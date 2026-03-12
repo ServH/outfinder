@@ -1,0 +1,43 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+	content: ["./src/**/*.{js,jsx,ts,tsx}"],
+	presets: [require("nativewind/preset")],
+	theme: {
+		extend: {
+			colors: {
+				"bg-paper": "#fafaf8",
+				"bg-surface": "#ffffff",
+				"bg-elevated": "#f5f5f3",
+				"text-primary": "#1a1a1a",
+				"text-secondary": "#6b6b6b",
+				"text-tertiary": "#9b9b9b",
+				hairline: "rgba(0,0,0,0.08)",
+				divider: "rgba(0,0,0,0.06)",
+				"premium-accent": "#c4a265",
+				"interactive-hint": "rgba(0,0,0,0.04)",
+				"favorite-red": "#E74C3C",
+				"tab-active": "#1a1a1a",
+				"tab-inactive": "#9b9b9b",
+				"tab-bar-bg": "#fafaf8",
+				"tab-bar-border": "rgba(0,0,0,0.06)",
+				"nav-bar-bg": "#fafaf8",
+			},
+			spacing: {
+				1: "4px",
+				2: "8px",
+				3: "12px",
+				4: "16px",
+				6: "24px",
+				8: "32px",
+				12: "48px",
+			},
+			fontFamily: {
+				"serif-jp": ["NotoSerifJP_400Regular"],
+				"serif-jp-medium": ["NotoSerifJP_500Medium"],
+				sans: ["Inter_400Regular"],
+				"sans-medium": ["Inter_500Medium"],
+			},
+		},
+	},
+	plugins: [],
+};
