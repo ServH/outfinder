@@ -1,0 +1,2090 @@
+[
+	{
+		"id": "p001",
+		"colorIds": ["c001", "c028", "c080"],
+		"nameJp": "暁の空",
+		"nameEn": "Dawn Sky"
+	},
+	{
+		"id": "p002",
+		"colorIds": ["c008", "c057"],
+		"nameJp": "春の便り",
+		"nameEn": "Spring Tidings"
+	},
+	{
+		"id": "p003",
+		"colorIds": ["c014", "c037", "c081"],
+		"nameJp": "紅梅の夕",
+		"nameEn": "Red Plum Evening"
+	},
+	{
+		"id": "p004",
+		"colorIds": ["c002", "c050", "c084", "c132"],
+		"nameJp": "秋の庭",
+		"nameEn": "Autumn Garden"
+	},
+	{
+		"id": "p005",
+		"colorIds": ["c055", "c109", "c080"],
+		"nameJp": "深海の夢",
+		"nameEn": "Deep Sea Dream"
+	},
+	{
+		"id": "p006",
+		"colorIds": ["c005", "c035"],
+		"nameJp": "夕焼けの丘",
+		"nameEn": "Sunset Hill"
+	},
+	{
+		"id": "p007",
+		"colorIds": ["c008", "c032", "c095"],
+		"nameJp": "椿の雨",
+		"nameEn": "Camellia Rain"
+	},
+	{
+		"id": "p008",
+		"colorIds": ["c026", "c142", "c081"],
+		"nameJp": "絹の霧",
+		"nameEn": "Silk Mist"
+	},
+	{
+		"id": "p009",
+		"colorIds": ["c060", "c087", "c111"],
+		"nameJp": "新緑の朝",
+		"nameEn": "Fresh Green Morning"
+	},
+	{
+		"id": "p010",
+		"colorIds": ["c003", "c044", "c090", "c137"],
+		"nameJp": "冬至の宴",
+		"nameEn": "Winter Solstice Feast"
+	},
+	{
+		"id": "p011",
+		"colorIds": ["c057", "c101"],
+		"nameJp": "紫雲の舞",
+		"nameEn": "Purple Cloud Dance"
+	},
+	{
+		"id": "p012",
+		"colorIds": ["c012", "c029", "c082"],
+		"nameJp": "山路の秋",
+		"nameEn": "Mountain Path Autumn"
+	},
+	{
+		"id": "p013",
+		"colorIds": ["c066", "c122", "c109"],
+		"nameJp": "渓流の響",
+		"nameEn": "Mountain Stream Echo"
+	},
+	{
+		"id": "p014",
+		"colorIds": ["c010", "c051", "c134"],
+		"nameJp": "麦畑の風",
+		"nameEn": "Wheat Field Wind"
+	},
+	{
+		"id": "p015",
+		"colorIds": ["c014", "c106", "c126", "c081"],
+		"nameJp": "祭りの夜",
+		"nameEn": "Festival Night"
+	},
+	{
+		"id": "p016",
+		"colorIds": ["c018", "c058"],
+		"nameJp": "花曇り",
+		"nameEn": "Flower Overcast"
+	},
+	{
+		"id": "p017",
+		"colorIds": ["c005", "c044", "c095"],
+		"nameJp": "焚火の跡",
+		"nameEn": "Bonfire Remains"
+	},
+	{
+		"id": "p018",
+		"colorIds": ["c021", "c033", "c098"],
+		"nameJp": "土壁の佇まい",
+		"nameEn": "Clay Wall Stillness"
+	},
+	{
+		"id": "p019",
+		"colorIds": ["c069", "c110", "c084"],
+		"nameJp": "瑠璃の海",
+		"nameEn": "Lapis Sea"
+	},
+	{
+		"id": "p020",
+		"colorIds": ["c002", "c037", "c086", "c158"],
+		"nameJp": "雅の調べ",
+		"nameEn": "Elegant Melody"
+	},
+	{
+		"id": "p021",
+		"colorIds": ["c007", "c050"],
+		"nameJp": "金糸の光",
+		"nameEn": "Golden Thread Light"
+	},
+	{
+		"id": "p022",
+		"colorIds": ["c076", "c117", "c082"],
+		"nameJp": "深山の緑",
+		"nameEn": "Deep Mountain Green"
+	},
+	{
+		"id": "p023",
+		"colorIds": ["c024", "c048", "c150"],
+		"nameJp": "柿の実",
+		"nameEn": "Persimmon Fruit"
+	},
+	{
+		"id": "p024",
+		"colorIds": ["c055", "c066", "c118", "c096"],
+		"nameJp": "港の朝",
+		"nameEn": "Harbor Morning"
+	},
+	{
+		"id": "p025",
+		"colorIds": ["c008", "c113"],
+		"nameJp": "牡丹の園",
+		"nameEn": "Peony Garden"
+	},
+	{
+		"id": "p026",
+		"colorIds": ["c001", "c031", "c142"],
+		"nameJp": "古寺の壁",
+		"nameEn": "Old Temple Wall"
+	},
+	{
+		"id": "p027",
+		"colorIds": ["c071", "c092", "c103"],
+		"nameJp": "藍染の布",
+		"nameEn": "Indigo Dyed Cloth"
+	},
+	{
+		"id": "p028",
+		"colorIds": ["c010", "c115", "c087"],
+		"nameJp": "山吹の谷",
+		"nameEn": "Kerria Valley"
+	},
+	{
+		"id": "p029",
+		"colorIds": ["c016", "c041", "c144", "c098"],
+		"nameJp": "番屋の灯",
+		"nameEn": "Guardhouse Lantern"
+	},
+	{
+		"id": "p030",
+		"colorIds": ["c054", "c078"],
+		"nameJp": "水面の光",
+		"nameEn": "Water Surface Light"
+	},
+	{
+		"id": "p031",
+		"colorIds": ["c026", "c050", "c095"],
+		"nameJp": "煤竹の間",
+		"nameEn": "Smoked Bamboo Room"
+	},
+	{
+		"id": "p032",
+		"colorIds": ["c014", "c128", "c090"],
+		"nameJp": "緋衣の舞",
+		"nameEn": "Scarlet Robe Dance"
+	},
+	{
+		"id": "p033",
+		"colorIds": ["c022", "c137", "c145"],
+		"nameJp": "苔の石段",
+		"nameEn": "Mossy Stone Steps"
+	},
+	{
+		"id": "p034",
+		"colorIds": ["c003", "c058", "c125", "c101"],
+		"nameJp": "藤棚の道",
+		"nameEn": "Wisteria Trellis Path"
+	},
+	{
+		"id": "p035",
+		"colorIds": ["c060", "c076", "c094"],
+		"nameJp": "若葉の候",
+		"nameEn": "Season of Young Leaves"
+	},
+	{
+		"id": "p036",
+		"colorIds": ["c005", "c028"],
+		"nameJp": "炎の道",
+		"nameEn": "Path of Flame"
+	},
+	{
+		"id": "p037",
+		"colorIds": ["c012", "c043", "c146"],
+		"nameJp": "茶室の窓",
+		"nameEn": "Tea Room Window"
+	},
+	{
+		"id": "p038",
+		"colorIds": ["c064", "c083", "c142"],
+		"nameJp": "鼠の調べ",
+		"nameEn": "Mouse Gray Harmony"
+	},
+	{
+		"id": "p039",
+		"colorIds": ["c009", "c107", "c131", "c035"],
+		"nameJp": "秋祭りの旗",
+		"nameEn": "Autumn Festival Banner"
+	},
+	{
+		"id": "p040",
+		"colorIds": ["c057", "c120", "c086"],
+		"nameJp": "菖蒲の夕",
+		"nameEn": "Iris Evening"
+	},
+	{
+		"id": "p041",
+		"colorIds": ["c015", "c139"],
+		"nameJp": "亜麻の道",
+		"nameEn": "Linen Path"
+	},
+	{
+		"id": "p042",
+		"colorIds": ["c021", "c036", "c090"],
+		"nameJp": "夜の砂漠",
+		"nameEn": "Desert Night"
+	},
+	{
+		"id": "p043",
+		"colorIds": ["c008", "c037", "c057", "c084"],
+		"nameJp": "花筏の流れ",
+		"nameEn": "Flower Raft Stream"
+	},
+	{
+		"id": "p044",
+		"colorIds": ["c055", "c080"],
+		"nameJp": "碧落の深み",
+		"nameEn": "Azure Depths"
+	},
+	{
+		"id": "p045",
+		"colorIds": ["c007", "c033", "c152"],
+		"nameJp": "土の温もり",
+		"nameEn": "Warmth of Earth"
+	},
+	{
+		"id": "p046",
+		"colorIds": ["c026", "c081", "c106"],
+		"nameJp": "墨と朱",
+		"nameEn": "Ink and Vermillion"
+	},
+	{
+		"id": "p047",
+		"colorIds": ["c002", "c012", "c044"],
+		"nameJp": "紅白の祝い",
+		"nameEn": "Red and White Celebration"
+	},
+	{
+		"id": "p048",
+		"colorIds": ["c066", "c105", "c118"],
+		"nameJp": "碧海の波",
+		"nameEn": "Blue Sea Waves"
+	},
+	{
+		"id": "p049",
+		"colorIds": ["c020", "c140", "c155", "c095"],
+		"nameJp": "枯野の朝",
+		"nameEn": "Withered Field Morning"
+	},
+	{
+		"id": "p050",
+		"colorIds": ["c111", "c132"],
+		"nameJp": "若草の山",
+		"nameEn": "Young Grass Mountain"
+	},
+	{
+		"id": "p051",
+		"colorIds": ["c014", "c048", "c084"],
+		"nameJp": "茜雲の峰",
+		"nameEn": "Madder Cloud Peak"
+	},
+	{
+		"id": "p052",
+		"colorIds": ["c004", "c115", "c126"],
+		"nameJp": "黄金の穂",
+		"nameEn": "Golden Ears of Rice"
+	},
+	{
+		"id": "p053",
+		"colorIds": ["c025", "c065", "c077"],
+		"nameJp": "薄紫の霞",
+		"nameEn": "Pale Purple Haze"
+	},
+	{
+		"id": "p054",
+		"colorIds": ["c028", "c044", "c081", "c126"],
+		"nameJp": "正月の飾り",
+		"nameEn": "New Year Decoration"
+	},
+	{
+		"id": "p055",
+		"colorIds": ["c069", "c055", "c092"],
+		"nameJp": "雨後の空",
+		"nameEn": "Sky After Rain"
+	},
+	{
+		"id": "p056",
+		"colorIds": ["c006", "c039"],
+		"nameJp": "赤土の路",
+		"nameEn": "Red Earth Road"
+	},
+	{
+		"id": "p057",
+		"colorIds": ["c017", "c046", "c153"],
+		"nameJp": "焦がれの色",
+		"nameEn": "Colors of Yearning"
+	},
+	{
+		"id": "p058",
+		"colorIds": ["c060", "c112", "c087", "c100"],
+		"nameJp": "翡翠の谷",
+		"nameEn": "Jade Valley"
+	},
+	{
+		"id": "p059",
+		"colorIds": ["c071", "c074", "c109"],
+		"nameJp": "瑠璃光",
+		"nameEn": "Lapis Light"
+	},
+	{
+		"id": "p060",
+		"colorIds": ["c008", "c014", "c130"],
+		"nameJp": "紅の三重奏",
+		"nameEn": "Crimson Trio"
+	},
+	{
+		"id": "p061",
+		"colorIds": ["c013", "c052"],
+		"nameJp": "狐の嫁入り",
+		"nameEn": "Fox Wedding"
+	},
+	{
+		"id": "p062",
+		"colorIds": ["c122", "c127", "c080"],
+		"nameJp": "海原の旅",
+		"nameEn": "Ocean Journey"
+	},
+	{
+		"id": "p063",
+		"colorIds": ["c010", "c026", "c095", "c150"],
+		"nameJp": "石畳の道",
+		"nameEn": "Cobblestone Path"
+	},
+	{
+		"id": "p064",
+		"colorIds": ["c032", "c106"],
+		"nameJp": "火の鳥",
+		"nameEn": "Firebird"
+	},
+	{
+		"id": "p065",
+		"colorIds": ["c067", "c089", "c094"],
+		"nameJp": "青磁の瓶",
+		"nameEn": "Celadon Vase"
+	},
+	{
+		"id": "p066",
+		"colorIds": ["c018", "c125", "c093"],
+		"nameJp": "桐の花",
+		"nameEn": "Paulownia Blossom"
+	},
+	{
+		"id": "p067",
+		"colorIds": ["c001", "c007", "c021"],
+		"nameJp": "砂丘の午後",
+		"nameEn": "Dune Afternoon"
+	},
+	{
+		"id": "p068",
+		"colorIds": ["c044", "c106", "c115", "c090"],
+		"nameJp": "歌舞伎の幕",
+		"nameEn": "Kabuki Curtain"
+	},
+	{
+		"id": "p069",
+		"colorIds": ["c055", "c122", "c129"],
+		"nameJp": "珊瑚礁の海",
+		"nameEn": "Coral Reef Sea"
+	},
+	{
+		"id": "p070",
+		"colorIds": ["c029", "c053"],
+		"nameJp": "琥珀の灯",
+		"nameEn": "Amber Lantern"
+	},
+	{
+		"id": "p071",
+		"colorIds": ["c016", "c024", "c037"],
+		"nameJp": "夕映えの橋",
+		"nameEn": "Bridge at Sunset"
+	},
+	{
+		"id": "p072",
+		"colorIds": ["c062", "c073", "c156", "c149"],
+		"nameJp": "苔むす庭",
+		"nameEn": "Moss-covered Garden"
+	},
+	{
+		"id": "p073",
+		"colorIds": ["c081", "c095", "c158"],
+		"nameJp": "墨染の衣",
+		"nameEn": "Ink-dyed Robe"
+	},
+	{
+		"id": "p074",
+		"colorIds": ["c032", "c037", "c125"],
+		"nameJp": "紫紅の宴",
+		"nameEn": "Purple-Red Banquet"
+	},
+	{
+		"id": "p075",
+		"colorIds": ["c019", "c045"],
+		"nameJp": "錆の味わい",
+		"nameEn": "Flavor of Rust"
+	},
+	{
+		"id": "p076",
+		"colorIds": ["c069", "c080", "c110"],
+		"nameJp": "群青の波",
+		"nameEn": "Ultramarine Waves"
+	},
+	{
+		"id": "p077",
+		"colorIds": ["c003", "c010", "c050", "c084"],
+		"nameJp": "金閣の夕",
+		"nameEn": "Golden Pavilion Evening"
+	},
+	{
+		"id": "p078",
+		"colorIds": ["c008", "c057", "c125"],
+		"nameJp": "春の宵",
+		"nameEn": "Spring Evening"
+	},
+	{
+		"id": "p079",
+		"colorIds": ["c111", "c117", "c124"],
+		"nameJp": "萌黄の野",
+		"nameEn": "Sprouting Green Field"
+	},
+	{
+		"id": "p080",
+		"colorIds": ["c035", "c041", "c137", "c144"],
+		"nameJp": "土蔵の壁",
+		"nameEn": "Storehouse Wall"
+	},
+	{
+		"id": "p081",
+		"colorIds": ["c028", "c081"],
+		"nameJp": "紅と墨",
+		"nameEn": "Crimson and Ink"
+	},
+	{
+		"id": "p082",
+		"colorIds": ["c054", "c066", "c084"],
+		"nameJp": "水の都",
+		"nameEn": "City of Water"
+	},
+	{
+		"id": "p083",
+		"colorIds": ["c022", "c116", "c141"],
+		"nameJp": "向日葵畑",
+		"nameEn": "Sunflower Field"
+	},
+	{
+		"id": "p084",
+		"colorIds": ["c005", "c014", "c031", "c142"],
+		"nameJp": "古都の秋",
+		"nameEn": "Ancient Capital Autumn"
+	},
+	{
+		"id": "p085",
+		"colorIds": ["c057", "c077", "c086"],
+		"nameJp": "紫の段",
+		"nameEn": "Purple Gradation"
+	},
+	{
+		"id": "p086",
+		"colorIds": ["c026", "c139", "c150"],
+		"nameJp": "生成りの帯",
+		"nameEn": "Unbleached Sash"
+	},
+	{
+		"id": "p087",
+		"colorIds": ["c107", "c121", "c131"],
+		"nameJp": "橙の三味",
+		"nameEn": "Orange Trio"
+	},
+	{
+		"id": "p088",
+		"colorIds": ["c036", "c053", "c095", "c134"],
+		"nameJp": "古木の森",
+		"nameEn": "Ancient Tree Forest"
+	},
+	{
+		"id": "p089",
+		"colorIds": ["c060", "c082"],
+		"nameJp": "森の奥",
+		"nameEn": "Deep Forest"
+	},
+	{
+		"id": "p090",
+		"colorIds": ["c002", "c008", "c032"],
+		"nameJp": "紅白梅",
+		"nameEn": "Red and White Plum"
+	},
+	{
+		"id": "p091",
+		"colorIds": ["c056", "c064", "c098"],
+		"nameJp": "曇天の海",
+		"nameEn": "Overcast Sea"
+	},
+	{
+		"id": "p092",
+		"colorIds": ["c011", "c023", "c040", "c115"],
+		"nameJp": "蜜柑の枝",
+		"nameEn": "Mandarin Branch"
+	},
+	{
+		"id": "p093",
+		"colorIds": ["c044", "c028", "c126"],
+		"nameJp": "赤と金",
+		"nameEn": "Red and Gold"
+	},
+	{
+		"id": "p094",
+		"colorIds": ["c070", "c073", "c100"],
+		"nameJp": "松の庭",
+		"nameEn": "Pine Garden"
+	},
+	{
+		"id": "p095",
+		"colorIds": ["c009", "c037"],
+		"nameJp": "杏の花",
+		"nameEn": "Apricot Flower"
+	},
+	{
+		"id": "p096",
+		"colorIds": ["c084", "c090", "c103"],
+		"nameJp": "夜闇の深み",
+		"nameEn": "Depths of Night"
+	},
+	{
+		"id": "p097",
+		"colorIds": ["c012", "c050", "c081", "c115"],
+		"nameJp": "仏壇の灯",
+		"nameEn": "Altar Candlelight"
+	},
+	{
+		"id": "p098",
+		"colorIds": ["c055", "c057", "c066"],
+		"nameJp": "五月の空",
+		"nameEn": "May Sky"
+	},
+	{
+		"id": "p099",
+		"colorIds": ["c021", "c041", "c146"],
+		"nameJp": "煤竹の径",
+		"nameEn": "Smoked Bamboo Path"
+	},
+	{
+		"id": "p100",
+		"colorIds": ["c108", "c113", "c130", "c084"],
+		"nameJp": "花魁の簪",
+		"nameEn": "Courtesan Hairpin"
+	},
+	{
+		"id": "p101",
+		"colorIds": ["c018", "c066"],
+		"nameJp": "白桃の水辺",
+		"nameEn": "White Peach Waterside"
+	},
+	{
+		"id": "p102",
+		"colorIds": ["c087", "c094", "c111"],
+		"nameJp": "常磐の森",
+		"nameEn": "Evergreen Forest"
+	},
+	{
+		"id": "p103",
+		"colorIds": ["c035", "c046", "c098"],
+		"nameJp": "煉瓦の街",
+		"nameEn": "Brick Town"
+	},
+	{
+		"id": "p104",
+		"colorIds": ["c002", "c055", "c080", "c142"],
+		"nameJp": "冬の海辺",
+		"nameEn": "Winter Seashore"
+	},
+	{
+		"id": "p105",
+		"colorIds": ["c006", "c013"],
+		"nameJp": "麻の布",
+		"nameEn": "Hemp Cloth"
+	},
+	{
+		"id": "p106",
+		"colorIds": ["c044", "c081", "c106"],
+		"nameJp": "漆と朱",
+		"nameEn": "Lacquer and Vermillion"
+	},
+	{
+		"id": "p107",
+		"colorIds": ["c065", "c125", "c101"],
+		"nameJp": "紫苑の道",
+		"nameEn": "Aster Path"
+	},
+	{
+		"id": "p108",
+		"colorIds": ["c024", "c035", "c048", "c137"],
+		"nameJp": "秋の収穫",
+		"nameEn": "Autumn Harvest"
+	},
+	{
+		"id": "p109",
+		"colorIds": ["c069", "c118", "c127"],
+		"nameJp": "露草の朝",
+		"nameEn": "Dayflower Morning"
+	},
+	{
+		"id": "p110",
+		"colorIds": ["c015", "c095"],
+		"nameJp": "白茶の静寂",
+		"nameEn": "White Tea Silence"
+	},
+	{
+		"id": "p111",
+		"colorIds": ["c050", "c126", "c137"],
+		"nameJp": "黄金の秋",
+		"nameEn": "Golden Autumn"
+	},
+	{
+		"id": "p112",
+		"colorIds": ["c028", "c032", "c044", "c106"],
+		"nameJp": "紅の重ね",
+		"nameEn": "Layered Reds"
+	},
+	{
+		"id": "p113",
+		"colorIds": ["c060", "c076", "c132"],
+		"nameJp": "草の原",
+		"nameEn": "Grassland"
+	},
+	{
+		"id": "p114",
+		"colorIds": ["c054", "c059"],
+		"nameJp": "霜の朝",
+		"nameEn": "Frost Morning"
+	},
+	{
+		"id": "p115",
+		"colorIds": ["c008", "c017", "c049"],
+		"nameJp": "桃の節句",
+		"nameEn": "Peach Blossom Festival"
+	},
+	{
+		"id": "p116",
+		"colorIds": ["c080", "c109", "c122", "c055"],
+		"nameJp": "青の四季",
+		"nameEn": "Four Seasons of Blue"
+	},
+	{
+		"id": "p117",
+		"colorIds": ["c029", "c036", "c043"],
+		"nameJp": "栗の木立",
+		"nameEn": "Chestnut Grove"
+	},
+	{
+		"id": "p118",
+		"colorIds": ["c020", "c025", "c079"],
+		"nameJp": "白妙の雪",
+		"nameEn": "Pure White Snow"
+	},
+	{
+		"id": "p119",
+		"colorIds": ["c037", "c113", "c081"],
+		"nameJp": "夜桜の宴",
+		"nameEn": "Night Cherry Blossom Feast"
+	},
+	{
+		"id": "p120",
+		"colorIds": ["c051", "c116", "c141", "c155"],
+		"nameJp": "稲穂の道",
+		"nameEn": "Rice Ear Path"
+	},
+	{
+		"id": "p121",
+		"colorIds": ["c062", "c067"],
+		"nameJp": "露の庭",
+		"nameEn": "Dewy Garden"
+	},
+	{
+		"id": "p122",
+		"colorIds": ["c005", "c009", "c107"],
+		"nameJp": "夕映えの雲",
+		"nameEn": "Sunset Clouds"
+	},
+	{
+		"id": "p123",
+		"colorIds": ["c084", "c092", "c105"],
+		"nameJp": "深淵の青",
+		"nameEn": "Abyss Blue"
+	},
+	{
+		"id": "p124",
+		"colorIds": ["c026", "c095", "c134", "c146"],
+		"nameJp": "古民家の床",
+		"nameEn": "Old Farmhouse Floor"
+	},
+	{
+		"id": "p125",
+		"colorIds": ["c038", "c044"],
+		"nameJp": "赤銅の光",
+		"nameEn": "Copper Glow"
+	},
+	{
+		"id": "p126",
+		"colorIds": ["c014", "c057", "c120"],
+		"nameJp": "京の花",
+		"nameEn": "Flowers of Kyoto"
+	},
+	{
+		"id": "p127",
+		"colorIds": ["c082", "c087", "c100", "c132"],
+		"nameJp": "山の稜線",
+		"nameEn": "Mountain Ridge"
+	},
+	{
+		"id": "p128",
+		"colorIds": ["c007", "c022", "c050"],
+		"nameJp": "金色の午後",
+		"nameEn": "Golden Afternoon"
+	},
+	{
+		"id": "p129",
+		"colorIds": ["c055", "c071", "c084"],
+		"nameJp": "青磁の壺",
+		"nameEn": "Celadon Jar"
+	},
+	{
+		"id": "p130",
+		"colorIds": ["c037", "c048", "c128"],
+		"nameJp": "薔薇と茜",
+		"nameEn": "Rose and Madder"
+	},
+	{
+		"id": "p131",
+		"colorIds": ["c003", "c081", "c142", "c158"],
+		"nameJp": "水墨画の世界",
+		"nameEn": "Ink Painting World"
+	},
+	{
+		"id": "p132",
+		"colorIds": ["c023", "c040", "c107"],
+		"nameJp": "柿の里",
+		"nameEn": "Persimmon Village"
+	},
+	{
+		"id": "p133",
+		"colorIds": ["c066", "c069", "c110"],
+		"nameJp": "海の深さ",
+		"nameEn": "Depth of the Sea"
+	},
+	{
+		"id": "p134",
+		"colorIds": ["c001", "c014", "c106"],
+		"nameJp": "朱鷺の翼",
+		"nameEn": "Ibis Wing"
+	},
+	{
+		"id": "p135",
+		"colorIds": ["c088", "c089", "c097", "c102"],
+		"nameJp": "深山幽谷",
+		"nameEn": "Deep Mountain Valley"
+	},
+	{
+		"id": "p136",
+		"colorIds": ["c004", "c052", "c144"],
+		"nameJp": "秋の山里",
+		"nameEn": "Autumn Mountain Village"
+	},
+	{
+		"id": "p137",
+		"colorIds": ["c058", "c074", "c125"],
+		"nameJp": "藤の便り",
+		"nameEn": "Wisteria Letter"
+	},
+	{
+		"id": "p138",
+		"colorIds": ["c031", "c081"],
+		"nameJp": "海老茶と墨",
+		"nameEn": "Maroon and Ink"
+	},
+	{
+		"id": "p139",
+		"colorIds": ["c035", "c044", "c050"],
+		"nameJp": "大和の秋",
+		"nameEn": "Yamato Autumn"
+	},
+	{
+		"id": "p140",
+		"colorIds": ["c008", "c018", "c058", "c057"],
+		"nameJp": "花の雲",
+		"nameEn": "Cloud of Flowers"
+	},
+	{
+		"id": "p141",
+		"colorIds": ["c076", "c112", "c117"],
+		"nameJp": "緑玉の環",
+		"nameEn": "Emerald Ring"
+	},
+	{
+		"id": "p142",
+		"colorIds": ["c028", "c048", "c095"],
+		"nameJp": "暖炉の灯",
+		"nameEn": "Fireplace Glow"
+	},
+	{
+		"id": "p143",
+		"colorIds": ["c016", "c022", "c115"],
+		"nameJp": "琥珀の蜂蜜",
+		"nameEn": "Amber Honey"
+	},
+	{
+		"id": "p144",
+		"colorIds": ["c071", "c077", "c086", "c103"],
+		"nameJp": "瑠璃の間",
+		"nameEn": "Lapis Chamber"
+	},
+	{
+		"id": "p145",
+		"colorIds": ["c001", "c005", "c037"],
+		"nameJp": "恋の予感",
+		"nameEn": "Premonition of Love"
+	},
+	{
+		"id": "p146",
+		"colorIds": ["c098", "c142", "c158"],
+		"nameJp": "利休の侘び",
+		"nameEn": "Rikyu Wabi"
+	},
+	{
+		"id": "p147",
+		"colorIds": ["c034", "c049"],
+		"nameJp": "古代紫",
+		"nameEn": "Ancient Purple"
+	},
+	{
+		"id": "p148",
+		"colorIds": ["c080", "c084", "c096"],
+		"nameJp": "藍の階調",
+		"nameEn": "Indigo Gradation"
+	},
+	{
+		"id": "p149",
+		"colorIds": ["c012", "c024", "c048", "c144"],
+		"nameJp": "秋深し",
+		"nameEn": "Deep Autumn"
+	},
+	{
+		"id": "p150",
+		"colorIds": ["c063", "c072"],
+		"nameJp": "月の浜辺",
+		"nameEn": "Moonlit Shore"
+	},
+	{
+		"id": "p151",
+		"colorIds": ["c032", "c037", "c090"],
+		"nameJp": "戦国の旗",
+		"nameEn": "Warring States Banner"
+	},
+	{
+		"id": "p152",
+		"colorIds": ["c111", "c126", "c087"],
+		"nameJp": "菜の花畑",
+		"nameEn": "Rapeseed Field"
+	},
+	{
+		"id": "p153",
+		"colorIds": ["c026", "c068", "c095", "c142"],
+		"nameJp": "禅の庭",
+		"nameEn": "Zen Garden"
+	},
+	{
+		"id": "p154",
+		"colorIds": ["c002", "c028"],
+		"nameJp": "紅に染まる",
+		"nameEn": "Dyed in Red"
+	},
+	{
+		"id": "p155",
+		"colorIds": ["c055", "c060", "c117"],
+		"nameJp": "初夏の風",
+		"nameEn": "Early Summer Breeze"
+	},
+	{
+		"id": "p156",
+		"colorIds": ["c029", "c031", "c042"],
+		"nameJp": "小豆の色",
+		"nameEn": "Adzuki Colors"
+	},
+	{
+		"id": "p157",
+		"colorIds": ["c019", "c033", "c053", "c098"],
+		"nameJp": "古道具の棚",
+		"nameEn": "Antique Shelf"
+	},
+	{
+		"id": "p158",
+		"colorIds": ["c057", "c109", "c125"],
+		"nameJp": "紫の深み",
+		"nameEn": "Purple Depths"
+	},
+	{
+		"id": "p159",
+		"colorIds": ["c010", "c050", "c081"],
+		"nameJp": "金屏風",
+		"nameEn": "Gold Folding Screen"
+	},
+	{
+		"id": "p160",
+		"colorIds": ["c069", "c078", "c122"],
+		"nameJp": "水の旅",
+		"nameEn": "Water Journey"
+	},
+	{
+		"id": "p161",
+		"colorIds": ["c005", "c008", "c032", "c084"],
+		"nameJp": "花見の夕べ",
+		"nameEn": "Cherry Blossom Viewing Evening"
+	},
+	{
+		"id": "p162",
+		"colorIds": ["c030", "c036", "c045"],
+		"nameJp": "焦茶の重ね",
+		"nameEn": "Layered Browns"
+	},
+	{
+		"id": "p163",
+		"colorIds": ["c059", "c075", "c079"],
+		"nameJp": "霧の朝",
+		"nameEn": "Misty Morning"
+	},
+	{
+		"id": "p164",
+		"colorIds": ["c106", "c115", "c081"],
+		"nameJp": "祭り囃子",
+		"nameEn": "Festival Music"
+	},
+	{
+		"id": "p165",
+		"colorIds": ["c037", "c044", "c106", "c126"],
+		"nameJp": "能の衣装",
+		"nameEn": "Noh Costume"
+	},
+	{
+		"id": "p166",
+		"colorIds": ["c002", "c066", "c080"],
+		"nameJp": "日本海の冬",
+		"nameEn": "Sea of Japan Winter"
+	},
+	{
+		"id": "p167",
+		"colorIds": ["c034", "c113", "c130"],
+		"nameJp": "花街の暮れ",
+		"nameEn": "Geisha Quarter Dusk"
+	},
+	{
+		"id": "p168",
+		"colorIds": ["c013", "c139", "c155"],
+		"nameJp": "亜麻の衣",
+		"nameEn": "Linen Garment"
+	},
+	{
+		"id": "p169",
+		"colorIds": ["c060", "c111", "c117", "c082"],
+		"nameJp": "青葉の山",
+		"nameEn": "Green Leaf Mountain"
+	},
+	{
+		"id": "p170",
+		"colorIds": ["c014", "c044"],
+		"nameJp": "鶴と太陽",
+		"nameEn": "Crane and Sun"
+	},
+	{
+		"id": "p171",
+		"colorIds": ["c083", "c092", "c096"],
+		"nameJp": "冬の夜空",
+		"nameEn": "Winter Night Sky"
+	},
+	{
+		"id": "p172",
+		"colorIds": ["c021", "c029", "c050"],
+		"nameJp": "秋の宝",
+		"nameEn": "Autumn Treasure"
+	},
+	{
+		"id": "p173",
+		"colorIds": ["c056", "c066", "c071", "c109"],
+		"nameJp": "青の幻想",
+		"nameEn": "Blue Fantasy"
+	},
+	{
+		"id": "p174",
+		"colorIds": ["c007", "c035", "c148"],
+		"nameJp": "胡桃の殻",
+		"nameEn": "Walnut Shell"
+	},
+	{
+		"id": "p175",
+		"colorIds": ["c081", "c090", "c095"],
+		"nameJp": "闇の三調",
+		"nameEn": "Three Tones of Darkness"
+	},
+	{
+		"id": "p176",
+		"colorIds": ["c023", "c051", "c131", "c116"],
+		"nameJp": "柑橘の棚",
+		"nameEn": "Citrus Display"
+	},
+	{
+		"id": "p177",
+		"colorIds": ["c037", "c128"],
+		"nameJp": "薔薇の棘",
+		"nameEn": "Rose Thorn"
+	},
+	{
+		"id": "p178",
+		"colorIds": ["c064", "c085", "c142"],
+		"nameJp": "鉄の色",
+		"nameEn": "Color of Iron"
+	},
+	{
+		"id": "p179",
+		"colorIds": ["c026", "c087", "c132"],
+		"nameJp": "杉の間",
+		"nameEn": "Cedar Room"
+	},
+	{
+		"id": "p180",
+		"colorIds": ["c004", "c011", "c126", "c115"],
+		"nameJp": "黄色の層",
+		"nameEn": "Yellow Layers"
+	},
+	{
+		"id": "p181",
+		"colorIds": ["c008", "c014", "c037"],
+		"nameJp": "花嫁の紅",
+		"nameEn": "Bride Rouge"
+	},
+	{
+		"id": "p182",
+		"colorIds": ["c082", "c094", "c132"],
+		"nameJp": "緑陰の道",
+		"nameEn": "Green Shade Path"
+	},
+	{
+		"id": "p183",
+		"colorIds": ["c036", "c043", "c095"],
+		"nameJp": "鳶の巣",
+		"nameEn": "Kite Nest"
+	},
+	{
+		"id": "p184",
+		"colorIds": ["c057", "c058", "c065", "c125"],
+		"nameJp": "紫苑の調べ",
+		"nameEn": "Aster Melody"
+	},
+	{
+		"id": "p185",
+		"colorIds": ["c010", "c012", "c028"],
+		"nameJp": "秋の紅",
+		"nameEn": "Autumn Crimson"
+	},
+	{
+		"id": "p186",
+		"colorIds": ["c055", "c110"],
+		"nameJp": "群青の空",
+		"nameEn": "Ultramarine Sky"
+	},
+	{
+		"id": "p187",
+		"colorIds": ["c024", "c026", "c146"],
+		"nameJp": "茶の味",
+		"nameEn": "Taste of Tea"
+	},
+	{
+		"id": "p188",
+		"colorIds": ["c105", "c118", "c122", "c080"],
+		"nameJp": "碧の回廊",
+		"nameEn": "Azure Corridor"
+	},
+	{
+		"id": "p189",
+		"colorIds": ["c028", "c106", "c081"],
+		"nameJp": "朱と墨の対",
+		"nameEn": "Vermillion-Ink Contrast"
+	},
+	{
+		"id": "p190",
+		"colorIds": ["c060", "c062", "c067"],
+		"nameJp": "翠の段",
+		"nameEn": "Jade Gradation"
+	},
+	{
+		"id": "p191",
+		"colorIds": ["c015", "c020", "c068"],
+		"nameJp": "白銀の朝",
+		"nameEn": "Silver Morning"
+	},
+	{
+		"id": "p192",
+		"colorIds": ["c031", "c047", "c081", "c153"],
+		"nameJp": "葡萄酒の宵",
+		"nameEn": "Wine Evening"
+	},
+	{
+		"id": "p193",
+		"colorIds": ["c032", "c044", "c126"],
+		"nameJp": "赤と黄",
+		"nameEn": "Red and Yellow"
+	},
+	{
+		"id": "p194",
+		"colorIds": ["c070", "c073", "c076"],
+		"nameJp": "薄緑の庭",
+		"nameEn": "Light Green Garden"
+	},
+	{
+		"id": "p195",
+		"colorIds": ["c001", "c095"],
+		"nameJp": "月明かりの雪",
+		"nameEn": "Moonlight Snow"
+	},
+	{
+		"id": "p196",
+		"colorIds": ["c046", "c048", "c044"],
+		"nameJp": "緋の重ね",
+		"nameEn": "Layered Scarlet"
+	},
+	{
+		"id": "p197",
+		"colorIds": ["c109", "c110", "c080", "c055"],
+		"nameJp": "藍の深淵",
+		"nameEn": "Indigo Abyss"
+	},
+	{
+		"id": "p198",
+		"colorIds": ["c021", "c050", "c084"],
+		"nameJp": "砂金の川",
+		"nameEn": "Gold Dust River"
+	},
+	{
+		"id": "p199",
+		"colorIds": ["c002", "c057", "c081"],
+		"nameJp": "藤と墨",
+		"nameEn": "Wisteria and Ink"
+	},
+	{
+		"id": "p200",
+		"colorIds": ["c087", "c117", "c132", "c111"],
+		"nameJp": "木漏れ日",
+		"nameEn": "Sunlight Through Leaves"
+	},
+	{
+		"id": "p201",
+		"colorIds": ["c014", "c048", "c113"],
+		"nameJp": "花の都",
+		"nameEn": "City of Flowers"
+	},
+	{
+		"id": "p202",
+		"colorIds": ["c039", "c041", "c044"],
+		"nameJp": "赤銅の鏡",
+		"nameEn": "Bronze Mirror"
+	},
+	{
+		"id": "p203",
+		"colorIds": ["c056", "c074", "c092"],
+		"nameJp": "潮の音",
+		"nameEn": "Sound of Tide"
+	},
+	{
+		"id": "p204",
+		"colorIds": ["c005", "c026", "c050", "c095"],
+		"nameJp": "絹の帛",
+		"nameEn": "Silk Fabric"
+	},
+	{
+		"id": "p205",
+		"colorIds": ["c099", "c103", "c084"],
+		"nameJp": "藍の闇",
+		"nameEn": "Indigo Darkness"
+	},
+	{
+		"id": "p206",
+		"colorIds": ["c037", "c128", "c081"],
+		"nameJp": "牡丹の影",
+		"nameEn": "Peony Shadow"
+	},
+	{
+		"id": "p207",
+		"colorIds": ["c007", "c016", "c022"],
+		"nameJp": "黄昏の麦",
+		"nameEn": "Twilight Wheat"
+	},
+	{
+		"id": "p208",
+		"colorIds": ["c031", "c044", "c081", "c126"],
+		"nameJp": "神社の秋",
+		"nameEn": "Shrine Autumn"
+	},
+	{
+		"id": "p209",
+		"colorIds": ["c055", "c057", "c125"],
+		"nameJp": "紫の空",
+		"nameEn": "Purple Sky"
+	},
+	{
+		"id": "p210",
+		"colorIds": ["c033", "c045", "c150"],
+		"nameJp": "土の記憶",
+		"nameEn": "Memory of Earth"
+	},
+	{
+		"id": "p211",
+		"colorIds": ["c122", "c066", "c087"],
+		"nameJp": "泉の涼",
+		"nameEn": "Cool Spring"
+	},
+	{
+		"id": "p212",
+		"colorIds": ["c018", "c025", "c077", "c101"],
+		"nameJp": "藤の園",
+		"nameEn": "Wisteria Garden"
+	},
+	{
+		"id": "p213",
+		"colorIds": ["c028", "c035", "c095"],
+		"nameJp": "秋の暖炉",
+		"nameEn": "Autumn Hearth"
+	},
+	{
+		"id": "p214",
+		"colorIds": ["c005", "c032"],
+		"nameJp": "緋文字",
+		"nameEn": "Scarlet Letter"
+	},
+	{
+		"id": "p215",
+		"colorIds": ["c064", "c092", "c098"],
+		"nameJp": "鼠の重ね",
+		"nameEn": "Layered Mouse Gray"
+	},
+	{
+		"id": "p216",
+		"colorIds": ["c076", "c094", "c087", "c149"],
+		"nameJp": "山の緑",
+		"nameEn": "Mountain Verdure"
+	},
+	{
+		"id": "p217",
+		"colorIds": ["c010", "c044", "c081"],
+		"nameJp": "朱漆の盆",
+		"nameEn": "Vermillion Lacquer Tray"
+	},
+	{
+		"id": "p218",
+		"colorIds": ["c012", "c021", "c139"],
+		"nameJp": "秋の七草",
+		"nameEn": "Seven Autumn Grasses"
+	},
+	{
+		"id": "p219",
+		"colorIds": ["c057", "c066", "c109"],
+		"nameJp": "青紫の海",
+		"nameEn": "Blue-Purple Sea"
+	},
+	{
+		"id": "p220",
+		"colorIds": ["c003", "c026", "c081", "c158"],
+		"nameJp": "書道の道具",
+		"nameEn": "Calligraphy Tools"
+	},
+	{
+		"id": "p221",
+		"colorIds": ["c040", "c046", "c107"],
+		"nameJp": "柿の秋",
+		"nameEn": "Persimmon Autumn"
+	},
+	{
+		"id": "p222",
+		"colorIds": ["c069", "c080", "c095"],
+		"nameJp": "鋼の空",
+		"nameEn": "Steel Sky"
+	},
+	{
+		"id": "p223",
+		"colorIds": ["c108", "c123", "c128"],
+		"nameJp": "紅の花束",
+		"nameEn": "Red Bouquet"
+	},
+	{
+		"id": "p224",
+		"colorIds": ["c002", "c018", "c101", "c125"],
+		"nameJp": "紫の春",
+		"nameEn": "Purple Spring"
+	},
+	{
+		"id": "p225",
+		"colorIds": ["c112", "c129", "c082"],
+		"nameJp": "翡翠の川",
+		"nameEn": "Jade River"
+	},
+	{
+		"id": "p226",
+		"colorIds": ["c001", "c035", "c081"],
+		"nameJp": "夕暮れの塀",
+		"nameEn": "Evening Wall"
+	},
+	{
+		"id": "p227",
+		"colorIds": ["c022", "c050", "c115"],
+		"nameJp": "黄金の風",
+		"nameEn": "Golden Wind"
+	},
+	{
+		"id": "p228",
+		"colorIds": ["c054", "c069", "c092", "c105"],
+		"nameJp": "海辺の村",
+		"nameEn": "Seaside Village"
+	},
+	{
+		"id": "p229",
+		"colorIds": ["c037", "c044", "c090"],
+		"nameJp": "赤い月",
+		"nameEn": "Red Moon"
+	},
+	{
+		"id": "p230",
+		"colorIds": ["c134", "c136", "c138"],
+		"nameJp": "橄欖の畑",
+		"nameEn": "Olive Field"
+	},
+	{
+		"id": "p231",
+		"colorIds": ["c009", "c014", "c130"],
+		"nameJp": "花街の朝",
+		"nameEn": "Geisha Quarter Morning"
+	},
+	{
+		"id": "p232",
+		"colorIds": ["c066", "c078", "c080", "c095"],
+		"nameJp": "冬の海",
+		"nameEn": "Winter Sea"
+	},
+	{
+		"id": "p233",
+		"colorIds": ["c010", "c137", "c154"],
+		"nameJp": "路考の茶",
+		"nameEn": "Road Tea Blend"
+	},
+	{
+		"id": "p234",
+		"colorIds": ["c028", "c032", "c037"],
+		"nameJp": "三紅",
+		"nameEn": "Three Reds"
+	},
+	{
+		"id": "p235",
+		"colorIds": ["c073", "c082", "c100"],
+		"nameJp": "松の林",
+		"nameEn": "Pine Woods"
+	},
+	{
+		"id": "p236",
+		"colorIds": ["c008", "c057", "c081", "c095"],
+		"nameJp": "夜桜",
+		"nameEn": "Night Cherry Blossoms"
+	},
+	{
+		"id": "p237",
+		"colorIds": ["c051", "c115", "c126"],
+		"nameJp": "秋の陽",
+		"nameEn": "Autumn Sunlight"
+	},
+	{
+		"id": "p238",
+		"colorIds": ["c027", "c042"],
+		"nameJp": "古の紅",
+		"nameEn": "Ancient Rouge"
+	},
+	{
+		"id": "p239",
+		"colorIds": ["c080", "c095", "c109"],
+		"nameJp": "深碧の間",
+		"nameEn": "Deep Azure Room"
+	},
+	{
+		"id": "p240",
+		"colorIds": ["c035", "c050", "c137", "c144"],
+		"nameJp": "秋の味覚",
+		"nameEn": "Autumn Flavors"
+	},
+	{
+		"id": "p241",
+		"colorIds": ["c005", "c012", "c044"],
+		"nameJp": "赤富士",
+		"nameEn": "Red Fuji"
+	},
+	{
+		"id": "p242",
+		"colorIds": ["c055", "c069", "c109"],
+		"nameJp": "瑠璃の波",
+		"nameEn": "Lapis Waves"
+	},
+	{
+		"id": "p243",
+		"colorIds": ["c026", "c081", "c142"],
+		"nameJp": "墨の滲み",
+		"nameEn": "Ink Bleed"
+	},
+	{
+		"id": "p244",
+		"colorIds": ["c111", "c117", "c087", "c094"],
+		"nameJp": "緑の回廊",
+		"nameEn": "Green Corridor"
+	},
+	{
+		"id": "p245",
+		"colorIds": ["c014", "c037", "c125"],
+		"nameJp": "紅紫の帳",
+		"nameEn": "Red-Purple Curtain"
+	},
+	{
+		"id": "p246",
+		"colorIds": ["c061", "c076", "c156"],
+		"nameJp": "柳の畔",
+		"nameEn": "Willow Bank"
+	},
+	{
+		"id": "p247",
+		"colorIds": ["c002", "c050", "c081"],
+		"nameJp": "金と墨",
+		"nameEn": "Gold and Ink"
+	},
+	{
+		"id": "p248",
+		"colorIds": ["c083", "c086", "c098", "c104"],
+		"nameJp": "暗がりの部屋",
+		"nameEn": "Dark Chamber"
+	},
+	{
+		"id": "p249",
+		"colorIds": ["c009", "c035", "c107"],
+		"nameJp": "柑橘の夕",
+		"nameEn": "Citrus Evening"
+	},
+	{
+		"id": "p250",
+		"colorIds": ["c066", "c080", "c110"],
+		"nameJp": "海の藍",
+		"nameEn": "Sea Indigo"
+	},
+	{
+		"id": "p251",
+		"colorIds": ["c007", "c021", "c137"],
+		"nameJp": "砂浜の風",
+		"nameEn": "Sandy Beach Wind"
+	},
+	{
+		"id": "p252",
+		"colorIds": ["c044", "c090", "c106", "c115"],
+		"nameJp": "歌舞伎座",
+		"nameEn": "Kabuki Theater"
+	},
+	{
+		"id": "p253",
+		"colorIds": ["c058", "c077", "c120"],
+		"nameJp": "菖蒲の池",
+		"nameEn": "Iris Pond"
+	},
+	{
+		"id": "p254",
+		"colorIds": ["c014", "c032", "c081"],
+		"nameJp": "紅の闇",
+		"nameEn": "Crimson Darkness"
+	},
+	{
+		"id": "p255",
+		"colorIds": ["c082", "c089", "c094"],
+		"nameJp": "深山の静",
+		"nameEn": "Mountain Stillness"
+	},
+	{
+		"id": "p256",
+		"colorIds": ["c024", "c046", "c148", "c154"],
+		"nameJp": "古陶の肌",
+		"nameEn": "Ancient Pottery Skin"
+	},
+	{
+		"id": "p257",
+		"colorIds": ["c055", "c122"],
+		"nameJp": "水の歌",
+		"nameEn": "Water Song"
+	},
+	{
+		"id": "p258",
+		"colorIds": ["c028", "c037", "c044"],
+		"nameJp": "紅三彩",
+		"nameEn": "Three Red Shades"
+	},
+	{
+		"id": "p259",
+		"colorIds": ["c060", "c117", "c100"],
+		"nameJp": "常盤の道",
+		"nameEn": "Evergreen Path"
+	},
+	{
+		"id": "p260",
+		"colorIds": ["c006", "c019", "c139", "c150"],
+		"nameJp": "砂の記憶",
+		"nameEn": "Sand Memory"
+	},
+	{
+		"id": "p261",
+		"colorIds": ["c057", "c084", "c101"],
+		"nameJp": "紫の夜",
+		"nameEn": "Purple Night"
+	},
+	{
+		"id": "p262",
+		"colorIds": ["c116", "c126", "c137"],
+		"nameJp": "黄色の収穫",
+		"nameEn": "Yellow Harvest"
+	},
+	{
+		"id": "p263",
+		"colorIds": ["c026", "c031", "c090"],
+		"nameJp": "重陽の節",
+		"nameEn": "Chrysanthemum Festival"
+	},
+	{
+		"id": "p264",
+		"colorIds": ["c122", "c110", "c080", "c069"],
+		"nameJp": "蒼穹の旅",
+		"nameEn": "Sky Vault Journey"
+	},
+	{
+		"id": "p265",
+		"colorIds": ["c012", "c044", "c095"],
+		"nameJp": "朱漆の膳",
+		"nameEn": "Vermillion Lacquer Table"
+	},
+	{
+		"id": "p266",
+		"colorIds": ["c076", "c111", "c132"],
+		"nameJp": "草の露",
+		"nameEn": "Grass Dew"
+	},
+	{
+		"id": "p267",
+		"colorIds": ["c008", "c130", "c090"],
+		"nameJp": "夜の花",
+		"nameEn": "Night Flower"
+	},
+	{
+		"id": "p268",
+		"colorIds": ["c003", "c064", "c095", "c142"],
+		"nameJp": "鼠の間",
+		"nameEn": "Mouse Gray Room"
+	},
+	{
+		"id": "p269",
+		"colorIds": ["c050", "c084", "c115"],
+		"nameJp": "金襴の夜",
+		"nameEn": "Gold Brocade Night"
+	},
+	{
+		"id": "p270",
+		"colorIds": ["c033", "c039", "c041"],
+		"nameJp": "赤土の壁",
+		"nameEn": "Red Clay Wall"
+	},
+	{
+		"id": "p271",
+		"colorIds": ["c055", "c066", "c105"],
+		"nameJp": "波の音",
+		"nameEn": "Sound of Waves"
+	},
+	{
+		"id": "p272",
+		"colorIds": ["c010", "c018", "c057", "c081"],
+		"nameJp": "春の帳",
+		"nameEn": "Spring Curtain"
+	},
+	{
+		"id": "p273",
+		"colorIds": ["c121", "c131", "c107"],
+		"nameJp": "蜜柑の庭",
+		"nameEn": "Mandarin Garden"
+	},
+	{
+		"id": "p274",
+		"colorIds": ["c087", "c111", "c124"],
+		"nameJp": "萌黄の春",
+		"nameEn": "Sprouting Spring"
+	},
+	{
+		"id": "p275",
+		"colorIds": ["c029", "c053", "c098"],
+		"nameJp": "琥珀の闇",
+		"nameEn": "Amber Darkness"
+	},
+	{
+		"id": "p276",
+		"colorIds": ["c020", "c026", "c095", "c158"],
+		"nameJp": "冬の石庭",
+		"nameEn": "Winter Rock Garden"
+	},
+	{
+		"id": "p277",
+		"colorIds": ["c106", "c109", "c126"],
+		"nameJp": "三原色の宴",
+		"nameEn": "Primary Colors Feast"
+	},
+	{
+		"id": "p278",
+		"colorIds": ["c134", "c144", "c146"],
+		"nameJp": "古木の幹",
+		"nameEn": "Old Tree Trunk"
+	},
+	{
+		"id": "p279",
+		"colorIds": ["c005", "c014", "c106"],
+		"nameJp": "紅鶴の舞",
+		"nameEn": "Flamingo Dance"
+	},
+	{
+		"id": "p280",
+		"colorIds": ["c061", "c067", "c089", "c100"],
+		"nameJp": "庭園の四季",
+		"nameEn": "Garden Four Seasons"
+	},
+	{
+		"id": "p281",
+		"colorIds": ["c081", "c084", "c106"],
+		"nameJp": "墨と朱と藍",
+		"nameEn": "Ink Vermillion Indigo"
+	},
+	{
+		"id": "p282",
+		"colorIds": ["c022", "c126", "c115"],
+		"nameJp": "黄金の波",
+		"nameEn": "Golden Waves"
+	},
+	{
+		"id": "p283",
+		"colorIds": ["c032", "c048", "c090"],
+		"nameJp": "炎の闇",
+		"nameEn": "Flame Darkness"
+	},
+	{
+		"id": "p284",
+		"colorIds": ["c055", "c109", "c127", "c096"],
+		"nameJp": "青い宝石",
+		"nameEn": "Blue Jewels"
+	},
+	{
+		"id": "p285",
+		"colorIds": ["c037", "c095", "c142"],
+		"nameJp": "茶の世界",
+		"nameEn": "World of Tea"
+	},
+	{
+		"id": "p286",
+		"colorIds": ["c016", "c035", "c044"],
+		"nameJp": "秋の便り",
+		"nameEn": "Autumn Letter"
+	},
+	{
+		"id": "p287",
+		"colorIds": ["c074", "c077", "c125"],
+		"nameJp": "紫の調べ",
+		"nameEn": "Purple Harmony"
+	},
+	{
+		"id": "p288",
+		"colorIds": ["c112", "c117", "c124", "c087"],
+		"nameJp": "翠の山",
+		"nameEn": "Jade Mountain"
+	},
+	{
+		"id": "p289",
+		"colorIds": ["c044", "c050", "c081"],
+		"nameJp": "赤金の対",
+		"nameEn": "Red-Gold Pair"
+	},
+	{
+		"id": "p290",
+		"colorIds": ["c026", "c137", "c152"],
+		"nameJp": "利休の色",
+		"nameEn": "Rikyu Colors"
+	},
+	{
+		"id": "p291",
+		"colorIds": ["c008", "c028", "c057"],
+		"nameJp": "花紅柳緑",
+		"nameEn": "Flowers and Willows"
+	},
+	{
+		"id": "p292",
+		"colorIds": ["c082", "c087", "c094", "c100"],
+		"nameJp": "深緑の回廊",
+		"nameEn": "Deep Green Corridor"
+	},
+	{
+		"id": "p293",
+		"colorIds": ["c005", "c050", "c095"],
+		"nameJp": "金砂の道",
+		"nameEn": "Gold Sand Path"
+	},
+	{
+		"id": "p294",
+		"colorIds": ["c066", "c069", "c122"],
+		"nameJp": "水の宮殿",
+		"nameEn": "Water Palace"
+	},
+	{
+		"id": "p295",
+		"colorIds": ["c043", "c053", "c134"],
+		"nameJp": "鳶の山",
+		"nameEn": "Kite Mountain"
+	},
+	{
+		"id": "p296",
+		"colorIds": ["c014", "c057", "c081", "c109"],
+		"nameJp": "花鳥風月",
+		"nameEn": "Nature Beauty"
+	},
+	{
+		"id": "p297",
+		"colorIds": ["c002", "c081", "c106"],
+		"nameJp": "紅白墨",
+		"nameEn": "Red White Ink"
+	},
+	{
+		"id": "p298",
+		"colorIds": ["c060", "c111", "c082"],
+		"nameJp": "森の光",
+		"nameEn": "Forest Light"
+	},
+	{
+		"id": "p299",
+		"colorIds": ["c010", "c084", "c142"],
+		"nameJp": "絹の夜",
+		"nameEn": "Silk Night"
+	},
+	{
+		"id": "p300",
+		"colorIds": ["c031", "c032", "c037", "c044"],
+		"nameJp": "紅の四重奏",
+		"nameEn": "Red Quartet"
+	},
+	{
+		"id": "p301",
+		"colorIds": ["c055", "c118", "c122"],
+		"nameJp": "青い鳥",
+		"nameEn": "Blue Bird"
+	},
+	{
+		"id": "p302",
+		"colorIds": ["c035", "c137", "c150"],
+		"nameJp": "秋の石",
+		"nameEn": "Autumn Stone"
+	},
+	{
+		"id": "p303",
+		"colorIds": ["c084", "c090", "c098", "c081"],
+		"nameJp": "闇の四調",
+		"nameEn": "Four Dark Tones"
+	},
+	{
+		"id": "p304",
+		"colorIds": ["c017", "c027"],
+		"nameJp": "肌の色合い",
+		"nameEn": "Skin Tones"
+	},
+	{
+		"id": "p305",
+		"colorIds": ["c050", "c126", "c084"],
+		"nameJp": "金の夜空",
+		"nameEn": "Golden Night Sky"
+	},
+	{
+		"id": "p306",
+		"colorIds": ["c057", "c093", "c101"],
+		"nameJp": "滅紫の帳",
+		"nameEn": "Faded Purple Curtain"
+	},
+	{
+		"id": "p307",
+		"colorIds": ["c024", "c037", "c095"],
+		"nameJp": "茜の暮れ",
+		"nameEn": "Madder Dusk"
+	},
+	{
+		"id": "p308",
+		"colorIds": ["c076", "c117", "c149", "c132"],
+		"nameJp": "苔の森",
+		"nameEn": "Moss Forest"
+	},
+	{
+		"id": "p309",
+		"colorIds": ["c028", "c106", "c126"],
+		"nameJp": "朱金の輝",
+		"nameEn": "Vermillion Gold Radiance"
+	},
+	{
+		"id": "p310",
+		"colorIds": ["c055", "c080", "c109"],
+		"nameJp": "碧の深み",
+		"nameEn": "Azure Depth"
+	},
+	{
+		"id": "p311",
+		"colorIds": ["c001", "c050", "c090"],
+		"nameJp": "金泥の月",
+		"nameEn": "Gold Wash Moon"
+	},
+	{
+		"id": "p312",
+		"colorIds": ["c066", "c095", "c142", "c158"],
+		"nameJp": "鼠の段",
+		"nameEn": "Mouse Gray Layers"
+	},
+	{
+		"id": "p313",
+		"colorIds": ["c031", "c041", "c048"],
+		"nameJp": "紅の壁",
+		"nameEn": "Red Wall"
+	},
+	{
+		"id": "p314",
+		"colorIds": ["c055", "c060", "c076"],
+		"nameJp": "碧の三調",
+		"nameEn": "Three Blue-Greens"
+	},
+	{
+		"id": "p315",
+		"colorIds": ["c015", "c072", "c098"],
+		"nameJp": "灰の朝",
+		"nameEn": "Ash Morning"
+	},
+	{
+		"id": "p316",
+		"colorIds": ["c037", "c044", "c050", "c081"],
+		"nameJp": "大和絵の具",
+		"nameEn": "Yamato Pigments"
+	},
+	{
+		"id": "p317",
+		"colorIds": ["c012", "c035", "c137"],
+		"nameJp": "秋の径",
+		"nameEn": "Autumn Lane"
+	},
+	{
+		"id": "p318",
+		"colorIds": ["c109", "c125"],
+		"nameJp": "瑠璃と紫",
+		"nameEn": "Lapis and Purple"
+	},
+	{
+		"id": "p319",
+		"colorIds": ["c002", "c005", "c008"],
+		"nameJp": "春の肌",
+		"nameEn": "Spring Complexion"
+	},
+	{
+		"id": "p320",
+		"colorIds": ["c080", "c084", "c090", "c095"],
+		"nameJp": "墨の五調",
+		"nameEn": "Five Ink Tones"
+	},
+	{
+		"id": "p321",
+		"colorIds": ["c106", "c111", "c126"],
+		"nameJp": "三彩の皿",
+		"nameEn": "Three-Color Plate"
+	},
+	{
+		"id": "p322",
+		"colorIds": ["c021", "c050", "c115"],
+		"nameJp": "黄金の砂",
+		"nameEn": "Golden Sand"
+	},
+	{
+		"id": "p323",
+		"colorIds": ["c008", "c044", "c081"],
+		"nameJp": "花と漆",
+		"nameEn": "Flower and Lacquer"
+	},
+	{
+		"id": "p324",
+		"colorIds": ["c082", "c132", "c156", "c149"],
+		"nameJp": "木立の道",
+		"nameEn": "Tree-lined Road"
+	},
+	{
+		"id": "p325",
+		"colorIds": ["c037", "c081", "c106"],
+		"nameJp": "能の面",
+		"nameEn": "Noh Mask"
+	},
+	{
+		"id": "p326",
+		"colorIds": ["c055", "c057", "c080"],
+		"nameJp": "蒼い月",
+		"nameEn": "Blue Moon"
+	},
+	{
+		"id": "p327",
+		"colorIds": ["c026", "c050", "c144"],
+		"nameJp": "朽葉の秋",
+		"nameEn": "Fallen Leaf Autumn"
+	},
+	{
+		"id": "p328",
+		"colorIds": ["c032", "c081", "c095", "c126"],
+		"nameJp": "祝の膳",
+		"nameEn": "Celebration Table"
+	},
+	{
+		"id": "p329",
+		"colorIds": ["c066", "c109", "c080"],
+		"nameJp": "深海の宝",
+		"nameEn": "Deep Sea Treasure"
+	},
+	{
+		"id": "p330",
+		"colorIds": ["c014", "c113", "c120"],
+		"nameJp": "花園の夕",
+		"nameEn": "Flower Garden Evening"
+	},
+	{
+		"id": "p331",
+		"colorIds": ["c050", "c081", "c095"],
+		"nameJp": "金泥の闇",
+		"nameEn": "Gold Wash Darkness"
+	},
+	{
+		"id": "p332",
+		"colorIds": ["c044", "c081", "c126", "c106"],
+		"nameJp": "日の丸の色",
+		"nameEn": "Colors of Japan"
+	},
+	{
+		"id": "p333",
+		"colorIds": ["c057", "c066", "c084"],
+		"nameJp": "紫碧の海",
+		"nameEn": "Purple-Blue Sea"
+	},
+	{
+		"id": "p334",
+		"colorIds": ["c035", "c044", "c081"],
+		"nameJp": "煉瓦の道",
+		"nameEn": "Brick Road"
+	},
+	{
+		"id": "p335",
+		"colorIds": ["c095", "c134", "c152"],
+		"nameJp": "わびの心",
+		"nameEn": "Spirit of Wabi"
+	},
+	{
+		"id": "p336",
+		"colorIds": ["c008", "c037", "c084"],
+		"nameJp": "梅と藍",
+		"nameEn": "Plum and Indigo"
+	},
+	{
+		"id": "p337",
+		"colorIds": ["c126", "c111", "c082"],
+		"nameJp": "春の野",
+		"nameEn": "Spring Field"
+	},
+	{
+		"id": "p338",
+		"colorIds": ["c028", "c050", "c090", "c126"],
+		"nameJp": "大名の宴",
+		"nameEn": "Daimyo Feast"
+	},
+	{
+		"id": "p339",
+		"colorIds": ["c002", "c015", "c095"],
+		"nameJp": "冬の茶室",
+		"nameEn": "Winter Tea Room"
+	},
+	{
+		"id": "p340",
+		"colorIds": ["c055", "c084", "c095"],
+		"nameJp": "冬の海峡",
+		"nameEn": "Winter Strait"
+	},
+	{
+		"id": "p341",
+		"colorIds": ["c044", "c048", "c095"],
+		"nameJp": "提灯の灯",
+		"nameEn": "Lantern Light"
+	},
+	{
+		"id": "p342",
+		"colorIds": ["c005", "c050", "c126", "c081"],
+		"nameJp": "黄金の国",
+		"nameEn": "Land of Gold"
+	},
+	{
+		"id": "p343",
+		"colorIds": ["c011", "c119", "c140"],
+		"nameJp": "蜂蜜の庭",
+		"nameEn": "Honey Garden"
+	},
+	{
+		"id": "p344",
+		"colorIds": ["c057", "c110", "c125"],
+		"nameJp": "紫碧の調",
+		"nameEn": "Purple-Azure Harmony"
+	},
+	{
+		"id": "p345",
+		"colorIds": ["c135", "c136", "c141"],
+		"nameJp": "利休の棚",
+		"nameEn": "Rikyu Shelf"
+	},
+	{
+		"id": "p346",
+		"colorIds": ["c037", "c044", "c081", "c095", "c159"],
+		"nameJp": "茜と墨",
+		"nameEn": "Madder and Ink"
+	},
+	{
+		"id": "p347",
+		"colorIds": ["c114", "c119", "c123", "c133"],
+		"nameJp": "紅の花園",
+		"nameEn": "Red Flower Garden"
+	},
+	{
+		"id": "p348",
+		"colorIds": ["c143", "c147", "c151", "c157", "c091"],
+		"nameJp": "石の庭",
+		"nameEn": "Stone Garden"
+	}
+]

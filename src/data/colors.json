@@ -1,0 +1,1274 @@
+[
+	{
+		"id": "c001",
+		"hex": "#E8D3B4",
+		"nameJp": "鸞鳥色",
+		"nameEn": "Luan-bird",
+		"swatchGroup": 0,
+		"combinationCount": 8
+	},
+	{
+		"id": "c002",
+		"hex": "#F5E6CC",
+		"nameJp": "鳥の子色",
+		"nameEn": "Eggshell",
+		"swatchGroup": 0,
+		"combinationCount": 13
+	},
+	{
+		"id": "c003",
+		"hex": "#F2E8D5",
+		"nameJp": "象牙色",
+		"nameEn": "Ivory",
+		"swatchGroup": 0,
+		"combinationCount": 6
+	},
+	{
+		"id": "c004",
+		"hex": "#EDDCB3",
+		"nameJp": "淡黄色",
+		"nameEn": "Pale Yellow",
+		"swatchGroup": 0,
+		"combinationCount": 3
+	},
+	{
+		"id": "c005",
+		"hex": "#F0D8A8",
+		"nameJp": "肌色",
+		"nameEn": "Skin",
+		"swatchGroup": 0,
+		"combinationCount": 14
+	},
+	{
+		"id": "c006",
+		"hex": "#E8C89E",
+		"nameJp": "小麦色",
+		"nameEn": "Wheat",
+		"swatchGroup": 0,
+		"combinationCount": 3
+	},
+	{
+		"id": "c007",
+		"hex": "#F5DEB3",
+		"nameJp": "薄香色",
+		"nameEn": "Light Incense",
+		"swatchGroup": 0,
+		"combinationCount": 7
+	},
+	{
+		"id": "c008",
+		"hex": "#E8D3D0",
+		"nameJp": "桜色",
+		"nameEn": "Cherry Blossom",
+		"swatchGroup": 0,
+		"combinationCount": 17
+	},
+	{
+		"id": "c009",
+		"hex": "#F2C9AC",
+		"nameJp": "杏色",
+		"nameEn": "Apricot",
+		"swatchGroup": 0,
+		"combinationCount": 5
+	},
+	{
+		"id": "c010",
+		"hex": "#F5E1C0",
+		"nameJp": "練色",
+		"nameEn": "Off-white Silk",
+		"swatchGroup": 0,
+		"combinationCount": 10
+	},
+	{
+		"id": "c011",
+		"hex": "#F0CEA0",
+		"nameJp": "蜂蜜色",
+		"nameEn": "Honey",
+		"swatchGroup": 0,
+		"combinationCount": 3
+	},
+	{
+		"id": "c012",
+		"hex": "#E8CDA8",
+		"nameJp": "丁子色",
+		"nameEn": "Clove",
+		"swatchGroup": 0,
+		"combinationCount": 10
+	},
+	{
+		"id": "c013",
+		"hex": "#F0D5B0",
+		"nameJp": "亜麻色",
+		"nameEn": "Flax",
+		"swatchGroup": 0,
+		"combinationCount": 3
+	},
+	{
+		"id": "c014",
+		"hex": "#F5D6C6",
+		"nameJp": "珊瑚色",
+		"nameEn": "Coral Pink",
+		"swatchGroup": 0,
+		"combinationCount": 17
+	},
+	{
+		"id": "c015",
+		"hex": "#E8DCC8",
+		"nameJp": "白茶色",
+		"nameEn": "White Tea",
+		"swatchGroup": 0,
+		"combinationCount": 5
+	},
+	{
+		"id": "c016",
+		"hex": "#F2DAB8",
+		"nameJp": "薄卵色",
+		"nameEn": "Pale Egg",
+		"swatchGroup": 0,
+		"combinationCount": 5
+	},
+	{
+		"id": "c017",
+		"hex": "#F0C8B4",
+		"nameJp": "肉色",
+		"nameEn": "Flesh",
+		"swatchGroup": 0,
+		"combinationCount": 3
+	},
+	{
+		"id": "c018",
+		"hex": "#F5E0D0",
+		"nameJp": "薄桜色",
+		"nameEn": "Pale Cherry Blossom",
+		"swatchGroup": 0,
+		"combinationCount": 7
+	},
+	{
+		"id": "c019",
+		"hex": "#E8D0B0",
+		"nameJp": "枇杷茶色",
+		"nameEn": "Loquat Tea",
+		"swatchGroup": 0,
+		"combinationCount": 3
+	},
+	{
+		"id": "c020",
+		"hex": "#F2DFC8",
+		"nameJp": "薄香色",
+		"nameEn": "Faint Incense",
+		"swatchGroup": 0,
+		"combinationCount": 4
+	},
+	{
+		"id": "c021",
+		"hex": "#E8C8A0",
+		"nameJp": "砂色",
+		"nameEn": "Sand",
+		"swatchGroup": 0,
+		"combinationCount": 9
+	},
+	{
+		"id": "c022",
+		"hex": "#F0DCC0",
+		"nameJp": "鬱金色",
+		"nameEn": "Turmeric",
+		"swatchGroup": 0,
+		"combinationCount": 7
+	},
+	{
+		"id": "c023",
+		"hex": "#F5D0A8",
+		"nameJp": "蜜柑色",
+		"nameEn": "Mandarin Light",
+		"swatchGroup": 0,
+		"combinationCount": 3
+	},
+	{
+		"id": "c024",
+		"hex": "#E8CCBA",
+		"nameJp": "薄柿色",
+		"nameEn": "Pale Persimmon",
+		"swatchGroup": 0,
+		"combinationCount": 7
+	},
+	{
+		"id": "c025",
+		"hex": "#F2E0D8",
+		"nameJp": "灰桜色",
+		"nameEn": "Ash Cherry",
+		"swatchGroup": 0,
+		"combinationCount": 3
+	},
+	{
+		"id": "c026",
+		"hex": "#E8D8C4",
+		"nameJp": "生成り色",
+		"nameEn": "Unbleached Silk",
+		"swatchGroup": 0,
+		"combinationCount": 16
+	},
+	{
+		"id": "c027",
+		"hex": "#F0D0BC",
+		"nameJp": "赤白橡色",
+		"nameEn": "Reddish White Oak",
+		"swatchGroup": 0,
+		"combinationCount": 2
+	},
+	{
+		"id": "c028",
+		"hex": "#B91C26",
+		"nameJp": "紅色",
+		"nameEn": "Crimson",
+		"swatchGroup": 1,
+		"combinationCount": 16
+	},
+	{
+		"id": "c029",
+		"hex": "#8B4513",
+		"nameJp": "栗色",
+		"nameEn": "Chestnut",
+		"swatchGroup": 1,
+		"combinationCount": 6
+	},
+	{
+		"id": "c030",
+		"hex": "#7B3F00",
+		"nameJp": "焦茶色",
+		"nameEn": "Burnt Brown",
+		"swatchGroup": 1,
+		"combinationCount": 1
+	},
+	{
+		"id": "c031",
+		"hex": "#6B2D2D",
+		"nameJp": "海老茶色",
+		"nameEn": "Maroon Brown",
+		"swatchGroup": 1,
+		"combinationCount": 9
+	},
+	{
+		"id": "c032",
+		"hex": "#B7282E",
+		"nameJp": "茜色",
+		"nameEn": "Madder",
+		"swatchGroup": 1,
+		"combinationCount": 14
+	},
+	{
+		"id": "c033",
+		"hex": "#A0522D",
+		"nameJp": "土色",
+		"nameEn": "Sienna",
+		"swatchGroup": 1,
+		"combinationCount": 5
+	},
+	{
+		"id": "c034",
+		"hex": "#8B2252",
+		"nameJp": "蘇芳色",
+		"nameEn": "Sappanwood",
+		"swatchGroup": 1,
+		"combinationCount": 2
+	},
+	{
+		"id": "c035",
+		"hex": "#9B4D2B",
+		"nameJp": "煉瓦色",
+		"nameEn": "Brick",
+		"swatchGroup": 1,
+		"combinationCount": 15
+	},
+	{
+		"id": "c036",
+		"hex": "#704214",
+		"nameJp": "褐色",
+		"nameEn": "Brown",
+		"swatchGroup": 1,
+		"combinationCount": 5
+	},
+	{
+		"id": "c037",
+		"hex": "#B5495B",
+		"nameJp": "臙脂色",
+		"nameEn": "Carmine",
+		"swatchGroup": 1,
+		"combinationCount": 25
+	},
+	{
+		"id": "c038",
+		"hex": "#A52A2A",
+		"nameJp": "赤茶色",
+		"nameEn": "Red Brown",
+		"swatchGroup": 1,
+		"combinationCount": 1
+	},
+	{
+		"id": "c039",
+		"hex": "#82422A",
+		"nameJp": "代赭色",
+		"nameEn": "Red Ochre",
+		"swatchGroup": 1,
+		"combinationCount": 3
+	},
+	{
+		"id": "c040",
+		"hex": "#C75B38",
+		"nameJp": "柿渋色",
+		"nameEn": "Persimmon Juice",
+		"swatchGroup": 1,
+		"combinationCount": 3
+	},
+	{
+		"id": "c041",
+		"hex": "#993520",
+		"nameJp": "弁柄色",
+		"nameEn": "Red Iron Oxide",
+		"swatchGroup": 1,
+		"combinationCount": 6
+	},
+	{
+		"id": "c042",
+		"hex": "#78281F",
+		"nameJp": "小豆色",
+		"nameEn": "Adzuki Bean",
+		"swatchGroup": 1,
+		"combinationCount": 2
+	},
+	{
+		"id": "c043",
+		"hex": "#8F3E2E",
+		"nameJp": "鳶色",
+		"nameEn": "Kite Brown",
+		"swatchGroup": 1,
+		"combinationCount": 4
+	},
+	{
+		"id": "c044",
+		"hex": "#C9171E",
+		"nameJp": "赤色",
+		"nameEn": "Red",
+		"swatchGroup": 1,
+		"combinationCount": 31
+	},
+	{
+		"id": "c045",
+		"hex": "#6B3624",
+		"nameJp": "錆色",
+		"nameEn": "Rust",
+		"swatchGroup": 1,
+		"combinationCount": 3
+	},
+	{
+		"id": "c046",
+		"hex": "#A84636",
+		"nameJp": "紅樺色",
+		"nameEn": "Red Birch",
+		"swatchGroup": 1,
+		"combinationCount": 5
+	},
+	{
+		"id": "c047",
+		"hex": "#5C2018",
+		"nameJp": "葡萄茶色",
+		"nameEn": "Grape Brown",
+		"swatchGroup": 1,
+		"combinationCount": 1
+	},
+	{
+		"id": "c048",
+		"hex": "#B44C43",
+		"nameJp": "紅緋色",
+		"nameEn": "Scarlet Red",
+		"swatchGroup": 1,
+		"combinationCount": 11
+	},
+	{
+		"id": "c049",
+		"hex": "#8E354A",
+		"nameJp": "紫紅色",
+		"nameEn": "Purple Red",
+		"swatchGroup": 1,
+		"combinationCount": 2
+	},
+	{
+		"id": "c050",
+		"hex": "#C4A265",
+		"nameJp": "金色",
+		"nameEn": "Gold",
+		"swatchGroup": 1,
+		"combinationCount": 26
+	},
+	{
+		"id": "c051",
+		"hex": "#D4A168",
+		"nameJp": "黄土色",
+		"nameEn": "Yellow Ochre",
+		"swatchGroup": 1,
+		"combinationCount": 4
+	},
+	{
+		"id": "c052",
+		"hex": "#9D5B2E",
+		"nameJp": "狐色",
+		"nameEn": "Fox",
+		"swatchGroup": 1,
+		"combinationCount": 2
+	},
+	{
+		"id": "c053",
+		"hex": "#7C4A2D",
+		"nameJp": "琥珀色",
+		"nameEn": "Amber",
+		"swatchGroup": 1,
+		"combinationCount": 5
+	},
+	{
+		"id": "c054",
+		"hex": "#C1D8E8",
+		"nameJp": "淡水色",
+		"nameEn": "Pale Water",
+		"swatchGroup": 2,
+		"combinationCount": 4
+	},
+	{
+		"id": "c055",
+		"hex": "#A8C8E0",
+		"nameJp": "空色",
+		"nameEn": "Sky Blue",
+		"swatchGroup": 2,
+		"combinationCount": 22
+	},
+	{
+		"id": "c056",
+		"hex": "#B0C4DE",
+		"nameJp": "薄花色",
+		"nameEn": "Pale Flower",
+		"swatchGroup": 2,
+		"combinationCount": 3
+	},
+	{
+		"id": "c057",
+		"hex": "#8B81C3",
+		"nameJp": "藤色",
+		"nameEn": "Wisteria",
+		"swatchGroup": 2,
+		"combinationCount": 23
+	},
+	{
+		"id": "c058",
+		"hex": "#C8BFE7",
+		"nameJp": "薄藤色",
+		"nameEn": "Pale Wisteria",
+		"swatchGroup": 2,
+		"combinationCount": 6
+	},
+	{
+		"id": "c059",
+		"hex": "#D3DEE8",
+		"nameJp": "白藍色",
+		"nameEn": "White Indigo",
+		"swatchGroup": 2,
+		"combinationCount": 2
+	},
+	{
+		"id": "c060",
+		"hex": "#A8D8B8",
+		"nameJp": "若緑色",
+		"nameEn": "Young Green",
+		"swatchGroup": 2,
+		"combinationCount": 11
+	},
+	{
+		"id": "c061",
+		"hex": "#B4D8C4",
+		"nameJp": "薄萌葱色",
+		"nameEn": "Pale Sprout Green",
+		"swatchGroup": 2,
+		"combinationCount": 2
+	},
+	{
+		"id": "c062",
+		"hex": "#C0D8C0",
+		"nameJp": "薄青色",
+		"nameEn": "Pale Blue-Green",
+		"swatchGroup": 2,
+		"combinationCount": 3
+	},
+	{
+		"id": "c063",
+		"hex": "#C8D8E0",
+		"nameJp": "月白色",
+		"nameEn": "Moonlight White",
+		"swatchGroup": 2,
+		"combinationCount": 1
+	},
+	{
+		"id": "c064",
+		"hex": "#B0B8C8",
+		"nameJp": "薄鼠色",
+		"nameEn": "Pale Mouse Gray",
+		"swatchGroup": 2,
+		"combinationCount": 5
+	},
+	{
+		"id": "c065",
+		"hex": "#C8C0D8",
+		"nameJp": "白菫色",
+		"nameEn": "White Violet",
+		"swatchGroup": 2,
+		"combinationCount": 3
+	},
+	{
+		"id": "c066",
+		"hex": "#A0C0D0",
+		"nameJp": "水色",
+		"nameEn": "Water Blue",
+		"swatchGroup": 2,
+		"combinationCount": 18
+	},
+	{
+		"id": "c067",
+		"hex": "#9CC0B8",
+		"nameJp": "青磁色",
+		"nameEn": "Celadon",
+		"swatchGroup": 2,
+		"combinationCount": 4
+	},
+	{
+		"id": "c068",
+		"hex": "#D0D0D8",
+		"nameJp": "銀鼠色",
+		"nameEn": "Silver Gray",
+		"swatchGroup": 2,
+		"combinationCount": 2
+	},
+	{
+		"id": "c069",
+		"hex": "#B8D0E0",
+		"nameJp": "甕覗色",
+		"nameEn": "Jar-peek Blue",
+		"swatchGroup": 2,
+		"combinationCount": 11
+	},
+	{
+		"id": "c070",
+		"hex": "#C4D8D0",
+		"nameJp": "白緑色",
+		"nameEn": "White Green",
+		"swatchGroup": 2,
+		"combinationCount": 2
+	},
+	{
+		"id": "c071",
+		"hex": "#A8B8D0",
+		"nameJp": "勿忘草色",
+		"nameEn": "Forget-me-not",
+		"swatchGroup": 2,
+		"combinationCount": 5
+	},
+	{
+		"id": "c072",
+		"hex": "#C8D0D8",
+		"nameJp": "灰青色",
+		"nameEn": "Gray Blue",
+		"swatchGroup": 2,
+		"combinationCount": 2
+	},
+	{
+		"id": "c073",
+		"hex": "#B0C8B8",
+		"nameJp": "錆青磁色",
+		"nameEn": "Patina Celadon",
+		"swatchGroup": 2,
+		"combinationCount": 4
+	},
+	{
+		"id": "c074",
+		"hex": "#A0B0C8",
+		"nameJp": "淡藤色",
+		"nameEn": "Light Wisteria Blue",
+		"swatchGroup": 2,
+		"combinationCount": 4
+	},
+	{
+		"id": "c075",
+		"hex": "#C0C8D0",
+		"nameJp": "藍白色",
+		"nameEn": "Indigo White",
+		"swatchGroup": 2,
+		"combinationCount": 1
+	},
+	{
+		"id": "c076",
+		"hex": "#98C8A8",
+		"nameJp": "薄緑色",
+		"nameEn": "Pale Green",
+		"swatchGroup": 2,
+		"combinationCount": 10
+	},
+	{
+		"id": "c077",
+		"hex": "#B8C0D8",
+		"nameJp": "淡紫色",
+		"nameEn": "Pale Violet",
+		"swatchGroup": 2,
+		"combinationCount": 6
+	},
+	{
+		"id": "c078",
+		"hex": "#A8D0D8",
+		"nameJp": "瓶覗色",
+		"nameEn": "Bottle-peek Blue",
+		"swatchGroup": 2,
+		"combinationCount": 3
+	},
+	{
+		"id": "c079",
+		"hex": "#D0D8D0",
+		"nameJp": "白鼠色",
+		"nameEn": "White Mouse",
+		"swatchGroup": 2,
+		"combinationCount": 2
+	},
+	{
+		"id": "c080",
+		"hex": "#164A84",
+		"nameJp": "藍色",
+		"nameEn": "Indigo",
+		"swatchGroup": 3,
+		"combinationCount": 20
+	},
+	{
+		"id": "c081",
+		"hex": "#1C1C1C",
+		"nameJp": "墨色",
+		"nameEn": "Ink Black",
+		"swatchGroup": 3,
+		"combinationCount": 42
+	},
+	{
+		"id": "c082",
+		"hex": "#1B3D2F",
+		"nameJp": "深緑色",
+		"nameEn": "Deep Green",
+		"swatchGroup": 3,
+		"combinationCount": 13
+	},
+	{
+		"id": "c083",
+		"hex": "#2E2E3A",
+		"nameJp": "鉄紺色",
+		"nameEn": "Iron Navy",
+		"swatchGroup": 3,
+		"combinationCount": 3
+	},
+	{
+		"id": "c084",
+		"hex": "#3A3A50",
+		"nameJp": "紺色",
+		"nameEn": "Dark Blue",
+		"swatchGroup": 3,
+		"combinationCount": 24
+	},
+	{
+		"id": "c085",
+		"hex": "#3C4452",
+		"nameJp": "藍鉄色",
+		"nameEn": "Indigo Iron",
+		"swatchGroup": 3,
+		"combinationCount": 1
+	},
+	{
+		"id": "c086",
+		"hex": "#4A3A5C",
+		"nameJp": "紫紺色",
+		"nameEn": "Purple Navy",
+		"swatchGroup": 3,
+		"combinationCount": 5
+	},
+	{
+		"id": "c087",
+		"hex": "#1E4D2B",
+		"nameJp": "常磐色",
+		"nameEn": "Evergreen",
+		"swatchGroup": 3,
+		"combinationCount": 14
+	},
+	{
+		"id": "c088",
+		"hex": "#26453C",
+		"nameJp": "千歳緑色",
+		"nameEn": "Thousand Year Green",
+		"swatchGroup": 3,
+		"combinationCount": 1
+	},
+	{
+		"id": "c089",
+		"hex": "#354E4B",
+		"nameJp": "青緑色",
+		"nameEn": "Blue-Green",
+		"swatchGroup": 3,
+		"combinationCount": 4
+	},
+	{
+		"id": "c090",
+		"hex": "#2C2C38",
+		"nameJp": "漆黒色",
+		"nameEn": "Jet Black",
+		"swatchGroup": 3,
+		"combinationCount": 16
+	},
+	{
+		"id": "c091",
+		"hex": "#3C3C50",
+		"nameJp": "勝色",
+		"nameEn": "Victory Blue",
+		"swatchGroup": 3,
+		"combinationCount": 1
+	},
+	{
+		"id": "c092",
+		"hex": "#3A5068",
+		"nameJp": "御召茶色",
+		"nameEn": "Noble Tea",
+		"swatchGroup": 3,
+		"combinationCount": 7
+	},
+	{
+		"id": "c093",
+		"hex": "#4C3A60",
+		"nameJp": "滅紫色",
+		"nameEn": "Faded Purple",
+		"swatchGroup": 3,
+		"combinationCount": 2
+	},
+	{
+		"id": "c094",
+		"hex": "#2A4A34",
+		"nameJp": "深緑青色",
+		"nameEn": "Deep Blue-Green",
+		"swatchGroup": 3,
+		"combinationCount": 8
+	},
+	{
+		"id": "c095",
+		"hex": "#424242",
+		"nameJp": "消炭色",
+		"nameEn": "Charcoal",
+		"swatchGroup": 3,
+		"combinationCount": 35
+	},
+	{
+		"id": "c096",
+		"hex": "#1A3050",
+		"nameJp": "濃紺色",
+		"nameEn": "Deep Navy",
+		"swatchGroup": 3,
+		"combinationCount": 4
+	},
+	{
+		"id": "c097",
+		"hex": "#2E4040",
+		"nameJp": "鉄色",
+		"nameEn": "Iron",
+		"swatchGroup": 3,
+		"combinationCount": 1
+	},
+	{
+		"id": "c098",
+		"hex": "#383838",
+		"nameJp": "煤色",
+		"nameEn": "Soot",
+		"swatchGroup": 3,
+		"combinationCount": 11
+	},
+	{
+		"id": "c099",
+		"hex": "#1C2D4A",
+		"nameJp": "留紺色",
+		"nameEn": "Fixed Navy",
+		"swatchGroup": 3,
+		"combinationCount": 1
+	},
+	{
+		"id": "c100",
+		"hex": "#345038",
+		"nameJp": "深松葉色",
+		"nameEn": "Deep Pine",
+		"swatchGroup": 3,
+		"combinationCount": 7
+	},
+	{
+		"id": "c101",
+		"hex": "#3C2A4C",
+		"nameJp": "深紫色",
+		"nameEn": "Deep Purple",
+		"swatchGroup": 3,
+		"combinationCount": 7
+	},
+	{
+		"id": "c102",
+		"hex": "#2A3A2A",
+		"nameJp": "暗緑色",
+		"nameEn": "Dark Green",
+		"swatchGroup": 3,
+		"combinationCount": 1
+	},
+	{
+		"id": "c103",
+		"hex": "#303848",
+		"nameJp": "暗藍色",
+		"nameEn": "Dark Indigo",
+		"swatchGroup": 3,
+		"combinationCount": 4
+	},
+	{
+		"id": "c104",
+		"hex": "#504050",
+		"nameJp": "茄子紺色",
+		"nameEn": "Eggplant Navy",
+		"swatchGroup": 3,
+		"combinationCount": 1
+	},
+	{
+		"id": "c105",
+		"hex": "#284050",
+		"nameJp": "碧色",
+		"nameEn": "Deep Azure",
+		"swatchGroup": 3,
+		"combinationCount": 5
+	},
+	{
+		"id": "c106",
+		"hex": "#E34234",
+		"nameJp": "朱色",
+		"nameEn": "Vermillion",
+		"swatchGroup": 4,
+		"combinationCount": 19
+	},
+	{
+		"id": "c107",
+		"hex": "#FF6347",
+		"nameJp": "橙赤色",
+		"nameEn": "Orange Red",
+		"swatchGroup": 4,
+		"combinationCount": 7
+	},
+	{
+		"id": "c108",
+		"hex": "#E35562",
+		"nameJp": "韓紅色",
+		"nameEn": "Chinese Red",
+		"swatchGroup": 4,
+		"combinationCount": 2
+	},
+	{
+		"id": "c109",
+		"hex": "#2050A0",
+		"nameJp": "瑠璃色",
+		"nameEn": "Lapis Lazuli",
+		"swatchGroup": 4,
+		"combinationCount": 16
+	},
+	{
+		"id": "c110",
+		"hex": "#3060A8",
+		"nameJp": "群青色",
+		"nameEn": "Ultramarine",
+		"swatchGroup": 4,
+		"combinationCount": 8
+	},
+	{
+		"id": "c111",
+		"hex": "#7BA23F",
+		"nameJp": "若草色",
+		"nameEn": "Young Grass",
+		"swatchGroup": 4,
+		"combinationCount": 13
+	},
+	{
+		"id": "c112",
+		"hex": "#3CB371",
+		"nameJp": "翠色",
+		"nameEn": "Emerald",
+		"swatchGroup": 4,
+		"combinationCount": 4
+	},
+	{
+		"id": "c113",
+		"hex": "#DA508C",
+		"nameJp": "牡丹色",
+		"nameEn": "Peony",
+		"swatchGroup": 4,
+		"combinationCount": 6
+	},
+	{
+		"id": "c114",
+		"hex": "#C850A0",
+		"nameJp": "躑躅色",
+		"nameEn": "Azalea",
+		"swatchGroup": 4,
+		"combinationCount": 1
+	},
+	{
+		"id": "c115",
+		"hex": "#F0A030",
+		"nameJp": "山吹色",
+		"nameEn": "Japanese Gold",
+		"swatchGroup": 4,
+		"combinationCount": 14
+	},
+	{
+		"id": "c116",
+		"hex": "#E8A020",
+		"nameJp": "向日葵色",
+		"nameEn": "Sunflower",
+		"swatchGroup": 4,
+		"combinationCount": 4
+	},
+	{
+		"id": "c117",
+		"hex": "#40A860",
+		"nameJp": "緑色",
+		"nameEn": "Green",
+		"swatchGroup": 4,
+		"combinationCount": 10
+	},
+	{
+		"id": "c118",
+		"hex": "#2878A8",
+		"nameJp": "花浅葱色",
+		"nameEn": "Flower Blue",
+		"swatchGroup": 4,
+		"combinationCount": 5
+	},
+	{
+		"id": "c119",
+		"hex": "#D0504C",
+		"nameJp": "鴇色",
+		"nameEn": "Crested Ibis",
+		"swatchGroup": 4,
+		"combinationCount": 2
+	},
+	{
+		"id": "c120",
+		"hex": "#8040B0",
+		"nameJp": "菖蒲色",
+		"nameEn": "Iris",
+		"swatchGroup": 4,
+		"combinationCount": 4
+	},
+	{
+		"id": "c121",
+		"hex": "#D06020",
+		"nameJp": "蜜柑色",
+		"nameEn": "Mandarin Orange",
+		"swatchGroup": 4,
+		"combinationCount": 2
+	},
+	{
+		"id": "c122",
+		"hex": "#48B0D8",
+		"nameJp": "浅葱色",
+		"nameEn": "Light Onion Blue",
+		"swatchGroup": 4,
+		"combinationCount": 11
+	},
+	{
+		"id": "c123",
+		"hex": "#C84050",
+		"nameJp": "緋色",
+		"nameEn": "Scarlet",
+		"swatchGroup": 4,
+		"combinationCount": 2
+	},
+	{
+		"id": "c124",
+		"hex": "#50A030",
+		"nameJp": "萌黄色",
+		"nameEn": "Sprouting Yellow-Green",
+		"swatchGroup": 4,
+		"combinationCount": 3
+	},
+	{
+		"id": "c125",
+		"hex": "#9050C8",
+		"nameJp": "紫色",
+		"nameEn": "Purple",
+		"swatchGroup": 4,
+		"combinationCount": 14
+	},
+	{
+		"id": "c126",
+		"hex": "#E8C818",
+		"nameJp": "黄色",
+		"nameEn": "Yellow",
+		"swatchGroup": 4,
+		"combinationCount": 22
+	},
+	{
+		"id": "c127",
+		"hex": "#3888C0",
+		"nameJp": "露草色",
+		"nameEn": "Dayflower Blue",
+		"swatchGroup": 4,
+		"combinationCount": 3
+	},
+	{
+		"id": "c128",
+		"hex": "#E0505C",
+		"nameJp": "薔薇色",
+		"nameEn": "Rose",
+		"swatchGroup": 4,
+		"combinationCount": 5
+	},
+	{
+		"id": "c129",
+		"hex": "#20A078",
+		"nameJp": "青竹色",
+		"nameEn": "Green Bamboo",
+		"swatchGroup": 4,
+		"combinationCount": 2
+	},
+	{
+		"id": "c130",
+		"hex": "#D84080",
+		"nameJp": "紅梅色",
+		"nameEn": "Red Plum",
+		"swatchGroup": 4,
+		"combinationCount": 5
+	},
+	{
+		"id": "c131",
+		"hex": "#F08030",
+		"nameJp": "柿色",
+		"nameEn": "Persimmon",
+		"swatchGroup": 4,
+		"combinationCount": 4
+	},
+	{
+		"id": "c132",
+		"hex": "#6B8E4E",
+		"nameJp": "草色",
+		"nameEn": "Grass",
+		"swatchGroup": 5,
+		"combinationCount": 10
+	},
+	{
+		"id": "c133",
+		"hex": "#8B8455",
+		"nameJp": "鶯色",
+		"nameEn": "Warbler",
+		"swatchGroup": 5,
+		"combinationCount": 1
+	},
+	{
+		"id": "c134",
+		"hex": "#6B6B50",
+		"nameJp": "鶯茶色",
+		"nameEn": "Warbler Brown",
+		"swatchGroup": 5,
+		"combinationCount": 7
+	},
+	{
+		"id": "c135",
+		"hex": "#8C7D5C",
+		"nameJp": "丁子茶色",
+		"nameEn": "Clove Brown",
+		"swatchGroup": 5,
+		"combinationCount": 1
+	},
+	{
+		"id": "c136",
+		"hex": "#807850",
+		"nameJp": "海松色",
+		"nameEn": "Sea Pine",
+		"swatchGroup": 5,
+		"combinationCount": 2
+	},
+	{
+		"id": "c137",
+		"hex": "#A09060",
+		"nameJp": "利休茶色",
+		"nameEn": "Rikyu Tea",
+		"swatchGroup": 5,
+		"combinationCount": 12
+	},
+	{
+		"id": "c138",
+		"hex": "#686850",
+		"nameJp": "橄欖色",
+		"nameEn": "Olive",
+		"swatchGroup": 5,
+		"combinationCount": 1
+	},
+	{
+		"id": "c139",
+		"hex": "#B0A080",
+		"nameJp": "亜麻色",
+		"nameEn": "Flaxen",
+		"swatchGroup": 5,
+		"combinationCount": 5
+	},
+	{
+		"id": "c140",
+		"hex": "#C0B090",
+		"nameJp": "枯草色",
+		"nameEn": "Dried Grass",
+		"swatchGroup": 5,
+		"combinationCount": 2
+	},
+	{
+		"id": "c141",
+		"hex": "#A08858",
+		"nameJp": "黄橡色",
+		"nameEn": "Yellow Oak",
+		"swatchGroup": 5,
+		"combinationCount": 3
+	},
+	{
+		"id": "c142",
+		"hex": "#989078",
+		"nameJp": "鼠色",
+		"nameEn": "Mouse Gray",
+		"swatchGroup": 5,
+		"combinationCount": 14
+	},
+	{
+		"id": "c143",
+		"hex": "#A09880",
+		"nameJp": "灰汁色",
+		"nameEn": "Lye",
+		"swatchGroup": 5,
+		"combinationCount": 1
+	},
+	{
+		"id": "c144",
+		"hex": "#887860",
+		"nameJp": "朽葉色",
+		"nameEn": "Decayed Leaf",
+		"swatchGroup": 5,
+		"combinationCount": 7
+	},
+	{
+		"id": "c145",
+		"hex": "#707860",
+		"nameJp": "松葉色",
+		"nameEn": "Pine Needle",
+		"swatchGroup": 5,
+		"combinationCount": 1
+	},
+	{
+		"id": "c146",
+		"hex": "#8C8070",
+		"nameJp": "煤竹色",
+		"nameEn": "Smoked Bamboo",
+		"swatchGroup": 5,
+		"combinationCount": 5
+	},
+	{
+		"id": "c147",
+		"hex": "#B8A888",
+		"nameJp": "砥粉色",
+		"nameEn": "Powder Stone",
+		"swatchGroup": 5,
+		"combinationCount": 1
+	},
+	{
+		"id": "c148",
+		"hex": "#908068",
+		"nameJp": "胡桃色",
+		"nameEn": "Walnut",
+		"swatchGroup": 5,
+		"combinationCount": 2
+	},
+	{
+		"id": "c149",
+		"hex": "#788060",
+		"nameJp": "苔色",
+		"nameEn": "Moss",
+		"swatchGroup": 5,
+		"combinationCount": 4
+	},
+	{
+		"id": "c150",
+		"hex": "#A89880",
+		"nameJp": "石色",
+		"nameEn": "Stone",
+		"swatchGroup": 5,
+		"combinationCount": 6
+	},
+	{
+		"id": "c151",
+		"hex": "#B0A898",
+		"nameJp": "素鼠色",
+		"nameEn": "Pure Mouse",
+		"swatchGroup": 5,
+		"combinationCount": 1
+	},
+	{
+		"id": "c152",
+		"hex": "#989080",
+		"nameJp": "茶鼠色",
+		"nameEn": "Tea Mouse",
+		"swatchGroup": 5,
+		"combinationCount": 3
+	},
+	{
+		"id": "c153",
+		"hex": "#686058",
+		"nameJp": "焦茶鼠色",
+		"nameEn": "Dark Brown Mouse",
+		"swatchGroup": 5,
+		"combinationCount": 2
+	},
+	{
+		"id": "c154",
+		"hex": "#807868",
+		"nameJp": "路考茶色",
+		"nameEn": "Road Tea",
+		"swatchGroup": 5,
+		"combinationCount": 2
+	},
+	{
+		"id": "c155",
+		"hex": "#A09070",
+		"nameJp": "白橡色",
+		"nameEn": "White Oak",
+		"swatchGroup": 5,
+		"combinationCount": 3
+	},
+	{
+		"id": "c156",
+		"hex": "#90A080",
+		"nameJp": "柳染色",
+		"nameEn": "Willow Dye",
+		"swatchGroup": 5,
+		"combinationCount": 3
+	},
+	{
+		"id": "c157",
+		"hex": "#C8B898",
+		"nameJp": "鳥の子茶色",
+		"nameEn": "Egg Brown",
+		"swatchGroup": 5,
+		"combinationCount": 1
+	},
+	{
+		"id": "c158",
+		"hex": "#787870",
+		"nameJp": "灰色",
+		"nameEn": "Gray",
+		"swatchGroup": 5,
+		"combinationCount": 7
+	},
+	{
+		"id": "c159",
+		"hex": "#706858",
+		"nameJp": "丁子鼠色",
+		"nameEn": "Clove Mouse",
+		"swatchGroup": 5,
+		"combinationCount": 1
+	}
+]
