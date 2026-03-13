@@ -219,6 +219,34 @@ describe("PaletteStrip", () => {
 		).toBeNull();
 	});
 
+	// === FR9 — Navigate to Outfit Visualizer ===
+
+	it("navigates to OutfitVisualizer when pressing the visualize button", () => {
+		render(
+			<PaletteStrip combination={threeColorCombo} selectedColorId="c001" />,
+		);
+
+		fireEvent.press(screen.getByTestId("visualize-outfit-combo-3"));
+
+		expect(mockPush).toHaveBeenCalledWith("OutfitVisualizer", {
+			combinationId: "combo-3",
+		});
+	});
+
+	it("fires hapticLight when pressing the visualize button", () => {
+		render(<PaletteStrip combination={twoColorCombo} selectedColorId="c001" />);
+
+		fireEvent.press(screen.getByTestId("visualize-outfit-combo-2"));
+
+		expect(hapticLight).toHaveBeenCalled();
+	});
+
+	it("has accessibility label on visualize button", () => {
+		render(<PaletteStrip combination={twoColorCombo} selectedColorId="c001" />);
+
+		expect(screen.getByLabelText("Visualize outfit")).toBeTruthy();
+	});
+
 	it("skips opacity press feedback when reduced motion is enabled", () => {
 		mockUseReducedMotion.mockReturnValue(true);
 

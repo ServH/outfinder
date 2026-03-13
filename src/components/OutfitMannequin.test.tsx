@@ -1,8 +1,13 @@
 import { render, screen } from "@testing-library/react-native";
 
 import type { Color } from "@/data/types";
+import type { SlotState } from "@/hooks/useOutfitState";
 
 import { OutfitMannequin } from "./OutfitMannequin";
+
+jest.mock("@/hooks/useReducedMotion", () => ({
+	useReducedMotion: () => false,
+}));
 
 function makeColor(
 	overrides: Partial<Color> & { hex: string; nameEn: string },
@@ -21,106 +26,141 @@ const blue = makeColor({ id: "c2", hex: "#0000ff", nameEn: "Blue" });
 const green = makeColor({ id: "c3", hex: "#00ff00", nameEn: "Green" });
 const yellow = makeColor({ id: "c4", hex: "#ffff00", nameEn: "Yellow" });
 
+const mockOnSlotTap = jest.fn();
+const mockOnVariantToggle = jest.fn();
+
+function makeSlots(
+	configs: { garmentType: string; color: Color }[],
+): SlotState[] {
+	return configs.map((c) => ({
+		garmentType: c.garmentType as SlotState["garmentType"],
+		color: c.color,
+	}));
+}
+
 describe("OutfitMannequin", () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
 	describe("2-color combination", () => {
+		const slots = makeSlots([
+			{ garmentType: "top-tshirt", color: red },
+			{ garmentType: "bottom-pants", color: blue },
+		]);
+
 		it("renders top + bottom slots", () => {
-			render(<OutfitMannequin colors={[red, blue]} />);
-
-			expect(screen.getByLabelText("T-shirt, colored Red")).toBeTruthy();
-			expect(screen.getByLabelText("Pants, colored Blue")).toBeTruthy();
-		});
-
-		it("assigns colors in top-to-bottom order", () => {
-			const { toJSON } = render(<OutfitMannequin colors={[red, blue]} />);
-
-			const mannequin = toJSON();
-			const slots = mannequin.children;
-			expect(slots).toHaveLength(2);
-
-			// First slot: top-tshirt with red
-			const topImage = slots[0].children[0];
-			expect(topImage.props.style).toEqual(
-				expect.objectContaining({ tintColor: "#ff0000" }),
+			render(
+				<OutfitMannequin
+					slots={slots}
+					selectedSlotIndex={null}
+					onSlotTap={mockOnSlotTap}
+					onVariantToggle={mockOnVariantToggle}
+				/>,
 			);
 
-			// Second slot: bottom-pants with blue
-			const bottomImage = slots[1].children[0];
-			expect(bottomImage.props.style).toEqual(
-				expect.objectContaining({ tintColor: "#0000ff" }),
-			);
+			expect(
+				screen.getByLabelText("T-shirt, colored Red, tap to select for swap"),
+			).toBeTruthy();
+			expect(
+				screen.getByLabelText("Pants, colored Blue, tap to select for swap"),
+			).toBeTruthy();
 		});
 	});
 
 	describe("3-color combination", () => {
+		const slots = makeSlots([
+			{ garmentType: "top-tshirt", color: red },
+			{ garmentType: "bottom-pants", color: blue },
+			{ garmentType: "shoes-sneakers", color: green },
+		]);
+
 		it("renders top + bottom + shoes slots", () => {
-			render(<OutfitMannequin colors={[red, blue, green]} />);
-
-			expect(screen.getByLabelText("T-shirt, colored Red")).toBeTruthy();
-			expect(screen.getByLabelText("Pants, colored Blue")).toBeTruthy();
-			expect(screen.getByLabelText("Sneakers, colored Green")).toBeTruthy();
-		});
-
-		it("assigns colors in top-to-bottom order", () => {
-			const { toJSON } = render(
-				<OutfitMannequin colors={[red, blue, green]} />,
+			render(
+				<OutfitMannequin
+					slots={slots}
+					selectedSlotIndex={null}
+					onSlotTap={mockOnSlotTap}
+					onVariantToggle={mockOnVariantToggle}
+				/>,
 			);
 
-			const mannequin = toJSON();
-			const slots = mannequin.children;
-			expect(slots).toHaveLength(3);
-
-			const topImage = slots[0].children[0];
-			expect(topImage.props.style).toEqual(
-				expect.objectContaining({ tintColor: "#ff0000" }),
-			);
-
-			const shoesImage = slots[2].children[0];
-			expect(shoesImage.props.style).toEqual(
-				expect.objectContaining({ tintColor: "#00ff00" }),
-			);
+			expect(
+				screen.getByLabelText("T-shirt, colored Red, tap to select for swap"),
+			).toBeTruthy();
+			expect(
+				screen.getByLabelText("Pants, colored Blue, tap to select for swap"),
+			).toBeTruthy();
+			expect(
+				screen.getByLabelText(
+					"Sneakers, colored Green, tap to select for swap",
+				),
+			).toBeTruthy();
 		});
 	});
 
 	describe("4-color combination", () => {
+		const slots = makeSlots([
+			{ garmentType: "layer-jacket", color: red },
+			{ garmentType: "top-tshirt", color: blue },
+			{ garmentType: "bottom-pants", color: green },
+			{ garmentType: "shoes-sneakers", color: yellow },
+		]);
+
 		it("renders layer + top + bottom + shoes slots", () => {
-			render(<OutfitMannequin colors={[red, blue, green, yellow]} />);
-
-			expect(screen.getByLabelText("Jacket, colored Red")).toBeTruthy();
-			expect(screen.getByLabelText("T-shirt, colored Blue")).toBeTruthy();
-			expect(screen.getByLabelText("Pants, colored Green")).toBeTruthy();
-			expect(screen.getByLabelText("Sneakers, colored Yellow")).toBeTruthy();
-		});
-
-		it("assigns colors in top-to-bottom order", () => {
-			const { toJSON } = render(
-				<OutfitMannequin colors={[red, blue, green, yellow]} />,
+			render(
+				<OutfitMannequin
+					slots={slots}
+					selectedSlotIndex={null}
+					onSlotTap={mockOnSlotTap}
+					onVariantToggle={mockOnVariantToggle}
+				/>,
 			);
 
-			const mannequin = toJSON();
-			const slots = mannequin.children;
-			expect(slots).toHaveLength(4);
-
-			const jacketImage = slots[0].children[0];
-			expect(jacketImage.props.style).toEqual(
-				expect.objectContaining({ tintColor: "#ff0000" }),
-			);
-
-			const shoesImage = slots[3].children[0];
-			expect(shoesImage.props.style).toEqual(
-				expect.objectContaining({ tintColor: "#ffff00" }),
-			);
+			expect(
+				screen.getByLabelText("Jacket, colored Red, tap to select for swap"),
+			).toBeTruthy();
+			expect(
+				screen.getByLabelText("T-shirt, colored Blue, tap to select for swap"),
+			).toBeTruthy();
+			expect(
+				screen.getByLabelText("Pants, colored Green, tap to select for swap"),
+			).toBeTruthy();
+			expect(
+				screen.getByLabelText(
+					"Sneakers, colored Yellow, tap to select for swap",
+				),
+			).toBeTruthy();
 		});
 	});
 
-	it("renders nothing for unsupported color count", () => {
-		const single = makeColor({ hex: "#ff0000", nameEn: "Red" });
-		const { toJSON } = render(<OutfitMannequin colors={[single]} />);
+	it("renders nothing for empty slots", () => {
+		const { toJSON } = render(
+			<OutfitMannequin
+				slots={[]}
+				selectedSlotIndex={null}
+				onSlotTap={mockOnSlotTap}
+				onVariantToggle={mockOnVariantToggle}
+			/>,
+		);
 
 		expect(toJSON()).toBeNull();
 	});
 
 	it("has outfit mannequin accessibility label", () => {
-		render(<OutfitMannequin colors={[red, blue]} />);
+		const slots = makeSlots([
+			{ garmentType: "top-tshirt", color: red },
+			{ garmentType: "bottom-pants", color: blue },
+		]);
+
+		render(
+			<OutfitMannequin
+				slots={slots}
+				selectedSlotIndex={null}
+				onSlotTap={mockOnSlotTap}
+				onVariantToggle={mockOnVariantToggle}
+			/>,
+		);
 
 		expect(screen.getByLabelText("Outfit mannequin")).toBeTruthy();
 	});

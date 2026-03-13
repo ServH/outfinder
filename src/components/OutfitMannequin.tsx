@@ -1,44 +1,41 @@
 import { View } from "react-native";
 
-import type { GarmentType } from "@/components/garments/index";
-import type { Color } from "@/data/types";
+import type { SlotState } from "@/hooks/useOutfitState";
 
 import { GarmentSlot } from "./GarmentSlot";
 
-interface SlotData {
-	garmentType: GarmentType;
-	color: Color;
-}
-
 export interface OutfitMannequinProps {
-	colors: Color[];
+	slots: SlotState[];
+	selectedSlotIndex: number | null;
+	onSlotTap: (index: number) => void;
+	onVariantToggle: (index: number) => void;
 }
 
-const SLOT_CONFIGS: Record<number, GarmentType[]> = {
-	2: ["top-tshirt", "bottom-pants"],
-	3: ["top-tshirt", "bottom-pants", "shoes-sneakers"],
-	4: ["layer-jacket", "top-tshirt", "bottom-pants", "shoes-sneakers"],
-};
-
-export function OutfitMannequin({ colors }: OutfitMannequinProps) {
-	const garmentTypes = SLOT_CONFIGS[colors.length];
-	if (!garmentTypes) {
+export function OutfitMannequin({
+	slots,
+	selectedSlotIndex,
+	onSlotTap,
+	onVariantToggle,
+}: OutfitMannequinProps) {
+	if (slots.length === 0) {
 		return null;
 	}
 
-	const slots: SlotData[] = garmentTypes.map((garmentType, index) => ({
-		garmentType,
-		color: colors[index],
-	}));
-
 	return (
-		<View className="items-center gap-1" accessibilityLabel="Outfit mannequin">
-			{slots.map((slot) => (
+		<View
+			style={{ width: 192, alignSelf: "center" }}
+			accessibilityLabel="Outfit mannequin"
+		>
+			{slots.map((slot, index) => (
 				<GarmentSlot
-					key={slot.garmentType}
+					// biome-ignore lint/suspicious/noArrayIndexKey: slot position is stable; color.id moves on swap breaking animations
+					key={index}
 					garmentType={slot.garmentType}
 					color={slot.color.hex}
 					colorName={slot.color.nameEn}
+					isSelected={selectedSlotIndex === index}
+					onTap={() => onSlotTap(index)}
+					onVariantToggle={() => onVariantToggle(index)}
 				/>
 			))}
 		</View>

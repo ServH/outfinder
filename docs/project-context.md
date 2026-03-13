@@ -34,6 +34,7 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 - **Epic 2: IN PROGRESS** — Outfit Visualization
   - Story 2.0: DONE — Garment SVG research, PNG + tintColor approved
   - Story 2.1: DONE — PNG garment silhouettes + OutfitMannequin (132 tests total)
+  - Story 2.2: DONE — Tap-swap, garment toggle, PaletteBar (157 tests total)
 - Epics 3-6: Backlog
 - 6 epics planned, 15+ stories total
 - Planning validated: implementation readiness passed 2026-03-12
@@ -55,8 +56,9 @@ outfinder/
 │   │   ├── ColorHeader.tsx          # 40x40 swatch + JP/EN names + combination count
 │   │   ├── PaletteStrip.tsx         # 2-4 color rectangles, cross-navigation, haptics, selected dot
 │   │   ├── CombinationList.tsx      # FlatList of PaletteStrips with 24px spacing + dividers
-│   │   ├── GarmentSlot.tsx          # Renders a garment from registry with color via tintColor, a11y role button
-│   │   ├── OutfitMannequin.tsx      # Vertically stacks GarmentSlots, auto-assigns colors, 2/3/4 slot configs
+│   │   ├── GarmentSlot.tsx          # Interactive garment slot — Pressable with selected state border, variant toggle, Reanimated animations
+│   │   ├── OutfitMannequin.tsx      # Vertically stacks GarmentSlots with interactive props from useOutfitState
+│   │   ├── PaletteBar.tsx           # Horizontal row of color swatches with JP names, reflects slot assignments
 │   │   └── garments/
 │   │       ├── index.ts             # GARMENT_REGISTRY — GarmentType union, GarmentConfig, 8 garment mappings
 │   │       ├── TopTShirt.tsx         # PNG + tintColor Image wrapper
@@ -73,6 +75,7 @@ outfinder/
 │   │   ├── combinations.json        # 348 Wada palettes (id, colorIds[], nameJp, nameEn)
 │   │   └── colorIndex.ts            # Pre-computed Map indexes — O(1) lookups: getColor, getCombination, getCombinations, getColorsByGroup, getAllColors, getAllCombinations
 │   ├── hooks/
+│   │   ├── useOutfitState.ts        # Outfit state hook — slots, selectedSlotIndex, selectSlot (tap-swap), toggleVariant
 │   │   └── useReducedMotion.ts      # AccessibilityInfo.isReduceMotionEnabled() + listener
 │   ├── lib/
 │   │   └── haptics.ts               # hapticLight(), hapticMedium(), hapticRigid() — all with try/catch + .catch()
@@ -85,7 +88,7 @@ outfinder/
 │   ├── screens/
 │   │   ├── ColorHome.tsx            # Grid of 159 colors with tab filtering by swatch family
 │   │   ├── Combinations.tsx         # ColorHeader + CombinationList for selected color
-│   │   ├── OutfitVisualizer.tsx     # Outfit visualization with garment silhouettes (Story 2.1)
+│   │   ├── OutfitVisualizer.tsx     # Outfit visualization with tap-swap, garment toggle, PaletteBar, haptics, VoiceOver (Story 2.2)
 │   │   ├── FavoritesList.tsx        # PLACEHOLDER — Epic 4 implements
 │   │   └── Settings.tsx             # PLACEHOLDER — Epic 6 implements
 │   ├── styles/
