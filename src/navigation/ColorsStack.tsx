@@ -41,7 +41,12 @@ export function ColorsStack() {
 			<Stack.Screen
 				name="OutfitVisualizer"
 				component={OutfitVisualizer}
-				options={{ title: "Outfit" }}
+				options={{
+					title: "Outfit Visualizer",
+					headerStyle: { backgroundColor: wadaTokens.navBarBg },
+					headerTintColor: wadaTokens.textPrimary,
+					headerBackTitle: "",
+				}}
 			/>
 			<Stack.Screen
 				name="GarmentPoC"
