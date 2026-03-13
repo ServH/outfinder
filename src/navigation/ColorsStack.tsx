@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ColorHome } from "@/screens/ColorHome";
 import { Combinations } from "@/screens/Combinations";
 import { OutfitVisualizer } from "@/screens/OutfitVisualizer";
+import { wadaTokens } from "@/styles/theme";
 
 import type { ColorsStackParamList } from "./types";
 
@@ -14,7 +15,16 @@ export function ColorsStack() {
 			<Stack.Screen
 				name="ColorHome"
 				component={ColorHome}
-				options={{ title: "Colors" }}
+				options={{
+					title: "配色辞典",
+					headerLargeTitle: true,
+					headerLargeStyle: { backgroundColor: wadaTokens.navBarBg },
+					headerStyle: { backgroundColor: wadaTokens.navBarBg },
+					headerTintColor: wadaTokens.textPrimary,
+					headerLargeTitleStyle: {
+						fontFamily: "NotoSerifJP_500Medium",
+					},
+				}}
 			/>
 			<Stack.Screen
 				name="Combinations"
