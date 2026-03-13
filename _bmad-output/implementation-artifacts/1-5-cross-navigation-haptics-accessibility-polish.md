@@ -236,11 +236,12 @@ Claude Opus 4.6
 
 ### Debug Log References
 
-None — clean implementation with no blocking issues.
+- **NativeWind + Pressable style function conflict (visual bug):** PaletteStrip color rectangles were invisible on the Combinations screen. Root cause: NativeWind 4 transforms `className` into the `style` prop internally. When Pressable also had a `style` function (`({ pressed }) => ({ backgroundColor, opacity })`), NativeWind's compiled styles overwrote the function — `backgroundColor` was never applied, leaving rectangles transparent. Fix: moved `backgroundColor` and `opacity` to a child View using Pressable's render function pattern (`{({ pressed }) => <View style={{...}} />}`), keeping `className` on Pressable for layout only. This matches the pattern used by ColorSwatch, which also separates NativeWind layout from dynamic inline styles.
+- **FlatList missing flex-1 in CombinationList:** The FlatList had no height constraint inside the Combinations screen flex layout, added `className="flex-1"`.
 
 ### Completion Notes List
 
-- Used Pressable's built-in `({ pressed })` style callback for opacity 0.88 feedback instead of Reanimated. This is simpler and avoids creating shared values per color rectangle (as suggested in Dev Notes).
+- Used Pressable's render function children pattern (`{({ pressed }) => ...}`) to separate NativeWind className (layout) from dynamic inline styles (backgroundColor, opacity). This avoids the NativeWind/Pressable style conflict.
 - Added `useNavigation` and `useReducedMotion` hooks to PaletteStrip — called before any early returns per Rules of Hooks.
 - Had to add `useNavigation` and `useReducedMotion` mocks to `Combinations.test.tsx` and `CombinationList.test.tsx` since PaletteStrip (rendered as child) now requires these hooks.
 - All 5 new tests pass: navigation push, hapticLight, selected-no-op, accessibility labels, reduced motion.
@@ -250,10 +251,12 @@ None — clean implementation with no blocking issues.
 
 - 2026-03-13: Story 1.5 implementation complete — cross-navigation, haptics, accessibility polish on PaletteStrip
 - 2026-03-13: Code review fixes — disabled selected color Pressable for VoiceOver, added accessibilityRole test, improved reduced motion test, updated File List
+- 2026-03-13: Bug fix — PaletteStrip colors invisible due to NativeWind/Pressable style conflict; refactored to render function pattern. Added flex-1 to CombinationList FlatList
 
 ### File List
 
-- src/components/PaletteStrip.tsx (MODIFIED — added Pressable, useNavigation, useReducedMotion, hapticLight, a11y labels, disabled selected color)
+- src/components/PaletteStrip.tsx (MODIFIED — Pressable render function pattern for NativeWind compat, useNavigation, useReducedMotion, hapticLight, a11y labels, disabled selected color)
+- src/components/CombinationList.tsx (MODIFIED — added flex-1 to FlatList for proper height in flex layout)
 - src/components/PaletteStrip.test.tsx (MODIFIED — added 7 new tests for navigation, haptics, a11y role, a11y labels, disabled selected, reduced motion opacity)
 - src/screens/Combinations.test.tsx (MODIFIED — added useNavigation and useReducedMotion mocks for PaletteStrip child)
 - src/components/CombinationList.test.tsx (MODIFIED — added useNavigation and useReducedMotion mocks for PaletteStrip child)

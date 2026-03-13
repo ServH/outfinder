@@ -22,6 +22,7 @@ export function CombinationList({
 	return (
 		<FlatList
 			testID="combination-list"
+			className="flex-1"
 			data={combinations}
 			keyExtractor={(item) => item.id}
 			contentContainerStyle={{ padding: 16 }}

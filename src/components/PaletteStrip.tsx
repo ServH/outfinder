@@ -38,12 +38,7 @@ export function PaletteStrip({
 							<View key={color.id} className="flex-1 flex-row">
 								{index > 0 && <View className="w-[0.5px] bg-hairline" />}
 								<Pressable
-									className="flex-1 items-center justify-end"
-									style={({ pressed }) => ({
-										backgroundColor: color.hex,
-										opacity:
-											pressed && !isSelected && !reducedMotion ? 0.88 : 1,
-									})}
+									className="flex-1"
 									testID={`palette-color-${color.id}`}
 									disabled={isSelected}
 									accessibilityRole={isSelected ? undefined : "link"}
@@ -57,11 +52,22 @@ export function PaletteStrip({
 										navigation.push("Combinations", { colorId: color.id });
 									}}
 								>
-									{isSelected && (
+									{({ pressed }) => (
 										<View
-											className="mb-2 h-[6px] w-[6px] rounded-full bg-white"
-											testID="selected-color-dot"
-										/>
+											className="flex-1 items-center justify-end"
+											style={{
+												backgroundColor: color.hex,
+												opacity:
+													pressed && !isSelected && !reducedMotion ? 0.88 : 1,
+											}}
+										>
+											{isSelected && (
+												<View
+													className="mb-2 h-[6px] w-[6px] rounded-full bg-white"
+													testID="selected-color-dot"
+												/>
+											)}
+										</View>
 									)}
 								</Pressable>
 							</View>
