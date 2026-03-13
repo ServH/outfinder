@@ -16,7 +16,7 @@ export function ColorsStack() {
 				name="ColorHome"
 				component={ColorHome}
 				options={{
-					title: "配色辞典",
+					title: "Outfinder",
 					headerLargeTitle: true,
 					headerLargeStyle: { backgroundColor: wadaTokens.navBarBg },
 					headerStyle: { backgroundColor: wadaTokens.navBarBg },

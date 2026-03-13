@@ -1,7 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useState } from "react";
-import { View } from "react-native";
 import { SwatchGroup } from "@/components/SwatchGroup";
 import { SwatchGroupTabs } from "@/components/SwatchGroupTabs";
 import { getAllColors, getColorsByGroup } from "@/data/colorIndex";
@@ -29,9 +28,15 @@ export function ColorHome() {
 	}
 
 	return (
-		<View className="flex-1 bg-paper">
-			<SwatchGroupTabs activeGroup={activeGroup} onTabChange={setActiveGroup} />
-			<SwatchGroup colors={colors} onColorPress={handleColorPress} />
-		</View>
+		<SwatchGroup
+			colors={colors}
+			onColorPress={handleColorPress}
+			ListHeaderComponent={
+				<SwatchGroupTabs
+					activeGroup={activeGroup}
+					onTabChange={setActiveGroup}
+				/>
+			}
+		/>
 	);
 }

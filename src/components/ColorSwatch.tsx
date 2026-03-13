@@ -50,9 +50,10 @@ export function ColorSwatch({ color, onPress }: ColorSwatchProps) {
 			onPress={() => onPress(color)}
 			onPressIn={handlePressIn}
 			onPressOut={handlePressOut}
+			className="flex-1"
 		>
 			<Animated.View
-				className={`h-[62px] w-[62px] rounded ${needsBorder ? "border border-hairline" : ""}`}
+				className={`aspect-square rounded ${needsBorder ? "border border-hairline" : ""}`}
 				style={[{ backgroundColor: color.hex }, animatedStyle]}
 			/>
 		</Pressable>

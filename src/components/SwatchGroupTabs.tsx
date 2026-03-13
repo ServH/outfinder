@@ -34,7 +34,7 @@ export function SwatchGroupTabs({
 			horizontal
 			showsHorizontalScrollIndicator={false}
 			accessibilityRole="tablist"
-			className="border-b border-divider bg-paper"
+			className="shrink-0 border-b border-divider bg-paper"
 			contentContainerStyle={{ paddingHorizontal: 16, gap: 16 }}
 		>
 			{TAB_KEYS.map((key) => {
