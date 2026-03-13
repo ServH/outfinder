@@ -34,8 +34,8 @@ yarn-error.*
 .env*.local
 .env.*
 
-# BMAD output (story specs)
-_bmad-output/
+# BMAD output — tracked for cross-device continuity
+# _bmad-output/
 
 # typescript
 *.tsbuildinfo

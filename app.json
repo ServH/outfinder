@@ -8,7 +8,8 @@
     "scheme": "outfinder",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.anonymous.outfinder"
     },
     "android": {
       "adaptiveIcon": {
