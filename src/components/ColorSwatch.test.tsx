@@ -3,7 +3,6 @@ import type { Color } from "@/data/types";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { ColorSwatch } from "./ColorSwatch";
 
-jest.mock("@/lib/haptics");
 jest.mock("@/hooks/useReducedMotion");
 
 const mockColor: Color = {
@@ -62,13 +61,19 @@ describe("ColorSwatch", () => {
 	});
 
 	it("triggers scale animation on pressIn when motion is enabled", () => {
-		const withSpring = require("react-native-reanimated").withSpring;
+		const reanimated = require("react-native-reanimated");
+		const withSpringSpy = jest.spyOn(reanimated, "withSpring");
+
 		render(<ColorSwatch color={mockColor} onPress={jest.fn()} />);
 
 		fireEvent(screen.getByTestId("color-swatch-c001"), "pressIn");
 
-		// withSpring should have been called with 1.05 target
-		expect(withSpring).toBeDefined();
+		expect(withSpringSpy).toHaveBeenCalledWith(1.05, {
+			damping: 15,
+			stiffness: 150,
+		});
+
+		withSpringSpy.mockRestore();
 	});
 
 	it("skips animation on pressIn when reduced motion is enabled", () => {

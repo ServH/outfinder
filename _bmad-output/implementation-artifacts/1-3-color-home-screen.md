@@ -368,7 +368,14 @@ Claude Opus 4.6
 - Task 5: Zero lint errors, zero type errors, 43 tests all green. All 5 ACs verified point-by-point.
 - Swatch group labels derived from actual color data: Pale & Light, Red & Brown, Blue & Lavender, Dark & Deep, Vivid & Bold, Green & Olive.
 
-### Code Review — LOW Severity Issues (Documented)
+### Code Review 2 — Fixes Applied
+
+- **M1. Fixed no-op animation test** — `ColorSwatch.test.tsx` now spies on `withSpring` and asserts it was called with `(1.05, { damping: 15, stiffness: 150 })`.
+- **M2. Added `accessibilityRole="tablist"`** to `SwatchGroupTabs.tsx` ScrollView container for VoiceOver tab group identification.
+- **M3. Added round-trip filter test** — `ColorHome.test.tsx` now verifies All → filter → All restores full 159-color dataset.
+- **L1. Removed unnecessary `jest.mock("@/lib/haptics")`** from `ColorSwatch.test.tsx` (component doesn't import haptics).
+
+### Remaining LOW Severity Issues (Documented)
 
 - **L1. `SwatchGroupTabsProps` uses `string` instead of `TabKey` type** — `activeGroup: string` and `onTabChange: (group: string) => void` should use the discriminated `TabKey` type already defined in the file. Minor type safety gap.
 - **L2. Reanimated mock `createAnimatedComponent` uses identity function** — works for current tests but could break if Reanimated-specific animated props are used in the future.
@@ -378,6 +385,7 @@ Claude Opus 4.6
 
 - 2026-03-12: Story 1.3 implementation complete — Color Home screen with tab filtering, animated swatches, haptics, accessibility, and full test coverage.
 - 2026-03-12: Code review fixes — added testID to SwatchGroupTabs tabs (H1), improved ColorHome test to verify full 159-color data pass-through via FlatList data prop (M1), added numColumns=5 test to SwatchGroup (M2), added reduced motion integration tests to ColorSwatch (M3). 46 tests, zero lint/type errors.
+- 2026-03-13: Code review 2 fixes — fixed no-op animation test with withSpring spy (M1), added accessibilityRole="tablist" to SwatchGroupTabs (M2), added round-trip All→filter→All test (M3), removed unnecessary haptics mock from ColorSwatch tests (L1). 47 tests, zero lint/type errors.
 
 ### File List
 

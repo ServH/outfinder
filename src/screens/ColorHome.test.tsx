@@ -50,6 +50,18 @@ describe("ColorHome", () => {
 		expect(mockPush).toHaveBeenCalledWith("Combinations", { colorId: "c001" });
 	});
 
+	it("restores all colors when returning to All tab after filtering", () => {
+		render(<ColorHome />);
+
+		fireEvent.press(screen.getByText("Red & Brown"));
+		const filteredCount = screen.getAllByRole("button").length;
+		expect(filteredCount).toBeLessThan(getAllColors().length);
+
+		fireEvent.press(screen.getByText("All"));
+		const flatList = screen.getByTestId("swatch-group-list");
+		expect(flatList.props.data).toHaveLength(getAllColors().length);
+	});
+
 	it("has accessibility labels on all swatches", () => {
 		render(<ColorHome />);
 

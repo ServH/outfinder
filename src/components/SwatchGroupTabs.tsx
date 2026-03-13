@@ -33,6 +33,7 @@ export function SwatchGroupTabs({
 		<ScrollView
 			horizontal
 			showsHorizontalScrollIndicator={false}
+			accessibilityRole="tablist"
 			className="border-b border-divider bg-paper"
 			contentContainerStyle={{ paddingHorizontal: 16, gap: 16 }}
 		>
