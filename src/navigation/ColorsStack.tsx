@@ -2,6 +2,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { ColorHome } from "@/screens/ColorHome";
 import { Combinations } from "@/screens/Combinations";
+import { GarmentPoC } from "@/screens/GarmentPoC";
+import { GarmentProposal } from "@/screens/GarmentProposal";
 import { OutfitVisualizer } from "@/screens/OutfitVisualizer";
 import { wadaTokens } from "@/styles/theme";
 
@@ -40,6 +42,24 @@ export function ColorsStack() {
 				name="OutfitVisualizer"
 				component={OutfitVisualizer}
 				options={{ title: "Outfit" }}
+			/>
+			<Stack.Screen
+				name="GarmentPoC"
+				component={GarmentPoC}
+				options={{
+					title: "Garment PoC",
+					headerStyle: { backgroundColor: wadaTokens.navBarBg },
+					headerTintColor: wadaTokens.textPrimary,
+				}}
+			/>
+			<Stack.Screen
+				name="GarmentProposal"
+				component={GarmentProposal}
+				options={{
+					title: "Garment Proposal",
+					headerStyle: { backgroundColor: wadaTokens.navBarBg },
+					headerTintColor: wadaTokens.textPrimary,
+				}}
 			/>
 		</Stack.Navigator>
 	);
