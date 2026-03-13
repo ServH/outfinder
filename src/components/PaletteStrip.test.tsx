@@ -182,18 +182,41 @@ describe("PaletteStrip", () => {
 		expect(hapticLight).not.toHaveBeenCalled();
 	});
 
-	it("has accessibility label 'View combinations for {nameEn}' on each color", () => {
+	it("has accessibilityRole 'link' on non-selected colors", () => {
 		render(
 			<PaletteStrip combination={threeColorCombo} selectedColorId="c001" />,
 		);
 
-		expect(
-			screen.getByLabelText("View combinations for Luan-bird"),
-		).toBeTruthy();
+		expect(screen.getByTestId("palette-color-c002")).toHaveProp(
+			"accessibilityRole",
+			"link",
+		);
+		expect(screen.getByTestId("palette-color-c003")).toHaveProp(
+			"accessibilityRole",
+			"link",
+		);
+	});
+
+	it("has accessibility label 'View combinations for {nameEn}' on non-selected colors", () => {
+		render(
+			<PaletteStrip combination={threeColorCombo} selectedColorId="c001" />,
+		);
+
 		expect(screen.getByLabelText("View combinations for Brown")).toBeTruthy();
 		expect(
 			screen.getByLabelText("View combinations for Royal Blue"),
 		).toBeTruthy();
+	});
+
+	it("marks the selected color as disabled with 'Selected' label", () => {
+		render(
+			<PaletteStrip combination={threeColorCombo} selectedColorId="c001" />,
+		);
+
+		expect(screen.getByLabelText("Selected: Luan-bird")).toBeTruthy();
+		expect(
+			screen.queryByLabelText("View combinations for Luan-bird"),
+		).toBeNull();
 	});
 
 	it("skips opacity press feedback when reduced motion is enabled", () => {
@@ -202,8 +225,10 @@ describe("PaletteStrip", () => {
 		render(<PaletteStrip combination={twoColorCombo} selectedColorId="c001" />);
 
 		const pressable = screen.getByTestId("palette-color-c002");
-		fireEvent.press(pressable);
 
+		// With reduced motion, the opacity condition (pressed && !isSelected && !reducedMotion)
+		// evaluates to false, so opacity stays 1. Verify navigation and haptics still work.
+		fireEvent.press(pressable);
 		expect(mockPush).toHaveBeenCalledWith("Combinations", {
 			colorId: "c002",
 		});

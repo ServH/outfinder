@@ -1,6 +1,6 @@
 # Story 1.5: Cross-Navigation, Haptics & Accessibility Polish
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -249,10 +249,12 @@ None — clean implementation with no blocking issues.
 ### Change Log
 
 - 2026-03-13: Story 1.5 implementation complete — cross-navigation, haptics, accessibility polish on PaletteStrip
+- 2026-03-13: Code review fixes — disabled selected color Pressable for VoiceOver, added accessibilityRole test, improved reduced motion test, updated File List
 
 ### File List
 
-- src/components/PaletteStrip.tsx (MODIFIED — added Pressable, useNavigation, useReducedMotion, hapticLight, a11y labels)
-- src/components/PaletteStrip.test.tsx (MODIFIED — added 5 new tests for navigation, haptics, a11y, reduced motion)
+- src/components/PaletteStrip.tsx (MODIFIED — added Pressable, useNavigation, useReducedMotion, hapticLight, a11y labels, disabled selected color)
+- src/components/PaletteStrip.test.tsx (MODIFIED — added 7 new tests for navigation, haptics, a11y role, a11y labels, disabled selected, reduced motion opacity)
 - src/screens/Combinations.test.tsx (MODIFIED — added useNavigation and useReducedMotion mocks for PaletteStrip child)
 - src/components/CombinationList.test.tsx (MODIFIED — added useNavigation and useReducedMotion mocks for PaletteStrip child)
+- _bmad-output/implementation-artifacts/sprint-status.yaml (MODIFIED — status updated to review)

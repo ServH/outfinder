@@ -45,10 +45,14 @@ export function PaletteStrip({
 											pressed && !isSelected && !reducedMotion ? 0.88 : 1,
 									})}
 									testID={`palette-color-${color.id}`}
-									accessibilityRole="link"
-									accessibilityLabel={`View combinations for ${color.nameEn}`}
+									disabled={isSelected}
+									accessibilityRole={isSelected ? undefined : "link"}
+									accessibilityLabel={
+										isSelected
+											? `Selected: ${color.nameEn}`
+											: `View combinations for ${color.nameEn}`
+									}
 									onPress={() => {
-										if (isSelected) return;
 										hapticLight();
 										navigation.push("Combinations", { colorId: color.id });
 									}}
