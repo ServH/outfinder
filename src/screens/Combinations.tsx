@@ -1,16 +1,28 @@
-import { Text, View } from "react-native";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { View } from "react-native";
+import { ColorHeader } from "@/components/ColorHeader";
+import { CombinationList } from "@/components/CombinationList";
+import { getColor, getCombinations } from "@/data/colorIndex";
+import type { ColorsStackParamList } from "@/navigation/types";
 
-type CombinationsProps = Record<string, never>;
+type CombinationsProps = NativeStackScreenProps<
+	ColorsStackParamList,
+	"Combinations"
+>;
 
-export function Combinations(_props: CombinationsProps) {
+export function Combinations({ route }: CombinationsProps) {
+	const { colorId } = route.params;
+	const color = getColor(colorId);
+	const combinations = getCombinations(colorId);
+
+	if (!color) {
+		return null;
+	}
+
 	return (
-		<View
-			className="flex-1 items-center justify-center bg-paper"
-			accessibilityLabel="Combinations screen"
-		>
-			<Text className="font-serif-jp text-lg text-primary">
-				Combinations — Story 1.4
-			</Text>
+		<View className="flex-1 bg-bg-paper">
+			<ColorHeader color={color} combinationCount={combinations.length} />
+			<CombinationList combinations={combinations} selectedColorId={colorId} />
 		</View>
 	);
 }

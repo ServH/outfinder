@@ -45,8 +45,8 @@ development_status:
   1-1-project-scaffold-and-configuration: done
   1-2-data-layer-and-navigation-shell: done
   1-3-color-home-screen: done
-  1-4-combinations-screen: backlog
-  1-5-cross-navigation-haptics-accessibility-polish: backlog
+  1-4-combinations-screen: done
+  1-5-cross-navigation-haptics-accessibility-polish: ready-for-dev
   epic-1-retrospective: optional
 
   epic-2: backlog

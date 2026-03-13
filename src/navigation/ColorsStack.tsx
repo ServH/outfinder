@@ -29,7 +29,12 @@ export function ColorsStack() {
 			<Stack.Screen
 				name="Combinations"
 				component={Combinations}
-				options={{ title: "Combinations" }}
+				options={{
+					headerStyle: { backgroundColor: wadaTokens.navBarBg },
+					headerTintColor: wadaTokens.textPrimary,
+					headerTitle: "",
+					headerBackTitle: "",
+				}}
 			/>
 			<Stack.Screen
 				name="OutfitVisualizer"
