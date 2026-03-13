@@ -6,6 +6,14 @@ jest.mock("@react-navigation/native-stack", () => ({
 	createNativeStackNavigator: jest.fn(),
 }));
 
+jest.mock("@react-navigation/native", () => ({
+	useNavigation: () => ({ push: jest.fn() }),
+}));
+
+jest.mock("@/hooks/useReducedMotion", () => ({
+	useReducedMotion: () => false,
+}));
+
 const realColor = getColor("c001")!;
 const realCombinations = getCombinations("c001");
 

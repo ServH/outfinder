@@ -1,15 +1,27 @@
-import { Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Pressable, Text, View } from "react-native";
 import type { Combination } from "@/data/types";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { hapticLight } from "@/lib/haptics";
+import type { ColorsStackParamList } from "@/navigation/types";
 
 export interface PaletteStripProps {
 	combination: Combination;
 	selectedColorId: string;
 }
 
+type CombinationsNav = NativeStackNavigationProp<
+	ColorsStackParamList,
+	"Combinations"
+>;
+
 export function PaletteStrip({
 	combination,
 	selectedColorId,
 }: PaletteStripProps) {
+	const navigation = useNavigation<CombinationsNav>();
+	const reducedMotion = useReducedMotion();
 	const colorNames = combination.colors.map((c) => c.nameEn).join(", ");
 
 	return (
@@ -19,23 +31,38 @@ export function PaletteStrip({
 		>
 			<View className="overflow-hidden rounded-lg">
 				<View className="flex-row" style={{ height: 120 }}>
-					{combination.colors.map((color, index) => (
-						<View key={color.id} className="flex-1 flex-row">
-							{index > 0 && <View className="w-[0.5px] bg-hairline" />}
-							<View
-								className="flex-1 items-center justify-end"
-								style={{ backgroundColor: color.hex }}
-								testID={`palette-color-${color.id}`}
-							>
-								{color.id === selectedColorId && (
-									<View
-										className="mb-2 h-[6px] w-[6px] rounded-full bg-white"
-										testID="selected-color-dot"
-									/>
-								)}
+					{combination.colors.map((color, index) => {
+						const isSelected = color.id === selectedColorId;
+
+						return (
+							<View key={color.id} className="flex-1 flex-row">
+								{index > 0 && <View className="w-[0.5px] bg-hairline" />}
+								<Pressable
+									className="flex-1 items-center justify-end"
+									style={({ pressed }) => ({
+										backgroundColor: color.hex,
+										opacity:
+											pressed && !isSelected && !reducedMotion ? 0.88 : 1,
+									})}
+									testID={`palette-color-${color.id}`}
+									accessibilityRole="link"
+									accessibilityLabel={`View combinations for ${color.nameEn}`}
+									onPress={() => {
+										if (isSelected) return;
+										hapticLight();
+										navigation.push("Combinations", { colorId: color.id });
+									}}
+								>
+									{isSelected && (
+										<View
+											className="mb-2 h-[6px] w-[6px] rounded-full bg-white"
+											testID="selected-color-dot"
+										/>
+									)}
+								</Pressable>
 							</View>
-						</View>
-					))}
+						);
+					})}
 				</View>
 			</View>
 			<View className="mt-2 flex-row">

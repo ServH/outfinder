@@ -1,6 +1,18 @@
-import { render, screen } from "@testing-library/react-native";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 import type { Color, Combination } from "@/data/types";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { hapticLight } from "@/lib/haptics";
 import { PaletteStrip } from "./PaletteStrip";
+
+const mockPush = jest.fn();
+jest.mock("@react-navigation/native", () => ({
+	useNavigation: () => ({ push: mockPush }),
+}));
+
+jest.mock("@/lib/haptics");
+
+jest.mock("@/hooks/useReducedMotion");
+const mockUseReducedMotion = useReducedMotion as jest.Mock;
 
 const color1: Color = {
 	id: "c001",
@@ -60,6 +72,12 @@ const fourColorCombo: Combination = {
 };
 
 describe("PaletteStrip", () => {
+	beforeEach(() => {
+		mockPush.mockClear();
+		(hapticLight as jest.Mock).mockClear();
+		mockUseReducedMotion.mockReturnValue(false);
+	});
+
 	it("renders 2 color rectangles for a 2-color combination", () => {
 		render(<PaletteStrip combination={twoColorCombo} selectedColorId="c001" />);
 
@@ -127,5 +145,68 @@ describe("PaletteStrip", () => {
 		render(<PaletteStrip combination={twoColorCombo} selectedColorId="c001" />);
 
 		expect(screen.getByTestId("palette-strip-combo-2")).toBeTruthy();
+	});
+
+	// === Story 1.5 — Cross-navigation, haptics, accessibility ===
+
+	it("navigates to Combinations when pressing a non-selected color", () => {
+		render(
+			<PaletteStrip combination={threeColorCombo} selectedColorId="c001" />,
+		);
+
+		fireEvent.press(screen.getByTestId("palette-color-c002"));
+
+		expect(mockPush).toHaveBeenCalledWith("Combinations", {
+			colorId: "c002",
+		});
+	});
+
+	it("fires hapticLight when pressing a non-selected color", () => {
+		render(
+			<PaletteStrip combination={threeColorCombo} selectedColorId="c001" />,
+		);
+
+		fireEvent.press(screen.getByTestId("palette-color-c002"));
+
+		expect(hapticLight).toHaveBeenCalled();
+	});
+
+	it("does NOT navigate or fire haptics when pressing the selected color", () => {
+		render(
+			<PaletteStrip combination={threeColorCombo} selectedColorId="c001" />,
+		);
+
+		fireEvent.press(screen.getByTestId("palette-color-c001"));
+
+		expect(mockPush).not.toHaveBeenCalled();
+		expect(hapticLight).not.toHaveBeenCalled();
+	});
+
+	it("has accessibility label 'View combinations for {nameEn}' on each color", () => {
+		render(
+			<PaletteStrip combination={threeColorCombo} selectedColorId="c001" />,
+		);
+
+		expect(
+			screen.getByLabelText("View combinations for Luan-bird"),
+		).toBeTruthy();
+		expect(screen.getByLabelText("View combinations for Brown")).toBeTruthy();
+		expect(
+			screen.getByLabelText("View combinations for Royal Blue"),
+		).toBeTruthy();
+	});
+
+	it("skips opacity press feedback when reduced motion is enabled", () => {
+		mockUseReducedMotion.mockReturnValue(true);
+
+		render(<PaletteStrip combination={twoColorCombo} selectedColorId="c001" />);
+
+		const pressable = screen.getByTestId("palette-color-c002");
+		fireEvent.press(pressable);
+
+		expect(mockPush).toHaveBeenCalledWith("Combinations", {
+			colorId: "c002",
+		});
+		expect(hapticLight).toHaveBeenCalled();
 	});
 });

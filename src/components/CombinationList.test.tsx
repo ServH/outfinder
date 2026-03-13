@@ -2,6 +2,14 @@ import { render, screen } from "@testing-library/react-native";
 import type { Color, Combination } from "@/data/types";
 import { CombinationList } from "./CombinationList";
 
+jest.mock("@react-navigation/native", () => ({
+	useNavigation: () => ({ push: jest.fn() }),
+}));
+
+jest.mock("@/hooks/useReducedMotion", () => ({
+	useReducedMotion: () => false,
+}));
+
 const color1: Color = {
 	id: "c001",
 	hex: "#E8D3B4",
