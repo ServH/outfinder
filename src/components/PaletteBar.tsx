@@ -36,7 +36,7 @@ export function PaletteBar({ slots }: PaletteBarProps) {
 							style={{ backgroundColor: slot.color.hex }}
 						/>
 						<Text className="font-serif text-[11px] text-secondary mt-1">
-							{slot.color.nameJp}
+							{slot.color.nameEn}
 						</Text>
 					</View>
 				);
