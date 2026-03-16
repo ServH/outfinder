@@ -1,16 +1,17 @@
 import { Image } from "react-native";
 
-export interface TopTShirtProps {
-	color: string;
-	accessibilityLabel: string;
-}
+import type { GarmentComponentProps } from "./index";
 
-export function TopTShirt({ color, accessibilityLabel }: TopTShirtProps) {
+export function TopTShirt({
+	color,
+	accessibilityLabel,
+	width,
+	height,
+}: GarmentComponentProps) {
 	return (
 		<Image
-			className="w-full aspect-[1.03]"
 			source={require("@/assets/garments/top-tshirt.png")}
-			style={{ tintColor: color }}
+			style={{ width, height, tintColor: color }}
 			resizeMode="contain"
 			accessibilityLabel={accessibilityLabel}
 		/>

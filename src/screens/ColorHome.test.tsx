@@ -62,24 +62,6 @@ describe("ColorHome", () => {
 		expect(flatList.props.data).toHaveLength(getAllColors().length);
 	});
 
-	it("renders temporary DEV links to PoC and Proposal screens", () => {
-		render(<ColorHome />);
-
-		const pocLink = screen.getByLabelText(
-			"Open garment rendering proof of concept",
-		);
-		const proposalLink = screen.getByLabelText("Open garment proposal wall");
-
-		expect(pocLink).toBeTruthy();
-		expect(proposalLink).toBeTruthy();
-
-		fireEvent.press(pocLink);
-		expect(mockPush).toHaveBeenCalledWith("GarmentPoC");
-
-		fireEvent.press(proposalLink);
-		expect(mockPush).toHaveBeenCalledWith("GarmentProposal");
-	});
-
 	it("has accessibility labels on all swatches", () => {
 		render(<ColorHome />);
 

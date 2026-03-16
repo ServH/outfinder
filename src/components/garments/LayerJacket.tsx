@@ -1,16 +1,17 @@
 import { Image } from "react-native";
 
-export interface LayerJacketProps {
-	color: string;
-	accessibilityLabel: string;
-}
+import type { GarmentComponentProps } from "./index";
 
-export function LayerJacket({ color, accessibilityLabel }: LayerJacketProps) {
+export function LayerJacket({
+	color,
+	accessibilityLabel,
+	width,
+	height,
+}: GarmentComponentProps) {
 	return (
 		<Image
-			className="w-full aspect-[0.97]"
 			source={require("@/assets/garments/layer-jacket.png")}
-			style={{ tintColor: color }}
+			style={{ width, height, tintColor: color }}
 			resizeMode="contain"
 			accessibilityLabel={accessibilityLabel}
 		/>

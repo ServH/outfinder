@@ -1,16 +1,17 @@
 import { Image } from "react-native";
 
-export interface BottomSkirtProps {
-	color: string;
-	accessibilityLabel: string;
-}
+import type { GarmentComponentProps } from "./index";
 
-export function BottomSkirt({ color, accessibilityLabel }: BottomSkirtProps) {
+export function BottomSkirt({
+	color,
+	accessibilityLabel,
+	width,
+	height,
+}: GarmentComponentProps) {
 	return (
 		<Image
-			className="w-full aspect-[0.89]"
 			source={require("@/assets/garments/bottom-skirt.png")}
-			style={{ tintColor: color }}
+			style={{ width, height, tintColor: color }}
 			resizeMode="contain"
 			accessibilityLabel={accessibilityLabel}
 		/>

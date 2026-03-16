@@ -1,7 +1,8 @@
 import type { RouteProp } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
-import { useCallback } from "react";
-import { AccessibilityInfo, ScrollView, Text, View } from "react-native";
+import { useCallback, useState } from "react";
+import type { LayoutChangeEvent } from "react-native";
+import { AccessibilityInfo, Text, View } from "react-native";
 import { GARMENT_REGISTRY } from "@/components/garments/index";
 import { OutfitMannequin } from "@/components/OutfitMannequin";
 import { PaletteBar } from "@/components/PaletteBar";
@@ -22,6 +23,16 @@ export function OutfitVisualizer() {
 
 	const { slots, selectedSlotIndex, selectSlot, toggleVariant } =
 		useOutfitState(combination?.colors ?? []);
+
+	const [mannequinLayout, setMannequinLayout] = useState({
+		height: 0,
+		width: 0,
+	});
+
+	const handleMannequinAreaLayout = useCallback((e: LayoutChangeEvent) => {
+		const { height, width } = e.nativeEvent.layout;
+		setMannequinLayout({ height, width });
+	}, []);
 
 	const handleSlotTap = useCallback(
 		(index: number) => {
@@ -78,18 +89,27 @@ export function OutfitVisualizer() {
 	}
 
 	return (
-		<ScrollView
+		<View
 			className="flex-1 bg-paper"
-			contentContainerClassName="items-center px-6 py-8"
 			accessibilityLabel="Outfit Visualizer screen"
 		>
-			<OutfitMannequin
-				slots={slots}
-				selectedSlotIndex={selectedSlotIndex}
-				onSlotTap={handleSlotTap}
-				onVariantToggle={handleVariantToggle}
-			/>
+			<View
+				testID="mannequin-area"
+				className="flex-1 items-center justify-center px-6"
+				onLayout={handleMannequinAreaLayout}
+			>
+				{mannequinLayout.height > 0 && (
+					<OutfitMannequin
+						slots={slots}
+						selectedSlotIndex={selectedSlotIndex}
+						onSlotTap={handleSlotTap}
+						onVariantToggle={handleVariantToggle}
+						availableHeight={mannequinLayout.height}
+						containerWidth={mannequinLayout.width}
+					/>
+				)}
+			</View>
 			<PaletteBar slots={slots} />
-		</ScrollView>
+		</View>
 	);
 }

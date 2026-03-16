@@ -2,8 +2,6 @@ export type ColorsStackParamList = {
 	ColorHome: undefined;
 	Combinations: { colorId: string };
 	OutfitVisualizer: { combinationId: string };
-	GarmentPoC: undefined;
-	GarmentProposal: undefined;
 };
 
 export type FavoritesStackParamList = {

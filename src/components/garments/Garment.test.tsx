@@ -32,7 +32,14 @@ describe("Garment Components", () => {
 				const testColor = "#ff0000";
 				const label = `${config.label}, colored Red`;
 
-				render(<Component color={testColor} accessibilityLabel={label} />);
+				render(
+					<Component
+						color={testColor}
+						accessibilityLabel={label}
+						width={120}
+						height={100}
+					/>,
+				);
 
 				const image = screen.getByLabelText(label);
 				expect(image).toBeTruthy();
@@ -46,7 +53,14 @@ describe("Garment Components", () => {
 				const Component = config.component;
 				const label = `${config.label}, colored Blue`;
 
-				render(<Component color="#0000ff" accessibilityLabel={label} />);
+				render(
+					<Component
+						color="#0000ff"
+						accessibilityLabel={label}
+						width={120}
+						height={100}
+					/>,
+				);
 
 				expect(screen.getByLabelText(label)).toBeTruthy();
 			});

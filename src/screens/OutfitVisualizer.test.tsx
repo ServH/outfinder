@@ -48,6 +48,13 @@ const blue = makeColor("c2", "#0000ff", "Blue", "青");
 const green = makeColor("c3", "#00ff00", "Green", "緑");
 const yellow = makeColor("c4", "#ffff00", "Yellow", "黄");
 
+function triggerMannequinLayout() {
+	const area = screen.getByTestId("mannequin-area");
+	fireEvent(area, "layout", {
+		nativeEvent: { layout: { width: 390, height: 500, x: 0, y: 0 } },
+	});
+}
+
 describe("OutfitVisualizer", () => {
 	beforeEach(() => {
 		mockGetCombination.mockReset();
@@ -65,6 +72,7 @@ describe("OutfitVisualizer", () => {
 		});
 
 		render(<OutfitVisualizer />);
+		triggerMannequinLayout();
 
 		expect(mockGetCombination).toHaveBeenCalledWith("combo-2");
 		expect(
@@ -85,6 +93,7 @@ describe("OutfitVisualizer", () => {
 		});
 
 		render(<OutfitVisualizer />);
+		triggerMannequinLayout();
 
 		expect(
 			screen.getByLabelText("T-shirt, colored Red, tap to select for swap"),
@@ -107,6 +116,7 @@ describe("OutfitVisualizer", () => {
 		});
 
 		render(<OutfitVisualizer />);
+		triggerMannequinLayout();
 
 		expect(
 			screen.getByLabelText("Jacket, colored Red, tap to select for swap"),
@@ -180,6 +190,7 @@ describe("OutfitVisualizer", () => {
 		});
 
 		render(<OutfitVisualizer />);
+		triggerMannequinLayout();
 
 		fireEvent.press(
 			screen.getByLabelText("T-shirt, colored Red, tap to select for swap"),
@@ -198,6 +209,7 @@ describe("OutfitVisualizer", () => {
 		});
 
 		render(<OutfitVisualizer />);
+		triggerMannequinLayout();
 
 		fireEvent.press(
 			screen.getByLabelText("T-shirt, colored Red, tap to select for swap"),
@@ -216,6 +228,7 @@ describe("OutfitVisualizer", () => {
 		});
 
 		render(<OutfitVisualizer />);
+		triggerMannequinLayout();
 
 		const toggleButtons = screen.getAllByLabelText("Toggle garment type");
 		fireEvent.press(toggleButtons[0]);
@@ -233,6 +246,7 @@ describe("OutfitVisualizer", () => {
 		});
 
 		render(<OutfitVisualizer />);
+		triggerMannequinLayout();
 
 		const toggleButtons = screen.getAllByLabelText("Toggle garment type");
 		fireEvent.press(toggleButtons[0]);
@@ -250,6 +264,7 @@ describe("OutfitVisualizer", () => {
 		});
 
 		render(<OutfitVisualizer />);
+		triggerMannequinLayout();
 
 		// Tap first garment to select
 		fireEvent.press(
@@ -276,6 +291,7 @@ describe("OutfitVisualizer", () => {
 		});
 
 		render(<OutfitVisualizer />);
+		triggerMannequinLayout();
 
 		const tshirt = screen.getByLabelText(
 			"T-shirt, colored Red, tap to select for swap",
