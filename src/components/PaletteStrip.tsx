@@ -74,6 +74,27 @@ export function PaletteStrip({
 						);
 					})}
 				</View>
+				<Pressable
+					testID={`visualize-outfit-${combination.id}`}
+					accessibilityRole="button"
+					accessibilityLabel="Visualize outfit"
+					className="absolute bottom-1 right-1 min-w-[44px] min-h-[44px] items-center justify-center"
+					hitSlop={4}
+					onPress={() => {
+						hapticLight();
+						navigation.push("OutfitVisualizer", {
+							combinationId: combination.id,
+						});
+					}}
+				>
+					<View className="w-7 h-7 rounded-full bg-black/30 items-center justify-center">
+						<View
+							className="w-2 h-2 rounded-full border-[1.5px] border-white"
+							style={{ marginBottom: -2 }}
+						/>
+						<View className="w-4 h-[1.5px] bg-white" />
+					</View>
+				</Pressable>
 			</View>
 			<View className="mt-2 flex-row">
 				{combination.colors.map((color) => (

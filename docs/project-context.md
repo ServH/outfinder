@@ -31,7 +31,10 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 ## Current Status
 
 - **Epic 1: DONE** — Color Discovery & Combination Exploration (6/6 stories, 77 tests)
-- **Epic 2: NEXT** — Outfit Visualization (backlog, requires Story 2.0 SVG research first)
+- **Epic 2: IN PROGRESS** — Outfit Visualization
+  - Story 2.0: DONE — Garment SVG research, PNG + tintColor approved
+  - Story 2.1: DONE — PNG garment silhouettes + OutfitMannequin (132 tests total)
+  - Story 2.2: DONE — Tap-swap, garment toggle, PaletteBar (157 tests total)
 - Epics 3-6: Backlog
 - 6 epics planned, 15+ stories total
 - Planning validated: implementation readiness passed 2026-03-12
@@ -52,13 +55,27 @@ outfinder/
 │   │   ├── SwatchGroup.tsx          # FlatList numColumns=5, renders ColorSwatch grid
 │   │   ├── ColorHeader.tsx          # 40x40 swatch + JP/EN names + combination count
 │   │   ├── PaletteStrip.tsx         # 2-4 color rectangles, cross-navigation, haptics, selected dot
-│   │   └── CombinationList.tsx      # FlatList of PaletteStrips with 24px spacing + dividers
+│   │   ├── CombinationList.tsx      # FlatList of PaletteStrips with 24px spacing + dividers
+│   │   ├── GarmentSlot.tsx          # Interactive garment slot — Pressable with selected state border, variant toggle, Reanimated animations
+│   │   ├── OutfitMannequin.tsx      # Vertically stacks GarmentSlots with interactive props from useOutfitState
+│   │   ├── PaletteBar.tsx           # Horizontal row of color swatches with JP names, reflects slot assignments
+│   │   └── garments/
+│   │       ├── index.ts             # GARMENT_REGISTRY — GarmentType union, GarmentConfig, 8 garment mappings
+│   │       ├── TopTShirt.tsx         # PNG + tintColor Image wrapper
+│   │       ├── TopShirt.tsx          # PNG + tintColor Image wrapper
+│   │       ├── BottomPants.tsx       # PNG + tintColor Image wrapper
+│   │       ├── BottomSkirt.tsx       # PNG + tintColor Image wrapper
+│   │       ├── LayerJacket.tsx       # PNG + tintColor Image wrapper
+│   │       ├── LayerHoodie.tsx       # PNG + tintColor Image wrapper
+│   │       ├── ShoesSneakers.tsx     # PNG + tintColor Image wrapper
+│   │       └── ShoesFormal.tsx       # PNG + tintColor Image wrapper
 │   ├── data/
 │   │   ├── types.ts                 # Color, Combination, SwatchGroup types
 │   │   ├── colors.json              # 159 Wada colors (hex, nameJp, nameEn, id, swatchGroup, combinationCount)
 │   │   ├── combinations.json        # 348 Wada palettes (id, colorIds[], nameJp, nameEn)
-│   │   └── colorIndex.ts            # Pre-computed Map indexes — O(1) lookups: getColor, getCombinations, getColorsByGroup, getAllColors, getAllCombinations
+│   │   └── colorIndex.ts            # Pre-computed Map indexes — O(1) lookups: getColor, getCombination, getCombinations, getColorsByGroup, getAllColors, getAllCombinations
 │   ├── hooks/
+│   │   ├── useOutfitState.ts        # Outfit state hook — slots, selectedSlotIndex, selectSlot (tap-swap), toggleVariant
 │   │   └── useReducedMotion.ts      # AccessibilityInfo.isReduceMotionEnabled() + listener
 │   ├── lib/
 │   │   └── haptics.ts               # hapticLight(), hapticMedium(), hapticRigid() — all with try/catch + .catch()
@@ -71,7 +88,7 @@ outfinder/
 │   ├── screens/
 │   │   ├── ColorHome.tsx            # Grid of 159 colors with tab filtering by swatch family
 │   │   ├── Combinations.tsx         # ColorHeader + CombinationList for selected color
-│   │   ├── OutfitVisualizer.tsx     # PLACEHOLDER — Epic 2 implements
+│   │   ├── OutfitVisualizer.tsx     # Outfit visualization with tap-swap, garment toggle, PaletteBar, haptics, VoiceOver (Story 2.2)
 │   │   ├── FavoritesList.tsx        # PLACEHOLDER — Epic 4 implements
 │   │   └── Settings.tsx             # PLACEHOLDER — Epic 6 implements
 │   ├── styles/
@@ -109,7 +126,7 @@ Keep `className` on Pressable for layout only. Dynamic styles go on a child View
 
 ### Data Access — Pure Functions, No Hooks
 ```typescript
-import { getColor, getCombinations, getColorsByGroup, getAllColors } from "@/data/colorIndex";
+import { getColor, getCombination, getCombinations, getColorsByGroup, getAllColors } from "@/data/colorIndex";
 ```
 Data is bundled JSON with pre-computed Map indexes. O(1) lookups. No state, no effects, no loading states, no hooks. Import and call directly.
 

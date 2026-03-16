@@ -6,6 +6,7 @@ const colorMap = new Map<string, Color>();
 const combinationsByColor = new Map<string, Combination[]>();
 const colorsByGroup = new Map<SwatchGroup, Color[]>();
 const allCombinations: Combination[] = [];
+const combinationMap = new Map<string, Combination>();
 
 for (const raw of colorsData) {
 	const color = raw as Color;
@@ -30,6 +31,7 @@ for (const raw of combinationsData as RawCombination[]) {
 	};
 
 	allCombinations.push(combination);
+	combinationMap.set(combination.id, combination);
 
 	for (const colorId of raw.colorIds) {
 		const existing = combinationsByColor.get(colorId) ?? [];
@@ -40,6 +42,10 @@ for (const raw of combinationsData as RawCombination[]) {
 
 export function getColor(colorId: string): Color | undefined {
 	return colorMap.get(colorId);
+}
+
+export function getCombination(combinationId: string): Combination | undefined {
+	return combinationMap.get(combinationId);
 }
 
 export function getCombinations(colorId: string): Combination[] {
