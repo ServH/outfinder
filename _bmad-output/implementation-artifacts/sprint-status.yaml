@@ -53,6 +53,8 @@ development_status:
   2-0-garment-svg-research-and-selection: done
   2-1-svg-garment-silhouettes-and-outfit-mannequin: done
   2-2-tap-swap-garment-toggle-and-palette-bar: done
+  2-3-outfit-visualizer-layout-and-proportions: done
+  2-4-flat-lay-visualizer-with-wada-identity: ready-for-dev
   epic-2-retrospective: optional
 
   epic-3: backlog

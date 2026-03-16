@@ -21,16 +21,8 @@ export interface GarmentSlotProps {
 	isSelected: boolean;
 	onTap: () => void;
 	onVariantToggle: () => void;
-}
-
-const MANNEQUIN_WIDTH = 192;
-
-function getSlotWidth(garmentType: GarmentType): number {
-	if (garmentType.startsWith("layer-")) return MANNEQUIN_WIDTH * 0.65;
-	if (garmentType.startsWith("top-")) return MANNEQUIN_WIDTH * 0.5;
-	if (garmentType === "bottom-pants") return MANNEQUIN_WIDTH * 0.28;
-	if (garmentType === "bottom-skirt") return MANNEQUIN_WIDTH * 0.4;
-	return MANNEQUIN_WIDTH * 0.3;
+	slotWidth: number;
+	slotHeight: number;
 }
 
 export function GarmentSlot({
@@ -40,6 +32,8 @@ export function GarmentSlot({
 	isSelected,
 	onTap,
 	onVariantToggle,
+	slotWidth,
+	slotHeight,
 }: GarmentSlotProps) {
 	const config = GARMENT_REGISTRY[garmentType];
 	const Component = config.component;
@@ -93,7 +87,7 @@ export function GarmentSlot({
 			accessibilityLabel={label}
 			accessibilityState={{ selected: isSelected }}
 			className="min-h-[44px]"
-			style={{ width: getSlotWidth(garmentType), alignSelf: "center" }}
+			style={{ width: slotWidth, alignSelf: "center" }}
 			onPress={onTap}
 		>
 			{({ pressed }) => (
@@ -107,7 +101,12 @@ export function GarmentSlot({
 					]}
 					className="items-center relative"
 				>
-					<Component color={color} accessibilityLabel="" />
+					<Component
+						color={color}
+						accessibilityLabel=""
+						width={slotWidth}
+						height={slotHeight}
+					/>
 					<Pressable
 						onPress={onVariantToggle}
 						accessibilityLabel="Toggle garment type"

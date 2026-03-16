@@ -1,19 +1,17 @@
 import { Image } from "react-native";
 
-export interface ShoesSneakersProps {
-	color: string;
-	accessibilityLabel: string;
-}
+import type { GarmentComponentProps } from "./index";
 
 export function ShoesSneakers({
 	color,
 	accessibilityLabel,
-}: ShoesSneakersProps) {
+	width,
+	height,
+}: GarmentComponentProps) {
 	return (
 		<Image
-			className="w-full aspect-[2.23]"
 			source={require("@/assets/garments/shoes-sneakers.png")}
-			style={{ tintColor: color }}
+			style={{ width, height, tintColor: color }}
 			resizeMode="contain"
 			accessibilityLabel={accessibilityLabel}
 		/>

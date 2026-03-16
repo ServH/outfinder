@@ -14,6 +14,8 @@ describe("GarmentSlot", () => {
 		isSelected: false,
 		onTap: jest.fn(),
 		onVariantToggle: jest.fn(),
+		slotWidth: 120,
+		slotHeight: 100,
 	};
 
 	beforeEach(() => {

@@ -1,16 +1,17 @@
 import { Image } from "react-native";
 
-export interface LayerHoodieProps {
-	color: string;
-	accessibilityLabel: string;
-}
+import type { GarmentComponentProps } from "./index";
 
-export function LayerHoodie({ color, accessibilityLabel }: LayerHoodieProps) {
+export function LayerHoodie({
+	color,
+	accessibilityLabel,
+	width,
+	height,
+}: GarmentComponentProps) {
 	return (
 		<Image
-			className="w-full aspect-[0.87]"
 			source={require("@/assets/garments/layer-hoodie.png")}
-			style={{ tintColor: color }}
+			style={{ width, height, tintColor: color }}
 			resizeMode="contain"
 			accessibilityLabel={accessibilityLabel}
 		/>

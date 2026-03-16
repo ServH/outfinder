@@ -22,6 +22,8 @@ export type GarmentType =
 export interface GarmentComponentProps {
 	color: string;
 	accessibilityLabel: string;
+	width: number;
+	height: number;
 }
 
 export interface GarmentConfig {

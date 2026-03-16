@@ -1,16 +1,17 @@
 import { Image } from "react-native";
 
-export interface ShoesFormalProps {
-	color: string;
-	accessibilityLabel: string;
-}
+import type { GarmentComponentProps } from "./index";
 
-export function ShoesFormal({ color, accessibilityLabel }: ShoesFormalProps) {
+export function ShoesFormal({
+	color,
+	accessibilityLabel,
+	width,
+	height,
+}: GarmentComponentProps) {
 	return (
 		<Image
-			className="w-full aspect-[2.44]"
 			source={require("@/assets/garments/shoes-formal.png")}
-			style={{ tintColor: color }}
+			style={{ width, height, tintColor: color }}
 			resizeMode="contain"
 			accessibilityLabel={accessibilityLabel}
 		/>
