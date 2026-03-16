@@ -49,12 +49,12 @@ development_status:
   1-5-cross-navigation-haptics-accessibility-polish: done
   epic-1-retrospective: done
 
-  epic-2: in-progress
+  epic-2: done
   2-0-garment-svg-research-and-selection: done
   2-1-svg-garment-silhouettes-and-outfit-mannequin: done
   2-2-tap-swap-garment-toggle-and-palette-bar: done
   2-3-outfit-visualizer-layout-and-proportions: done
-  2-4-flat-lay-visualizer-with-wada-identity: ready-for-dev
+  # 2-4-flat-lay-visualizer-with-wada-identity: descoped from epic-2
   epic-2-retrospective: optional
 
   epic-3: backlog
