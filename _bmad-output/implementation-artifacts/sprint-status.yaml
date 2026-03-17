@@ -56,16 +56,16 @@ development_status:
   2-3-outfit-visualizer-layout-and-proportions: done
   # 2-4-flat-lay-visualizer-with-wada-identity: descoped — rolled back, replaced by 2.5
   2-5-skia-real-garment-visualizer: done
-  epic-2-retrospective: optional
+  epic-2-retrospective: done
 
   epic-3: backlog
   3-1-share-image-generation-and-branding: backlog
   3-2-native-share-sheet-integration: backlog
   epic-3-retrospective: optional
 
-  epic-4: backlog
-  4-1-favorites-context-and-favorite-button: backlog
-  4-2-favorites-list-screen-and-navigation: backlog
+  epic-4: in-progress
+  4-1-favorites-context-and-favorite-button: done
+  4-2-favorites-list-screen-and-navigation: done
   epic-4-retrospective: optional
 
   epic-5: backlog

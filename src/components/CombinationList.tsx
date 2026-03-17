@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { FlatList, View } from "react-native";
 import type { Combination } from "@/data/types";
 import { PaletteStrip } from "./PaletteStrip";
@@ -5,6 +6,8 @@ import { PaletteStrip } from "./PaletteStrip";
 export interface CombinationListProps {
 	combinations: Combination[];
 	selectedColorId: string;
+	isFavorite?: (id: string) => boolean;
+	onToggleFavorite?: (id: string) => void;
 }
 
 function ItemSeparator() {
@@ -18,7 +21,23 @@ function ItemSeparator() {
 export function CombinationList({
 	combinations,
 	selectedColorId,
+	isFavorite,
+	onToggleFavorite,
 }: CombinationListProps) {
+	const renderItem = useCallback(
+		({ item }: { item: Combination }) => (
+			<PaletteStrip
+				combination={item}
+				selectedColorId={selectedColorId}
+				isFavorite={isFavorite?.(item.id)}
+				onToggleFavorite={
+					onToggleFavorite ? () => onToggleFavorite(item.id) : undefined
+				}
+			/>
+		),
+		[selectedColorId, isFavorite, onToggleFavorite],
+	);
+
 	return (
 		<FlatList
 			testID="combination-list"
@@ -27,9 +46,7 @@ export function CombinationList({
 			keyExtractor={(item) => item.id}
 			contentContainerStyle={{ padding: 16 }}
 			ItemSeparatorComponent={ItemSeparator}
-			renderItem={({ item }) => (
-				<PaletteStrip combination={item} selectedColorId={selectedColorId} />
-			)}
+			renderItem={renderItem}
 		/>
 	);
 }

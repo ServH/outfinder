@@ -17,11 +17,9 @@ export function ColorsStack() {
 				component={ColorHome}
 				options={{
 					title: "Outfinder",
-					headerLargeTitle: true,
-					headerLargeStyle: { backgroundColor: wadaTokens.navBarBg },
 					headerStyle: { backgroundColor: wadaTokens.navBarBg },
 					headerTintColor: wadaTokens.textPrimary,
-					headerLargeTitleStyle: {
+					headerTitleStyle: {
 						fontFamily: "NotoSerifJP_500Medium",
 					},
 				}}

@@ -2,6 +2,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { View } from "react-native";
 import { ColorHeader } from "@/components/ColorHeader";
 import { CombinationList } from "@/components/CombinationList";
+import { useFavorites } from "@/contexts/FavoritesContext";
 import { getColor, getCombinations } from "@/data/colorIndex";
 import type { ColorsStackParamList } from "@/navigation/types";
 
@@ -14,6 +15,7 @@ export function Combinations({ route }: CombinationsProps) {
 	const { colorId } = route.params;
 	const color = getColor(colorId);
 	const combinations = getCombinations(colorId);
+	const { isFavorite, toggleFavorite } = useFavorites();
 
 	if (!color) {
 		return null;
@@ -22,7 +24,12 @@ export function Combinations({ route }: CombinationsProps) {
 	return (
 		<View className="flex-1 bg-bg-paper">
 			<ColorHeader color={color} combinationCount={combinations.length} />
-			<CombinationList combinations={combinations} selectedColorId={colorId} />
+			<CombinationList
+				combinations={combinations}
+				selectedColorId={colorId}
+				isFavorite={isFavorite}
+				onToggleFavorite={toggleFavorite}
+			/>
 		</View>
 	);
 }
