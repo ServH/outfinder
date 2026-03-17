@@ -5,10 +5,13 @@ import type { Combination } from "@/data/types";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { hapticLight } from "@/lib/haptics";
 import type { ColorsStackParamList } from "@/navigation/types";
+import { FavoriteButton } from "./FavoriteButton";
 
 export interface PaletteStripProps {
 	combination: Combination;
 	selectedColorId: string;
+	isFavorite?: boolean;
+	onToggleFavorite?: () => void;
 }
 
 type CombinationsNav = NativeStackNavigationProp<
@@ -19,6 +22,8 @@ type CombinationsNav = NativeStackNavigationProp<
 export function PaletteStrip({
 	combination,
 	selectedColorId,
+	isFavorite,
+	onToggleFavorite,
 }: PaletteStripProps) {
 	const navigation = useNavigation<CombinationsNav>();
 	const reducedMotion = useReducedMotion();
@@ -30,6 +35,15 @@ export function PaletteStrip({
 			accessibilityLabel={`Combination: ${colorNames}`}
 		>
 			<View className="overflow-hidden rounded-lg">
+				{onToggleFavorite && (
+					<View className="absolute top-1 right-1 z-10">
+						<FavoriteButton
+							combinationId={combination.id}
+							isFavorite={isFavorite ?? false}
+							onToggle={onToggleFavorite}
+						/>
+					</View>
+				)}
 				<View className="flex-row" style={{ height: 120 }}>
 					{combination.colors.map((color, index) => {
 						const isSelected = color.id === selectedColorId;

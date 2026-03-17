@@ -59,8 +59,8 @@ describe("PaletteBar", () => {
 
 		render(<PaletteBar slots={slots} />);
 
-		expect(screen.getByText("赤")).toBeTruthy();
-		expect(screen.getByText("青")).toBeTruthy();
+		expect(screen.getByText("Red")).toBeTruthy();
+		expect(screen.getByText("Blue")).toBeTruthy();
 	});
 
 	it("renders correct number of swatches for 3 colors", () => {
@@ -72,9 +72,9 @@ describe("PaletteBar", () => {
 
 		render(<PaletteBar slots={slots} />);
 
-		expect(screen.getByText("赤")).toBeTruthy();
-		expect(screen.getByText("青")).toBeTruthy();
-		expect(screen.getByText("緑")).toBeTruthy();
+		expect(screen.getByText("Red")).toBeTruthy();
+		expect(screen.getByText("Blue")).toBeTruthy();
+		expect(screen.getByText("Green")).toBeTruthy();
 	});
 
 	it("renders correct number of swatches for 4 colors", () => {
@@ -87,10 +87,10 @@ describe("PaletteBar", () => {
 
 		render(<PaletteBar slots={slots} />);
 
-		expect(screen.getByText("赤")).toBeTruthy();
-		expect(screen.getByText("青")).toBeTruthy();
-		expect(screen.getByText("緑")).toBeTruthy();
-		expect(screen.getByText("黄")).toBeTruthy();
+		expect(screen.getByText("Red")).toBeTruthy();
+		expect(screen.getByText("Blue")).toBeTruthy();
+		expect(screen.getByText("Green")).toBeTruthy();
+		expect(screen.getByText("Yellow")).toBeTruthy();
 	});
 
 	it("displays garment labels on each swatch", () => {

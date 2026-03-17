@@ -14,6 +14,24 @@ jest.mock("@/hooks/useReducedMotion", () => ({
 	useReducedMotion: () => false,
 }));
 
+const mockIsFavorite = jest.fn().mockReturnValue(false);
+const mockToggleFavorite = jest.fn();
+
+jest.mock("@/contexts/FavoritesContext", () => ({
+	useFavorites: () => ({
+		favorites: new Set(),
+		isFavorite: mockIsFavorite,
+		toggleFavorite: mockToggleFavorite,
+		count: 0,
+	}),
+}));
+
+jest.mock("expo-symbols", () => ({
+	SymbolView: "SymbolView",
+}));
+
+jest.mock("react-native-reanimated");
+
 const realColor = getColor("c001")!;
 const realCombinations = getCombinations("c001");
 
@@ -76,5 +94,17 @@ describe("Combinations", () => {
 		);
 
 		expect(toJSON()).toBeNull();
+	});
+
+	it("passes isFavorite and onToggleFavorite to CombinationList", () => {
+		renderCombinations("c001");
+
+		const flatList = screen.getByTestId("combination-list");
+		const rendered = flatList.props.renderItem({
+			item: realCombinations[0],
+			index: 0,
+		});
+		expect(rendered.props.isFavorite).toBe(false);
+		expect(rendered.props.onToggleFavorite).toBeDefined();
 	});
 });

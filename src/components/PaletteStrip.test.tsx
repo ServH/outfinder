@@ -4,6 +4,12 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { hapticLight } from "@/lib/haptics";
 import { PaletteStrip } from "./PaletteStrip";
 
+jest.mock("expo-symbols", () => ({
+	SymbolView: "SymbolView",
+}));
+
+jest.mock("react-native-reanimated");
+
 const mockPush = jest.fn();
 jest.mock("@react-navigation/native", () => ({
 	useNavigation: () => ({ push: mockPush }),
@@ -261,5 +267,55 @@ describe("PaletteStrip", () => {
 			colorId: "c002",
 		});
 		expect(hapticLight).toHaveBeenCalled();
+	});
+
+	// === Story 4.1 — FavoriteButton integration ===
+
+	it("renders FavoriteButton when onToggleFavorite is provided", () => {
+		render(
+			<PaletteStrip
+				combination={twoColorCombo}
+				selectedColorId="c001"
+				isFavorite={false}
+				onToggleFavorite={jest.fn()}
+			/>,
+		);
+
+		expect(screen.getByTestId("favorite-button-combo-2")).toBeTruthy();
+	});
+
+	it("does not render FavoriteButton when onToggleFavorite is not provided", () => {
+		render(<PaletteStrip combination={twoColorCombo} selectedColorId="c001" />);
+
+		expect(screen.queryByTestId("favorite-button-combo-2")).toBeNull();
+	});
+
+	it("passes isFavorite state to FavoriteButton", () => {
+		render(
+			<PaletteStrip
+				combination={twoColorCombo}
+				selectedColorId="c001"
+				isFavorite={true}
+				onToggleFavorite={jest.fn()}
+			/>,
+		);
+
+		const icon = screen.getByTestId("favorite-icon-combo-2");
+		expect(icon.props.name).toBe("heart.fill");
+	});
+
+	it("calls onToggleFavorite when FavoriteButton is pressed", () => {
+		const mockToggle = jest.fn();
+		render(
+			<PaletteStrip
+				combination={twoColorCombo}
+				selectedColorId="c001"
+				isFavorite={false}
+				onToggleFavorite={mockToggle}
+			/>,
+		);
+
+		fireEvent.press(screen.getByTestId("favorite-button-combo-2"));
+		expect(mockToggle).toHaveBeenCalledTimes(1);
 	});
 });

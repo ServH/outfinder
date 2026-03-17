@@ -10,6 +10,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
+import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { TabNavigator } from "@/navigation/TabNavigator";
 
 SplashScreen.preventAutoHideAsync();
@@ -33,9 +34,11 @@ export function App() {
 	}
 
 	return (
-		<NavigationContainer>
-			<TabNavigator />
-		</NavigationContainer>
+		<FavoritesProvider>
+			<NavigationContainer>
+				<TabNavigator />
+			</NavigationContainer>
+		</FavoritesProvider>
 	);
 }
 
