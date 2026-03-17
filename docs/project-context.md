@@ -2,7 +2,7 @@
 
 ## What is this project?
 
-A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "A Dictionary of Color Combinations" — into a visual outfit coordination tool. Users select a garment color, see curated harmonious combinations, and visualize them as customizable clothing silhouettes they can share on Instagram and TikTok.
+A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "A Dictionary of Color Combinations" — into a visual outfit coordination tool. Users select a garment color, see curated harmonious combinations, and visualize them as realistic tinted clothing on an editorial card they can share on Instagram and TikTok.
 
 ## Tech Stack
 
@@ -13,6 +13,7 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 | Styling | NativeWind 4.2.2 (Tailwind CSS for RN) |
 | Navigation | React Navigation 7 (native stacks) |
 | Animations | Reanimated 4.2.2 |
+| 2D Rendering | @shopify/react-native-skia 2.5.1 (Canvas, ColorMatrix, RadialGradient) |
 | Icons | expo-symbols (SF Symbols) |
 | IAP | RevenueCat (react-native-purchases) — not yet implemented |
 | Storage | AsyncStorage + expo-secure-store — not yet implemented |
@@ -33,8 +34,10 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 - **Epic 1: DONE** — Color Discovery & Combination Exploration (6/6 stories, 77 tests)
 - **Epic 2: IN PROGRESS** — Outfit Visualization
   - Story 2.0: DONE — Garment SVG research, PNG + tintColor approved
-  - Story 2.1: DONE — PNG garment silhouettes + OutfitMannequin (132 tests total)
-  - Story 2.2: DONE — Tap-swap, garment toggle, PaletteBar (157 tests total)
+  - Story 2.1: DONE — PNG garment silhouettes + OutfitMannequin
+  - Story 2.2: DONE — Tap-swap, garment toggle, PaletteBar
+  - Story 2.3: DONE — Proportional mannequin layout
+  - Story 2.5: DONE — Skia real garment visualizer (replaced Stories 2.1-2.3 components with Skia tinting, editorial card, Wada identity — 167 tests total)
 - Epics 3-6: Backlog
 - 6 epics planned, 15+ stories total
 - Planning validated: implementation readiness passed 2026-03-12
@@ -47,7 +50,9 @@ outfinder/
 ├── App.tsx                          # Entry point — font loading, NavigationContainer, TabNavigator
 ├── index.js                         # Registers App.tsx with Expo
 ├── __mocks__/
-│   └── react-native-reanimated.js   # Manual Reanimated v4 Jest mock (built-in imports native modules)
+│   ├── react-native-reanimated.js   # Manual Reanimated v4 Jest mock (built-in imports native modules)
+│   └── @shopify/
+│       └── react-native-skia.js     # Manual Skia Jest mock (Canvas, Image, Fill, etc.)
 ├── src/
 │   ├── components/
 │   │   ├── ColorSwatch.tsx          # 62x62px Pressable, Reanimated spring scale (1.05x), pale border detection
@@ -56,19 +61,14 @@ outfinder/
 │   │   ├── ColorHeader.tsx          # 40x40 swatch + JP/EN names + combination count
 │   │   ├── PaletteStrip.tsx         # 2-4 color rectangles, cross-navigation, haptics, selected dot
 │   │   ├── CombinationList.tsx      # FlatList of PaletteStrips with 24px spacing + dividers
-│   │   ├── GarmentSlot.tsx          # Interactive garment slot — Pressable with selected state border, variant toggle, Reanimated animations
-│   │   ├── OutfitMannequin.tsx      # Vertically stacks GarmentSlots with interactive props from useOutfitState
-│   │   ├── PaletteBar.tsx           # Horizontal row of color swatches with JP names, reflects slot assignments
+│   │   ├── TintedGarment.tsx        # Skia Canvas + ColorMatrix tinting for any garment photo
+│   │   ├── OutfitCard.tsx           # White editorial card with stacked TintedGarments, tap-swap, variant toggle
+│   │   ├── WarmBackground.tsx       # Full-screen Skia warm radial gradient (Japanese paper tones)
+│   │   ├── Aureola.tsx              # Radial glow behind outfit card using dominant color
+│   │   ├── WadaHeader.tsx           # Japanese combination name + "N colors · Sanzo Wada" subtitle
+│   │   ├── MiniPaletteStrip.tsx     # Thin horizontal color strip with names below the card
 │   │   └── garments/
-│   │       ├── index.ts             # GARMENT_REGISTRY — GarmentType union, GarmentConfig, 8 garment mappings
-│   │       ├── TopTShirt.tsx         # PNG + tintColor Image wrapper
-│   │       ├── TopShirt.tsx          # PNG + tintColor Image wrapper
-│   │       ├── BottomPants.tsx       # PNG + tintColor Image wrapper
-│   │       ├── BottomSkirt.tsx       # PNG + tintColor Image wrapper
-│   │       ├── LayerJacket.tsx       # PNG + tintColor Image wrapper
-│   │       ├── LayerHoodie.tsx       # PNG + tintColor Image wrapper
-│   │       ├── ShoesSneakers.tsx     # PNG + tintColor Image wrapper
-│   │       └── ShoesFormal.tsx       # PNG + tintColor Image wrapper
+│   │       └── index.ts             # GARMENT_REGISTRY — GarmentType union, GarmentConfig (image, label, heightHint)
 │   ├── data/
 │   │   ├── types.ts                 # Color, Combination, SwatchGroup types
 │   │   ├── colors.json              # 159 Wada colors (hex, nameJp, nameEn, id, swatchGroup, combinationCount)
@@ -88,12 +88,14 @@ outfinder/
 │   ├── screens/
 │   │   ├── ColorHome.tsx            # Grid of 159 colors with tab filtering by swatch family
 │   │   ├── Combinations.tsx         # ColorHeader + CombinationList for selected color
-│   │   ├── OutfitVisualizer.tsx     # Outfit visualization with tap-swap, garment toggle, PaletteBar, haptics, VoiceOver (Story 2.2)
+│   │   ├── OutfitVisualizer.tsx     # Outfit visualization with Skia tinting, editorial card, Wada identity, haptics, VoiceOver
 │   │   ├── FavoritesList.tsx        # PLACEHOLDER — Epic 4 implements
 │   │   └── Settings.tsx             # PLACEHOLDER — Epic 6 implements
 │   ├── styles/
 │   │   └── theme.ts                 # 16 Wada design token constants (camelCase) for programmatic access
 │   └── global.css                   # Tailwind directives (@tailwind base/components/utilities)
+├── assets/
+│   └── garments/                    # 8 real garment photo PNGs (white-on-transparent, AI-generated flat-lay)
 ├── tailwind.config.js               # 16 Wada tokens, font families, 8px spacing scale
 ├── metro.config.js                  # NativeWind + SVG transformer
 ├── babel.config.js                  # NativeWind jsxImportSource + Reanimated plugin
@@ -110,6 +112,12 @@ outfinder/
 - NativeWind `className` for static styles — NEVER `StyleSheet.create`
 - `style={{}}` ONLY for dynamic Wada color values (e.g., `style={{ backgroundColor: color.hex }}`)
 - Co-located test files: `Component.test.tsx` next to `Component.tsx`
+
+### Garment System (Skia-based)
+- `GARMENT_REGISTRY` in `garments/index.ts` is the single source of truth for all garments
+- Each garment: `{ image: require(), label: string, heightHint: number }`
+- `TintedGarment` applies Skia `ColorMatrix` to tint any white-on-transparent PNG
+- To add a garment: add PNG + registry entry + optional variant pair. No component changes needed.
 
 ### NativeWind + Pressable (CRITICAL)
 NativeWind 4 compiles `className` into the `style` prop. This **conflicts** with Pressable's `({ pressed }) => style` function — NativeWind overwrites it, making dynamic styles invisible.
@@ -166,6 +174,7 @@ Use `push()` to allow stacking multiple instances (cross-navigation). `navigate(
 ### Testing
 - Jest ~29.7.0 with jest-expo preset (NOT Jest 30.x — incompatible with Expo SDK 55)
 - Manual Reanimated mock at `__mocks__/react-native-reanimated.js` (built-in mock fails)
+- Manual Skia mock at `__mocks__/@shopify/react-native-skia.js` (renders as Views with testIDs)
 - `pnpm test -- --ci` FAILS — use `npx jest --ci` in CI
 - FlatList virtualizes rendering — test via `data` prop, not full item count assertions
 - Mock `@react-navigation/native` for navigation tests

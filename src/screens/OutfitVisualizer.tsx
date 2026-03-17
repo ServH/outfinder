@@ -1,15 +1,19 @@
 import type { RouteProp } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
-import { useCallback, useState } from "react";
-import type { LayoutChangeEvent } from "react-native";
-import { AccessibilityInfo, Text, View } from "react-native";
+import { useCallback } from "react";
+import { AccessibilityInfo, Dimensions, Text, View } from "react-native";
+import { Aureola } from "@/components/Aureola";
 import { GARMENT_REGISTRY } from "@/components/garments/index";
-import { OutfitMannequin } from "@/components/OutfitMannequin";
-import { PaletteBar } from "@/components/PaletteBar";
+import { MiniPaletteStrip } from "@/components/MiniPaletteStrip";
+import { OutfitCard } from "@/components/OutfitCard";
+import { WadaHeader } from "@/components/WadaHeader";
+import { WarmBackground } from "@/components/WarmBackground";
 import { getCombination } from "@/data/colorIndex";
 import { useOutfitState, VARIANT_PAIRS } from "@/hooks/useOutfitState";
 import { hapticMedium } from "@/lib/haptics";
 import type { ColorsStackParamList } from "@/navigation/types";
+
+const { width: SCREEN_W } = Dimensions.get("window");
 
 type OutfitVisualizerRoute = RouteProp<
 	ColorsStackParamList,
@@ -23,16 +27,6 @@ export function OutfitVisualizer() {
 
 	const { slots, selectedSlotIndex, selectSlot, toggleVariant } =
 		useOutfitState(combination?.colors ?? []);
-
-	const [mannequinLayout, setMannequinLayout] = useState({
-		height: 0,
-		width: 0,
-	});
-
-	const handleMannequinAreaLayout = useCallback((e: LayoutChangeEvent) => {
-		const { height, width } = e.nativeEvent.layout;
-		setMannequinLayout({ height, width });
-	}, []);
 
 	const handleSlotTap = useCallback(
 		(index: number) => {
@@ -89,27 +83,29 @@ export function OutfitVisualizer() {
 	}
 
 	return (
-		<View
-			className="flex-1 bg-paper"
-			accessibilityLabel="Outfit Visualizer screen"
-		>
-			<View
-				testID="mannequin-area"
-				className="flex-1 items-center justify-center px-6"
-				onLayout={handleMannequinAreaLayout}
-			>
-				{mannequinLayout.height > 0 && (
-					<OutfitMannequin
-						slots={slots}
-						selectedSlotIndex={selectedSlotIndex}
-						onSlotTap={handleSlotTap}
-						onVariantToggle={handleVariantToggle}
-						availableHeight={mannequinLayout.height}
-						containerWidth={mannequinLayout.width}
+		<View style={{ flex: 1 }} accessibilityLabel="Outfit Visualizer screen">
+			<WarmBackground />
+			<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+				<Aureola hex={slots[0].color.hex} width={SCREEN_W} height={500} />
+				<WadaHeader
+					nameJp={combination.nameJp}
+					colorCount={combination.colors.length}
+				/>
+				<OutfitCard
+					slots={slots}
+					selectedSlotIndex={selectedSlotIndex}
+					onSlotTap={handleSlotTap}
+					onVariantToggle={handleVariantToggle}
+				/>
+				<View style={{ marginTop: 16 }}>
+					<MiniPaletteStrip
+						colors={slots.map((s) => ({
+							hex: s.color.hex,
+							nameEn: s.color.nameEn,
+						}))}
 					/>
-				)}
+				</View>
 			</View>
-			<PaletteBar slots={slots} />
 		</View>
 	);
 }

@@ -48,13 +48,6 @@ const blue = makeColor("c2", "#0000ff", "Blue", "青");
 const green = makeColor("c3", "#00ff00", "Green", "緑");
 const yellow = makeColor("c4", "#ffff00", "Yellow", "黄");
 
-function triggerMannequinLayout() {
-	const area = screen.getByTestId("mannequin-area");
-	fireEvent(area, "layout", {
-		nativeEvent: { layout: { width: 390, height: 500, x: 0, y: 0 } },
-	});
-}
-
 describe("OutfitVisualizer", () => {
 	beforeEach(() => {
 		mockGetCombination.mockReset();
@@ -67,12 +60,11 @@ describe("OutfitVisualizer", () => {
 		mockGetCombination.mockReturnValue({
 			id: "combo-2",
 			colors: [red, blue],
-			nameJp: "",
+			nameJp: "テスト",
 			nameEn: "Test 2",
 		});
 
 		render(<OutfitVisualizer />);
-		triggerMannequinLayout();
 
 		expect(mockGetCombination).toHaveBeenCalledWith("combo-2");
 		expect(
@@ -88,12 +80,11 @@ describe("OutfitVisualizer", () => {
 		mockGetCombination.mockReturnValue({
 			id: "combo-3",
 			colors: [red, blue, green],
-			nameJp: "",
+			nameJp: "テスト",
 			nameEn: "Test 3",
 		});
 
 		render(<OutfitVisualizer />);
-		triggerMannequinLayout();
 
 		expect(
 			screen.getByLabelText("T-shirt, colored Red, tap to select for swap"),
@@ -111,12 +102,11 @@ describe("OutfitVisualizer", () => {
 		mockGetCombination.mockReturnValue({
 			id: "combo-4",
 			colors: [red, blue, green, yellow],
-			nameJp: "",
+			nameJp: "テスト",
 			nameEn: "Test 4",
 		});
 
 		render(<OutfitVisualizer />);
-		triggerMannequinLayout();
 
 		expect(
 			screen.getByLabelText("Jacket, colored Red, tap to select for swap"),
@@ -146,7 +136,7 @@ describe("OutfitVisualizer", () => {
 		mockGetCombination.mockReturnValue({
 			id: "combo-2",
 			colors: [red, blue],
-			nameJp: "",
+			nameJp: "テスト",
 			nameEn: "Test",
 		});
 
@@ -164,20 +154,61 @@ describe("OutfitVisualizer", () => {
 		expect(mockGetCombination).toHaveBeenCalledWith("specific-combo-id");
 	});
 
-	it("renders PaletteBar with color swatches", () => {
+	it("renders WadaHeader with combination name", () => {
 		mockRouteParams.combinationId = "combo-2";
 		mockGetCombination.mockReturnValue({
 			id: "combo-2",
 			colors: [red, blue],
-			nameJp: "",
+			nameJp: "秋の装い",
+			nameEn: "Autumn Look",
+		});
+
+		render(<OutfitVisualizer />);
+
+		expect(screen.getByText("秋の装い")).toBeTruthy();
+		expect(screen.getByText("2 colors · Sanzo Wada")).toBeTruthy();
+	});
+
+	it("renders MiniPaletteStrip with color names", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
 			nameEn: "Test",
 		});
 
 		render(<OutfitVisualizer />);
 
-		expect(
-			screen.getByLabelText("Color palette: Red on T-shirt, Blue on Pants"),
-		).toBeTruthy();
+		expect(screen.getByLabelText("Outfit color palette")).toBeTruthy();
+	});
+
+	it("renders OutfitCard", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		expect(screen.getByLabelText("Outfit card")).toBeTruthy();
+	});
+
+	it("renders warm background", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		expect(screen.getByLabelText("Warm background")).toBeTruthy();
 	});
 
 	it("fires hapticMedium when tapping a garment to select", () => {
@@ -185,12 +216,11 @@ describe("OutfitVisualizer", () => {
 		mockGetCombination.mockReturnValue({
 			id: "combo-2",
 			colors: [red, blue],
-			nameJp: "",
+			nameJp: "テスト",
 			nameEn: "Test",
 		});
 
 		render(<OutfitVisualizer />);
-		triggerMannequinLayout();
 
 		fireEvent.press(
 			screen.getByLabelText("T-shirt, colored Red, tap to select for swap"),
@@ -204,12 +234,11 @@ describe("OutfitVisualizer", () => {
 		mockGetCombination.mockReturnValue({
 			id: "combo-2",
 			colors: [red, blue],
-			nameJp: "",
+			nameJp: "テスト",
 			nameEn: "Test",
 		});
 
 		render(<OutfitVisualizer />);
-		triggerMannequinLayout();
 
 		fireEvent.press(
 			screen.getByLabelText("T-shirt, colored Red, tap to select for swap"),
@@ -223,14 +252,13 @@ describe("OutfitVisualizer", () => {
 		mockGetCombination.mockReturnValue({
 			id: "combo-2",
 			colors: [red, blue],
-			nameJp: "",
+			nameJp: "テスト",
 			nameEn: "Test",
 		});
 
 		render(<OutfitVisualizer />);
-		triggerMannequinLayout();
 
-		const toggleButtons = screen.getAllByLabelText("Toggle garment type");
+		const toggleButtons = screen.getAllByLabelText(/Change .* variant/);
 		fireEvent.press(toggleButtons[0]);
 
 		expect(mockHapticMedium).toHaveBeenCalledTimes(1);
@@ -241,14 +269,13 @@ describe("OutfitVisualizer", () => {
 		mockGetCombination.mockReturnValue({
 			id: "combo-2",
 			colors: [red, blue],
-			nameJp: "",
+			nameJp: "テスト",
 			nameEn: "Test",
 		});
 
 		render(<OutfitVisualizer />);
-		triggerMannequinLayout();
 
-		const toggleButtons = screen.getAllByLabelText("Toggle garment type");
+		const toggleButtons = screen.getAllByLabelText(/Change .* variant/);
 		fireEvent.press(toggleButtons[0]);
 
 		expect(mockAnnounce).toHaveBeenCalledWith("Changed to Shirt");
@@ -259,12 +286,11 @@ describe("OutfitVisualizer", () => {
 		mockGetCombination.mockReturnValue({
 			id: "combo-2",
 			colors: [red, blue],
-			nameJp: "",
+			nameJp: "テスト",
 			nameEn: "Test",
 		});
 
 		render(<OutfitVisualizer />);
-		triggerMannequinLayout();
 
 		// Tap first garment to select
 		fireEvent.press(
@@ -286,12 +312,11 @@ describe("OutfitVisualizer", () => {
 		mockGetCombination.mockReturnValue({
 			id: "combo-2",
 			colors: [red, blue],
-			nameJp: "",
+			nameJp: "テスト",
 			nameEn: "Test",
 		});
 
 		render(<OutfitVisualizer />);
-		triggerMannequinLayout();
 
 		const tshirt = screen.getByLabelText(
 			"T-shirt, colored Red, tap to select for swap",
@@ -308,5 +333,230 @@ describe("OutfitVisualizer", () => {
 		fireEvent.press(tshirt);
 		expect(mockHapticMedium).not.toHaveBeenCalled();
 		expect(mockAnnounce).not.toHaveBeenCalled();
+	});
+
+	it("renders WadaHeader for 3-color combination", () => {
+		mockRouteParams.combinationId = "combo-3";
+		mockGetCombination.mockReturnValue({
+			id: "combo-3",
+			colors: [red, blue, green],
+			nameJp: "春の三色",
+			nameEn: "Spring Trio",
+		});
+
+		render(<OutfitVisualizer />);
+
+		expect(screen.getByText("春の三色")).toBeTruthy();
+		expect(screen.getByText("3 colors · Sanzo Wada")).toBeTruthy();
+	});
+
+	it("renders WadaHeader for 4-color combination", () => {
+		mockRouteParams.combinationId = "combo-4";
+		mockGetCombination.mockReturnValue({
+			id: "combo-4",
+			colors: [red, blue, green, yellow],
+			nameJp: "四季の色",
+			nameEn: "Four Seasons",
+		});
+
+		render(<OutfitVisualizer />);
+
+		expect(screen.getByText("四季の色")).toBeTruthy();
+		expect(screen.getByText("4 colors · Sanzo Wada")).toBeTruthy();
+	});
+
+	it("renders MiniPaletteStrip color names for 3-color combo", () => {
+		mockRouteParams.combinationId = "combo-3";
+		mockGetCombination.mockReturnValue({
+			id: "combo-3",
+			colors: [red, blue, green],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		expect(screen.getByText("Red")).toBeTruthy();
+		expect(screen.getByText("Blue")).toBeTruthy();
+		expect(screen.getByText("Green")).toBeTruthy();
+	});
+
+	it("haptic fires on variant toggle of second slot", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		const toggleButtons = screen.getAllByLabelText(/Change .* variant/);
+		fireEvent.press(toggleButtons[1]);
+
+		expect(mockHapticMedium).toHaveBeenCalledTimes(1);
+	});
+
+	it("VoiceOver announces swap on 3-color combination", () => {
+		mockRouteParams.combinationId = "combo-3";
+		mockGetCombination.mockReturnValue({
+			id: "combo-3",
+			colors: [red, blue, green],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		fireEvent.press(
+			screen.getByLabelText("T-shirt, colored Red, tap to select for swap"),
+		);
+		fireEvent.press(
+			screen.getByLabelText("Sneakers, colored Green, tap to select for swap"),
+		);
+
+		expect(mockAnnounce).toHaveBeenCalledWith(
+			"T-shirt is now Green, Sneakers is now Red",
+		);
+	});
+
+	it("variant toggle announces pants to skirt change", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		const toggleButtons = screen.getAllByLabelText(/Change .* variant/);
+		fireEvent.press(toggleButtons[1]); // toggle Pants → Skirt
+
+		expect(mockAnnounce).toHaveBeenCalledWith("Changed to Skirt");
+	});
+
+	it("renders aureola component", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		expect(screen.getByLabelText("Color aureola")).toBeTruthy();
+	});
+
+	it("not-found state has screen accessibility label", () => {
+		mockRouteParams.combinationId = "invalid";
+		mockGetCombination.mockReturnValue(undefined);
+
+		render(<OutfitVisualizer />);
+
+		expect(screen.getByLabelText("Outfit Visualizer screen")).toBeTruthy();
+	});
+
+	it("multiple swaps work correctly", () => {
+		mockRouteParams.combinationId = "combo-3";
+		mockGetCombination.mockReturnValue({
+			id: "combo-3",
+			colors: [red, blue, green],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		// First swap: T-shirt (Red) ↔ Pants (Blue)
+		fireEvent.press(
+			screen.getByLabelText("T-shirt, colored Red, tap to select for swap"),
+		);
+		fireEvent.press(
+			screen.getByLabelText("Pants, colored Blue, tap to select for swap"),
+		);
+
+		// Verify first swap
+		expect(
+			screen.getByLabelText("T-shirt, colored Blue, tap to select for swap"),
+		).toBeTruthy();
+		expect(
+			screen.getByLabelText("Pants, colored Red, tap to select for swap"),
+		).toBeTruthy();
+
+		// Second swap: T-shirt (Blue) ↔ Sneakers (Green)
+		fireEvent.press(
+			screen.getByLabelText("T-shirt, colored Blue, tap to select for swap"),
+		);
+		fireEvent.press(
+			screen.getByLabelText("Sneakers, colored Green, tap to select for swap"),
+		);
+
+		expect(
+			screen.getByLabelText("T-shirt, colored Green, tap to select for swap"),
+		).toBeTruthy();
+		expect(
+			screen.getByLabelText("Sneakers, colored Blue, tap to select for swap"),
+		).toBeTruthy();
+	});
+
+	it("MiniPaletteStrip shows all color names for 4-color combo", () => {
+		mockRouteParams.combinationId = "combo-4";
+		mockGetCombination.mockReturnValue({
+			id: "combo-4",
+			colors: [red, blue, green, yellow],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		expect(screen.getByText("Red")).toBeTruthy();
+		expect(screen.getByText("Blue")).toBeTruthy();
+		expect(screen.getByText("Green")).toBeTruthy();
+		expect(screen.getByText("Yellow")).toBeTruthy();
+	});
+
+	it("haptic fires twice for complete swap interaction", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		fireEvent.press(
+			screen.getByLabelText("T-shirt, colored Red, tap to select for swap"),
+		);
+		fireEvent.press(
+			screen.getByLabelText("Pants, colored Blue, tap to select for swap"),
+		);
+
+		expect(mockHapticMedium).toHaveBeenCalledTimes(2);
+	});
+
+	it("renders all presentation components for 4-color combo", () => {
+		mockRouteParams.combinationId = "combo-4";
+		mockGetCombination.mockReturnValue({
+			id: "combo-4",
+			colors: [red, blue, green, yellow],
+			nameJp: "四色",
+			nameEn: "Four",
+		});
+
+		render(<OutfitVisualizer />);
+
+		expect(screen.getByLabelText("Warm background")).toBeTruthy();
+		expect(screen.getByLabelText("Color aureola")).toBeTruthy();
+		expect(screen.getByLabelText("Outfit card")).toBeTruthy();
+		expect(screen.getByLabelText("Outfit color palette")).toBeTruthy();
+		expect(screen.getByText("四色")).toBeTruthy();
 	});
 });

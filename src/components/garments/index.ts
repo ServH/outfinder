@@ -1,13 +1,4 @@
-import type { ComponentType } from "react";
-
-import { BottomPants } from "./BottomPants";
-import { BottomSkirt } from "./BottomSkirt";
-import { LayerHoodie } from "./LayerHoodie";
-import { LayerJacket } from "./LayerJacket";
-import { ShoesFormal } from "./ShoesFormal";
-import { ShoesSneakers } from "./ShoesSneakers";
-import { TopShirt } from "./TopShirt";
-import { TopTShirt } from "./TopTShirt";
+import type { DataSourceParam } from "@shopify/react-native-skia";
 
 export type GarmentType =
 	| "top-tshirt"
@@ -19,25 +10,58 @@ export type GarmentType =
 	| "shoes-sneakers"
 	| "shoes-formal";
 
-export interface GarmentComponentProps {
-	color: string;
-	accessibilityLabel: string;
-	width: number;
-	height: number;
-}
-
 export interface GarmentConfig {
-	component: ComponentType<GarmentComponentProps>;
+	image: DataSourceParam;
 	label: string;
+	heightHint: number;
 }
 
+// To add a new garment type:
+// 1. Add white-on-transparent flat-lay PNG to assets/garments/{type}.png
+// 2. Add type to GarmentType union above
+// 3. Add entry to GARMENT_REGISTRY with { image, label, heightHint }
+// 4. Optionally add to VARIANT_PAIRS in useOutfitState.ts
+// 5. Optionally add to SLOT_CONFIGS in useOutfitState.ts
+// No component changes needed — TintedGarment tints any registered garment.
 export const GARMENT_REGISTRY: Record<GarmentType, GarmentConfig> = {
-	"top-tshirt": { component: TopTShirt, label: "T-shirt" },
-	"top-shirt": { component: TopShirt, label: "Shirt" },
-	"bottom-pants": { component: BottomPants, label: "Pants" },
-	"bottom-skirt": { component: BottomSkirt, label: "Skirt" },
-	"layer-jacket": { component: LayerJacket, label: "Jacket" },
-	"layer-hoodie": { component: LayerHoodie, label: "Hoodie" },
-	"shoes-sneakers": { component: ShoesSneakers, label: "Sneakers" },
-	"shoes-formal": { component: ShoesFormal, label: "Formal shoes" },
+	"top-tshirt": {
+		image: require("@/assets/garments/top-tshirt.png"),
+		label: "T-shirt",
+		heightHint: 105,
+	},
+	"top-shirt": {
+		image: require("@/assets/garments/top-shirt.png"),
+		label: "Shirt",
+		heightHint: 105,
+	},
+	"bottom-pants": {
+		image: require("@/assets/garments/bottom-pants.png"),
+		label: "Pants",
+		heightHint: 160,
+	},
+	"bottom-skirt": {
+		image: require("@/assets/garments/bottom-skirt.png"),
+		label: "Skirt",
+		heightHint: 120,
+	},
+	"layer-jacket": {
+		image: require("@/assets/garments/layer-jacket.png"),
+		label: "Jacket",
+		heightHint: 110,
+	},
+	"layer-hoodie": {
+		image: require("@/assets/garments/layer-hoodie.png"),
+		label: "Hoodie",
+		heightHint: 110,
+	},
+	"shoes-sneakers": {
+		image: require("@/assets/garments/shoes-sneakers.png"),
+		label: "Sneakers",
+		heightHint: 60,
+	},
+	"shoes-formal": {
+		image: require("@/assets/garments/shoes-formal.png"),
+		label: "Formal shoes",
+		heightHint: 65,
+	},
 };
