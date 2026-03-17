@@ -1,6 +1,6 @@
 # Story 4.1: Favorites Context & FavoriteButton
 
-Status: review
+Status: done
 
 ## Story
 
