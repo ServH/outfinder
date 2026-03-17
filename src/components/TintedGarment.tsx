@@ -1,7 +1,6 @@
 import {
 	Canvas,
 	ColorMatrix,
-	Fill,
 	Image,
 	useImage,
 } from "@shopify/react-native-skia";

@@ -34,11 +34,11 @@ function makeSlots(
 
 describe("OutfitCard", () => {
 	const mockOnSlotTap = jest.fn();
-	const mockOnVariantToggle = jest.fn();
+	const mockOnVariantCycle = jest.fn();
 
 	beforeEach(() => {
 		mockOnSlotTap.mockReset();
-		mockOnVariantToggle.mockReset();
+		mockOnVariantCycle.mockReset();
 	});
 
 	it("renders correct number of TintedGarments for 2 slots", () => {
@@ -48,7 +48,7 @@ describe("OutfitCard", () => {
 				slots={slots}
 				selectedSlotIndex={null}
 				onSlotTap={mockOnSlotTap}
-				onVariantToggle={mockOnVariantToggle}
+				onVariantCycle={mockOnVariantCycle}
 			/>,
 		);
 
@@ -71,7 +71,7 @@ describe("OutfitCard", () => {
 				slots={slots}
 				selectedSlotIndex={null}
 				onSlotTap={mockOnSlotTap}
-				onVariantToggle={mockOnVariantToggle}
+				onVariantCycle={mockOnVariantCycle}
 			/>,
 		);
 
@@ -98,7 +98,7 @@ describe("OutfitCard", () => {
 				slots={slots}
 				selectedSlotIndex={null}
 				onSlotTap={mockOnSlotTap}
-				onVariantToggle={mockOnVariantToggle}
+				onVariantCycle={mockOnVariantCycle}
 			/>,
 		);
 
@@ -123,7 +123,7 @@ describe("OutfitCard", () => {
 				slots={slots}
 				selectedSlotIndex={null}
 				onSlotTap={mockOnSlotTap}
-				onVariantToggle={mockOnVariantToggle}
+				onVariantCycle={mockOnVariantCycle}
 			/>,
 		);
 
@@ -137,7 +137,7 @@ describe("OutfitCard", () => {
 				slots={slots}
 				selectedSlotIndex={null}
 				onSlotTap={mockOnSlotTap}
-				onVariantToggle={mockOnVariantToggle}
+				onVariantCycle={mockOnVariantCycle}
 			/>,
 		);
 
@@ -147,20 +147,44 @@ describe("OutfitCard", () => {
 		expect(mockOnSlotTap).toHaveBeenCalledWith(1);
 	});
 
-	it("onVariantToggle fires with correct index", () => {
+	it("onVariantCycle fires via accessibility increment action", () => {
 		const slots = makeSlots(["top-tshirt", red], ["bottom-pants", blue]);
 		render(
 			<OutfitCard
 				slots={slots}
 				selectedSlotIndex={null}
 				onSlotTap={mockOnSlotTap}
-				onVariantToggle={mockOnVariantToggle}
+				onVariantCycle={mockOnVariantCycle}
 			/>,
 		);
 
-		const toggleButtons = screen.getAllByLabelText(/Change .* variant/);
-		fireEvent.press(toggleButtons[0]);
-		expect(mockOnVariantToggle).toHaveBeenCalledWith(0);
+		const tshirt = screen.getByLabelText(
+			"T-shirt, colored Red, tap to select for swap",
+		);
+		fireEvent(tshirt, "accessibilityAction", {
+			nativeEvent: { actionName: "increment" },
+		});
+		expect(mockOnVariantCycle).toHaveBeenCalledWith(0, 1);
+	});
+
+	it("onVariantCycle fires via accessibility decrement action", () => {
+		const slots = makeSlots(["top-tshirt", red], ["bottom-pants", blue]);
+		render(
+			<OutfitCard
+				slots={slots}
+				selectedSlotIndex={null}
+				onSlotTap={mockOnSlotTap}
+				onVariantCycle={mockOnVariantCycle}
+			/>,
+		);
+
+		const tshirt = screen.getByLabelText(
+			"T-shirt, colored Red, tap to select for swap",
+		);
+		fireEvent(tshirt, "accessibilityAction", {
+			nativeEvent: { actionName: "decrement" },
+		});
+		expect(mockOnVariantCycle).toHaveBeenCalledWith(0, -1);
 	});
 
 	it("selected state renders correctly", () => {
@@ -170,7 +194,7 @@ describe("OutfitCard", () => {
 				slots={slots}
 				selectedSlotIndex={0}
 				onSlotTap={mockOnSlotTap}
-				onVariantToggle={mockOnVariantToggle}
+				onVariantCycle={mockOnVariantCycle}
 			/>,
 		);
 
@@ -192,7 +216,7 @@ describe("OutfitCard", () => {
 				slots={slots}
 				selectedSlotIndex={null}
 				onSlotTap={mockOnSlotTap}
-				onVariantToggle={mockOnVariantToggle}
+				onVariantCycle={mockOnVariantCycle}
 			/>,
 		);
 
@@ -211,7 +235,7 @@ describe("OutfitCard", () => {
 				slots={slots}
 				selectedSlotIndex={1}
 				onSlotTap={mockOnSlotTap}
-				onVariantToggle={mockOnVariantToggle}
+				onVariantCycle={mockOnVariantCycle}
 			/>,
 		);
 
@@ -226,20 +250,24 @@ describe("OutfitCard", () => {
 		expect(pants.props.accessibilityState).toEqual({ selected: true });
 	});
 
-	it("onVariantToggle fires correct index for second slot", () => {
+	it("onVariantCycle fires correct index for second slot", () => {
 		const slots = makeSlots(["top-tshirt", red], ["bottom-pants", blue]);
 		render(
 			<OutfitCard
 				slots={slots}
 				selectedSlotIndex={null}
 				onSlotTap={mockOnSlotTap}
-				onVariantToggle={mockOnVariantToggle}
+				onVariantCycle={mockOnVariantCycle}
 			/>,
 		);
 
-		const toggleButtons = screen.getAllByLabelText(/Change .* variant/);
-		fireEvent.press(toggleButtons[1]);
-		expect(mockOnVariantToggle).toHaveBeenCalledWith(1);
+		const pants = screen.getByLabelText(
+			"Pants, colored Blue, tap to select for swap",
+		);
+		fireEvent(pants, "accessibilityAction", {
+			nativeEvent: { actionName: "increment" },
+		});
+		expect(mockOnVariantCycle).toHaveBeenCalledWith(1, 1);
 	});
 
 	it("sequential slot taps fire correct indices", () => {
@@ -249,7 +277,7 @@ describe("OutfitCard", () => {
 				slots={slots}
 				selectedSlotIndex={null}
 				onSlotTap={mockOnSlotTap}
-				onVariantToggle={mockOnVariantToggle}
+				onVariantCycle={mockOnVariantCycle}
 			/>,
 		);
 
@@ -264,7 +292,7 @@ describe("OutfitCard", () => {
 		expect(mockOnSlotTap).toHaveBeenNthCalledWith(2, 1);
 	});
 
-	it("all slots have button accessibility role", () => {
+	it("all slots have adjustable accessibility role", () => {
 		const slots = makeSlots(
 			["top-tshirt", red],
 			["bottom-pants", blue],
@@ -275,28 +303,32 @@ describe("OutfitCard", () => {
 				slots={slots}
 				selectedSlotIndex={null}
 				onSlotTap={mockOnSlotTap}
-				onVariantToggle={mockOnVariantToggle}
+				onVariantCycle={mockOnVariantCycle}
 			/>,
 		);
 
-		const buttons = screen.getAllByRole("button");
-		// 3 slot pressables + 3 variant toggle pressables = 6
-		expect(buttons.length).toBeGreaterThanOrEqual(6);
+		const adjustables = screen.getAllByRole("adjustable");
+		expect(adjustables).toHaveLength(3);
 	});
 
-	it("variant toggle labels match garment types", () => {
-		const slots = makeSlots(["layer-hoodie", red], ["bottom-skirt", blue]);
+	it("slots have accessibility actions for variant cycling", () => {
+		const slots = makeSlots(["top-tshirt", red], ["bottom-pants", blue]);
 		render(
 			<OutfitCard
 				slots={slots}
 				selectedSlotIndex={null}
 				onSlotTap={mockOnSlotTap}
-				onVariantToggle={mockOnVariantToggle}
+				onVariantCycle={mockOnVariantCycle}
 			/>,
 		);
 
-		expect(screen.getByLabelText("Change Hoodie variant")).toBeTruthy();
-		expect(screen.getByLabelText("Change Skirt variant")).toBeTruthy();
+		const tshirt = screen.getByLabelText(
+			"T-shirt, colored Red, tap to select for swap",
+		);
+		expect(tshirt.props.accessibilityActions).toEqual([
+			{ name: "increment", label: "Next variant" },
+			{ name: "decrement", label: "Previous variant" },
+		]);
 	});
 
 	it("renders correctly with layer-hoodie and shoes-formal", () => {
@@ -311,7 +343,7 @@ describe("OutfitCard", () => {
 				slots={slots}
 				selectedSlotIndex={null}
 				onSlotTap={mockOnSlotTap}
-				onVariantToggle={mockOnVariantToggle}
+				onVariantCycle={mockOnVariantCycle}
 			/>,
 		);
 

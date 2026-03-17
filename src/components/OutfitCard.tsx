@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { Pressable, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
+	runOnJS,
 	useAnimatedStyle,
 	useSharedValue,
 	withRepeat,
@@ -17,17 +19,21 @@ export interface OutfitCardProps {
 	slots: SlotState[];
 	selectedSlotIndex: number | null;
 	onSlotTap: (index: number) => void;
-	onVariantToggle: (index: number) => void;
+	onVariantCycle: (index: number, direction: 1 | -1) => void;
 }
 
 const CARD_WIDTH = 220;
+const SWIPE_THRESHOLD = 30;
+const VELOCITY_THRESHOLD = 300;
+const SLIDE_DISTANCE = 60;
+const ANIM_DURATION = 150;
 
 interface CardSlotProps {
 	slot: SlotState;
 	index: number;
 	isSelected: boolean;
 	onTap: () => void;
-	onVariantToggle: () => void;
+	onVariantCycle: (direction: 1 | -1) => void;
 }
 
 function CardSlot({
@@ -35,13 +41,15 @@ function CardSlot({
 	index,
 	isSelected,
 	onTap,
-	onVariantToggle,
+	onVariantCycle,
 }: CardSlotProps) {
 	const config = GARMENT_REGISTRY[slot.garmentType];
 	const label = `${config.label}, colored ${slot.color.nameEn}, tap to select for swap`;
 	const reducedMotion = useReducedMotion();
 
 	const borderOpacity = useSharedValue(0);
+	const translateX = useSharedValue(0);
+	const slideOpacity = useSharedValue(1);
 
 	useEffect(() => {
 		if (isSelected) {
@@ -67,86 +75,97 @@ function CardSlot({
 		borderRadius: 8,
 	}));
 
+	const slideStyle = useAnimatedStyle(() => ({
+		transform: [{ translateX: translateX.value }],
+		opacity: slideOpacity.value,
+	}));
+
+	function triggerCycle(direction: 1 | -1) {
+		if (reducedMotion) {
+			onVariantCycle(direction);
+			return;
+		}
+		const exitDir = direction;
+		translateX.value = withTiming(
+			exitDir * SLIDE_DISTANCE,
+			{ duration: ANIM_DURATION },
+			(finished) => {
+				if (finished) {
+					runOnJS(onVariantCycle)(direction);
+					translateX.value = -exitDir * SLIDE_DISTANCE;
+					slideOpacity.value = 0;
+					translateX.value = withTiming(0, { duration: ANIM_DURATION });
+					slideOpacity.value = withTiming(1, {
+						duration: ANIM_DURATION,
+					});
+				}
+			},
+		);
+		slideOpacity.value = withTiming(0.3, { duration: ANIM_DURATION });
+	}
+
+	const panGesture = Gesture.Pan()
+		.activeOffsetX([-SWIPE_THRESHOLD, SWIPE_THRESHOLD])
+		.failOffsetY([-20, 20])
+		.onEnd((event) => {
+			"worklet";
+			const isRightSwipe =
+				event.translationX > SWIPE_THRESHOLD ||
+				event.velocityX > VELOCITY_THRESHOLD;
+			const isLeftSwipe =
+				event.translationX < -SWIPE_THRESHOLD ||
+				event.velocityX < -VELOCITY_THRESHOLD;
+
+			if (isRightSwipe) {
+				runOnJS(triggerCycle)(1);
+			} else if (isLeftSwipe) {
+				runOnJS(triggerCycle)(-1);
+			}
+		});
+
 	return (
 		<View style={index > 0 ? { marginTop: -8 } : undefined}>
-			<Pressable
-				accessibilityRole="button"
-				accessibilityLabel={label}
-				accessibilityState={{ selected: isSelected }}
-				style={{ minHeight: 44 }}
-				onPress={onTap}
-			>
-				{({ pressed }) => (
-					<Animated.View
-						style={[
-							borderStyle,
-							{
-								opacity: pressed ? 0.88 : 1,
-								alignItems: "center",
-							},
-						]}
-					>
-						<TintedGarment
-							garmentType={slot.garmentType}
-							colorHex={slot.color.hex}
-							width={CARD_WIDTH}
-							height={config.heightHint}
-						/>
-						<Pressable
-							onPress={onVariantToggle}
-							accessibilityLabel={`Change ${config.label} variant`}
-							accessibilityRole="button"
-							style={{
-								position: "absolute",
-								bottom: 0,
-								right: 0,
-								minWidth: 44,
-								minHeight: 44,
-								alignItems: "center",
-								justifyContent: "center",
-							}}
-							hitSlop={8}
-						>
-							<View
-								style={{
-									width: 20,
-									height: 20,
-									borderRadius: 10,
-									backgroundColor: "rgba(0,0,0,0.3)",
+			<GestureDetector gesture={panGesture}>
+				<Pressable
+					accessibilityRole="adjustable"
+					accessibilityLabel={label}
+					accessibilityState={{ selected: isSelected }}
+					accessibilityActions={[
+						{ name: "increment", label: "Next variant" },
+						{ name: "decrement", label: "Previous variant" },
+					]}
+					onAccessibilityAction={(event) => {
+						if (event.nativeEvent.actionName === "increment") {
+							onVariantCycle(1);
+						} else if (event.nativeEvent.actionName === "decrement") {
+							onVariantCycle(-1);
+						}
+					}}
+					style={{ minHeight: 44 }}
+					onPress={onTap}
+				>
+					{({ pressed }) => (
+						<Animated.View
+							style={[
+								borderStyle,
+								{
+									opacity: pressed ? 0.88 : 1,
 									alignItems: "center",
-									justifyContent: "center",
-								}}
-							>
-								<View
-									style={{
-										width: 0,
-										height: 0,
-										borderLeftWidth: 3,
-										borderRightWidth: 3,
-										borderBottomWidth: 4,
-										borderLeftColor: "transparent",
-										borderRightColor: "transparent",
-										borderBottomColor: "white",
-									}}
+								},
+							]}
+						>
+							<Animated.View style={slideStyle}>
+								<TintedGarment
+									garmentType={slot.garmentType}
+									colorHex={slot.color.hex}
+									width={CARD_WIDTH}
+									height={config.heightHint}
 								/>
-								<View
-									style={{
-										width: 0,
-										height: 0,
-										borderLeftWidth: 3,
-										borderRightWidth: 3,
-										borderTopWidth: 4,
-										borderLeftColor: "transparent",
-										borderRightColor: "transparent",
-										borderTopColor: "white",
-										marginTop: 2,
-									}}
-								/>
-							</View>
-						</Pressable>
-					</Animated.View>
-				)}
-			</Pressable>
+							</Animated.View>
+						</Animated.View>
+					)}
+				</Pressable>
+			</GestureDetector>
 		</View>
 	);
 }
@@ -155,7 +174,7 @@ export function OutfitCard({
 	slots,
 	selectedSlotIndex,
 	onSlotTap,
-	onVariantToggle,
+	onVariantCycle,
 }: OutfitCardProps) {
 	return (
 		<View
@@ -171,15 +190,15 @@ export function OutfitCard({
 				shadowRadius: 20,
 			}}
 		>
-			{slots.map((slot, index) => (
+			{slots.map((slot, i) => (
 				<CardSlot
 					// biome-ignore lint/suspicious/noArrayIndexKey: slot position is stable; color.id moves on swap breaking animations
-					key={index}
+					key={i}
 					slot={slot}
-					index={index}
-					isSelected={selectedSlotIndex === index}
-					onTap={() => onSlotTap(index)}
-					onVariantToggle={() => onVariantToggle(index)}
+					index={i}
+					isSelected={selectedSlotIndex === i}
+					onTap={() => onSlotTap(i)}
+					onVariantCycle={(dir) => onVariantCycle(i, dir)}
 				/>
 			))}
 		</View>

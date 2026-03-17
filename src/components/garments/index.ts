@@ -42,7 +42,7 @@ export const GARMENT_REGISTRY: Record<GarmentType, GarmentConfig> = {
 	"bottom-skirt": {
 		image: require("@/assets/garments/bottom-skirt.png"),
 		label: "Skirt",
-		heightHint: 120,
+		heightHint: 100,
 	},
 	"layer-jacket": {
 		image: require("@/assets/garments/layer-jacket.png"),

@@ -3,13 +3,16 @@ import { useRoute } from "@react-navigation/native";
 import { useCallback } from "react";
 import { AccessibilityInfo, Dimensions, Text, View } from "react-native";
 import { Aureola } from "@/components/Aureola";
-import { GARMENT_REGISTRY } from "@/components/garments/index";
+import {
+	GARMENT_REGISTRY,
+	type GarmentType,
+} from "@/components/garments/index";
 import { MiniPaletteStrip } from "@/components/MiniPaletteStrip";
 import { OutfitCard } from "@/components/OutfitCard";
 import { WadaHeader } from "@/components/WadaHeader";
 import { WarmBackground } from "@/components/WarmBackground";
 import { getCombination } from "@/data/colorIndex";
-import { useOutfitState, VARIANT_PAIRS } from "@/hooks/useOutfitState";
+import { getCycleForGarment, useOutfitState } from "@/hooks/useOutfitState";
 import { hapticMedium } from "@/lib/haptics";
 import type { ColorsStackParamList } from "@/navigation/types";
 
@@ -20,13 +23,25 @@ type OutfitVisualizerRoute = RouteProp<
 	"OutfitVisualizer"
 >;
 
+function getNextGarmentLabel(
+	garmentType: GarmentType,
+	direction: 1 | -1,
+	slotCount: number,
+): string {
+	const cycle = getCycleForGarment(garmentType, slotCount);
+	const pos = cycle.indexOf(garmentType);
+	const next = (pos + direction + cycle.length) % cycle.length;
+	return GARMENT_REGISTRY[cycle[next]].label;
+}
+
 export function OutfitVisualizer() {
 	const route = useRoute<OutfitVisualizerRoute>();
 	const { combinationId } = route.params;
 	const combination = getCombination(combinationId);
 
-	const { slots, selectedSlotIndex, selectSlot, toggleVariant } =
-		useOutfitState(combination?.colors ?? []);
+	const { slots, selectedSlotIndex, selectSlot, cycleVariant } = useOutfitState(
+		combination?.colors ?? [],
+	);
 
 	const handleSlotTap = useCallback(
 		(index: number) => {
@@ -56,17 +71,18 @@ export function OutfitVisualizer() {
 		[slots, selectedSlotIndex, selectSlot],
 	);
 
-	const handleVariantToggle = useCallback(
-		(index: number) => {
+	const handleVariantCycle = useCallback(
+		(index: number, direction: 1 | -1) => {
 			hapticMedium();
-			toggleVariant(index);
-			const newType = VARIANT_PAIRS[slots[index].garmentType];
-			if (newType) {
-				const newLabel = GARMENT_REGISTRY[newType].label;
-				AccessibilityInfo.announceForAccessibility(`Changed to ${newLabel}`);
-			}
+			const newLabel = getNextGarmentLabel(
+				slots[index].garmentType,
+				direction,
+				slots.length,
+			);
+			cycleVariant(index, direction);
+			AccessibilityInfo.announceForAccessibility(`Changed to ${newLabel}`);
 		},
-		[slots, toggleVariant],
+		[slots, cycleVariant],
 	);
 
 	if (!combination) {
@@ -95,7 +111,7 @@ export function OutfitVisualizer() {
 					slots={slots}
 					selectedSlotIndex={selectedSlotIndex}
 					onSlotTap={handleSlotTap}
-					onVariantToggle={handleVariantToggle}
+					onVariantCycle={handleVariantCycle}
 				/>
 				<View style={{ marginTop: 16 }}>
 					<MiniPaletteStrip
