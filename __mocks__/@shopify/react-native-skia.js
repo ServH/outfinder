@@ -22,6 +22,6 @@ module.exports = {
 	RadialGradient: createSkiaComponent("RadialGradient"),
 	RoundedRect: createSkiaComponent("RoundedRect"),
 	Shadow: createSkiaComponent("Shadow"),
-	useImage: jest.fn(() => "mock-image"),
+	useImage: jest.fn(() => ({ width: () => 1024, height: () => 1024 })),
 	vec: (x, y) => ({ x, y }),
 };

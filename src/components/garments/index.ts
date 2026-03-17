@@ -57,11 +57,11 @@ export const GARMENT_REGISTRY: Record<GarmentType, GarmentConfig> = {
 	"shoes-sneakers": {
 		image: require("@/assets/garments/shoes-sneakers.png"),
 		label: "Sneakers",
-		heightHint: 60,
+		heightHint: 85,
 	},
 	"shoes-formal": {
 		image: require("@/assets/garments/shoes-formal.png"),
 		label: "Formal shoes",
-		heightHint: 65,
+		heightHint: 85,
 	},
 };

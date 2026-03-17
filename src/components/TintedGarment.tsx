@@ -42,17 +42,22 @@ export function TintedGarment({
 
 	if (!image) return null;
 
+	// Compute canvas width from image aspect ratio so the image fills
+	// its canvas with no dead space. Variant pairs (sneakers ↔ formal)
+	// have different ratios; tight canvas prevents "distant" look.
+	const imageRatio = image.width() / image.height();
+	const effectiveWidth = Math.min(width, Math.round(height * imageRatio));
+
 	const matrix = hexToTintMatrix(colorHex);
 
 	return (
-		<Canvas style={{ width, height }}>
-			<Fill color="#fafaf8" />
+		<Canvas style={{ width: effectiveWidth, height }}>
 			<Image
 				image={image}
 				fit="contain"
 				x={0}
 				y={0}
-				width={width}
+				width={effectiveWidth}
 				height={height}
 			>
 				<ColorMatrix matrix={matrix} />
