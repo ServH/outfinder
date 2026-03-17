@@ -17,6 +17,7 @@ export const SharePreview = forwardRef<View, SharePreviewProps>(
 		return (
 			<View
 				ref={ref}
+				collapsable={false}
 				testID="share-preview-container"
 				style={{
 					position: "absolute",

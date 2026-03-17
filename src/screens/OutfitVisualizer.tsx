@@ -1,7 +1,14 @@
 import type { RouteProp } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
-import { useCallback, useRef } from "react";
-import { AccessibilityInfo, Dimensions, Text, View } from "react-native";
+import { useCallback, useRef, useState } from "react";
+import {
+	AccessibilityInfo,
+	Alert,
+	Dimensions,
+	Pressable,
+	Text,
+	View,
+} from "react-native";
 import { Aureola } from "@/components/Aureola";
 import {
 	GARMENT_REGISTRY,
@@ -9,12 +16,12 @@ import {
 } from "@/components/garments/index";
 import { MiniPaletteStrip } from "@/components/MiniPaletteStrip";
 import { OutfitCard } from "@/components/OutfitCard";
-import { SharePreview } from "@/components/SharePreview";
 import { WadaHeader } from "@/components/WadaHeader";
 import { WarmBackground } from "@/components/WarmBackground";
 import { getCombination } from "@/data/colorIndex";
 import { getCycleForGarment, useOutfitState } from "@/hooks/useOutfitState";
-import { hapticMedium } from "@/lib/haptics";
+import { hapticMedium, hapticRigid } from "@/lib/haptics";
+import { shareOutfit } from "@/lib/share";
 import type { ColorsStackParamList } from "@/navigation/types";
 
 const { width: SCREEN_W } = Dimensions.get("window");
@@ -42,9 +49,25 @@ export function OutfitVisualizer() {
 
 	const shareViewRef = useRef<View>(null);
 
+	const [sharing, setSharing] = useState(false);
+
 	const { slots, selectedSlotIndex, selectSlot, cycleVariant } = useOutfitState(
 		combination?.colors ?? [],
 	);
+
+	const handleShare = useCallback(async () => {
+		if (sharing) return;
+		hapticRigid();
+		setSharing(true);
+		const success = await shareOutfit(shareViewRef);
+		setSharing(false);
+		if (!success) {
+			Alert.alert(
+				"Unable to share",
+				"Something went wrong generating the image. Please try again.",
+			);
+		}
+	}, [sharing]);
 
 	const handleSlotTap = useCallback(
 		(index: number) => {
@@ -103,41 +126,64 @@ export function OutfitVisualizer() {
 
 	return (
 		<View style={{ flex: 1 }} accessibilityLabel="Outfit Visualizer screen">
-			<WarmBackground />
-			<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-				<Aureola hex={slots[0].color.hex} width={SCREEN_W} height={500} />
-				<WadaHeader
-					nameJp={combination.nameJp}
-					colorCount={combination.colors.length}
-				/>
-				<OutfitCard
-					slots={slots}
-					selectedSlotIndex={selectedSlotIndex}
-					onSlotTap={handleSlotTap}
-					onVariantCycle={handleVariantCycle}
-				/>
-				<View style={{ marginTop: 16 }}>
-					<MiniPaletteStrip
-						colors={slots.map((s) => ({
-							hex: s.color.hex,
-							nameEn: s.color.nameEn,
-						}))}
+			{/* Capturable area — everything the user sees minus the share button */}
+			<View ref={shareViewRef} collapsable={false} style={{ flex: 1 }}>
+				<WarmBackground />
+				<View
+					style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+				>
+					<Aureola hex={slots[0].color.hex} width={SCREEN_W} height={500} />
+					<WadaHeader
+						nameJp={combination.nameJp}
+						colorCount={combination.colors.length}
 					/>
+					<OutfitCard
+						slots={slots}
+						selectedSlotIndex={selectedSlotIndex}
+						onSlotTap={handleSlotTap}
+						onVariantCycle={handleVariantCycle}
+					/>
+					<View style={{ marginTop: 16 }}>
+						<MiniPaletteStrip
+							colors={slots.map((s) => ({
+								hex: s.color.hex,
+								nameEn: s.color.nameEn,
+							}))}
+						/>
+					</View>
+					<Text
+						style={{
+							marginTop: 24,
+							fontSize: 14,
+							fontFamily: "Inter_500Medium",
+							color: "#a09080",
+						}}
+					>
+						Outfinder
+					</Text>
 				</View>
 			</View>
-			<View accessibilityElementsHidden={true}>
-				<SharePreview
-					ref={shareViewRef}
-					slots={slots}
-					combination={{
-						nameJp: combination.nameJp,
-						colors: slots.map((s) => ({
-							hex: s.color.hex,
-							nameEn: s.color.nameEn,
-						})),
-					}}
-				/>
-			</View>
+			{/* Share button — positioned over the content but excluded from capture */}
+			<Pressable
+				onPress={handleShare}
+				disabled={sharing}
+				accessibilityLabel="Share outfit image"
+				accessibilityRole="button"
+				style={{
+					position: "absolute",
+					bottom: 48,
+					alignSelf: "center",
+					opacity: sharing ? 0.5 : 1,
+					backgroundColor: "#ffffff",
+					borderRadius: 9999,
+					paddingHorizontal: 24,
+					paddingVertical: 12,
+				}}
+			>
+				<Text className="font-sans text-sm font-medium text-primary">
+					Share Outfit
+				</Text>
+			</Pressable>
 		</View>
 	);
 }

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react-native";
+import { act, fireEvent, render, screen } from "@testing-library/react-native";
 
 import { OutfitVisualizer } from "./OutfitVisualizer";
 
@@ -16,8 +16,16 @@ jest.mock("@/data/colorIndex", () => ({
 
 // Mock haptics
 const mockHapticMedium = jest.fn();
+const mockHapticRigid = jest.fn();
 jest.mock("@/lib/haptics", () => ({
 	hapticMedium: (...args: unknown[]) => mockHapticMedium(...args),
+	hapticRigid: (...args: unknown[]) => mockHapticRigid(...args),
+}));
+
+// Mock share
+const mockShareOutfit = jest.fn();
+jest.mock("@/lib/share", () => ({
+	shareOutfit: (...args: unknown[]) => mockShareOutfit(...args),
 }));
 
 // Mock useReducedMotion
@@ -52,6 +60,8 @@ describe("OutfitVisualizer", () => {
 	beforeEach(() => {
 		mockGetCombination.mockReset();
 		mockHapticMedium.mockReset();
+		mockHapticRigid.mockReset();
+		mockShareOutfit.mockReset();
 		mockAnnounce.mockReset();
 	});
 
@@ -544,7 +554,7 @@ describe("OutfitVisualizer", () => {
 		expect(screen.getByLabelText("Color aureola")).toBeTruthy();
 	});
 
-	it("renders SharePreview off-screen", () => {
+	it("renders Outfinder branding text", () => {
 		mockRouteParams.combinationId = "combo-2";
 		mockGetCombination.mockReturnValue({
 			id: "combo-2",
@@ -555,11 +565,7 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		expect(
-			screen.getByTestId("share-preview-container", {
-				includeHiddenElements: true,
-			}),
-		).toBeTruthy();
+		expect(screen.getByText("Outfinder")).toBeTruthy();
 	});
 
 	it("not-found state has screen accessibility label", () => {
@@ -698,5 +704,106 @@ describe("OutfitVisualizer", () => {
 			nativeEvent: { actionName: "increment" },
 		});
 		expect(mockAnnounce).toHaveBeenCalledWith("Changed to Shirt");
+	});
+
+	it("renders Share Outfit button with correct accessibility", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		const shareButton = screen.getByLabelText("Share outfit image");
+		expect(shareButton).toBeTruthy();
+		expect(shareButton.props.accessibilityRole).toBe("button");
+	});
+
+	it("fires hapticRigid when share button pressed", async () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+		mockShareOutfit.mockResolvedValue(true);
+
+		render(<OutfitVisualizer />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByLabelText("Share outfit image"));
+		});
+
+		expect(mockHapticRigid).toHaveBeenCalledTimes(1);
+	});
+
+	it("calls shareOutfit when share button pressed", async () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+		mockShareOutfit.mockResolvedValue(true);
+
+		render(<OutfitVisualizer />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByLabelText("Share outfit image"));
+		});
+
+		expect(mockShareOutfit).toHaveBeenCalledTimes(1);
+	});
+
+	it("shows alert when shareOutfit returns false", async () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+		mockShareOutfit.mockResolvedValue(false);
+
+		const alertSpy = jest.spyOn(require("react-native").Alert, "alert");
+
+		render(<OutfitVisualizer />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByLabelText("Share outfit image"));
+		});
+
+		expect(alertSpy).toHaveBeenCalledWith(
+			"Unable to share",
+			"Something went wrong generating the image. Please try again.",
+		);
+		alertSpy.mockRestore();
+	});
+
+	it("does not show alert when shareOutfit succeeds", async () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+		mockShareOutfit.mockResolvedValue(true);
+
+		const alertSpy = jest.spyOn(require("react-native").Alert, "alert");
+
+		render(<OutfitVisualizer />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByLabelText("Share outfit image"));
+		});
+
+		expect(alertSpy).not.toHaveBeenCalled();
+		alertSpy.mockRestore();
 	});
 });
