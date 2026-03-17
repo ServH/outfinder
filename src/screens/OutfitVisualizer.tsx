@@ -1,6 +1,6 @@
 import type { RouteProp } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { AccessibilityInfo, Dimensions, Text, View } from "react-native";
 import { Aureola } from "@/components/Aureola";
 import {
@@ -9,6 +9,7 @@ import {
 } from "@/components/garments/index";
 import { MiniPaletteStrip } from "@/components/MiniPaletteStrip";
 import { OutfitCard } from "@/components/OutfitCard";
+import { SharePreview } from "@/components/SharePreview";
 import { WadaHeader } from "@/components/WadaHeader";
 import { WarmBackground } from "@/components/WarmBackground";
 import { getCombination } from "@/data/colorIndex";
@@ -38,6 +39,8 @@ export function OutfitVisualizer() {
 	const route = useRoute<OutfitVisualizerRoute>();
 	const { combinationId } = route.params;
 	const combination = getCombination(combinationId);
+
+	const shareViewRef = useRef<View>(null);
 
 	const { slots, selectedSlotIndex, selectSlot, cycleVariant } = useOutfitState(
 		combination?.colors ?? [],
@@ -121,6 +124,19 @@ export function OutfitVisualizer() {
 						}))}
 					/>
 				</View>
+			</View>
+			<View accessibilityElementsHidden={true}>
+				<SharePreview
+					ref={shareViewRef}
+					slots={slots}
+					combination={{
+						nameJp: combination.nameJp,
+						colors: slots.map((s) => ({
+							hex: s.color.hex,
+							nameEn: s.color.nameEn,
+						})),
+					}}
+				/>
 			</View>
 		</View>
 	);

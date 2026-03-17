@@ -165,8 +165,10 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		expect(screen.getByText("秋の装い")).toBeTruthy();
-		expect(screen.getByText("2 colors · Sanzo Wada")).toBeTruthy();
+		expect(screen.getAllByText("秋の装い").length).toBeGreaterThanOrEqual(1);
+		expect(
+			screen.getAllByText("2 colors · Sanzo Wada").length,
+		).toBeGreaterThanOrEqual(1);
 	});
 
 	it("renders MiniPaletteStrip with color names", () => {
@@ -424,8 +426,10 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		expect(screen.getByText("春の三色")).toBeTruthy();
-		expect(screen.getByText("3 colors · Sanzo Wada")).toBeTruthy();
+		expect(screen.getAllByText("春の三色").length).toBeGreaterThanOrEqual(1);
+		expect(
+			screen.getAllByText("3 colors · Sanzo Wada").length,
+		).toBeGreaterThanOrEqual(1);
 	});
 
 	it("renders WadaHeader for 4-color combination", () => {
@@ -439,8 +443,10 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		expect(screen.getByText("四季の色")).toBeTruthy();
-		expect(screen.getByText("4 colors · Sanzo Wada")).toBeTruthy();
+		expect(screen.getAllByText("四季の色").length).toBeGreaterThanOrEqual(1);
+		expect(
+			screen.getAllByText("4 colors · Sanzo Wada").length,
+		).toBeGreaterThanOrEqual(1);
 	});
 
 	it("renders MiniPaletteStrip color names for 3-color combo", () => {
@@ -454,9 +460,9 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		expect(screen.getByText("Red")).toBeTruthy();
-		expect(screen.getByText("Blue")).toBeTruthy();
-		expect(screen.getByText("Green")).toBeTruthy();
+		expect(screen.getAllByText("Red").length).toBeGreaterThanOrEqual(1);
+		expect(screen.getAllByText("Blue").length).toBeGreaterThanOrEqual(1);
+		expect(screen.getAllByText("Green").length).toBeGreaterThanOrEqual(1);
 	});
 
 	it("haptic fires on variant cycle of second slot", () => {
@@ -538,6 +544,24 @@ describe("OutfitVisualizer", () => {
 		expect(screen.getByLabelText("Color aureola")).toBeTruthy();
 	});
 
+	it("renders SharePreview off-screen", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		expect(
+			screen.getByTestId("share-preview-container", {
+				includeHiddenElements: true,
+			}),
+		).toBeTruthy();
+	});
+
 	it("not-found state has screen accessibility label", () => {
 		mockRouteParams.combinationId = "invalid";
 		mockGetCombination.mockReturnValue(undefined);
@@ -601,10 +625,10 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		expect(screen.getByText("Red")).toBeTruthy();
-		expect(screen.getByText("Blue")).toBeTruthy();
-		expect(screen.getByText("Green")).toBeTruthy();
-		expect(screen.getByText("Yellow")).toBeTruthy();
+		expect(screen.getAllByText("Red").length).toBeGreaterThanOrEqual(1);
+		expect(screen.getAllByText("Blue").length).toBeGreaterThanOrEqual(1);
+		expect(screen.getAllByText("Green").length).toBeGreaterThanOrEqual(1);
+		expect(screen.getAllByText("Yellow").length).toBeGreaterThanOrEqual(1);
 	});
 
 	it("haptic fires twice for complete swap interaction", () => {
@@ -643,7 +667,7 @@ describe("OutfitVisualizer", () => {
 		expect(screen.getByLabelText("Color aureola")).toBeTruthy();
 		expect(screen.getByLabelText("Outfit card")).toBeTruthy();
 		expect(screen.getByLabelText("Outfit color palette")).toBeTruthy();
-		expect(screen.getByText("四色")).toBeTruthy();
+		expect(screen.getAllByText("四色").length).toBeGreaterThanOrEqual(1);
 	});
 
 	it("4-color combo keeps layer and top cycles separate", () => {
