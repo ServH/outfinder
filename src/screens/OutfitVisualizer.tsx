@@ -125,13 +125,11 @@ export function OutfitVisualizer() {
 	}
 
 	return (
-		<View style={{ flex: 1 }} accessibilityLabel="Outfit Visualizer screen">
+		<View className="flex-1" accessibilityLabel="Outfit Visualizer screen">
 			{/* Capturable area — everything the user sees minus the share button */}
-			<View ref={shareViewRef} collapsable={false} style={{ flex: 1 }}>
+			<View ref={shareViewRef} collapsable={false} className="flex-1">
 				<WarmBackground />
-				<View
-					style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-				>
+				<View className="flex-1 items-center justify-center">
 					<Aureola hex={slots[0].color.hex} width={SCREEN_W} height={500} />
 					<WadaHeader
 						nameJp={combination.nameJp}
@@ -143,7 +141,7 @@ export function OutfitVisualizer() {
 						onSlotTap={handleSlotTap}
 						onVariantCycle={handleVariantCycle}
 					/>
-					<View style={{ marginTop: 16 }}>
+					<View className="mt-4">
 						<MiniPaletteStrip
 							colors={slots.map((s) => ({
 								hex: s.color.hex,
@@ -152,12 +150,8 @@ export function OutfitVisualizer() {
 						/>
 					</View>
 					<Text
-						style={{
-							marginTop: 24,
-							fontSize: 14,
-							fontFamily: "Inter_500Medium",
-							color: "#a09080",
-						}}
+						className="mt-6 font-sans-medium text-sm"
+						style={{ color: "#a09080" }}
 					>
 						Outfinder
 					</Text>
@@ -169,16 +163,8 @@ export function OutfitVisualizer() {
 				disabled={sharing}
 				accessibilityLabel="Share outfit image"
 				accessibilityRole="button"
-				style={{
-					position: "absolute",
-					bottom: 48,
-					alignSelf: "center",
-					opacity: sharing ? 0.5 : 1,
-					backgroundColor: "#ffffff",
-					borderRadius: 9999,
-					paddingHorizontal: 24,
-					paddingVertical: 12,
-				}}
+				className="absolute bottom-12 self-center min-h-[48px] items-center justify-center rounded-full bg-bg-surface px-6 py-3"
+				style={{ opacity: sharing ? 0.5 : 1 }}
 			>
 				<Text className="font-sans text-sm font-medium text-primary">
 					Share Outfit

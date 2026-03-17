@@ -785,6 +785,45 @@ describe("OutfitVisualizer", () => {
 		alertSpy.mockRestore();
 	});
 
+	it("prevents double-tap by ignoring second press while sharing", async () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		let resolveShare!: (value: boolean) => void;
+		mockShareOutfit.mockImplementation(
+			() =>
+				new Promise<boolean>((resolve) => {
+					resolveShare = resolve;
+				}),
+		);
+
+		render(<OutfitVisualizer />);
+
+		const shareButton = screen.getByLabelText("Share outfit image");
+
+		// First press — starts sharing
+		await act(async () => {
+			fireEvent.press(shareButton);
+		});
+
+		// Second press while first is in-flight — should be ignored
+		await act(async () => {
+			fireEvent.press(shareButton);
+		});
+
+		// Resolve the pending share
+		await act(async () => {
+			resolveShare(true);
+		});
+
+		expect(mockShareOutfit).toHaveBeenCalledTimes(1);
+	});
+
 	it("does not show alert when shareOutfit succeeds", async () => {
 		mockRouteParams.combinationId = "combo-2";
 		mockGetCombination.mockReturnValue({

@@ -10,8 +10,9 @@ export async function captureShareImage(
 		const uri = await captureRef(viewRef, {
 			format: "png",
 			quality: 1,
+			// @ts-expect-error — pixelRatio is supported by react-native-view-shot but missing from its type definitions
 			pixelRatio: PixelRatio.get(),
-		} as Parameters<typeof captureRef>[1]);
+		});
 		return uri;
 	} catch {
 		return null;

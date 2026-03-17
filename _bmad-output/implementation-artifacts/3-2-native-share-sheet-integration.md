@@ -1,6 +1,6 @@
 # Story 3.2: Native Share Sheet Integration
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -338,13 +338,41 @@ Claude Opus 4.6
 
 - 2026-03-17: Implemented native share sheet integration — `shareOutfit()` function + Share Outfit button + 10 new tests (Story 3.2)
 - 2026-03-17: Fix — replaced off-screen SharePreview capture with direct on-screen content capture for correct proportions, shadows, and device-adaptive resolution
+- 2026-03-17: Code review fixes — see Senior Developer Review below
+
+### Senior Developer Review (AI)
+
+**Reviewer:** Claude Opus 4.6 — Adversarial Code Review
+**Date:** 2026-03-17
+**Outcome:** Approved after fixes (all 8 findings resolved)
+
+#### Findings and Resolutions
+
+| # | Severity | Finding | Resolution |
+|---|----------|---------|------------|
+| H1 | HIGH | Share button used inline `style` for static props (violated CLAUDE.md `className` convention) | Replaced with `className` for all static styles, `style` only for dynamic `opacity` |
+| H2 | HIGH | SharePreview component was dead code (unused after on-screen capture pivot) with 8 orphan tests | Deleted `SharePreview.tsx` and `SharePreview.test.tsx` |
+| M1 | MEDIUM | No test for double-tap prevention despite being a documented feature | Added "prevents double-tap by ignoring second press while sharing" test |
+| M2 | MEDIUM | Inner Views used inline `style` for static layout (flex-1, items-center, justify-center, mt-4) | Replaced with `className` equivalents |
+| M3 | MEDIUM | Type assertion `as Parameters<typeof captureRef>[1]` bypassed TypeScript safety | Replaced with `@ts-expect-error` comment explaining the missing type definition |
+| M4 | MEDIUM | Touch target at exactly 44px with no safety margin | Added `min-h-[48px]` to guarantee 48px minimum height |
+| L1 | LOW | Branding "Outfinder" Text used all inline styles | Converted to `className` for layout/font, kept only `color` as inline (non-token Wada value) |
+| L2 | LOW | `shareViewRef` View used `style={{ flex: 1 }}` | Replaced with `className="flex-1"` |
+
+#### Post-Review Test Results
+
+- **Test Suites:** 22 passed (was 23 — removed SharePreview suite)
+- **Tests:** 230 passed (was 237 — removed 8 SharePreview tests, added 1 double-tap test)
+- **tsc:** 0 errors
+- **lint:** 0 errors
 
 ### File List
 
-- `src/lib/share.ts` — MODIFIED: Added `shareOutfit()`, `captureShareImage` uses `PixelRatio.get()` for device-native resolution
+- `src/lib/share.ts` — MODIFIED: Added `shareOutfit()`, `captureShareImage` uses `PixelRatio.get()`, replaced type assertion with `@ts-expect-error`
 - `src/lib/share.test.ts` — MODIFIED: 8 tests (3 captureShareImage + 5 shareOutfit), expo-sharing mock
-- `src/screens/OutfitVisualizer.tsx` — MODIFIED: Share button + handler, capture ref on on-screen content, removed SharePreview, added Outfinder branding
-- `src/screens/OutfitVisualizer.test.tsx` — MODIFIED: 5 share button tests, replaced SharePreview test with branding test
-- `src/components/SharePreview.tsx` — MODIFIED: Added `collapsable={false}` (component preserved but no longer imported)
-- `_bmad-output/implementation-artifacts/sprint-status.yaml` — MODIFIED: Story 3-2 status → review
-- `_bmad-output/implementation-artifacts/3-2-native-share-sheet-integration.md` — MODIFIED: Tasks, Dev Agent Record, File List, Change Log, Status
+- `src/screens/OutfitVisualizer.tsx` — MODIFIED: Share button + handler with `className` convention, capture ref on on-screen content, Outfinder branding, min-h-[48px] touch target
+- `src/screens/OutfitVisualizer.test.tsx` — MODIFIED: 6 share button tests (added double-tap prevention), branding test
+- `src/components/SharePreview.tsx` — DELETED: Dead code after on-screen capture pivot
+- `src/components/SharePreview.test.tsx` — DELETED: Tests for deleted component
+- `_bmad-output/implementation-artifacts/sprint-status.yaml` — MODIFIED: Story 3-2 status → done
+- `_bmad-output/implementation-artifacts/3-2-native-share-sheet-integration.md` — MODIFIED: Status, review notes, File List, Change Log
