@@ -13,6 +13,7 @@ export interface FavoriteButtonProps {
 	combinationId: string;
 	isFavorite: boolean;
 	onToggle: () => void;
+	onPremiumGate?: () => void;
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -21,6 +22,7 @@ export function FavoriteButton({
 	combinationId,
 	isFavorite,
 	onToggle,
+	onPremiumGate,
 }: FavoriteButtonProps) {
 	const scale = useSharedValue(1);
 	const reducedMotion = useReducedMotion();
@@ -30,6 +32,11 @@ export function FavoriteButton({
 	}));
 
 	function handlePress() {
+		if (onPremiumGate) {
+			hapticLight();
+			onPremiumGate();
+			return;
+		}
 		hapticLight();
 		if (!reducedMotion) {
 			scale.value = withSpring(1.2, { damping: 15, stiffness: 300 }, () => {

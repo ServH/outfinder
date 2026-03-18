@@ -58,22 +58,22 @@ development_status:
   2-5-skia-real-garment-visualizer: done
   epic-2-retrospective: done
 
-  epic-3: in-progress
+  epic-3: done
   3-1-share-image-generation-and-branding: done
   3-2-native-share-sheet-integration: done
-  epic-3-retrospective: optional
+  epic-3-retrospective: done
 
   epic-4: done
   4-1-favorites-context-and-favorite-button: done
   4-2-favorites-list-screen-and-navigation: done
   epic-4-retrospective: done
 
-  epic-5: backlog
-  5-1-premium-context-and-paywall-ui: backlog
-  5-2-in-app-purchase-flow-and-restore: backlog
+  epic-5: in-progress
+  5-1-premium-context-and-paywall-ui: done
+  5-2-in-app-purchase-flow-and-restore: done
   epic-5-retrospective: optional
 
-  epic-6: backlog
-  6-1-onboarding-flow: backlog
+  epic-6: in-progress
+  6-1-onboarding-flow: done
   6-2-settings-screen-and-app-store-preparation: backlog
   epic-6-retrospective: optional

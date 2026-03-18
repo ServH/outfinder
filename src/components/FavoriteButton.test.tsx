@@ -152,4 +152,48 @@ describe("FavoriteButton", () => {
 		expect(button.props.className).toMatch(/min-w-\[44px\]/);
 		expect(button.props.className).toMatch(/min-h-\[44px\]/);
 	});
+
+	it("calls onPremiumGate instead of onToggle when gate exists", () => {
+		const mockOnPremiumGate = jest.fn();
+		render(
+			<FavoriteButton
+				combinationId="combo-1"
+				isFavorite={false}
+				onToggle={mockOnToggle}
+				onPremiumGate={mockOnPremiumGate}
+			/>,
+		);
+
+		fireEvent.press(screen.getByTestId("favorite-button-combo-1"));
+		expect(mockOnPremiumGate).toHaveBeenCalledTimes(1);
+		expect(mockOnToggle).not.toHaveBeenCalled();
+	});
+
+	it("calls onToggle normally when no premium gate", () => {
+		render(
+			<FavoriteButton
+				combinationId="combo-1"
+				isFavorite={false}
+				onToggle={mockOnToggle}
+			/>,
+		);
+
+		fireEvent.press(screen.getByTestId("favorite-button-combo-1"));
+		expect(mockOnToggle).toHaveBeenCalledTimes(1);
+	});
+
+	it("fires hapticLight even when premium gate intercepts", () => {
+		const mockOnPremiumGate = jest.fn();
+		render(
+			<FavoriteButton
+				combinationId="combo-1"
+				isFavorite={false}
+				onToggle={mockOnToggle}
+				onPremiumGate={mockOnPremiumGate}
+			/>,
+		);
+
+		fireEvent.press(screen.getByTestId("favorite-button-combo-1"));
+		expect(hapticLight).toHaveBeenCalled();
+	});
 });

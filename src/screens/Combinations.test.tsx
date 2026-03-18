@@ -26,6 +26,18 @@ jest.mock("@/contexts/FavoritesContext", () => ({
 	}),
 }));
 
+jest.mock("@/contexts/PremiumContext", () => ({
+	usePremium: () => ({
+		isPremium: false,
+		loading: false,
+		paywallDismissedThisSession: false,
+		setPaywallDismissedThisSession: jest.fn(),
+		priceString: "€0.99",
+		purchase: jest.fn(),
+		restore: jest.fn(),
+	}),
+}));
+
 jest.mock("expo-symbols", () => ({
 	SymbolView: "SymbolView",
 }));
