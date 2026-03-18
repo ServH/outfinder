@@ -119,18 +119,19 @@ describe("TintedGarment", () => {
 		expect(queryByTestId("skia-canvas")).toBeNull();
 	});
 
-	it("renders Canvas with specified dimensions", () => {
+	it("computes canvas width from image aspect ratio", () => {
+		// Mock returns 1024×1024 (1:1 ratio), so effectiveWidth = min(220, 85*1) = 85
 		render(
 			<TintedGarment
 				garmentType="shoes-formal"
 				colorHex="#0000ff"
-				width={180}
-				height={65}
+				width={220}
+				height={85}
 			/>,
 		);
 		const canvas = screen.getByTestId("skia-canvas");
 		expect(canvas.props.style).toEqual(
-			expect.objectContaining({ width: 180, height: 65 }),
+			expect.objectContaining({ width: 85, height: 85 }),
 		);
 	});
 });

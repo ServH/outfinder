@@ -9,6 +9,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { TabNavigator } from "@/navigation/TabNavigator";
@@ -34,11 +35,13 @@ export function App() {
 	}
 
 	return (
-		<FavoritesProvider>
-			<NavigationContainer>
-				<TabNavigator />
-			</NavigationContainer>
-		</FavoritesProvider>
+		<GestureHandlerRootView style={{ flex: 1 }}>
+			<FavoritesProvider>
+				<NavigationContainer>
+					<TabNavigator />
+				</NavigationContainer>
+			</FavoritesProvider>
+		</GestureHandlerRootView>
 	);
 }
 

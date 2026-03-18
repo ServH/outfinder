@@ -2,7 +2,7 @@ import { act, renderHook } from "@testing-library/react-native";
 
 import type { Color } from "@/data/types";
 
-import { useOutfitState } from "./useOutfitState";
+import { getCycleForGarment, useOutfitState } from "./useOutfitState";
 
 function makeColor(
 	overrides: Partial<Color> & { hex: string; nameEn: string },
@@ -129,70 +129,166 @@ describe("useOutfitState", () => {
 		});
 	});
 
-	describe("toggleVariant", () => {
-		it("toggles top-tshirt to top-shirt", () => {
+	describe("cycleVariant", () => {
+		it("cycles top-tshirt forward to top-shirt in 2-color", () => {
 			const { result } = renderHook(() => useOutfitState([red, blue]));
 
 			act(() => {
-				result.current.toggleVariant(0);
+				result.current.cycleVariant(0, 1);
 			});
 
 			expect(result.current.slots[0].garmentType).toBe("top-shirt");
 		});
 
-		it("toggles top-shirt back to top-tshirt", () => {
+		it("cycles top-shirt forward to layer-jacket in 2-color (extended)", () => {
 			const { result } = renderHook(() => useOutfitState([red, blue]));
 
 			act(() => {
-				result.current.toggleVariant(0);
+				result.current.cycleVariant(0, 1); // tshirt → shirt
 			});
 			act(() => {
-				result.current.toggleVariant(0);
+				result.current.cycleVariant(0, 1); // shirt → jacket
 			});
 
+			expect(result.current.slots[0].garmentType).toBe("layer-jacket");
+		});
+
+		it("cycles full upper body in 3-color: tshirt → shirt → jacket → hoodie → tshirt", () => {
+			const { result } = renderHook(() => useOutfitState([red, blue, green]));
+
+			act(() => result.current.cycleVariant(0, 1)); // tshirt → shirt
+			expect(result.current.slots[0].garmentType).toBe("top-shirt");
+
+			act(() => result.current.cycleVariant(0, 1)); // shirt → jacket
+			expect(result.current.slots[0].garmentType).toBe("layer-jacket");
+
+			act(() => result.current.cycleVariant(0, 1)); // jacket → hoodie
+			expect(result.current.slots[0].garmentType).toBe("layer-hoodie");
+
+			act(() => result.current.cycleVariant(0, 1)); // hoodie → tshirt (wrap)
 			expect(result.current.slots[0].garmentType).toBe("top-tshirt");
 		});
 
-		it("toggles bottom-pants to bottom-skirt", () => {
+		it("cycles backward: tshirt → hoodie in 2-color", () => {
 			const { result } = renderHook(() => useOutfitState([red, blue]));
 
 			act(() => {
-				result.current.toggleVariant(1);
-			});
-
-			expect(result.current.slots[1].garmentType).toBe("bottom-skirt");
-		});
-
-		it("toggles layer-jacket to layer-hoodie (4-color)", () => {
-			const { result } = renderHook(() =>
-				useOutfitState([red, blue, green, yellow]),
-			);
-
-			act(() => {
-				result.current.toggleVariant(0);
+				result.current.cycleVariant(0, -1);
 			});
 
 			expect(result.current.slots[0].garmentType).toBe("layer-hoodie");
 		});
 
-		it("toggles shoes-sneakers to shoes-formal (3-color)", () => {
+		it("cycles bottom-pants to bottom-skirt", () => {
+			const { result } = renderHook(() => useOutfitState([red, blue]));
+
+			act(() => {
+				result.current.cycleVariant(1, 1);
+			});
+
+			expect(result.current.slots[1].garmentType).toBe("bottom-skirt");
+		});
+
+		it("keeps layer and top separate in 4-color: layer cycles jacket ↔ hoodie", () => {
+			const { result } = renderHook(() =>
+				useOutfitState([red, blue, green, yellow]),
+			);
+
+			act(() => {
+				result.current.cycleVariant(0, 1); // jacket → hoodie
+			});
+			expect(result.current.slots[0].garmentType).toBe("layer-hoodie");
+
+			act(() => {
+				result.current.cycleVariant(0, 1); // hoodie → jacket (wraps, only 2)
+			});
+			expect(result.current.slots[0].garmentType).toBe("layer-jacket");
+		});
+
+		it("keeps layer and top separate in 4-color: top cycles tshirt ↔ shirt", () => {
+			const { result } = renderHook(() =>
+				useOutfitState([red, blue, green, yellow]),
+			);
+
+			act(() => {
+				result.current.cycleVariant(1, 1); // tshirt → shirt
+			});
+			expect(result.current.slots[1].garmentType).toBe("top-shirt");
+
+			act(() => {
+				result.current.cycleVariant(1, 1); // shirt → tshirt (wraps, only 2)
+			});
+			expect(result.current.slots[1].garmentType).toBe("top-tshirt");
+		});
+
+		it("cycles shoes-sneakers to shoes-formal in 3-color", () => {
 			const { result } = renderHook(() => useOutfitState([red, blue, green]));
 
 			act(() => {
-				result.current.toggleVariant(2);
+				result.current.cycleVariant(2, 1);
 			});
 
 			expect(result.current.slots[2].garmentType).toBe("shoes-formal");
 		});
 
-		it("preserves color assignment during toggle", () => {
+		it("preserves color assignment during cycle", () => {
 			const { result } = renderHook(() => useOutfitState([red, blue]));
 
 			act(() => {
-				result.current.toggleVariant(0);
+				result.current.cycleVariant(0, 1);
 			});
 
 			expect(result.current.slots[0].color).toBe(red);
 		});
+	});
+});
+
+describe("getCycleForGarment", () => {
+	it("returns full upper cycle for tops in 2-color combo", () => {
+		const cycle = getCycleForGarment("top-tshirt", 2);
+		expect(cycle).toEqual([
+			"top-tshirt",
+			"top-shirt",
+			"layer-jacket",
+			"layer-hoodie",
+		]);
+	});
+
+	it("returns full upper cycle for tops in 3-color combo", () => {
+		const cycle = getCycleForGarment("top-shirt", 3);
+		expect(cycle).toEqual([
+			"top-tshirt",
+			"top-shirt",
+			"layer-jacket",
+			"layer-hoodie",
+		]);
+	});
+
+	it("returns top-only cycle in 4-color combo", () => {
+		const cycle = getCycleForGarment("top-tshirt", 4);
+		expect(cycle).toEqual(["top-tshirt", "top-shirt"]);
+	});
+
+	it("returns layer-only cycle in 4-color combo", () => {
+		const cycle = getCycleForGarment("layer-jacket", 4);
+		expect(cycle).toEqual(["layer-jacket", "layer-hoodie"]);
+	});
+
+	it("returns lower cycle regardless of slot count", () => {
+		expect(getCycleForGarment("bottom-pants", 2)).toEqual([
+			"bottom-pants",
+			"bottom-skirt",
+		]);
+		expect(getCycleForGarment("bottom-pants", 4)).toEqual([
+			"bottom-pants",
+			"bottom-skirt",
+		]);
+	});
+
+	it("returns foot cycle regardless of slot count", () => {
+		expect(getCycleForGarment("shoes-sneakers", 3)).toEqual([
+			"shoes-sneakers",
+			"shoes-formal",
+		]);
 	});
 });

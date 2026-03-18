@@ -1,16 +1,28 @@
 import type { RouteProp } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
-import { useCallback } from "react";
-import { AccessibilityInfo, Dimensions, Text, View } from "react-native";
+import { useCallback, useRef, useState } from "react";
+import {
+	AccessibilityInfo,
+	Alert,
+	Dimensions,
+	Pressable,
+	ScrollView,
+	Text,
+	View,
+} from "react-native";
 import { Aureola } from "@/components/Aureola";
-import { GARMENT_REGISTRY } from "@/components/garments/index";
+import {
+	GARMENT_REGISTRY,
+	type GarmentType,
+} from "@/components/garments/index";
 import { MiniPaletteStrip } from "@/components/MiniPaletteStrip";
 import { OutfitCard } from "@/components/OutfitCard";
 import { WadaHeader } from "@/components/WadaHeader";
 import { WarmBackground } from "@/components/WarmBackground";
 import { getCombination } from "@/data/colorIndex";
-import { useOutfitState, VARIANT_PAIRS } from "@/hooks/useOutfitState";
-import { hapticMedium } from "@/lib/haptics";
+import { getCycleForGarment, useOutfitState } from "@/hooks/useOutfitState";
+import { hapticMedium, hapticRigid } from "@/lib/haptics";
+import { shareOutfit } from "@/lib/share";
 import type { ColorsStackParamList } from "@/navigation/types";
 
 const { width: SCREEN_W } = Dimensions.get("window");
@@ -20,13 +32,43 @@ type OutfitVisualizerRoute = RouteProp<
 	"OutfitVisualizer"
 >;
 
+function getNextGarmentLabel(
+	garmentType: GarmentType,
+	direction: 1 | -1,
+	slotCount: number,
+): string {
+	const cycle = getCycleForGarment(garmentType, slotCount);
+	const pos = cycle.indexOf(garmentType);
+	const next = (pos + direction + cycle.length) % cycle.length;
+	return GARMENT_REGISTRY[cycle[next]].label;
+}
+
 export function OutfitVisualizer() {
 	const route = useRoute<OutfitVisualizerRoute>();
 	const { combinationId } = route.params;
 	const combination = getCombination(combinationId);
 
-	const { slots, selectedSlotIndex, selectSlot, toggleVariant } =
-		useOutfitState(combination?.colors ?? []);
+	const shareViewRef = useRef<View>(null);
+
+	const [sharing, setSharing] = useState(false);
+
+	const { slots, selectedSlotIndex, selectSlot, cycleVariant } = useOutfitState(
+		combination?.colors ?? [],
+	);
+
+	const handleShare = useCallback(async () => {
+		if (sharing) return;
+		hapticRigid();
+		setSharing(true);
+		const success = await shareOutfit(shareViewRef);
+		setSharing(false);
+		if (!success) {
+			Alert.alert(
+				"Unable to share",
+				"Something went wrong generating the image. Please try again.",
+			);
+		}
+	}, [sharing]);
 
 	const handleSlotTap = useCallback(
 		(index: number) => {
@@ -56,17 +98,18 @@ export function OutfitVisualizer() {
 		[slots, selectedSlotIndex, selectSlot],
 	);
 
-	const handleVariantToggle = useCallback(
-		(index: number) => {
+	const handleVariantCycle = useCallback(
+		(index: number, direction: 1 | -1) => {
 			hapticMedium();
-			toggleVariant(index);
-			const newType = VARIANT_PAIRS[slots[index].garmentType];
-			if (newType) {
-				const newLabel = GARMENT_REGISTRY[newType].label;
-				AccessibilityInfo.announceForAccessibility(`Changed to ${newLabel}`);
-			}
+			const newLabel = getNextGarmentLabel(
+				slots[index].garmentType,
+				direction,
+				slots.length,
+			);
+			cycleVariant(index, direction);
+			AccessibilityInfo.announceForAccessibility(`Changed to ${newLabel}`);
 		},
-		[slots, toggleVariant],
+		[slots, cycleVariant],
 	);
 
 	if (!combination) {
@@ -83,28 +126,62 @@ export function OutfitVisualizer() {
 	}
 
 	return (
-		<View style={{ flex: 1 }} accessibilityLabel="Outfit Visualizer screen">
-			<WarmBackground />
-			<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-				<Aureola hex={slots[0].color.hex} width={SCREEN_W} height={500} />
-				<WadaHeader
-					nameJp={combination.nameJp}
-					colorCount={combination.colors.length}
-				/>
-				<OutfitCard
-					slots={slots}
-					selectedSlotIndex={selectedSlotIndex}
-					onSlotTap={handleSlotTap}
-					onVariantToggle={handleVariantToggle}
-				/>
-				<View style={{ marginTop: 16 }}>
-					<MiniPaletteStrip
-						colors={slots.map((s) => ({
-							hex: s.color.hex,
-							nameEn: s.color.nameEn,
-						}))}
-					/>
+		<View
+			className="flex-1"
+			style={{ backgroundColor: "#ebe5da" }}
+			accessibilityLabel="Outfit Visualizer screen"
+		>
+			{/* ScrollView handles 4-garment outfits that exceed screen height */}
+			<ScrollView
+				contentContainerStyle={{ flexGrow: 1 }}
+				showsVerticalScrollIndicator={false}
+			>
+				{/* Capturable area — everything the user sees minus the share button */}
+				<View ref={shareViewRef} collapsable={false} className="flex-1">
+					<WarmBackground />
+					<View className="flex-1 items-center justify-center py-4">
+						<Aureola hex={slots[0].color.hex} width={SCREEN_W} height={500} />
+						<WadaHeader
+							nameJp={combination.nameJp}
+							colorCount={combination.colors.length}
+						/>
+						<OutfitCard
+							slots={slots}
+							selectedSlotIndex={selectedSlotIndex}
+							onSlotTap={handleSlotTap}
+							onVariantCycle={handleVariantCycle}
+						/>
+						<View className="mt-4">
+							<MiniPaletteStrip
+								colors={slots.map((s) => ({
+									hex: s.color.hex,
+									nameEn: s.color.nameEn,
+								}))}
+							/>
+						</View>
+						<Text
+							className="mt-6 font-sans-medium text-sm"
+							style={{ color: "#a09080" }}
+						>
+							Outfinder
+						</Text>
+					</View>
 				</View>
+			</ScrollView>
+			{/* Share button — in normal flow below capture area, never overlaps content */}
+			<View className="items-center py-3">
+				<Pressable
+					onPress={handleShare}
+					disabled={sharing}
+					accessibilityLabel="Share outfit image"
+					accessibilityRole="button"
+					className="min-h-[48px] items-center justify-center rounded-full bg-bg-surface px-6 py-3"
+					style={{ opacity: sharing ? 0.5 : 1 }}
+				>
+					<Text className="font-sans text-sm font-medium text-primary">
+						Share Outfit
+					</Text>
+				</Pressable>
 			</View>
 		</View>
 	);

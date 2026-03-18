@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react-native";
+import { act, fireEvent, render, screen } from "@testing-library/react-native";
 
 import { OutfitVisualizer } from "./OutfitVisualizer";
 
@@ -16,8 +16,16 @@ jest.mock("@/data/colorIndex", () => ({
 
 // Mock haptics
 const mockHapticMedium = jest.fn();
+const mockHapticRigid = jest.fn();
 jest.mock("@/lib/haptics", () => ({
 	hapticMedium: (...args: unknown[]) => mockHapticMedium(...args),
+	hapticRigid: (...args: unknown[]) => mockHapticRigid(...args),
+}));
+
+// Mock share
+const mockShareOutfit = jest.fn();
+jest.mock("@/lib/share", () => ({
+	shareOutfit: (...args: unknown[]) => mockShareOutfit(...args),
 }));
 
 // Mock useReducedMotion
@@ -52,6 +60,8 @@ describe("OutfitVisualizer", () => {
 	beforeEach(() => {
 		mockGetCombination.mockReset();
 		mockHapticMedium.mockReset();
+		mockHapticRigid.mockReset();
+		mockShareOutfit.mockReset();
 		mockAnnounce.mockReset();
 	});
 
@@ -165,8 +175,10 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		expect(screen.getByText("秋の装い")).toBeTruthy();
-		expect(screen.getByText("2 colors · Sanzo Wada")).toBeTruthy();
+		expect(screen.getAllByText("秋の装い").length).toBeGreaterThanOrEqual(1);
+		expect(
+			screen.getAllByText("2 colors · Sanzo Wada").length,
+		).toBeGreaterThanOrEqual(1);
 	});
 
 	it("renders MiniPaletteStrip with color names", () => {
@@ -247,7 +259,7 @@ describe("OutfitVisualizer", () => {
 		expect(mockAnnounce).toHaveBeenCalledWith("Selected T-shirt for swap");
 	});
 
-	it("fires hapticMedium on variant toggle", () => {
+	it("fires hapticMedium on variant cycle via accessibility action", () => {
 		mockRouteParams.combinationId = "combo-2";
 		mockGetCombination.mockReturnValue({
 			id: "combo-2",
@@ -258,13 +270,17 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		const toggleButtons = screen.getAllByLabelText(/Change .* variant/);
-		fireEvent.press(toggleButtons[0]);
+		const tshirt = screen.getByLabelText(
+			"T-shirt, colored Red, tap to select for swap",
+		);
+		fireEvent(tshirt, "accessibilityAction", {
+			nativeEvent: { actionName: "increment" },
+		});
 
 		expect(mockHapticMedium).toHaveBeenCalledTimes(1);
 	});
 
-	it("announces garment type change on variant toggle", () => {
+	it("announces garment type change on variant cycle forward", () => {
 		mockRouteParams.combinationId = "combo-2";
 		mockGetCombination.mockReturnValue({
 			id: "combo-2",
@@ -275,10 +291,84 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		const toggleButtons = screen.getAllByLabelText(/Change .* variant/);
-		fireEvent.press(toggleButtons[0]);
+		const tshirt = screen.getByLabelText(
+			"T-shirt, colored Red, tap to select for swap",
+		);
+		fireEvent(tshirt, "accessibilityAction", {
+			nativeEvent: { actionName: "increment" },
+		});
 
 		expect(mockAnnounce).toHaveBeenCalledWith("Changed to Shirt");
+	});
+
+	it("cycles through extended upper garments in 3-color combo", () => {
+		mockRouteParams.combinationId = "combo-3";
+		mockGetCombination.mockReturnValue({
+			id: "combo-3",
+			colors: [red, blue, green],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		const tshirt = screen.getByLabelText(
+			"T-shirt, colored Red, tap to select for swap",
+		);
+
+		// tshirt → shirt
+		fireEvent(tshirt, "accessibilityAction", {
+			nativeEvent: { actionName: "increment" },
+		});
+		expect(mockAnnounce).toHaveBeenCalledWith("Changed to Shirt");
+
+		// shirt → jacket
+		const shirt = screen.getByLabelText(
+			"Shirt, colored Red, tap to select for swap",
+		);
+		fireEvent(shirt, "accessibilityAction", {
+			nativeEvent: { actionName: "increment" },
+		});
+		expect(mockAnnounce).toHaveBeenCalledWith("Changed to Jacket");
+
+		// jacket → hoodie
+		const jacket = screen.getByLabelText(
+			"Jacket, colored Red, tap to select for swap",
+		);
+		fireEvent(jacket, "accessibilityAction", {
+			nativeEvent: { actionName: "increment" },
+		});
+		expect(mockAnnounce).toHaveBeenCalledWith("Changed to Hoodie");
+
+		// hoodie → tshirt (wraps)
+		const hoodie = screen.getByLabelText(
+			"Hoodie, colored Red, tap to select for swap",
+		);
+		fireEvent(hoodie, "accessibilityAction", {
+			nativeEvent: { actionName: "increment" },
+		});
+		expect(mockAnnounce).toHaveBeenCalledWith("Changed to T-shirt");
+	});
+
+	it("cycles backward via decrement action", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		const tshirt = screen.getByLabelText(
+			"T-shirt, colored Red, tap to select for swap",
+		);
+		// tshirt decrement wraps to hoodie (full upper cycle in 2-color)
+		fireEvent(tshirt, "accessibilityAction", {
+			nativeEvent: { actionName: "decrement" },
+		});
+		expect(mockAnnounce).toHaveBeenCalledWith("Changed to Hoodie");
 	});
 
 	it("swaps colors between two garments with haptic and VoiceOver", () => {
@@ -346,8 +436,10 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		expect(screen.getByText("春の三色")).toBeTruthy();
-		expect(screen.getByText("3 colors · Sanzo Wada")).toBeTruthy();
+		expect(screen.getAllByText("春の三色").length).toBeGreaterThanOrEqual(1);
+		expect(
+			screen.getAllByText("3 colors · Sanzo Wada").length,
+		).toBeGreaterThanOrEqual(1);
 	});
 
 	it("renders WadaHeader for 4-color combination", () => {
@@ -361,8 +453,10 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		expect(screen.getByText("四季の色")).toBeTruthy();
-		expect(screen.getByText("4 colors · Sanzo Wada")).toBeTruthy();
+		expect(screen.getAllByText("四季の色").length).toBeGreaterThanOrEqual(1);
+		expect(
+			screen.getAllByText("4 colors · Sanzo Wada").length,
+		).toBeGreaterThanOrEqual(1);
 	});
 
 	it("renders MiniPaletteStrip color names for 3-color combo", () => {
@@ -376,12 +470,12 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		expect(screen.getByText("Red")).toBeTruthy();
-		expect(screen.getByText("Blue")).toBeTruthy();
-		expect(screen.getByText("Green")).toBeTruthy();
+		expect(screen.getAllByText("Red").length).toBeGreaterThanOrEqual(1);
+		expect(screen.getAllByText("Blue").length).toBeGreaterThanOrEqual(1);
+		expect(screen.getAllByText("Green").length).toBeGreaterThanOrEqual(1);
 	});
 
-	it("haptic fires on variant toggle of second slot", () => {
+	it("haptic fires on variant cycle of second slot", () => {
 		mockRouteParams.combinationId = "combo-2";
 		mockGetCombination.mockReturnValue({
 			id: "combo-2",
@@ -392,8 +486,12 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		const toggleButtons = screen.getAllByLabelText(/Change .* variant/);
-		fireEvent.press(toggleButtons[1]);
+		const pants = screen.getByLabelText(
+			"Pants, colored Blue, tap to select for swap",
+		);
+		fireEvent(pants, "accessibilityAction", {
+			nativeEvent: { actionName: "increment" },
+		});
 
 		expect(mockHapticMedium).toHaveBeenCalledTimes(1);
 	});
@@ -421,7 +519,7 @@ describe("OutfitVisualizer", () => {
 		);
 	});
 
-	it("variant toggle announces pants to skirt change", () => {
+	it("variant cycle announces pants to skirt change", () => {
 		mockRouteParams.combinationId = "combo-2";
 		mockGetCombination.mockReturnValue({
 			id: "combo-2",
@@ -432,8 +530,12 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		const toggleButtons = screen.getAllByLabelText(/Change .* variant/);
-		fireEvent.press(toggleButtons[1]); // toggle Pants → Skirt
+		const pants = screen.getByLabelText(
+			"Pants, colored Blue, tap to select for swap",
+		);
+		fireEvent(pants, "accessibilityAction", {
+			nativeEvent: { actionName: "increment" },
+		});
 
 		expect(mockAnnounce).toHaveBeenCalledWith("Changed to Skirt");
 	});
@@ -450,6 +552,20 @@ describe("OutfitVisualizer", () => {
 		render(<OutfitVisualizer />);
 
 		expect(screen.getByLabelText("Color aureola")).toBeTruthy();
+	});
+
+	it("renders Outfinder branding text", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		expect(screen.getByText("Outfinder")).toBeTruthy();
 	});
 
 	it("not-found state has screen accessibility label", () => {
@@ -515,10 +631,10 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		expect(screen.getByText("Red")).toBeTruthy();
-		expect(screen.getByText("Blue")).toBeTruthy();
-		expect(screen.getByText("Green")).toBeTruthy();
-		expect(screen.getByText("Yellow")).toBeTruthy();
+		expect(screen.getAllByText("Red").length).toBeGreaterThanOrEqual(1);
+		expect(screen.getAllByText("Blue").length).toBeGreaterThanOrEqual(1);
+		expect(screen.getAllByText("Green").length).toBeGreaterThanOrEqual(1);
+		expect(screen.getAllByText("Yellow").length).toBeGreaterThanOrEqual(1);
 	});
 
 	it("haptic fires twice for complete swap interaction", () => {
@@ -557,6 +673,176 @@ describe("OutfitVisualizer", () => {
 		expect(screen.getByLabelText("Color aureola")).toBeTruthy();
 		expect(screen.getByLabelText("Outfit card")).toBeTruthy();
 		expect(screen.getByLabelText("Outfit color palette")).toBeTruthy();
-		expect(screen.getByText("四色")).toBeTruthy();
+		expect(screen.getAllByText("四色").length).toBeGreaterThanOrEqual(1);
+	});
+
+	it("4-color combo keeps layer and top cycles separate", () => {
+		mockRouteParams.combinationId = "combo-4";
+		mockGetCombination.mockReturnValue({
+			id: "combo-4",
+			colors: [red, blue, green, yellow],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		// Layer slot: jacket → hoodie (only 2 in layer cycle)
+		const jacket = screen.getByLabelText(
+			"Jacket, colored Red, tap to select for swap",
+		);
+		fireEvent(jacket, "accessibilityAction", {
+			nativeEvent: { actionName: "increment" },
+		});
+		expect(mockAnnounce).toHaveBeenCalledWith("Changed to Hoodie");
+
+		// Top slot: tshirt → shirt (only 2 in top cycle)
+		const tshirt = screen.getByLabelText(
+			"T-shirt, colored Blue, tap to select for swap",
+		);
+		fireEvent(tshirt, "accessibilityAction", {
+			nativeEvent: { actionName: "increment" },
+		});
+		expect(mockAnnounce).toHaveBeenCalledWith("Changed to Shirt");
+	});
+
+	it("renders Share Outfit button with correct accessibility", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		const shareButton = screen.getByLabelText("Share outfit image");
+		expect(shareButton).toBeTruthy();
+		expect(shareButton.props.accessibilityRole).toBe("button");
+	});
+
+	it("fires hapticRigid when share button pressed", async () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+		mockShareOutfit.mockResolvedValue(true);
+
+		render(<OutfitVisualizer />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByLabelText("Share outfit image"));
+		});
+
+		expect(mockHapticRigid).toHaveBeenCalledTimes(1);
+	});
+
+	it("calls shareOutfit when share button pressed", async () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+		mockShareOutfit.mockResolvedValue(true);
+
+		render(<OutfitVisualizer />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByLabelText("Share outfit image"));
+		});
+
+		expect(mockShareOutfit).toHaveBeenCalledTimes(1);
+	});
+
+	it("shows alert when shareOutfit returns false", async () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+		mockShareOutfit.mockResolvedValue(false);
+
+		const alertSpy = jest.spyOn(require("react-native").Alert, "alert");
+
+		render(<OutfitVisualizer />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByLabelText("Share outfit image"));
+		});
+
+		expect(alertSpy).toHaveBeenCalledWith(
+			"Unable to share",
+			"Something went wrong generating the image. Please try again.",
+		);
+		alertSpy.mockRestore();
+	});
+
+	it("prevents double-tap by ignoring second press while sharing", async () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		let resolveShare!: (value: boolean) => void;
+		mockShareOutfit.mockImplementation(
+			() =>
+				new Promise<boolean>((resolve) => {
+					resolveShare = resolve;
+				}),
+		);
+
+		render(<OutfitVisualizer />);
+
+		const shareButton = screen.getByLabelText("Share outfit image");
+
+		// First press — starts sharing
+		await act(async () => {
+			fireEvent.press(shareButton);
+		});
+
+		// Second press while first is in-flight — should be ignored
+		await act(async () => {
+			fireEvent.press(shareButton);
+		});
+
+		// Resolve the pending share
+		await act(async () => {
+			resolveShare(true);
+		});
+
+		expect(mockShareOutfit).toHaveBeenCalledTimes(1);
+	});
+
+	it("does not show alert when shareOutfit succeeds", async () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+		mockShareOutfit.mockResolvedValue(true);
+
+		const alertSpy = jest.spyOn(require("react-native").Alert, "alert");
+
+		render(<OutfitVisualizer />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByLabelText("Share outfit image"));
+		});
+
+		expect(alertSpy).not.toHaveBeenCalled();
+		alertSpy.mockRestore();
 	});
 });
