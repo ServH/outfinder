@@ -14,6 +14,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
+import { PremiumProvider } from "@/contexts/PremiumContext";
 import { TabNavigator } from "@/navigation/TabNavigator";
 import { Onboarding } from "@/screens/Onboarding";
 
@@ -69,9 +70,11 @@ export function App() {
 					<Onboarding onComplete={handleOnboardingComplete} />
 				) : (
 					<FavoritesProvider>
-						<NavigationContainer>
-							<TabNavigator />
-						</NavigationContainer>
+						<PremiumProvider>
+							<NavigationContainer>
+								<TabNavigator />
+							</NavigationContainer>
+						</PremiumProvider>
 					</FavoritesProvider>
 				)}
 			</SafeAreaProvider>

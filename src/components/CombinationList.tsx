@@ -8,6 +8,7 @@ export interface CombinationListProps {
 	selectedColorId: string;
 	isFavorite?: (id: string) => boolean;
 	onToggleFavorite?: (id: string) => void;
+	onPremiumGate?: (id: string) => void;
 }
 
 function ItemSeparator() {
@@ -23,19 +24,29 @@ export function CombinationList({
 	selectedColorId,
 	isFavorite,
 	onToggleFavorite,
+	onPremiumGate,
 }: CombinationListProps) {
 	const renderItem = useCallback(
-		({ item }: { item: Combination }) => (
-			<PaletteStrip
-				combination={item}
-				selectedColorId={selectedColorId}
-				isFavorite={isFavorite?.(item.id)}
-				onToggleFavorite={
-					onToggleFavorite ? () => onToggleFavorite(item.id) : undefined
-				}
-			/>
-		),
-		[selectedColorId, isFavorite, onToggleFavorite],
+		({ item }: { item: Combination }) => {
+			const isCurrentlyFav = isFavorite?.(item.id) ?? false;
+			const shouldGate =
+				onPremiumGate && !isCurrentlyFav
+					? () => onPremiumGate(item.id)
+					: undefined;
+
+			return (
+				<PaletteStrip
+					combination={item}
+					selectedColorId={selectedColorId}
+					isFavorite={isCurrentlyFav}
+					onToggleFavorite={
+						onToggleFavorite ? () => onToggleFavorite(item.id) : undefined
+					}
+					onPremiumGate={shouldGate}
+				/>
+			);
+		},
+		[selectedColorId, isFavorite, onToggleFavorite, onPremiumGate],
 	);
 
 	return (

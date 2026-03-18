@@ -1,0 +1,442 @@
+import { useEffect } from "react";
+import {
+	Dimensions,
+	Modal,
+	Pressable,
+	ScrollView,
+	Text,
+	View,
+} from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, {
+	runOnJS,
+	useAnimatedStyle,
+	useSharedValue,
+	withDelay,
+	withSpring,
+	withTiming,
+} from "react-native-reanimated";
+import { getAllCombinations, getCombination } from "@/data/colorIndex";
+import type { Combination } from "@/data/types";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { hapticLight } from "@/lib/haptics";
+import { wadaTokens } from "@/styles/theme";
+
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+const SHEET_HEIGHT = SCREEN_HEIGHT * 0.7;
+const DISMISS_THRESHOLD = 100;
+const VELOCITY_THRESHOLD = 500;
+
+export interface PremiumPaywallProps {
+	visible: boolean;
+	blockedCombination?: Combination;
+	favoriteCombinationIds: string[];
+	priceString: string;
+	onPurchase: () => void;
+	onRestore: () => void;
+	onDismiss: () => void;
+}
+
+export function PremiumPaywall({
+	visible,
+	blockedCombination,
+	favoriteCombinationIds,
+	priceString,
+	onPurchase,
+	onRestore,
+	onDismiss,
+}: PremiumPaywallProps) {
+	const reducedMotion = useReducedMotion();
+	const translateY = useSharedValue(SHEET_HEIGHT);
+	const overlayOpacity = useSharedValue(0);
+	const blockedStripOpacity = useSharedValue(0);
+	const ctaScale = useSharedValue(1);
+
+	const totalCombinations = getAllCombinations().length;
+	const favCount = favoriteCombinationIds.length;
+
+	useEffect(() => {
+		if (visible) {
+			hapticLight();
+			if (reducedMotion) {
+				translateY.value = 0;
+				overlayOpacity.value = 0.3;
+				blockedStripOpacity.value = 0.35;
+			} else {
+				translateY.value = withSpring(0, {
+					damping: 20,
+					stiffness: 200,
+				});
+				overlayOpacity.value = withTiming(0.3, { duration: 200 });
+				blockedStripOpacity.value = withDelay(
+					200,
+					withTiming(0.35, { duration: 300 }),
+				);
+			}
+		} else {
+			translateY.value = SHEET_HEIGHT;
+			overlayOpacity.value = 0;
+			blockedStripOpacity.value = 0;
+		}
+	}, [visible, reducedMotion, translateY, overlayOpacity, blockedStripOpacity]);
+
+	function dismiss() {
+		if (reducedMotion) {
+			translateY.value = SHEET_HEIGHT;
+			overlayOpacity.value = 0;
+			onDismiss();
+		} else {
+			translateY.value = withSpring(
+				SHEET_HEIGHT,
+				{ damping: 25, stiffness: 250 },
+				(finished) => {
+					if (finished) {
+						runOnJS(onDismiss)();
+					}
+				},
+			);
+			overlayOpacity.value = withTiming(0, { duration: 150 });
+		}
+	}
+
+	const panGesture = Gesture.Pan()
+		.onUpdate((event) => {
+			if (event.translationY > 0) {
+				translateY.value = event.translationY;
+			}
+		})
+		.onEnd((event) => {
+			if (
+				event.translationY > DISMISS_THRESHOLD ||
+				event.velocityY > VELOCITY_THRESHOLD
+			) {
+				runOnJS(dismiss)();
+			} else {
+				translateY.value = withSpring(0, { damping: 20, stiffness: 200 });
+			}
+		});
+
+	const sheetStyle = useAnimatedStyle(() => ({
+		transform: [{ translateY: translateY.value }],
+	}));
+
+	const overlayStyle = useAnimatedStyle(() => ({
+		opacity: overlayOpacity.value,
+	}));
+
+	const blockedStripStyle = useAnimatedStyle(() => ({
+		opacity: blockedStripOpacity.value,
+	}));
+
+	const ctaAnimStyle = useAnimatedStyle(() => ({
+		transform: [{ scale: ctaScale.value }],
+	}));
+
+	// Resolve favorite combinations to their actual data
+	const savedCombinations = favoriteCombinationIds
+		.map((id) => getCombination(id))
+		.filter((c): c is Combination => c !== undefined);
+
+	// Settings entry point: no blocked combination
+	const isSettingsEntry = !blockedCombination;
+	const showPalettePreview = favCount > 0 || !isSettingsEntry;
+
+	const badgeText = isSettingsEntry
+		? `${favCount} of 5 free favorites used`
+		: "5 of 5 free favorites used";
+
+	if (!visible) {
+		return null;
+	}
+
+	return (
+		<Modal
+			testID="premium-paywall-modal"
+			transparent
+			visible={visible}
+			animationType="none"
+			statusBarTranslucent
+		>
+			<View className="flex-1" testID="premium-paywall">
+				{/* Dim overlay */}
+				<Pressable
+					testID="paywall-overlay"
+					className="absolute inset-0"
+					accessibilityRole="button"
+					accessibilityLabel="Dismiss paywall"
+					onPress={dismiss}
+				>
+					<Animated.View className="flex-1 bg-black" style={overlayStyle} />
+				</Pressable>
+
+				{/* Bottom sheet */}
+				<GestureDetector gesture={panGesture}>
+					<Animated.View
+						testID="paywall-sheet"
+						className="absolute bottom-0 left-0 right-0"
+						style={[
+							sheetStyle,
+							{
+								height: SHEET_HEIGHT,
+								backgroundColor: wadaTokens.bgPaper,
+								borderTopLeftRadius: 20,
+								borderTopRightRadius: 20,
+							},
+						]}
+					>
+						<ScrollView
+							contentContainerStyle={{
+								paddingHorizontal: 24,
+								paddingBottom: 40,
+							}}
+							showsVerticalScrollIndicator={false}
+						>
+							{/* Drag handle */}
+							<View
+								className="self-center mt-[10px]"
+								style={{
+									width: 36,
+									height: 4,
+									borderRadius: 2,
+									backgroundColor: "rgba(0,0,0,0.12)",
+								}}
+								accessibilityElementsHidden
+							/>
+
+							{/* Saved Palettes Preview */}
+							{showPalettePreview && (
+								<View className="mt-6">
+									{/* Header row */}
+									<View
+										className="flex-row justify-between"
+										accessible
+										accessibilityLabel={`Your collection. ${favCount} combinations saved`}
+									>
+										<Text
+											allowFontScaling
+											className="font-sans text-[11px]"
+											style={{ color: wadaTokens.textTertiary }}
+										>
+											Your collection
+										</Text>
+										<Text
+											allowFontScaling
+											className="font-sans text-[11px]"
+											style={{ color: wadaTokens.favoriteRed }}
+										>
+											♥ {favCount} saved
+										</Text>
+									</View>
+
+									{/* Palette strips */}
+									<View className="mt-1 gap-[6px]">
+										{savedCombinations.map((combo) => (
+											<View
+												key={combo.id}
+												testID={`saved-palette-${combo.id}`}
+												className="flex-row overflow-hidden"
+												style={{ height: 32, borderRadius: 5 }}
+												accessibilityLabel={`${combo.nameEn}. ${combo.colors.length} colors: ${combo.colors.map((c) => c.nameEn).join(", ")}`}
+											>
+												{combo.colors.map((color) => (
+													<View
+														key={color.id}
+														className="flex-1"
+														style={{ backgroundColor: color.hex }}
+													/>
+												))}
+											</View>
+										))}
+
+										{/* Blocked strip (faded) */}
+										{blockedCombination && (
+											<Animated.View
+												testID="blocked-palette-strip"
+												className="flex-row overflow-hidden"
+												style={[
+													{ height: 32, borderRadius: 5 },
+													blockedStripStyle,
+												]}
+												accessibilityLabel="Locked combination. Upgrade to save"
+											>
+												{blockedCombination.colors.map((color) => (
+													<View
+														key={color.id}
+														className="flex-1"
+														style={{ backgroundColor: color.hex }}
+													/>
+												))}
+											</Animated.View>
+										)}
+									</View>
+								</View>
+							)}
+
+							{/* Limit badge */}
+							<View className="items-center mt-2 mb-5">
+								<View
+									testID="limit-badge"
+									className="px-3 py-[5px]"
+									style={{
+										borderRadius: 20,
+										backgroundColor: "rgba(196,162,101,0.10)",
+									}}
+									accessibilityRole="text"
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[11px] font-medium"
+										style={{ color: wadaTokens.premiumAccent }}
+									>
+										{badgeText}
+									</Text>
+								</View>
+							</View>
+
+							{/* Headline */}
+							<Text
+								testID="paywall-headline"
+								allowFontScaling
+								className="font-serif-jp text-[20px] text-center mb-[10px]"
+								style={{
+									color: wadaTokens.textPrimary,
+									lineHeight: 28,
+								}}
+							>
+								{"Don't stop\ncollecting"}
+							</Text>
+
+							{/* Body text */}
+							<Text
+								testID="paywall-body"
+								allowFontScaling
+								className="font-sans text-[13px] font-light text-center px-2 mb-6"
+								style={{
+									color: wadaTokens.textSecondary,
+									lineHeight: 21,
+								}}
+							>
+								You've found {favCount}{" "}
+								{favCount === 1 ? "harmony" : "harmonies"} worth keeping. There
+								are {totalCombinations - favCount} more combinations waiting to
+								be discovered.
+							</Text>
+
+							{/* Price + CTA row */}
+							<View className="flex-row gap-3 items-center mb-4">
+								{/* Price tag */}
+								<View
+									testID="price-tag"
+									className="items-center"
+									style={{
+										backgroundColor: wadaTokens.bgElevated,
+										borderRadius: 10,
+										paddingHorizontal: 16,
+										paddingVertical: 12,
+										flexShrink: 0,
+									}}
+									accessibilityLabel={`${priceString}, one-time purchase`}
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[22px] font-semibold"
+										style={{ color: wadaTokens.textPrimary }}
+									>
+										{priceString}
+									</Text>
+									<Text
+										allowFontScaling
+										className="font-sans text-[10px]"
+										style={{
+											color: wadaTokens.textTertiary,
+											marginTop: 1,
+										}}
+									>
+										one time
+									</Text>
+								</View>
+
+								{/* CTA button */}
+								<Pressable
+									testID="cta-unlock"
+									className="flex-1 items-center"
+									style={{
+										backgroundColor: wadaTokens.textPrimary,
+										borderRadius: 14,
+										paddingVertical: 16,
+									}}
+									accessibilityRole="button"
+									accessibilityLabel={`Unlock unlimited favorites for ${priceString}`}
+									onPressIn={() => {
+										if (!reducedMotion) {
+											ctaScale.value = withSpring(0.97, {
+												damping: 15,
+												stiffness: 300,
+											});
+										}
+									}}
+									onPressOut={() => {
+										if (!reducedMotion) {
+											ctaScale.value = withSpring(1, {
+												damping: 15,
+												stiffness: 300,
+											});
+										}
+									}}
+									onPress={onPurchase}
+								>
+									<Animated.View style={ctaAnimStyle}>
+										<Text
+											allowFontScaling
+											className="font-sans text-[15px] font-medium"
+											style={{
+												color: wadaTokens.bgPaper,
+												letterSpacing: 0.3,
+											}}
+										>
+											Unlock Unlimited
+										</Text>
+									</Animated.View>
+								</Pressable>
+							</View>
+
+							{/* Secondary actions */}
+							<View className="flex-row justify-center gap-6 mt-1">
+								<Pressable
+									testID="restore-purchase"
+									className="min-h-[44px] justify-center"
+									accessibilityRole="button"
+									accessibilityLabel="Restore previous purchase"
+									onPress={onRestore}
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[13px]"
+										style={{ color: wadaTokens.textTertiary }}
+									>
+										Restore Purchase
+									</Text>
+								</Pressable>
+								<Pressable
+									testID="not-now"
+									className="min-h-[44px] justify-center"
+									accessibilityRole="button"
+									accessibilityLabel="Dismiss paywall"
+									onPress={dismiss}
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[13px]"
+										style={{ color: wadaTokens.textTertiary }}
+									>
+										Not now
+									</Text>
+								</Pressable>
+							</View>
+						</ScrollView>
+					</Animated.View>
+				</GestureDetector>
+			</View>
+		</Modal>
+	);
+}

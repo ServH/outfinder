@@ -12,6 +12,7 @@ export interface PaletteStripProps {
 	selectedColorId: string;
 	isFavorite?: boolean;
 	onToggleFavorite?: () => void;
+	onPremiumGate?: () => void;
 }
 
 type CombinationsNav = NativeStackNavigationProp<
@@ -24,6 +25,7 @@ export function PaletteStrip({
 	selectedColorId,
 	isFavorite,
 	onToggleFavorite,
+	onPremiumGate,
 }: PaletteStripProps) {
 	const navigation = useNavigation<CombinationsNav>();
 	const reducedMotion = useReducedMotion();
@@ -41,6 +43,7 @@ export function PaletteStrip({
 							combinationId={combination.id}
 							isFavorite={isFavorite ?? false}
 							onToggle={onToggleFavorite}
+							onPremiumGate={onPremiumGate}
 						/>
 					</View>
 				)}
