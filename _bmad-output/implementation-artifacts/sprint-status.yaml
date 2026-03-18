@@ -49,7 +49,7 @@ development_status:
   1-5-cross-navigation-haptics-accessibility-polish: done
   epic-1-retrospective: done
 
-  epic-2: in-progress
+  epic-2: done
   2-0-garment-svg-research-and-selection: done
   2-1-svg-garment-silhouettes-and-outfit-mannequin: done
   2-2-tap-swap-garment-toggle-and-palette-bar: done
@@ -58,15 +58,15 @@ development_status:
   2-5-skia-real-garment-visualizer: done
   epic-2-retrospective: done
 
-  epic-3: backlog
-  3-1-share-image-generation-and-branding: backlog
-  3-2-native-share-sheet-integration: backlog
+  epic-3: in-progress
+  3-1-share-image-generation-and-branding: done
+  3-2-native-share-sheet-integration: done
   epic-3-retrospective: optional
 
-  epic-4: in-progress
+  epic-4: done
   4-1-favorites-context-and-favorite-button: done
   4-2-favorites-list-screen-and-navigation: done
-  epic-4-retrospective: optional
+  epic-4-retrospective: done
 
   epic-5: backlog
   5-1-premium-context-and-paywall-ui: backlog

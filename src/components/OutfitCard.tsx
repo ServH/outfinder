@@ -123,8 +123,10 @@ function CardSlot({
 			}
 		});
 
+	const isShoes = slot.garmentType.startsWith("shoes-");
+
 	return (
-		<View style={index > 0 ? { marginTop: -8 } : undefined}>
+		<View style={index > 0 ? { marginTop: isShoes ? -20 : 6 } : undefined}>
 			<GestureDetector gesture={panGesture}>
 				<Pressable
 					accessibilityRole="adjustable"
