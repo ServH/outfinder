@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import {
+	ActivityIndicator,
 	Dimensions,
 	Modal,
 	Pressable,
@@ -18,6 +19,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { getAllCombinations, getCombination } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
+import type { PurchaseState } from "@/hooks/usePremiumGate";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { hapticLight } from "@/lib/haptics";
 import { wadaTokens } from "@/styles/theme";
@@ -32,6 +34,8 @@ export interface PremiumPaywallProps {
 	blockedCombination?: Combination;
 	favoriteCombinationIds: string[];
 	priceString: string;
+	purchaseState?: PurchaseState;
+	errorMessage?: string | null;
 	onPurchase: () => void;
 	onRestore: () => void;
 	onDismiss: () => void;
@@ -42,6 +46,8 @@ export function PremiumPaywall({
 	blockedCombination,
 	favoriteCombinationIds,
 	priceString,
+	purchaseState = "idle",
+	errorMessage = null,
 	onPurchase,
 	onRestore,
 	onDismiss,
@@ -99,7 +105,11 @@ export function PremiumPaywall({
 		}
 	}
 
+	const isLoading =
+		purchaseState === "purchasing" || purchaseState === "restoring";
+
 	const panGesture = Gesture.Pan()
+		.enabled(!isLoading)
 		.onUpdate((event) => {
 			if (event.translationY > 0) {
 				translateY.value = event.translationY;
@@ -164,7 +174,7 @@ export function PremiumPaywall({
 					className="absolute inset-0"
 					accessibilityRole="button"
 					accessibilityLabel="Dismiss paywall"
-					onPress={dismiss}
+					onPress={isLoading ? undefined : dismiss}
 				>
 					<Animated.View className="flex-1 bg-black" style={overlayStyle} />
 				</Pressable>
@@ -364,9 +374,15 @@ export function PremiumPaywall({
 										backgroundColor: wadaTokens.textPrimary,
 										borderRadius: 14,
 										paddingVertical: 16,
+										opacity: isLoading ? 0.7 : 1,
 									}}
 									accessibilityRole="button"
-									accessibilityLabel={`Unlock unlimited favorites for ${priceString}`}
+									accessibilityLabel={
+										purchaseState === "purchasing"
+											? "Purchasing, please wait"
+											: `Unlock unlimited favorites for ${priceString}`
+									}
+									disabled={isLoading}
 									onPressIn={() => {
 										if (!reducedMotion) {
 											ctaScale.value = withSpring(0.97, {
@@ -386,19 +402,50 @@ export function PremiumPaywall({
 									onPress={onPurchase}
 								>
 									<Animated.View style={ctaAnimStyle}>
-										<Text
-											allowFontScaling
-											className="font-sans text-[15px] font-medium"
-											style={{
-												color: wadaTokens.bgPaper,
-												letterSpacing: 0.3,
-											}}
-										>
-											Unlock Unlimited
-										</Text>
+										{purchaseState === "purchasing" ? (
+											<ActivityIndicator
+												testID="cta-loading"
+												size="small"
+												color="#ffffff"
+											/>
+										) : (
+											<Text
+												allowFontScaling
+												className="font-sans text-[15px] font-medium"
+												style={{
+													color: wadaTokens.bgPaper,
+													letterSpacing: 0.3,
+												}}
+											>
+												Unlock Unlimited
+											</Text>
+										)}
 									</Animated.View>
 								</Pressable>
 							</View>
+
+							{/* Error banner */}
+							{purchaseState === "error" && errorMessage && (
+								<View
+									testID="error-banner"
+									accessibilityRole="alert"
+									style={{
+										backgroundColor: "rgba(231,76,60,0.08)",
+										borderRadius: 8,
+										paddingHorizontal: 12,
+										paddingVertical: 8,
+										marginBottom: 12,
+									}}
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[13px] text-center"
+										style={{ color: wadaTokens.textSecondary }}
+									>
+										{errorMessage}
+									</Text>
+								</View>
+							)}
 
 							{/* Secondary actions */}
 							<View className="flex-row justify-center gap-6 mt-1">
@@ -406,28 +453,45 @@ export function PremiumPaywall({
 									testID="restore-purchase"
 									className="min-h-[44px] justify-center"
 									accessibilityRole="button"
-									accessibilityLabel="Restore previous purchase"
+									accessibilityLabel={
+										purchaseState === "restoring"
+											? "Restoring purchase, please wait"
+											: "Restore previous purchase"
+									}
+									disabled={isLoading}
 									onPress={onRestore}
 								>
-									<Text
-										allowFontScaling
-										className="font-sans text-[13px]"
-										style={{ color: wadaTokens.textTertiary }}
-									>
-										Restore Purchase
-									</Text>
+									{purchaseState === "restoring" ? (
+										<ActivityIndicator
+											testID="restore-loading"
+											size="small"
+											color={wadaTokens.textTertiary}
+										/>
+									) : (
+										<Text
+											allowFontScaling
+											className="font-sans text-[13px]"
+											style={{ color: wadaTokens.textTertiary }}
+										>
+											Restore Purchase
+										</Text>
+									)}
 								</Pressable>
 								<Pressable
 									testID="not-now"
 									className="min-h-[44px] justify-center"
 									accessibilityRole="button"
 									accessibilityLabel="Dismiss paywall"
+									disabled={isLoading}
 									onPress={dismiss}
 								>
 									<Text
 										allowFontScaling
 										className="font-sans text-[13px]"
-										style={{ color: wadaTokens.textTertiary }}
+										style={{
+											color: wadaTokens.textTertiary,
+											opacity: isLoading ? 0.5 : 1,
+										}}
 									>
 										Not now
 									</Text>

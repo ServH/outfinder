@@ -1,0 +1,201 @@
+import {
+	act,
+	fireEvent,
+	render,
+	screen,
+	waitFor,
+} from "@testing-library/react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { Settings } from "./Settings";
+
+jest.mock("@/lib/haptics");
+jest.mock("@/hooks/useReducedMotion");
+jest.mock("react-native-reanimated");
+jest.mock("react-native-gesture-handler", () => {
+	const { View } = require("react-native");
+	return {
+		GestureHandlerRootView: View,
+		Gesture: {
+			Pan: () => ({
+				enabled: jest.fn().mockReturnThis(),
+				onUpdate: jest.fn().mockReturnThis(),
+				onEnd: jest.fn().mockReturnThis(),
+			}),
+		},
+		GestureDetector: ({ children }: { children: React.ReactNode }) => children,
+	};
+});
+jest.mock("@/data/colorIndex", () => ({
+	getCombination: () => undefined,
+	getAllCombinations: () => new Array(348),
+}));
+
+// Mock values we can control per test
+const mockRestore = jest.fn().mockResolvedValue(undefined);
+const mockPurchase = jest.fn().mockResolvedValue(undefined);
+const mockToggleFavorite = jest.fn();
+let mockIsPremium = false;
+let mockCount = 3;
+
+jest.mock("@/contexts/PremiumContext", () => ({
+	usePremium: () => ({
+		isPremium: mockIsPremium,
+		loading: false,
+		paywallDismissedThisSession: false,
+		setPaywallDismissedThisSession: jest.fn(),
+		priceString: "€0.99",
+		purchase: mockPurchase,
+		restore: mockRestore,
+	}),
+}));
+
+jest.mock("@/contexts/FavoritesContext", () => ({
+	useFavorites: () => ({
+		favorites: new Set(["c1", "c2", "c3"]),
+		toggleFavorite: mockToggleFavorite,
+		isFavorite: jest.fn(),
+		count: mockCount,
+	}),
+}));
+
+const mockUseReducedMotion = useReducedMotion as jest.Mock;
+
+function renderSettings() {
+	return render(
+		<GestureHandlerRootView>
+			<Settings />
+		</GestureHandlerRootView>,
+	);
+}
+
+describe("Settings", () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockIsPremium = false;
+		mockCount = 3;
+		mockUseReducedMotion.mockReturnValue(false);
+	});
+
+	it("renders premium section", () => {
+		renderSettings();
+		expect(screen.getByTestId("premium-section")).toBeTruthy();
+		expect(screen.getByText("Premium")).toBeTruthy();
+	});
+
+	it("shows Free Plan badge when not premium", () => {
+		renderSettings();
+		expect(screen.getByTestId("free-plan-badge")).toBeTruthy();
+		expect(screen.getByText("Free Plan · 3 favorites")).toBeTruthy();
+	});
+
+	it("shows Premium Active badge when premium", () => {
+		mockIsPremium = true;
+		renderSettings();
+		expect(screen.getByTestId("premium-active-badge")).toBeTruthy();
+		expect(screen.getByText("Premium Active ✓")).toBeTruthy();
+	});
+
+	it("renders Restore Purchases button", () => {
+		renderSettings();
+		expect(screen.getByTestId("settings-restore-button")).toBeTruthy();
+		expect(screen.getByText("Restore Purchases")).toBeTruthy();
+	});
+
+	it("shows loading indicator when restore is in progress", async () => {
+		let resolveRestore!: () => void;
+		mockRestore.mockImplementation(
+			() =>
+				new Promise<void>((resolve) => {
+					resolveRestore = resolve;
+				}),
+		);
+		renderSettings();
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("settings-restore-button"));
+		});
+		expect(screen.getByTestId("settings-restore-loading")).toBeTruthy();
+
+		// Clean up
+		await act(async () => {
+			resolveRestore();
+		});
+	});
+
+	it("shows Upgrade to Premium button for free users", () => {
+		renderSettings();
+		expect(screen.getByTestId("settings-upgrade-button")).toBeTruthy();
+		expect(screen.getByText("Upgrade to Premium")).toBeTruthy();
+	});
+
+	it("hides Upgrade button for premium users", () => {
+		mockIsPremium = true;
+		renderSettings();
+		expect(screen.queryByTestId("settings-upgrade-button")).toBeNull();
+	});
+
+	it("has accessibility label on settings screen", () => {
+		renderSettings();
+		expect(screen.getByLabelText("Settings screen")).toBeTruthy();
+	});
+
+	it("has accessibility role button on restore", () => {
+		renderSettings();
+		const btn = screen.getByTestId("settings-restore-button");
+		expect(btn.props.accessibilityRole).toBe("button");
+	});
+
+	it("has accessibility role button on upgrade", () => {
+		renderSettings();
+		const btn = screen.getByTestId("settings-upgrade-button");
+		expect(btn.props.accessibilityRole).toBe("button");
+	});
+
+	it("opens paywall when upgrade button is pressed", async () => {
+		renderSettings();
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("settings-upgrade-button"));
+		});
+		expect(screen.getByTestId("premium-paywall")).toBeTruthy();
+	});
+
+	it("shows Restored text on successful restore", async () => {
+		let resolveRestore!: () => void;
+		mockRestore.mockImplementation(
+			() =>
+				new Promise<void>((resolve) => {
+					resolveRestore = resolve;
+				}),
+		);
+		renderSettings();
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("settings-restore-button"));
+		});
+		await act(async () => {
+			resolveRestore();
+		});
+		expect(screen.getByText("Restored!")).toBeTruthy();
+	});
+
+	it("shows error message on restore failure", async () => {
+		let rejectRestore!: (error: Error) => void;
+		mockRestore.mockImplementation(
+			() =>
+				new Promise<void>((_resolve, reject) => {
+					rejectRestore = reject;
+				}),
+		);
+		renderSettings();
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("settings-restore-button"));
+		});
+		await act(async () => {
+			rejectRestore(new Error("No previous purchase found"));
+		});
+		expect(screen.getByTestId("settings-restore-error")).toBeTruthy();
+		expect(
+			screen.getByText("No previous purchase found for this Apple ID."),
+		).toBeTruthy();
+	});
+});

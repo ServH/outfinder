@@ -14,6 +14,7 @@ jest.mock("react-native-gesture-handler", () => {
 		GestureHandlerRootView: View,
 		Gesture: {
 			Pan: () => ({
+				enabled: jest.fn().mockReturnThis(),
 				onUpdate: jest.fn().mockReturnThis(),
 				onEnd: jest.fn().mockReturnThis(),
 			}),
@@ -300,5 +301,104 @@ describe("PremiumPaywall", () => {
 		expect(restore.props.className).toMatch(/min-h-\[44px\]/);
 		const notNow = screen.getByTestId("not-now");
 		expect(notNow.props.className).toMatch(/min-h-\[44px\]/);
+	});
+
+	// Loading states (Story 5.2)
+	describe("purchase loading states", () => {
+		it("shows ActivityIndicator on CTA when purchasing", () => {
+			renderPaywall({ purchaseState: "purchasing" });
+			expect(screen.getByTestId("cta-loading")).toBeTruthy();
+			expect(screen.queryByText("Unlock Unlimited")).toBeNull();
+		});
+
+		it("disables CTA during purchasing", () => {
+			renderPaywall({ purchaseState: "purchasing" });
+			const cta = screen.getByTestId("cta-unlock");
+			expect(cta.props.accessibilityState?.disabled).toBe(true);
+		});
+
+		it("shows ActivityIndicator on Restore when restoring", () => {
+			renderPaywall({ purchaseState: "restoring" });
+			expect(screen.getByTestId("restore-loading")).toBeTruthy();
+			expect(screen.queryByText("Restore Purchase")).toBeNull();
+		});
+
+		it("disables CTA during restoring", () => {
+			renderPaywall({ purchaseState: "restoring" });
+			const cta = screen.getByTestId("cta-unlock");
+			expect(cta.props.accessibilityState?.disabled).toBe(true);
+		});
+
+		it("disables Restore during purchasing", () => {
+			renderPaywall({ purchaseState: "purchasing" });
+			const restore = screen.getByTestId("restore-purchase");
+			expect(restore.props.accessibilityState?.disabled).toBe(true);
+		});
+
+		it("disables Not now during any loading state", () => {
+			renderPaywall({ purchaseState: "purchasing" });
+			const notNow = screen.getByTestId("not-now");
+			expect(notNow.props.accessibilityState?.disabled).toBe(true);
+		});
+
+		it("does not dismiss when overlay pressed during purchasing", () => {
+			renderPaywall({ purchaseState: "purchasing" });
+			fireEvent.press(screen.getByTestId("paywall-overlay"));
+			expect(defaultProps.onDismiss).not.toHaveBeenCalled();
+		});
+
+		it("updates CTA accessibility label when purchasing", () => {
+			renderPaywall({ purchaseState: "purchasing" });
+			expect(screen.getByLabelText("Purchasing, please wait")).toBeTruthy();
+		});
+
+		it("updates Restore accessibility label when restoring", () => {
+			renderPaywall({ purchaseState: "restoring" });
+			expect(
+				screen.getByLabelText("Restoring purchase, please wait"),
+			).toBeTruthy();
+		});
+	});
+
+	// Error states (Story 5.2)
+	describe("error states", () => {
+		it("renders error banner with message when purchaseState is error", () => {
+			renderPaywall({
+				purchaseState: "error",
+				errorMessage: "Something went wrong. Please try again.",
+			});
+			expect(screen.getByTestId("error-banner")).toBeTruthy();
+			expect(
+				screen.getByText("Something went wrong. Please try again."),
+			).toBeTruthy();
+		});
+
+		it("error banner has accessibilityRole alert", () => {
+			renderPaywall({
+				purchaseState: "error",
+				errorMessage: "Network error",
+			});
+			const banner = screen.getByTestId("error-banner");
+			expect(banner.props.accessibilityRole).toBe("alert");
+		});
+
+		it("does not render error banner when purchaseState is idle", () => {
+			renderPaywall({ purchaseState: "idle", errorMessage: null });
+			expect(screen.queryByTestId("error-banner")).toBeNull();
+		});
+
+		it("does not render error banner when errorMessage is null", () => {
+			renderPaywall({ purchaseState: "error", errorMessage: null });
+			expect(screen.queryByTestId("error-banner")).toBeNull();
+		});
+	});
+
+	// Default purchaseState (Story 5.2)
+	it("defaults to idle purchaseState when not provided", () => {
+		renderPaywall();
+		expect(screen.queryByTestId("cta-loading")).toBeNull();
+		expect(screen.queryByTestId("restore-loading")).toBeNull();
+		expect(screen.queryByTestId("error-banner")).toBeNull();
+		expect(screen.getByText("Unlock Unlimited")).toBeTruthy();
 	});
 });

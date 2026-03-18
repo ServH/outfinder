@@ -45,6 +45,8 @@ export function Combinations({ route }: CombinationsProps) {
 				blockedCombination={gate.blockedCombination}
 				favoriteCombinationIds={gate.favoriteCombinationIds}
 				priceString={gate.priceString}
+				purchaseState={gate.purchaseState}
+				errorMessage={gate.errorMessage}
 				onPurchase={() => gate.handlePurchase(toggleFavorite)}
 				onRestore={gate.handleRestore}
 				onDismiss={gate.handleDismiss}
