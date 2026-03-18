@@ -14,9 +14,12 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 | Navigation | React Navigation 7 (native stacks) |
 | Animations | Reanimated 4.2.2 |
 | 2D Rendering | @shopify/react-native-skia 2.5.1 (Canvas, ColorMatrix, RadialGradient) |
+| Image Capture | react-native-view-shot 4.0.3 (captureRef for share images) |
+| Sharing | expo-sharing ~55.0.11 (native iOS Share Sheet / UIActivityViewController) |
 | Icons | expo-symbols (SF Symbols) |
+| Storage | AsyncStorage (favorites persistence) |
 | IAP | RevenueCat (react-native-purchases) — not yet implemented |
-| Storage | AsyncStorage + expo-secure-store — not yet implemented |
+| Secure Storage | expo-secure-store — not yet implemented |
 | Linting | Biome 2.4.6 (tabs, double quotes) |
 | Testing | Jest ~29.7.0 + jest-expo + React Native Testing Library |
 | Fonts | Noto Serif JP (Regular/Medium) + Inter (Regular/Medium) via expo-font |
@@ -31,26 +34,33 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 
 ## Current Status
 
-- **Epic 1: DONE** — Color Discovery & Combination Exploration (6/6 stories, 77 tests)
-- **Epic 2: IN PROGRESS** — Outfit Visualization
-  - Story 2.0: DONE — Garment SVG research, PNG + tintColor approved
-  - Story 2.1: DONE — PNG garment silhouettes + OutfitMannequin
-  - Story 2.2: DONE — Tap-swap, garment toggle, PaletteBar
-  - Story 2.3: DONE — Proportional mannequin layout
-  - Story 2.5: DONE — Skia real garment visualizer (replaced Stories 2.1-2.3 components with Skia tinting, editorial card, Wada identity — 167 tests total)
-- Epics 3-6: Backlog
-- 6 epics planned, 15+ stories total
-- Planning validated: implementation readiness passed 2026-03-12
-- Epic 1 retrospective completed: 2026-03-13
+- **Epic 1: DONE** — Color Discovery & Combination Exploration (6/6 stories)
+- **Epic 2: DONE** — Outfit Visualization (4/4 stories — Story 2.4 descoped/rolled back, replaced by Story 2.5 Skia rewrite)
+- **Epic 3: DONE** — Social Sharing (2/2 stories — share image capture + native share sheet)
+- **Epic 4: DONE** — Favorites & Collections (2/2 stories — FavoritesContext + FavoritesList)
+- **Epic 5: BACKLOG** — Premium & In-App Purchases
+- **Epic 6: BACKLOG** — Onboarding & App Store Launch
+- **Tests:** 230 across 22 suites (all passing)
+- **Code Reviews:** Adversarial review on every story since Epic 1
+- **Retrospectives:** Epic 1, 2, 3, 4 completed
+
+### Epic Execution Order (non-sequential)
+
+Epics were NOT executed in numerical order:
+1. Epic 1 → Epic 2 → **Epic 4** → **Epic 3** → (next: Epic 5)
+
+Epic 3 was postponed after Epic 2 because the Visualizer was visually flat for social sharing. Epic 4 (Favorites) was independent and executed first. Story 2.5 (Skia rewrite) + bugfix polish branch resolved the visual debt, unblocking Epic 3.
 
 ## Project Structure
 
 ```
 outfinder/
-├── App.tsx                          # Entry point — font loading, NavigationContainer, TabNavigator
+├── App.tsx                          # Entry point — font loading, FavoritesProvider, NavigationContainer, TabNavigator
 ├── index.js                         # Registers App.tsx with Expo
 ├── __mocks__/
 │   ├── react-native-reanimated.js   # Manual Reanimated v4 Jest mock (built-in imports native modules)
+│   ├── react-native-gesture-handler.js # Gesture handler mock
+│   ├── react-native-view-shot.js    # View-shot captureRef mock (returns "file:///mock-path.png")
 │   └── @shopify/
 │       └── react-native-skia.js     # Manual Skia Jest mock (Canvas, Image, Fill, etc.)
 ├── src/
@@ -59,7 +69,7 @@ outfinder/
 │   │   ├── SwatchGroupTabs.tsx      # Horizontal ScrollView, 7 tabs (All + 6 families), hapticLight on tap
 │   │   ├── SwatchGroup.tsx          # FlatList numColumns=5, renders ColorSwatch grid
 │   │   ├── ColorHeader.tsx          # 40x40 swatch + JP/EN names + combination count
-│   │   ├── PaletteStrip.tsx         # 2-4 color rectangles, cross-navigation, haptics, selected dot
+│   │   ├── PaletteStrip.tsx         # 2-4 color rectangles, cross-navigation, haptics, selected dot, FavoriteButton
 │   │   ├── CombinationList.tsx      # FlatList of PaletteStrips with 24px spacing + dividers
 │   │   ├── TintedGarment.tsx        # Skia Canvas + ColorMatrix tinting for any garment photo
 │   │   ├── OutfitCard.tsx           # White editorial card with stacked TintedGarments, tap-swap, variant toggle
@@ -67,8 +77,13 @@ outfinder/
 │   │   ├── Aureola.tsx              # Radial glow behind outfit card using dominant color
 │   │   ├── WadaHeader.tsx           # Japanese combination name + "N colors · Sanzo Wada" subtitle
 │   │   ├── MiniPaletteStrip.tsx     # Thin horizontal color strip with names below the card
+│   │   ├── FavoriteButton.tsx       # Heart toggle (SF Symbol), spring animation, hapticLight, a11y
+│   │   ├── EmptyState.tsx           # Empty favorites guidance with heart icon and message
+│   │   ├── presentation.test.tsx    # Shared presentation component tests
 │   │   └── garments/
 │   │       └── index.ts             # GARMENT_REGISTRY — GarmentType union, GarmentConfig (image, label, heightHint)
+│   ├── contexts/
+│   │   └── FavoritesContext.tsx     # FavoritesProvider + useFavorites() — Set<combinationId>, AsyncStorage persistence, toggle/isFavorite/count
 │   ├── data/
 │   │   ├── types.ts                 # Color, Combination, SwatchGroup types
 │   │   ├── colors.json              # 159 Wada colors (hex, nameJp, nameEn, id, swatchGroup, combinationCount)
@@ -78,18 +93,19 @@ outfinder/
 │   │   ├── useOutfitState.ts        # Outfit state hook — slots, selectedSlotIndex, selectSlot (tap-swap), toggleVariant
 │   │   └── useReducedMotion.ts      # AccessibilityInfo.isReduceMotionEnabled() + listener
 │   ├── lib/
-│   │   └── haptics.ts               # hapticLight(), hapticMedium(), hapticRigid() — all with try/catch + .catch()
+│   │   ├── haptics.ts               # hapticLight(), hapticMedium(), hapticRigid() — all with try/catch + .catch()
+│   │   └── share.ts                 # captureShareImage(viewRef) + shareOutfit(viewRef) — view-shot capture + expo-sharing
 │   ├── navigation/
 │   │   ├── types.ts                 # ColorsStackParamList, FavoritesStackParamList, SettingsStackParamList, TabParamList
 │   │   ├── TabNavigator.tsx         # 3 tabs: Colors (paintpalette), Favorites (heart), Settings (gearshape)
 │   │   ├── ColorsStack.tsx          # ColorHome → Combinations → OutfitVisualizer (native stack)
-│   │   ├── FavoritesStack.tsx       # Placeholder stack
+│   │   ├── FavoritesStack.tsx       # FavoritesList with large title header
 │   │   └── SettingsStack.tsx        # Placeholder stack
 │   ├── screens/
 │   │   ├── ColorHome.tsx            # Grid of 159 colors with tab filtering by swatch family
 │   │   ├── Combinations.tsx         # ColorHeader + CombinationList for selected color
-│   │   ├── OutfitVisualizer.tsx     # Outfit visualization with Skia tinting, editorial card, Wada identity, haptics, VoiceOver
-│   │   ├── FavoritesList.tsx        # PLACEHOLDER — Epic 4 implements
+│   │   ├── OutfitVisualizer.tsx     # Outfit visualization with Skia tinting, editorial card, Wada identity, share button, branding, haptics, VoiceOver
+│   │   ├── FavoritesList.tsx        # Saved combinations list, CombinationList reuse, EmptyState when empty
 │   │   └── Settings.tsx             # PLACEHOLDER — Epic 6 implements
 │   ├── styles/
 │   │   └── theme.ts                 # 16 Wada design token constants (camelCase) for programmatic access
@@ -119,6 +135,22 @@ outfinder/
 - `TintedGarment` applies Skia `ColorMatrix` to tint any white-on-transparent PNG
 - To add a garment: add PNG + registry entry + optional variant pair. No component changes needed.
 
+### Share Flow (On-Screen Capture)
+- `lib/share.ts` provides `captureShareImage(viewRef)` and `shareOutfit(viewRef)`
+- **Captures the on-screen Skia content directly** — NOT an off-screen duplicate view
+- `shareViewRef` wraps the visible OutfitVisualizer content (WarmBackground + Aureola + WadaHeader + OutfitCard + MiniPaletteStrip + branding)
+- Share button rendered as absolute overlay (`bottom: 48`) outside the capture area
+- Uses `PixelRatio.get()` for device-native resolution (adapts to any iPhone)
+- `collapsable={false}` on capturable View for RN optimization safety
+- "Outfinder" branding text rendered inside capture area (subtle, #a09080)
+
+### Favorites System (Context-based)
+- `FavoritesContext` provides `useFavorites()` hook: `toggle(id)`, `isFavorite(id)`, `favorites` Set, `count`
+- Persists to AsyncStorage key `@outfinder/favorites`
+- `FavoriteButton` is a heart toggle embedded in `PaletteStrip` — works in both Colors and Favorites stacks
+- `FavoritesProvider` wraps the app in `App.tsx`
+- Sets the pattern for `PremiumContext` in Epic 5
+
 ### NativeWind + Pressable (CRITICAL)
 NativeWind 4 compiles `className` into the `style` prop. This **conflicts** with Pressable's `({ pressed }) => style` function — NativeWind overwrites it, making dynamic styles invisible.
 
@@ -140,9 +172,12 @@ Data is bundled JSON with pre-computed Map indexes. O(1) lookups. No state, no e
 
 ### Haptics — Always Through Wrapper
 ```typescript
-import { hapticLight, hapticMedium } from "@/lib/haptics";
+import { hapticLight, hapticMedium, hapticRigid } from "@/lib/haptics";
 ```
 NEVER import expo-haptics directly. The wrapper has try/catch + `.catch()` for error handling.
+- `hapticLight()` — selection feedback (tab switch, favorite toggle)
+- `hapticMedium()` — swap/change feedback (garment color swap, variant cycle)
+- `hapticRigid()` — confirm/action feedback (share initiation, purchase confirmation)
 
 ### Animations — Reanimated + Reduce Motion
 ```typescript
@@ -168,31 +203,46 @@ Use `push()` to allow stacking multiple instances (cross-navigation). `navigate(
 - `accessibilityLabel` on all interactive elements
 - `accessibilityRole` ("button", "tab", "link" as appropriate)
 - `accessibilityState={{ selected }}` on tabs
-- 44px minimum touch targets
+- `accessibilityElementsHidden` on off-screen/decorative content to prevent VoiceOver leaks
+- 44px minimum touch targets (48px preferred — `min-h-[48px]`)
 - Color never conveyed by color alone — names always present
 
 ### Testing
 - Jest ~29.7.0 with jest-expo preset (NOT Jest 30.x — incompatible with Expo SDK 55)
 - Manual Reanimated mock at `__mocks__/react-native-reanimated.js` (built-in mock fails)
 - Manual Skia mock at `__mocks__/@shopify/react-native-skia.js` (renders as Views with testIDs)
+- Manual view-shot mock at `__mocks__/react-native-view-shot.js`
 - `pnpm test -- --ci` FAILS — use `npx jest --ci` in CI
 - FlatList virtualizes rendering — test via `data` prop, not full item count assertions
 - Mock `@react-navigation/native` for navigation tests
 - Mock `@/lib/haptics` for haptic verification
 - Use `testID` attributes (React Native convention, not `data-testid`)
+- Use `getAllByText` when text appears in both visible and off-screen/capture elements
+- Use `includeHiddenElements: true` when querying inside `accessibilityElementsHidden` wrappers
+- Double-tap prevention patterns: test with `sharing` state guards
 
 ### Git Branching
 - Epic branches: `epic-N`
 - Story branches: `story-X.Y-description` off epic branch (flat naming, NOT `epic-N/story-X.Y`)
 - Commit pattern: `feat: <description> (Story X.Y)`, `fix: code review — <details> (Story X.Y)`
 
-## Known Technical Debt (LOW)
+## Known Technical Debt
 
-1. `biome.json` uses overrides workaround for CSS @tailwind — Biome 2.4.6 bug, revisit on update
-2. `SwatchGroupTabsProps` uses `string` instead of `TabKey` type — minor type safety gap
-3. Reanimated mock `createAnimatedComponent` uses identity function — may break with animated props
-4. `isLightColor` in ColorSwatch not exported or unit tested — luminance threshold without coverage
-5. Minimal test coverage on scaffold Story 1.1 (2 static value tests only)
+| # | Item | Priority | Since |
+|---|------|----------|-------|
+| 1 | `biome.json` uses overrides workaround for CSS @tailwind | LOW | Epic 1 — Biome 2.4.6 bug, revisit on update |
+| 2 | Reanimated mock `createAnimatedComponent` uses identity function | LOW | Epic 1 — could break with animated props |
+| 3 | `isLightColor` in ColorSwatch not exported or unit tested | LOW | Epic 1 — luminance threshold without coverage |
+
+## Key Learnings from Retrospectives
+
+Patterns validated across 4 epics:
+- **Previous Story Intelligence** in Dev Notes prevents re-discovery of known issues
+- **Adversarial code review** before every merge is non-negotiable
+- **Stories capped at 4-5 tasks** — larger stories show context degradation
+- **Small epics = predictable quality** (Epic 4: 2 stories, zero drama)
+- **Validate visual paradigm changes with mockup before code** (Story 2.4 rollback lesson)
+- **On-screen capture > off-screen duplicate** for share images (Story 3.1→3.2 pivot)
 
 ## Swatch Group Labels
 
