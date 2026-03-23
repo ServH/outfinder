@@ -1,10 +1,4 @@
-import {
-	act,
-	fireEvent,
-	render,
-	screen,
-	waitFor,
-} from "@testing-library/react-native";
+import { act, fireEvent, render, screen } from "@testing-library/react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { Settings } from "./Settings";
@@ -37,6 +31,15 @@ const mockPurchase = jest.fn().mockResolvedValue(undefined);
 const mockToggleFavorite = jest.fn();
 let mockIsPremium = false;
 let mockCount = 3;
+
+jest.mock("expo-constants", () => ({
+	__esModule: true,
+	default: {
+		expoConfig: {
+			version: "1.2.3",
+		},
+	},
+}));
 
 jest.mock("@/contexts/PremiumContext", () => ({
 	usePremium: () => ({
@@ -197,5 +200,49 @@ describe("Settings", () => {
 		expect(
 			screen.getByText("No previous purchase found for this Apple ID."),
 		).toBeTruthy();
+	});
+
+	// About section tests (Story 6.2)
+	it("renders about section", () => {
+		renderSettings();
+		expect(screen.getByText("About")).toBeTruthy();
+		expect(screen.getByTestId("about-section")).toBeTruthy();
+	});
+
+	it("renders version number from expo-constants", () => {
+		renderSettings();
+		const versionRow = screen.getByTestId("settings-version-row");
+		expect(versionRow).toBeTruthy();
+		expect(screen.getByText("Version")).toBeTruthy();
+		expect(screen.getByText("1.2.3")).toBeTruthy();
+		expect(screen.getByLabelText("Version 1.2.3")).toBeTruthy();
+	});
+
+	it("renders Wada attribution text", () => {
+		renderSettings();
+		const attribution = screen.getByTestId("settings-wada-attribution");
+		expect(attribution).toBeTruthy();
+		expect(
+			screen.getByLabelText(
+				"Based on A Dictionary of Color Combinations by Sanzo Wada",
+			),
+		).toBeTruthy();
+		expect(screen.getByText(/和田三造/)).toBeTruthy();
+		expect(screen.getByText(/A Dictionary of Color Combinations/)).toBeTruthy();
+	});
+
+	it("renders privacy info text", () => {
+		renderSettings();
+		const privacyRow = screen.getByTestId("settings-privacy-row");
+		expect(privacyRow).toBeTruthy();
+		expect(
+			screen.getByLabelText("Privacy policy: no data is collected"),
+		).toBeTruthy();
+		expect(screen.getByText("Privacy: No data collected")).toBeTruthy();
+	});
+
+	it("does not render old placeholder text", () => {
+		renderSettings();
+		expect(screen.queryByText("More settings in 6.2")).toBeNull();
 	});
 });

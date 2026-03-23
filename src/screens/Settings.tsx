@@ -1,3 +1,4 @@
+import Constants from "expo-constants";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
 	ActivityIndicator,
@@ -214,14 +215,94 @@ export function Settings(_props: SettingsProps) {
 					</View>
 				</View>
 
-				{/* Placeholder for Story 6.2 additional settings */}
-				<View className="mt-8 items-center">
+				{/* About section */}
+				<View testID="about-section" className="mt-8">
 					<Text
-						className="font-serif-jp text-lg"
-						style={{ color: wadaTokens.textTertiary }}
+						allowFontScaling
+						className="font-sans text-[16px] font-bold mb-3"
+						style={{ color: wadaTokens.textPrimary }}
 					>
-						More settings in 6.2
+						About
 					</Text>
+
+					<View
+						style={{
+							backgroundColor: wadaTokens.bgElevated,
+							borderRadius: 12,
+							overflow: "hidden",
+						}}
+					>
+						{/* Version row */}
+						<View
+							testID="settings-version-row"
+							className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+							accessibilityLabel={`Version ${Constants.expoConfig?.version ?? "1.0.0"}`}
+						>
+							<Text
+								allowFontScaling
+								className="font-sans text-[14px]"
+								style={{ color: wadaTokens.textPrimary }}
+							>
+								Version
+							</Text>
+							<Text
+								allowFontScaling
+								className="font-sans text-[14px]"
+								style={{ color: wadaTokens.textSecondary }}
+							>
+								{Constants.expoConfig?.version ?? "1.0.0"}
+							</Text>
+						</View>
+
+						{/* Divider */}
+						<View
+							style={{
+								height: 1,
+								backgroundColor: wadaTokens.divider,
+								marginHorizontal: 16,
+							}}
+						/>
+
+						{/* Wada Attribution row */}
+						<View
+							testID="settings-wada-attribution"
+							className="px-4 py-3 min-h-[44px] justify-center"
+							accessibilityLabel="Based on A Dictionary of Color Combinations by Sanzo Wada"
+						>
+							<Text
+								allowFontScaling
+								className="font-sans text-[14px]"
+								style={{ color: wadaTokens.textSecondary }}
+							>
+								Based on <Text className="font-serif-jp">和田三造</Text>
+								{'\'s "A Dictionary of Color Combinations"'}
+							</Text>
+						</View>
+
+						{/* Divider */}
+						<View
+							style={{
+								height: 1,
+								backgroundColor: wadaTokens.divider,
+								marginHorizontal: 16,
+							}}
+						/>
+
+						{/* Privacy row */}
+						<View
+							testID="settings-privacy-row"
+							className="px-4 py-3 min-h-[44px] justify-center"
+							accessibilityLabel="Privacy policy: no data is collected"
+						>
+							<Text
+								allowFontScaling
+								className="font-sans text-[14px]"
+								style={{ color: wadaTokens.textSecondary }}
+							>
+								Privacy: No data collected
+							</Text>
+						</View>
+					</View>
 				</View>
 			</ScrollView>
 
