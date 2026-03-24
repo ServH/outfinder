@@ -34,7 +34,7 @@ describe("FavoriteButton", () => {
 
 		const symbol = screen.getByTestId("favorite-icon-combo-1");
 		expect(symbol.props.name).toBe("heart");
-		expect(symbol.props.tintColor).toBe("#9b9b9b");
+		expect(symbol.props.tintColor).toBe("#767676");
 	});
 
 	it("renders filled heart when favorite", () => {

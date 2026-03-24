@@ -12,6 +12,7 @@ export function WadaHeader({ nameJp, colorCount }: WadaHeaderProps) {
 			accessibilityLabel={`${nameJp}, ${colorCount} color Wada combination`}
 		>
 			<Text
+				allowFontScaling
 				style={{
 					fontSize: 20,
 					fontFamily: "NotoSerifJP_500Medium",

@@ -44,6 +44,26 @@ jest.mock("expo-symbols", () => ({
 
 jest.mock("react-native-reanimated");
 
+let mockToastVisible = false;
+jest.mock("@/hooks/usePremiumGate", () => ({
+	usePremiumGate: () => ({
+		paywallVisible: false,
+		toastVisible: mockToastVisible,
+		toastOpacity: { current: 1 },
+		blockedCombination: undefined,
+		favoriteCombinationIds: [],
+		priceString: "€0.99",
+		purchaseState: "idle",
+		errorMessage: null,
+		handlePremiumGate: jest.fn(),
+		handlePurchase: jest.fn(),
+		handleRestore: jest.fn(),
+		handleDismiss: jest.fn(),
+		openPaywall: jest.fn(),
+	}),
+	getRestoreErrorMessage: jest.fn(),
+}));
+
 const realColor = getColor("c001")!;
 const realCombinations = getCombinations("c001");
 
@@ -118,5 +138,14 @@ describe("Combinations", () => {
 		});
 		expect(rendered.props.isFavorite).toBe(false);
 		expect(rendered.props.onToggleFavorite).toBeDefined();
+	});
+
+	// accessibilityLiveRegion (Story 6.3)
+	it("has polite liveRegion on premium toast", () => {
+		mockToastVisible = true;
+		renderCombinations("c001");
+
+		const toast = screen.getByTestId("premium-toast");
+		expect(toast.props.accessibilityLiveRegion).toBe("polite");
 	});
 });

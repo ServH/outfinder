@@ -44,6 +44,26 @@ jest.mock("@/lib/haptics", () => ({
 	hapticLight: jest.fn(),
 }));
 
+let mockToastVisible = false;
+jest.mock("@/hooks/usePremiumGate", () => ({
+	usePremiumGate: () => ({
+		paywallVisible: false,
+		toastVisible: mockToastVisible,
+		toastOpacity: { current: 1 },
+		blockedCombination: undefined,
+		favoriteCombinationIds: [],
+		priceString: "€0.99",
+		purchaseState: "idle",
+		errorMessage: null,
+		handlePremiumGate: jest.fn(),
+		handlePurchase: jest.fn(),
+		handleRestore: jest.fn(),
+		handleDismiss: jest.fn(),
+		openPaywall: jest.fn(),
+	}),
+	getRestoreErrorMessage: jest.fn(),
+}));
+
 const realCombo1 = getCombination("p001")!;
 
 describe("FavoritesList", () => {
@@ -51,6 +71,7 @@ describe("FavoritesList", () => {
 		mockFavorites = new Set<string>();
 		mockToggleFavorite.mockClear();
 		mockPush.mockClear();
+		mockToastVisible = false;
 	});
 
 	it("renders empty state when no favorites", () => {
@@ -128,5 +149,15 @@ describe("FavoritesList", () => {
 		expect(screen.getAllByTestId("favorites-divider").length).toBeGreaterThan(
 			0,
 		);
+	});
+
+	// accessibilityLiveRegion (Story 6.3)
+	it("has polite liveRegion on premium toast", () => {
+		mockFavorites = new Set(["p001"]);
+		mockToastVisible = true;
+		render(<FavoritesList />);
+
+		const toast = screen.getByTestId("premium-toast");
+		expect(toast.props.accessibilityLiveRegion).toBe("polite");
 	});
 });

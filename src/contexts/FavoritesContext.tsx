@@ -41,7 +41,9 @@ export function FavoritesProvider({ children }: FavoritesProviderProps) {
 				}
 			})
 			.catch((error) => {
-				console.error("Failed to load favorites:", error);
+				if (__DEV__) {
+					console.error("Failed to load favorites:", error);
+				}
 			});
 	}, []);
 
@@ -60,7 +62,9 @@ export function FavoritesProvider({ children }: FavoritesProviderProps) {
 			}
 			AsyncStorage.setItem(STORAGE_KEY, JSON.stringify([...next])).catch(
 				(error) => {
-					console.error("Failed to persist favorites:", error);
+					if (__DEV__) {
+						console.error("Failed to persist favorites:", error);
+					}
 				},
 			);
 			return next;

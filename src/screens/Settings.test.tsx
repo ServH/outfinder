@@ -222,4 +222,32 @@ describe("Settings", () => {
 		renderSettings();
 		expect(screen.queryByText("More settings in 6.2")).toBeNull();
 	});
+
+	// accessibilityLiveRegion (Story 6.3)
+	describe("accessibilityLiveRegion", () => {
+		it("has polite liveRegion on restore button content area", () => {
+			renderSettings();
+			const restoreContent = screen.getByTestId("restore-content");
+			expect(restoreContent.props.accessibilityLiveRegion).toBe("polite");
+		});
+
+		it("has assertive liveRegion on restore error", async () => {
+			let rejectRestore!: (error: Error) => void;
+			mockRestore.mockImplementation(
+				() =>
+					new Promise<void>((_resolve, reject) => {
+						rejectRestore = reject;
+					}),
+			);
+			renderSettings();
+			await act(async () => {
+				fireEvent.press(screen.getByTestId("settings-restore-button"));
+			});
+			await act(async () => {
+				rejectRestore(new Error("No previous purchase found"));
+			});
+			const errorView = screen.getByTestId("settings-restore-error");
+			expect(errorView.props.accessibilityLiveRegion).toBe("assertive");
+		});
+	});
 });
