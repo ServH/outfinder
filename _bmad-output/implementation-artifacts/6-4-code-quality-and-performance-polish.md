@@ -1,6 +1,6 @@
 # Story 6.4: Code Quality & Performance Polish
 
-Status: ready-for-dev
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -23,47 +23,47 @@ I want the codebase to follow established NativeWind patterns, produce zero test
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Convert MiniPaletteStrip to NativeWind className (AC: #1)
-  - [ ] 1.1 In `src/components/MiniPaletteStrip.tsx`, convert the outer View's `style={{ gap: 6, alignItems: "center" }}` to `className="items-center gap-[6px]"`.
-  - [ ] 1.2 Convert the palette strip View's `style={{ flexDirection: "row", borderRadius: 6, overflow: "hidden", height: 18 }}` to `className="flex-row overflow-hidden"` + keep only `style={{ borderRadius: 6, height: 18, width: screenW * 0.6 }}` (width is dynamic from dimensions).
-  - [ ] 1.3 Convert the color names container View's `style={{ flexDirection: "row", gap: 12 }}` to `className="flex-row gap-3"` (gap-3 = 12px per tailwind config).
-  - [ ] 1.4 Convert each color name Text's `style={{ fontSize: 9, color: "#a09080" }}` to `className="text-[9px] text-center"` + keep `style={{ color: "#a09080" }}` (Wada color, dynamic). Add `className="flex-1"` to match previous layout.
-  - [ ] 1.5 Verify visual output is identical — the component renders at the same proportions and positions.
+- [x] Task 1: Convert MiniPaletteStrip to NativeWind className (AC: #1)
+  - [x]1.1 In `src/components/MiniPaletteStrip.tsx`, convert the outer View's `style={{ gap: 6, alignItems: "center" }}` to `className="items-center gap-[6px]"`.
+  - [x]1.2 Convert the palette strip View's `style={{ flexDirection: "row", borderRadius: 6, overflow: "hidden", height: 18 }}` to `className="flex-row overflow-hidden"` + keep only `style={{ borderRadius: 6, height: 18, width: screenW * 0.6 }}` (width is dynamic from dimensions).
+  - [x]1.3 Convert the color names container View's `style={{ flexDirection: "row", gap: 12 }}` to `className="flex-row gap-3"` (gap-3 = 12px per tailwind config).
+  - [x]1.4 Convert each color name Text's `style={{ fontSize: 9, color: "#a09080" }}` to `className="text-[9px] text-center"` + keep `style={{ color: "#a09080" }}` (Wada color, dynamic). Add `className="flex-1"` to match previous layout.
+  - [x]1.5 Verify visual output is identical — the component renders at the same proportions and positions.
 
-- [ ] Task 2: Convert WadaHeader to NativeWind className (AC: #1)
-  - [ ] 2.1 In `src/components/WadaHeader.tsx`, convert the outer View's `style={{ alignItems: "center", gap: 2, marginBottom: 4 }}` to `className="items-center gap-[2px] mb-1"` (mb-1 = 4px per tailwind config).
-  - [ ] 2.2 Convert the Japanese name Text's `style={{ fontSize: 20, fontFamily: "NotoSerifJP_500Medium", color: "#2c2c2c", letterSpacing: 2 }}` to `className="font-serif-jp-medium text-[20px] tracking-[2px]"` + keep `style={{ color: "#2c2c2c" }}` (dynamic Wada color).
-  - [ ] 2.3 Convert the subtitle Text's `style={{ fontSize: 10, color: "#a09080", letterSpacing: 1 }}` to `className="text-[10px] tracking-[1px]"` + keep `style={{ color: "#a09080" }}` (dynamic Wada color). Add `allowFontScaling` and `maxFontSizeMultiplier={1.5}` (small text, same pattern as MiniPaletteStrip from Story 6.3).
-  - [ ] 2.4 Verify visual output matches — font, spacing, colors all identical.
+- [x] Task 2: Convert WadaHeader to NativeWind className (AC: #1)
+  - [x]2.1 In `src/components/WadaHeader.tsx`, convert the outer View's `style={{ alignItems: "center", gap: 2, marginBottom: 4 }}` to `className="items-center gap-[2px] mb-1"` (mb-1 = 4px per tailwind config).
+  - [x]2.2 Convert the Japanese name Text's `style={{ fontSize: 20, fontFamily: "NotoSerifJP_500Medium", color: "#2c2c2c", letterSpacing: 2 }}` to `className="font-serif-jp-medium text-[20px] tracking-[2px]"` + keep `style={{ color: "#2c2c2c" }}` (dynamic Wada color).
+  - [x]2.3 Convert the subtitle Text's `style={{ fontSize: 10, color: "#a09080", letterSpacing: 1 }}` to `className="text-[10px] tracking-[1px]"` + keep `style={{ color: "#a09080" }}` (dynamic Wada color). Add `allowFontScaling` and `maxFontSizeMultiplier={1.5}` (small text, same pattern as MiniPaletteStrip from Story 6.3).
+  - [x]2.4 Verify visual output matches — font, spacing, colors all identical.
 
-- [ ] Task 3: Fix act() warnings in PremiumContext tests (AC: #2)
-  - [ ] 3.1 Analyze the root cause: PremiumContext's `init()` function runs 4 sequential async steps (SecureStore read → setLoading → Purchases.configure → getCustomerInfo → setIsPremium → getOfferings → setPriceString). The bare `await act(async () => {})` pattern only flushes one microtask tick, but the init chain has multiple awaits that resolve across several ticks — causing state updates outside the act boundary.
-  - [ ] 3.2 Replace all bare `await act(async () => {})` calls that wait for init to complete with `await waitFor(() => expect(result.current.loading).toBe(false))` (or equivalent assertion-based waiting). Import `waitFor` from `@testing-library/react-native`. This ensures the test waits until all async state updates from init have settled.
-  - [ ] 3.3 For tests that don't check init (e.g., "initializes with isPremium false and loading true", "exposes paywallDismissedThisSession"), leave them synchronous — they intentionally test the pre-init state.
-  - [ ] 3.4 For tests that call `purchase()` or `restore()` after init, use nested `await act(async () => { await result.current.purchase() })` — these are already correct but verify no warnings remain.
-  - [ ] 3.5 Run `pnpm test -- --verbose src/contexts/PremiumContext.test.tsx 2>&1` and verify zero "not wrapped in act(...)" warnings in output.
+- [x] Task 3: Fix act() warnings in PremiumContext tests (AC: #2)
+  - [x]3.1 Analyze the root cause: PremiumContext's `init()` function runs 4 sequential async steps (SecureStore read → setLoading → Purchases.configure → getCustomerInfo → setIsPremium → getOfferings → setPriceString). The bare `await act(async () => {})` pattern only flushes one microtask tick, but the init chain has multiple awaits that resolve across several ticks — causing state updates outside the act boundary.
+  - [x]3.2 Replace all bare `await act(async () => {})` calls that wait for init to complete with `await waitFor(() => expect(result.current.loading).toBe(false))` (or equivalent assertion-based waiting). Import `waitFor` from `@testing-library/react-native`. This ensures the test waits until all async state updates from init have settled.
+  - [x]3.3 For tests that don't check init (e.g., "initializes with isPremium false and loading true", "exposes paywallDismissedThisSession"), leave them synchronous — they intentionally test the pre-init state.
+  - [x]3.4 For tests that call `purchase()` or `restore()` after init, use nested `await act(async () => { await result.current.purchase() })` — these are already correct but verify no warnings remain.
+  - [x]3.5 Run `pnpm test -- --verbose src/contexts/PremiumContext.test.tsx 2>&1` and verify zero "not wrapped in act(...)" warnings in output.
 
-- [ ] Task 4: Compress garment PNG assets (AC: #3)
-  - [ ] 4.1 Resize all 8 garment PNGs from 1024px width to 512px width, maintaining aspect ratio. Use `sips` (built-in macOS tool): `sips --resampleWidth 512 assets/garments/*.png`. This preserves RGBA, transparency, and non-interlaced format.
-  - [ ] 4.2 After resize, verify each file is under 200 KB with `ls -la assets/garments/`. If any exceed 200 KB, apply further compression with `sips --setProperty formatOptions high`.
-  - [ ] 4.3 Verify visual quality: the TintedGarment component renders garments at `heightHint` sizes (85-160px) — at 3x retina that's max 480px. Source at 512px provides adequate resolution. Visually confirm in the OutfitVisualizer that tinted garments still look clean.
-  - [ ] 4.4 Document the before/after sizes in the completion notes.
+- [x] Task 4: Compress garment PNG assets (AC: #3)
+  - [x]4.1 Resize all 8 garment PNGs from 1024px width to 512px width, maintaining aspect ratio. Use `sips` (built-in macOS tool): `sips --resampleWidth 512 assets/garments/*.png`. This preserves RGBA, transparency, and non-interlaced format.
+  - [x]4.2 After resize, verify each file is under 200 KB with `ls -la assets/garments/`. If any exceed 200 KB, apply further compression with `sips --setProperty formatOptions high`.
+  - [x]4.3 Verify visual quality: the TintedGarment component renders garments at `heightHint` sizes (85-160px) — at 3x retina that's max 480px. Source at 512px provides adequate resolution. Visually confirm in the OutfitVisualizer that tinted garments still look clean.
+  - [x]4.4 Document the before/after sizes in the completion notes.
 
-- [ ] Task 5: Replace Dimensions.get("window") with useWindowDimensions() (AC: #4)
-  - [ ] 5.1 **MiniPaletteStrip.tsx**: Remove `import { Dimensions, ... }` and the module-level `const { width: SCREEN_W } = Dimensions.get("window")`. Add `useWindowDimensions` to the react-native import. Inside the component function, add `const { width: screenW } = useWindowDimensions()`. Replace all `SCREEN_W` references with `screenW`. The width is used in `style={{ width: screenW * 0.6 }}` on the palette strip.
-  - [ ] 5.2 **WarmBackground.tsx**: Remove the module-level Dimensions call. This is a function component — add `useWindowDimensions` and derive `screenW` inside. Replace `SCREEN_W` references in the Skia `RadialGradient` props: `c={vec(screenW / 2, 100)}` and `r={screenW * 0.8}`.
-  - [ ] 5.3 **OutfitVisualizer.tsx**: Remove the module-level Dimensions call. Add `useWindowDimensions` inside the component. Replace `SCREEN_W` with local `screenW`. It's used at line 143: `<Aureola hex={...} width={screenW} height={500} />`. **Important:** This is used inside the component function, so the hook placement is straightforward.
-  - [ ] 5.4 **Onboarding.tsx**: Remove the module-level `const { width: SCREEN_WIDTH } = Dimensions.get("window")` (line 55). Add `useWindowDimensions` inside the `Onboarding` component. Derive `const { width: screenWidth } = useWindowDimensions()`. Replace `SCREEN_WIDTH` in `renderSlide` (line 105: `style={{ width: screenWidth }}`). **Note:** `renderSlide` is a nested function inside the component — it has closure access to the hook value.
-  - [ ] 5.5 **PremiumPaywall.tsx**: This is the most complex case. The module-level `SCREEN_HEIGHT` (line 27) derives `SHEET_HEIGHT` (line 28) which is used in: animated value init (line 56), dismiss function (lines 83, 91, 96), and sheet style (line 190). Move both into the component function: `const { height: screenHeight } = useWindowDimensions(); const sheetHeight = screenHeight * 0.7;`. Replace all `SHEET_HEIGHT` with `sheetHeight`. Keep `DISMISS_THRESHOLD` and `VELOCITY_THRESHOLD` as module-level constants (they're fixed values, not dimension-dependent).
-  - [ ] 5.6 Update any affected tests that mock `Dimensions.get`. Search for `Dimensions` in test files and update mocks to use `useWindowDimensions` mock pattern if needed. The standard jest mock for useWindowDimensions: `jest.mock('react-native', () => ({ ...jest.requireActual('react-native'), useWindowDimensions: () => ({ width: 390, height: 844 }) }))` — but check if tests actually mock Dimensions first.
+- [x] Task 5: Replace Dimensions.get("window") with useWindowDimensions() (AC: #4)
+  - [x]5.1 **MiniPaletteStrip.tsx**: Remove `import { Dimensions, ... }` and the module-level `const { width: SCREEN_W } = Dimensions.get("window")`. Add `useWindowDimensions` to the react-native import. Inside the component function, add `const { width: screenW } = useWindowDimensions()`. Replace all `SCREEN_W` references with `screenW`. The width is used in `style={{ width: screenW * 0.6 }}` on the palette strip.
+  - [x]5.2 **WarmBackground.tsx**: Remove the module-level Dimensions call. This is a function component — add `useWindowDimensions` and derive `screenW` inside. Replace `SCREEN_W` references in the Skia `RadialGradient` props: `c={vec(screenW / 2, 100)}` and `r={screenW * 0.8}`.
+  - [x]5.3 **OutfitVisualizer.tsx**: Remove the module-level Dimensions call. Add `useWindowDimensions` inside the component. Replace `SCREEN_W` with local `screenW`. It's used at line 143: `<Aureola hex={...} width={screenW} height={500} />`. **Important:** This is used inside the component function, so the hook placement is straightforward.
+  - [x]5.4 **Onboarding.tsx**: Remove the module-level `const { width: SCREEN_WIDTH } = Dimensions.get("window")` (line 55). Add `useWindowDimensions` inside the `Onboarding` component. Derive `const { width: screenWidth } = useWindowDimensions()`. Replace `SCREEN_WIDTH` in `renderSlide` (line 105: `style={{ width: screenWidth }}`). **Note:** `renderSlide` is a nested function inside the component — it has closure access to the hook value.
+  - [x]5.5 **PremiumPaywall.tsx**: This is the most complex case. The module-level `SCREEN_HEIGHT` (line 27) derives `SHEET_HEIGHT` (line 28) which is used in: animated value init (line 56), dismiss function (lines 83, 91, 96), and sheet style (line 190). Move both into the component function: `const { height: screenHeight } = useWindowDimensions(); const sheetHeight = screenHeight * 0.7;`. Replace all `SHEET_HEIGHT` with `sheetHeight`. Keep `DISMISS_THRESHOLD` and `VELOCITY_THRESHOLD` as module-level constants (they're fixed values, not dimension-dependent).
+  - [x]5.6 Update any affected tests that mock `Dimensions.get`. Search for `Dimensions` in test files and update mocks to use `useWindowDimensions` mock pattern if needed. The standard jest mock for useWindowDimensions: `jest.mock('react-native', () => ({ ...jest.requireActual('react-native'), useWindowDimensions: () => ({ width: 390, height: 844 }) }))` — but check if tests actually mock Dimensions first.
 
-- [ ] Task 6: Final verification (AC: #5)
-  - [ ] 6.1 Run `npx tsc --noEmit` — 0 errors.
-  - [ ] 6.2 Run `pnpm lint` — 0 errors, 0 warnings.
-  - [ ] 6.3 Run `pnpm test 2>&1 | grep -i "act("` — 0 act() warnings.
-  - [ ] 6.4 Run `pnpm test` — all tests pass (354+ existing + any new).
-  - [ ] 6.5 Point-by-point AC verification.
-  - [ ] 6.6 Verify File List matches `git diff --name-status`.
+- [x] Task 6: Final verification (AC: #5)
+  - [x]6.1 Run `npx tsc --noEmit` — 0 errors.
+  - [x]6.2 Run `pnpm lint` — 0 errors, 0 warnings.
+  - [x]6.3 Run `pnpm test 2>&1 | grep -i "act("` — 0 act() warnings.
+  - [x]6.4 Run `pnpm test` — all tests pass (354+ existing + any new).
+  - [x]6.5 Point-by-point AC verification.
+  - [x]6.6 Verify File List matches `git diff --name-status`.
 
 ## Dev Notes
 
@@ -227,3 +227,40 @@ Create story branch `story-6.4-quality-perf-polish` off `epic-1` (current main e
 - [Source: React Native useWindowDimensions docs] — Reactive hook replacement for Dimensions.get
 - [Source: Apple HIG image assets] — 3x retina maximum actual rendered sizes
 - [Source: _bmad-output/implementation-artifacts/6-3-accessibility-polish-and-production-hygiene.md] — Previous story, current test count (354)
+
+## Dev Agent Record
+
+### Implementation Notes
+
+- **Task 1-2 (NativeWind):** Converted MiniPaletteStrip and WadaHeader static inline styles to `className`. Only dynamic Wada color values remain in `style={{}}`. WadaHeader was simpler than story spec predicted (subtitle removed in Story 6.3), adapted to actual file state.
+- **Task 3 (act() warnings):** Root cause confirmed — `await act(async () => {})` only flushed one microtask tick, but init chain has 5+ sequential awaits. Fix: created `flushInit()` helper using `setTimeout(0)` inside `act()` — macrotask boundary ensures ALL microtasks drain before act exits. Also switched from `clearAllMocks` to `resetAllMocks` to prevent `mockImplementation` leaks between tests. Added `afterEach(flushInit)` as safety net.
+- **Task 4 (PNG compression):** Used `sips --resampleWidth 512` for initial resize, then Pillow `optimize=True` for zlib level 9 compression. Two files (bottom-pants, layer-jacket) needed further resize to 448px to meet <200 KB target. Total savings: 5.6 MB → 1.3 MB (77% reduction). No code changes needed — Metro resolves resized PNGs transparently.
+- **Task 5 (useWindowDimensions):** Migrated all 5 files from module-level `Dimensions.get("window")` to `useWindowDimensions()` hook inside components. PremiumPaywall was most complex — derived `sheetHeight` locally, added to useEffect deps. No test mocks needed (no tests mocked Dimensions).
+- **Task 6 (Verification):** TSC 0 errors, lint 0 errors, 357/357 tests pass, 0 act() warnings.
+
+### Debug Log
+
+No blocking issues encountered.
+
+## File List
+
+- `src/components/MiniPaletteStrip.tsx` (MODIFIED) — NativeWind className conversion + useWindowDimensions
+- `src/components/WadaHeader.tsx` (MODIFIED) — NativeWind className conversion
+- `src/contexts/PremiumContext.test.tsx` (MODIFIED) — Fixed act() warnings with flushInit() helper
+- `src/components/WarmBackground.tsx` (MODIFIED) — useWindowDimensions replacing Dimensions.get
+- `src/screens/OutfitVisualizer.tsx` (MODIFIED) — useWindowDimensions replacing Dimensions.get
+- `src/screens/Onboarding.tsx` (MODIFIED) — useWindowDimensions replacing Dimensions.get
+- `src/components/PremiumPaywall.tsx` (MODIFIED) — useWindowDimensions replacing Dimensions.get
+- `assets/garments/bottom-pants.png` (MODIFIED) — Resized 1024px→448px + optimized (1,098 KB→196 KB)
+- `assets/garments/bottom-skirt.png` (MODIFIED) — Resized 1024px→512px + optimized (668 KB→153 KB)
+- `assets/garments/layer-hoodie.png` (MODIFIED) — Resized 1024px→512px + optimized (771 KB→185 KB)
+- `assets/garments/layer-jacket.png` (MODIFIED) — Resized 1024px→448px + optimized (822 KB→187 KB)
+- `assets/garments/shoes-formal.png` (MODIFIED) — Resized 1024px→512px (325 KB→96 KB)
+- `assets/garments/shoes-sneakers.png` (MODIFIED) — Resized 1024px→512px (390 KB→111 KB)
+- `assets/garments/top-shirt.png` (MODIFIED) — Resized 1024px→512px + optimized (769 KB→184 KB)
+- `assets/garments/top-tshirt.png` (MODIFIED) — Resized 1024px→512px + optimized (784 KB→194 KB)
+
+## Change Log
+
+- 2026-03-24: Story 6.4 implemented — NativeWind className conversion, PremiumContext act() warning fix, garment PNG compression (77% size reduction), useWindowDimensions migration (5 files). All 357 tests pass, 0 act() warnings, TSC and lint clean.
+- 2026-03-24: Code review — fixed 3 AC #1 violations in MiniPaletteStrip (flex:1, borderRadius:6, height:18 moved from style to className). 357/357 tests pass post-fix. Story → done.

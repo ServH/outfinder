@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import {
 	ActivityIndicator,
-	Dimensions,
 	Modal,
 	Pressable,
 	ScrollView,
 	Text,
+	useWindowDimensions,
 	View,
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -24,8 +24,6 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { hapticLight } from "@/lib/haptics";
 import { wadaTokens } from "@/styles/theme";
 
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
-const SHEET_HEIGHT = SCREEN_HEIGHT * 0.7;
 const DISMISS_THRESHOLD = 100;
 const VELOCITY_THRESHOLD = 500;
 
@@ -52,8 +50,10 @@ export function PremiumPaywall({
 	onRestore,
 	onDismiss,
 }: PremiumPaywallProps) {
+	const { height: screenHeight } = useWindowDimensions();
+	const sheetHeight = screenHeight * 0.7;
 	const reducedMotion = useReducedMotion();
-	const translateY = useSharedValue(SHEET_HEIGHT);
+	const translateY = useSharedValue(sheetHeight);
 	const overlayOpacity = useSharedValue(0);
 	const blockedStripOpacity = useSharedValue(0);
 	const ctaScale = useSharedValue(1);
@@ -80,20 +80,27 @@ export function PremiumPaywall({
 				);
 			}
 		} else {
-			translateY.value = SHEET_HEIGHT;
+			translateY.value = sheetHeight;
 			overlayOpacity.value = 0;
 			blockedStripOpacity.value = 0;
 		}
-	}, [visible, reducedMotion, translateY, overlayOpacity, blockedStripOpacity]);
+	}, [
+		visible,
+		reducedMotion,
+		sheetHeight,
+		translateY,
+		overlayOpacity,
+		blockedStripOpacity,
+	]);
 
 	function dismiss() {
 		if (reducedMotion) {
-			translateY.value = SHEET_HEIGHT;
+			translateY.value = sheetHeight;
 			overlayOpacity.value = 0;
 			onDismiss();
 		} else {
 			translateY.value = withSpring(
-				SHEET_HEIGHT,
+				sheetHeight,
 				{ damping: 25, stiffness: 250 },
 				(finished) => {
 					if (finished) {
@@ -187,7 +194,7 @@ export function PremiumPaywall({
 						style={[
 							sheetStyle,
 							{
-								height: SHEET_HEIGHT,
+								height: sheetHeight,
 								backgroundColor: wadaTokens.bgPaper,
 								borderTopLeftRadius: 20,
 								borderTopRightRadius: 20,

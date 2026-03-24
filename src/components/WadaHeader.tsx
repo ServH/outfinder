@@ -9,17 +9,13 @@ export interface WadaHeaderProps {
 export function WadaHeader({ nameJp, colorCount }: WadaHeaderProps) {
 	return (
 		<View
-			style={{ alignItems: "center", marginBottom: 12 }}
+			className="items-center mb-3"
 			accessibilityLabel={`${nameJp}, ${colorCount} color Wada combination`}
 		>
 			<Text
+				className="font-serif-jp-medium text-[20px] tracking-[2px]"
 				allowFontScaling
-				style={{
-					fontSize: 20,
-					fontFamily: "NotoSerifJP_500Medium",
-					color: wadaTokens.textPrimary,
-					letterSpacing: 2,
-				}}
+				style={{ color: wadaTokens.textPrimary }}
 			>
 				{nameJp}
 			</Text>
