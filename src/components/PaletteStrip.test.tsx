@@ -269,6 +269,41 @@ describe("PaletteStrip", () => {
 		expect(hapticLight).toHaveBeenCalled();
 	});
 
+	// === Story 6.3 — Dot contrast on light swatches ===
+
+	it("renders dark dot on light-colored selected swatch", () => {
+		const lightColor: Color = {
+			id: "c-light",
+			hex: "#FFFFFF",
+			nameJp: "白",
+			nameEn: "White",
+			swatchGroup: 0,
+			combinationCount: 1,
+		};
+		const combo: Combination = {
+			id: "combo-light",
+			colors: [lightColor, color2],
+			nameJp: "明暗",
+			nameEn: "Light Dark",
+		};
+
+		render(<PaletteStrip combination={combo} selectedColorId="c-light" />);
+
+		const dot = screen.getByTestId("selected-color-dot");
+		expect(dot.props.className).toContain("bg-black");
+		expect(dot.props.className).not.toContain("bg-white");
+	});
+
+	it("renders white dot on dark-colored selected swatch", () => {
+		render(
+			<PaletteStrip combination={threeColorCombo} selectedColorId="c002" />,
+		);
+
+		const dot = screen.getByTestId("selected-color-dot");
+		expect(dot.props.className).toContain("bg-white");
+		expect(dot.props.className).not.toContain("bg-black");
+	});
+
 	// === Story 4.1 — FavoriteButton integration ===
 
 	it("renders FavoriteButton when onToggleFavorite is provided", () => {

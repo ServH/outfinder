@@ -160,6 +160,7 @@ export function OutfitVisualizer() {
 							/>
 						</View>
 						<Text
+							allowFontScaling
 							className="mt-6 font-sans-medium text-sm"
 							style={{ color: "#a09080" }}
 						>
@@ -178,7 +179,10 @@ export function OutfitVisualizer() {
 					className="min-h-[48px] items-center justify-center rounded-full bg-bg-surface px-6 py-3"
 					style={{ opacity: sharing ? 0.5 : 1 }}
 				>
-					<Text className="font-sans text-sm font-medium text-primary">
+					<Text
+						allowFontScaling
+						className="font-sans text-sm font-medium text-primary"
+					>
 						Share Outfit
 					</Text>
 				</Pressable>

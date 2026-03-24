@@ -29,7 +29,12 @@ export function MiniPaletteStrip({ colors }: MiniPaletteStripProps) {
 			</View>
 			<View style={{ flexDirection: "row", gap: 12 }}>
 				{colors.map((c) => (
-					<Text key={c.nameEn} style={{ fontSize: 9, color: "#a09080" }}>
+					<Text
+						key={c.nameEn}
+						allowFontScaling
+						maxFontSizeMultiplier={1.5}
+						style={{ fontSize: 9, color: "#a09080" }}
+					>
 						{c.nameEn}
 					</Text>
 				))}

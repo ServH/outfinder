@@ -111,12 +111,14 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 					style={{ backgroundColor: item.placeholderColor }}
 				/>
 				<Text
+					allowFontScaling
 					className="mt-8 text-center text-primary"
 					style={{ fontFamily: "NotoSerifJP_400Regular", fontSize: 24 }}
 				>
 					{item.titleJp}
 				</Text>
 				<Text
+					allowFontScaling
 					className="mt-3 text-center text-secondary"
 					style={{ fontFamily: "Inter_400Regular", fontSize: 14 }}
 				>
@@ -131,6 +133,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 						onPress={handleCta}
 					>
 						<Text
+							allowFontScaling
 							className="text-center text-white"
 							style={{
 								fontFamily: "NotoSerifJP_400Regular",
@@ -140,6 +143,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 							始めましょう
 						</Text>
 						<Text
+							allowFontScaling
 							className="mt-1 text-center"
 							style={{
 								fontFamily: "Inter_400Regular",
@@ -167,6 +171,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 				onPress={handleSkip}
 			>
 				<Text
+					allowFontScaling
 					className="text-tertiary"
 					style={{ fontFamily: "Inter_400Regular", fontSize: 13 }}
 				>

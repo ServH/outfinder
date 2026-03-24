@@ -401,7 +401,11 @@ export function PremiumPaywall({
 									}}
 									onPress={onPurchase}
 								>
-									<Animated.View style={ctaAnimStyle}>
+									<Animated.View
+										testID="cta-content"
+										style={ctaAnimStyle}
+										accessibilityLiveRegion="polite"
+									>
 										{purchaseState === "purchasing" ? (
 											<ActivityIndicator
 												testID="cta-loading"
@@ -429,6 +433,7 @@ export function PremiumPaywall({
 								<View
 									testID="error-banner"
 									accessibilityRole="alert"
+									accessibilityLiveRegion="assertive"
 									style={{
 										backgroundColor: "rgba(231,76,60,0.08)",
 										borderRadius: 8,

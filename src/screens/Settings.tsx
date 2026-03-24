@@ -165,7 +165,9 @@ export function Settings(_props: SettingsProps) {
 							disabled={restoreState === "loading"}
 							onPress={handleSettingsRestore}
 						>
-							{restoreButtonContent()}
+							<View testID="restore-content" accessibilityLiveRegion="polite">
+								{restoreButtonContent()}
+							</View>
 						</Pressable>
 
 						{/* Restore error message */}
@@ -173,6 +175,7 @@ export function Settings(_props: SettingsProps) {
 							<View
 								testID="settings-restore-error"
 								accessibilityRole="alert"
+								accessibilityLiveRegion="assertive"
 								className="px-4 pb-3"
 							>
 								<Text

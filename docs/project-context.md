@@ -38,16 +38,16 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 - **Epic 2: DONE** — Outfit Visualization (4/4 stories — Story 2.4 descoped/rolled back, replaced by Story 2.5 Skia rewrite)
 - **Epic 3: DONE** — Social Sharing (2/2 stories — share image capture + native share sheet)
 - **Epic 4: DONE** — Favorites & Collections (2/2 stories — FavoritesContext + FavoritesList)
-- **Epic 5: BACKLOG** — Premium & In-App Purchases
-- **Epic 6: BACKLOG** — Onboarding & App Store Launch
-- **Tests:** 230 across 22 suites (all passing)
+- **Epic 5: DONE** — Premium & In-App Purchases (2/2 stories — PremiumContext + IAP purchase/restore flow)
+- **Epic 6: IN-PROGRESS** — Onboarding & App Store Launch (3/4 stories done: 6.1 Onboarding, 6.2 Settings/EAS, 6.3 A11y polish; 6.4 remaining)
+- **Tests:** 360 across 29 suites (all passing)
 - **Code Reviews:** Adversarial review on every story since Epic 1
 - **Retrospectives:** Epic 1, 2, 3, 4 completed
 
 ### Epic Execution Order (non-sequential)
 
 Epics were NOT executed in numerical order:
-1. Epic 1 → Epic 2 → **Epic 4** → **Epic 3** → (next: Epic 5)
+1. Epic 1 → Epic 2 → **Epic 4** → **Epic 3** → Epic 5 → Epic 6 (in-progress)
 
 Epic 3 was postponed after Epic 2 because the Visualizer was visually flat for social sharing. Epic 4 (Favorites) was independent and executed first. Story 2.5 (Skia rewrite) + bugfix polish branch resolved the visual debt, unblocking Epic 3.
 
@@ -83,7 +83,8 @@ outfinder/
 │   │   └── garments/
 │   │       └── index.ts             # GARMENT_REGISTRY — GarmentType union, GarmentConfig (image, label, heightHint)
 │   ├── contexts/
-│   │   └── FavoritesContext.tsx     # FavoritesProvider + useFavorites() — Set<combinationId>, AsyncStorage persistence, toggle/isFavorite/count
+│   │   ├── FavoritesContext.tsx     # FavoritesProvider + useFavorites() — Set<combinationId>, AsyncStorage persistence, toggle/isFavorite/count
+│   │   └── PremiumContext.tsx       # PremiumProvider + usePremium() — RevenueCat IAP, SecureStore cache, purchase/restore
 │   ├── data/
 │   │   ├── types.ts                 # Color, Combination, SwatchGroup types
 │   │   ├── colors.json              # 159 Wada colors (hex, nameJp, nameEn, id, swatchGroup, combinationCount)
@@ -93,6 +94,7 @@ outfinder/
 │   │   ├── useOutfitState.ts        # Outfit state hook — slots, selectedSlotIndex, selectSlot (tap-swap), toggleVariant
 │   │   └── useReducedMotion.ts      # AccessibilityInfo.isReduceMotionEnabled() + listener
 │   ├── lib/
+│   │   ├── color.ts                 # isLightColor(hex) — luminance-based light color detection for contrast-aware UI
 │   │   ├── haptics.ts               # hapticLight(), hapticMedium(), hapticRigid() — all with try/catch + .catch()
 │   │   └── share.ts                 # captureShareImage(viewRef) + shareOutfit(viewRef) — view-shot capture + expo-sharing
 │   ├── navigation/
@@ -232,7 +234,6 @@ Use `push()` to allow stacking multiple instances (cross-navigation). `navigate(
 |---|------|----------|-------|
 | 1 | `biome.json` uses overrides workaround for CSS @tailwind | LOW | Epic 1 — Biome 2.4.6 bug, revisit on update |
 | 2 | Reanimated mock `createAnimatedComponent` uses identity function | LOW | Epic 1 — could break with animated props |
-| 3 | `isLightColor` in ColorSwatch not exported or unit tested | LOW | Epic 1 — luminance threshold without coverage |
 
 ## Key Learnings from Retrospectives
 

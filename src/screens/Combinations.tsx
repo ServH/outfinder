@@ -57,12 +57,16 @@ export function Combinations({ route }: CombinationsProps) {
 					testID="premium-toast"
 					className="absolute bottom-12 left-6 right-6 items-center"
 					style={{ opacity: gate.toastOpacity }}
+					accessibilityLiveRegion="polite"
 				>
 					<View
 						className="px-4 py-3 rounded-xl"
 						style={{ backgroundColor: "rgba(0,0,0,0.75)" }}
 					>
-						<Text className="font-sans text-[13px] text-white text-center">
+						<Text
+							allowFontScaling
+							className="font-sans text-[13px] text-white text-center"
+						>
 							Upgrade to save more favorites
 						</Text>
 					</View>

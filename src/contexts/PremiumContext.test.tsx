@@ -228,6 +228,31 @@ describe("PremiumContext", () => {
 		);
 	});
 
+	// __DEV__ guard (Story 6.3)
+	it("does not call console.warn in production mode (__DEV__ === false)", async () => {
+		const originalDev = __DEV__;
+		Object.defineProperty(globalThis, "__DEV__", {
+			value: false,
+			writable: true,
+		});
+
+		(SecureStore.getItemAsync as jest.Mock).mockRejectedValue(
+			new Error("SecureStore unavailable"),
+		);
+		const consoleSpy = jest.spyOn(console, "warn").mockImplementation();
+
+		renderHook(() => usePremium(), { wrapper });
+		await act(async () => {});
+
+		expect(consoleSpy).not.toHaveBeenCalled();
+
+		consoleSpy.mockRestore();
+		Object.defineProperty(globalThis, "__DEV__", {
+			value: originalDev,
+			writable: true,
+		});
+	});
+
 	it("restore() throws when no previous purchase found", async () => {
 		(Purchases.restorePurchases as jest.Mock).mockResolvedValue({
 			entitlements: { active: {} },

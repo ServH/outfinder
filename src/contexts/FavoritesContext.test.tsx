@@ -149,4 +149,29 @@ describe("FavoritesContext", () => {
 		expect(result.current.isFavorite("combo-1")).toBe(true);
 		consoleSpy.mockRestore();
 	});
+
+	// __DEV__ guard (Story 6.3)
+	it("does not call console.error in production mode (__DEV__ === false)", async () => {
+		const originalDev = __DEV__;
+		Object.defineProperty(globalThis, "__DEV__", {
+			value: false,
+			writable: true,
+		});
+
+		(AsyncStorage.getItem as jest.Mock).mockRejectedValue(
+			new Error("Storage unavailable"),
+		);
+		const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+
+		renderHook(() => useFavorites(), { wrapper });
+		await act(async () => {});
+
+		expect(consoleSpy).not.toHaveBeenCalled();
+
+		consoleSpy.mockRestore();
+		Object.defineProperty(globalThis, "__DEV__", {
+			value: originalDev,
+			writable: true,
+		});
+	});
 });

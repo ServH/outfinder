@@ -393,6 +393,24 @@ describe("PremiumPaywall", () => {
 		});
 	});
 
+	// accessibilityLiveRegion (Story 6.3)
+	describe("accessibilityLiveRegion", () => {
+		it("has polite liveRegion on CTA content area", () => {
+			renderPaywall();
+			const ctaContent = screen.getByTestId("cta-content");
+			expect(ctaContent.props.accessibilityLiveRegion).toBe("polite");
+		});
+
+		it("has assertive liveRegion on error banner", () => {
+			renderPaywall({
+				purchaseState: "error",
+				errorMessage: "Purchase failed",
+			});
+			const banner = screen.getByTestId("error-banner");
+			expect(banner.props.accessibilityLiveRegion).toBe("assertive");
+		});
+	});
+
 	// Default purchaseState (Story 5.2)
 	it("defaults to idle purchaseState when not provided", () => {
 		renderPaywall();

@@ -45,7 +45,12 @@ export function PremiumProvider({ children }: PremiumProviderProps) {
 					setIsPremium(true);
 				}
 			} catch (error) {
-				console.warn("Failed to read premium status from SecureStore:", error);
+				if (__DEV__) {
+					console.warn(
+						"Failed to read premium status from SecureStore:",
+						error,
+					);
+				}
 			}
 			setLoading(false);
 
@@ -55,7 +60,9 @@ export function PremiumProvider({ children }: PremiumProviderProps) {
 					apiKey: PREMIUM_CONFIG.REVENUECAT_API_KEY,
 				});
 			} catch (error) {
-				console.warn("RevenueCat configure failed:", error);
+				if (__DEV__) {
+					console.warn("RevenueCat configure failed:", error);
+				}
 				return;
 			}
 
@@ -71,7 +78,9 @@ export function PremiumProvider({ children }: PremiumProviderProps) {
 					active ? "true" : "false",
 				);
 			} catch (error) {
-				console.warn("Failed to validate entitlements:", error);
+				if (__DEV__) {
+					console.warn("Failed to validate entitlements:", error);
+				}
 			}
 
 			// 4. Load offering for price
@@ -83,7 +92,9 @@ export function PremiumProvider({ children }: PremiumProviderProps) {
 					setPriceString(price);
 				}
 			} catch (error) {
-				console.warn("Failed to load offerings:", error);
+				if (__DEV__) {
+					console.warn("Failed to load offerings:", error);
+				}
 			}
 		}
 

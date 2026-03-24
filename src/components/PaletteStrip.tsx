@@ -3,6 +3,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Pressable, Text, View } from "react-native";
 import type { Combination } from "@/data/types";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { isLightColor } from "@/lib/color";
 import { hapticLight } from "@/lib/haptics";
 import type { ColorsStackParamList } from "@/navigation/types";
 import { FavoriteButton } from "./FavoriteButton";
@@ -80,7 +81,7 @@ export function PaletteStrip({
 										>
 											{isSelected && (
 												<View
-													className="mb-2 h-[6px] w-[6px] rounded-full bg-white"
+													className={`mb-2 h-[6px] w-[6px] rounded-full ${isLightColor(color.hex) ? "bg-black" : "bg-white"}`}
 													testID="selected-color-dot"
 												/>
 											)}
