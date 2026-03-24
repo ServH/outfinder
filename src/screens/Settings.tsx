@@ -99,14 +99,14 @@ export function Settings(_props: SettingsProps) {
 				contentContainerStyle={{ padding: 24 }}
 				showsVerticalScrollIndicator={false}
 			>
-				{/* Premium section */}
+				{/* Plans section */}
 				<View testID="premium-section">
 					<Text
 						allowFontScaling
 						className="font-sans text-[16px] font-bold mb-3"
 						style={{ color: wadaTokens.textPrimary }}
 					>
-						Premium
+						Plans
 					</Text>
 
 					<View
@@ -251,55 +251,6 @@ export function Settings(_props: SettingsProps) {
 								style={{ color: wadaTokens.textSecondary }}
 							>
 								{Constants.expoConfig?.version ?? "1.0.0"}
-							</Text>
-						</View>
-
-						{/* Divider */}
-						<View
-							style={{
-								height: 1,
-								backgroundColor: wadaTokens.divider,
-								marginHorizontal: 16,
-							}}
-						/>
-
-						{/* Wada Attribution row */}
-						<View
-							testID="settings-wada-attribution"
-							className="px-4 py-3 min-h-[44px] justify-center"
-							accessibilityLabel="Based on A Dictionary of Color Combinations by Sanzo Wada"
-						>
-							<Text
-								allowFontScaling
-								className="font-sans text-[14px]"
-								style={{ color: wadaTokens.textSecondary }}
-							>
-								Based on <Text className="font-serif-jp">和田三造</Text>
-								{'\'s "A Dictionary of Color Combinations"'}
-							</Text>
-						</View>
-
-						{/* Divider */}
-						<View
-							style={{
-								height: 1,
-								backgroundColor: wadaTokens.divider,
-								marginHorizontal: 16,
-							}}
-						/>
-
-						{/* Privacy row */}
-						<View
-							testID="settings-privacy-row"
-							className="px-4 py-3 min-h-[44px] justify-center"
-							accessibilityLabel="Privacy policy: no data is collected"
-						>
-							<Text
-								allowFontScaling
-								className="font-sans text-[14px]"
-								style={{ color: wadaTokens.textSecondary }}
-							>
-								Privacy: No data collected
 							</Text>
 						</View>
 					</View>

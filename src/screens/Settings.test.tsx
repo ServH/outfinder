@@ -83,7 +83,7 @@ describe("Settings", () => {
 	it("renders premium section", () => {
 		renderSettings();
 		expect(screen.getByTestId("premium-section")).toBeTruthy();
-		expect(screen.getByText("Premium")).toBeTruthy();
+		expect(screen.getByText("Plans")).toBeTruthy();
 	});
 
 	it("shows Free Plan badge when not premium", () => {
@@ -216,29 +216,6 @@ describe("Settings", () => {
 		expect(screen.getByText("Version")).toBeTruthy();
 		expect(screen.getByText("1.2.3")).toBeTruthy();
 		expect(screen.getByLabelText("Version 1.2.3")).toBeTruthy();
-	});
-
-	it("renders Wada attribution text", () => {
-		renderSettings();
-		const attribution = screen.getByTestId("settings-wada-attribution");
-		expect(attribution).toBeTruthy();
-		expect(
-			screen.getByLabelText(
-				"Based on A Dictionary of Color Combinations by Sanzo Wada",
-			),
-		).toBeTruthy();
-		expect(screen.getByText(/和田三造/)).toBeTruthy();
-		expect(screen.getByText(/A Dictionary of Color Combinations/)).toBeTruthy();
-	});
-
-	it("renders privacy info text", () => {
-		renderSettings();
-		const privacyRow = screen.getByTestId("settings-privacy-row");
-		expect(privacyRow).toBeTruthy();
-		expect(
-			screen.getByLabelText("Privacy policy: no data is collected"),
-		).toBeTruthy();
-		expect(screen.getByText("Privacy: No data collected")).toBeTruthy();
 	});
 
 	it("does not render old placeholder text", () => {
