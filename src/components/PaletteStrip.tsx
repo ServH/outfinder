@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { SymbolView } from "expo-symbols";
 import { Pressable, Text, View } from "react-native";
 import type { Combination } from "@/data/types";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -105,11 +106,7 @@ export function PaletteStrip({
 					}}
 				>
 					<View className="w-7 h-7 rounded-full bg-black/30 items-center justify-center">
-						<View
-							className="w-2 h-2 rounded-full border-[1.5px] border-white"
-							style={{ marginBottom: -2 }}
-						/>
-						<View className="w-4 h-[1.5px] bg-white" />
+						<SymbolView name="tshirt" tintColor="white" size={16} />
 					</View>
 				</Pressable>
 			</View>

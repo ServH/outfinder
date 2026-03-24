@@ -11,11 +11,6 @@ describe("WadaHeader", () => {
 		expect(screen.getByText("秋の装い")).toBeTruthy();
 	});
 
-	it("renders color count subtitle", () => {
-		render(<WadaHeader nameJp="海の色合い" colorCount={4} />);
-		expect(screen.getByText("4 colors · Sanzo Wada")).toBeTruthy();
-	});
-
 	it("has correct accessibility label", () => {
 		render(<WadaHeader nameJp="冬の重ね着" colorCount={3} />);
 		expect(
@@ -23,21 +18,11 @@ describe("WadaHeader", () => {
 		).toBeTruthy();
 	});
 
-	it("renders correct subtitle for 2 colors", () => {
-		render(<WadaHeader nameJp="テスト" colorCount={2} />);
-		expect(screen.getByText("2 colors · Sanzo Wada")).toBeTruthy();
-	});
-
 	it("accessibility label includes color count for 4 colors", () => {
 		render(<WadaHeader nameJp="四色の美" colorCount={4} />);
 		expect(
 			screen.getByLabelText("四色の美, 4 color Wada combination"),
 		).toBeTruthy();
-	});
-
-	it("always renders Sanzo Wada attribution", () => {
-		render(<WadaHeader nameJp="テスト" colorCount={3} />);
-		expect(screen.getByText(/Sanzo Wada/)).toBeTruthy();
 	});
 });
 

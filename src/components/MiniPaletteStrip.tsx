@@ -1,4 +1,5 @@
 import { Dimensions, Text, View } from "react-native";
+import { wadaTokens } from "@/styles/theme";
 
 const { width: SCREEN_W } = Dimensions.get("window");
 
@@ -27,9 +28,17 @@ export function MiniPaletteStrip({ colors }: MiniPaletteStripProps) {
 					/>
 				))}
 			</View>
-			<View style={{ flexDirection: "row", gap: 12 }}>
+			<View style={{ flexDirection: "row", width: SCREEN_W * 0.6 }}>
 				{colors.map((c) => (
-					<Text key={c.nameEn} style={{ fontSize: 9, color: "#a09080" }}>
+					<Text
+						key={c.nameEn}
+						style={{
+							flex: 1,
+							fontSize: 9,
+							color: wadaTokens.wadaMuted,
+							textAlign: "center",
+						}}
+					>
 						{c.nameEn}
 					</Text>
 				))}

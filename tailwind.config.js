@@ -21,6 +21,8 @@ module.exports = {
 				"tab-bar-bg": "#fafaf8",
 				"tab-bar-border": "rgba(0,0,0,0.06)",
 				"nav-bar-bg": "#fafaf8",
+				"wada-muted": "#a09080",
+				"warm-bg": "#ebe5da",
 			},
 			spacing: {
 				1: "4px",

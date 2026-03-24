@@ -74,8 +74,7 @@ export function Settings(_props: SettingsProps) {
 				return (
 					<Text
 						allowFontScaling
-						className="font-sans text-[14px]"
-						style={{ color: wadaTokens.premiumAccent }}
+						className="font-sans text-[14px] text-premium-accent"
 					>
 						Restored!
 					</Text>
@@ -84,8 +83,7 @@ export function Settings(_props: SettingsProps) {
 				return (
 					<Text
 						allowFontScaling
-						className="font-sans text-[14px]"
-						style={{ color: wadaTokens.textPrimary }}
+						className="font-sans text-[14px] text-text-primary"
 					>
 						Restore Purchases
 					</Text>
@@ -103,19 +101,12 @@ export function Settings(_props: SettingsProps) {
 				<View testID="premium-section">
 					<Text
 						allowFontScaling
-						className="font-sans text-[16px] font-bold mb-3"
-						style={{ color: wadaTokens.textPrimary }}
+						className="font-sans text-[16px] font-bold mb-3 text-text-primary"
 					>
 						Plans
 					</Text>
 
-					<View
-						style={{
-							backgroundColor: wadaTokens.bgElevated,
-							borderRadius: 12,
-							overflow: "hidden",
-						}}
-					>
+					<View className="bg-bg-elevated rounded-xl overflow-hidden">
 						{/* Status row */}
 						<View
 							testID="premium-status-row"
@@ -130,8 +121,7 @@ export function Settings(_props: SettingsProps) {
 								<Text
 									testID="premium-active-badge"
 									allowFontScaling
-									className="font-sans text-[14px] font-medium"
-									style={{ color: wadaTokens.premiumAccent }}
+									className="font-sans text-[14px] font-medium text-premium-accent"
 								>
 									Premium Active ✓
 								</Text>
@@ -139,8 +129,7 @@ export function Settings(_props: SettingsProps) {
 								<Text
 									testID="free-plan-badge"
 									allowFontScaling
-									className="font-sans text-[14px]"
-									style={{ color: wadaTokens.textSecondary }}
+									className="font-sans text-[14px] text-text-secondary"
 								>
 									Free Plan · {count} favorites
 								</Text>
@@ -148,13 +137,7 @@ export function Settings(_props: SettingsProps) {
 						</View>
 
 						{/* Divider */}
-						<View
-							style={{
-								height: 1,
-								backgroundColor: wadaTokens.divider,
-								marginHorizontal: 16,
-							}}
-						/>
+						<View className="h-[1px] bg-divider mx-4" />
 
 						{/* Restore Purchases button */}
 						<Pressable
@@ -177,8 +160,7 @@ export function Settings(_props: SettingsProps) {
 							>
 								<Text
 									allowFontScaling
-									className="font-sans text-[12px]"
-									style={{ color: wadaTokens.textSecondary }}
+									className="font-sans text-[12px] text-text-secondary"
 								>
 									{restoreMessage}
 								</Text>
@@ -188,13 +170,7 @@ export function Settings(_props: SettingsProps) {
 						{/* Upgrade row (free users only) */}
 						{!isPremium && (
 							<>
-								<View
-									style={{
-										height: 1,
-										backgroundColor: wadaTokens.divider,
-										marginHorizontal: 16,
-									}}
-								/>
+								<View className="h-[1px] bg-divider mx-4" />
 								<Pressable
 									testID="settings-upgrade-button"
 									className="px-4 min-h-[44px] justify-center"
@@ -204,8 +180,7 @@ export function Settings(_props: SettingsProps) {
 								>
 									<Text
 										allowFontScaling
-										className="font-sans text-[14px] font-medium"
-										style={{ color: wadaTokens.premiumAccent }}
+										className="font-sans text-[14px] font-medium text-premium-accent"
 									>
 										Upgrade to Premium
 									</Text>
@@ -219,19 +194,12 @@ export function Settings(_props: SettingsProps) {
 				<View testID="about-section" className="mt-8">
 					<Text
 						allowFontScaling
-						className="font-sans text-[16px] font-bold mb-3"
-						style={{ color: wadaTokens.textPrimary }}
+						className="font-sans text-[16px] font-bold mb-3 text-text-primary"
 					>
 						About
 					</Text>
 
-					<View
-						style={{
-							backgroundColor: wadaTokens.bgElevated,
-							borderRadius: 12,
-							overflow: "hidden",
-						}}
-					>
+					<View className="bg-bg-elevated rounded-xl overflow-hidden">
 						{/* Version row */}
 						<View
 							testID="settings-version-row"
@@ -240,15 +208,13 @@ export function Settings(_props: SettingsProps) {
 						>
 							<Text
 								allowFontScaling
-								className="font-sans text-[14px]"
-								style={{ color: wadaTokens.textPrimary }}
+								className="font-sans text-[14px] text-text-primary"
 							>
 								Version
 							</Text>
 							<Text
 								allowFontScaling
-								className="font-sans text-[14px]"
-								style={{ color: wadaTokens.textSecondary }}
+								className="font-sans text-[14px] text-text-secondary"
 							>
 								{Constants.expoConfig?.version ?? "1.0.0"}
 							</Text>

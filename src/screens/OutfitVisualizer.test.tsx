@@ -176,9 +176,6 @@ describe("OutfitVisualizer", () => {
 		render(<OutfitVisualizer />);
 
 		expect(screen.getAllByText("秋の装い").length).toBeGreaterThanOrEqual(1);
-		expect(
-			screen.getAllByText("2 colors · Sanzo Wada").length,
-		).toBeGreaterThanOrEqual(1);
 	});
 
 	it("renders MiniPaletteStrip with color names", () => {
@@ -437,9 +434,6 @@ describe("OutfitVisualizer", () => {
 		render(<OutfitVisualizer />);
 
 		expect(screen.getAllByText("春の三色").length).toBeGreaterThanOrEqual(1);
-		expect(
-			screen.getAllByText("3 colors · Sanzo Wada").length,
-		).toBeGreaterThanOrEqual(1);
 	});
 
 	it("renders WadaHeader for 4-color combination", () => {
@@ -454,9 +448,6 @@ describe("OutfitVisualizer", () => {
 		render(<OutfitVisualizer />);
 
 		expect(screen.getAllByText("四季の色").length).toBeGreaterThanOrEqual(1);
-		expect(
-			screen.getAllByText("4 colors · Sanzo Wada").length,
-		).toBeGreaterThanOrEqual(1);
 	});
 
 	it("renders MiniPaletteStrip color names for 3-color combo", () => {

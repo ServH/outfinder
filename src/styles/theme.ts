@@ -19,6 +19,8 @@ export const wadaTokens = {
 	tabBarBg: "#fafaf8",
 	tabBarBorder: "rgba(0,0,0,0.06)",
 	navBarBg: "#fafaf8",
+	wadaMuted: "#a09080",
+	warmBg: "#ebe5da",
 } as const;
 
 export type WadaToken = keyof typeof wadaTokens;
