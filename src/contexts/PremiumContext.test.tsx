@@ -14,9 +14,20 @@ function wrapper({ children }: { children: ReactNode }) {
 	return <PremiumProvider>{children}</PremiumProvider>;
 }
 
+/**
+ * Flush all async microtasks from PremiumContext init() within a single act() boundary.
+ * setTimeout(0) is a macrotask — all pending microtasks (Promise continuations from
+ * the multi-step init chain) drain before it fires, keeping state updates inside act().
+ */
+async function flushInit() {
+	await act(async () => {
+		await new Promise<void>((resolve) => setTimeout(resolve, 0));
+	});
+}
+
 describe("PremiumContext", () => {
 	beforeEach(() => {
-		jest.clearAllMocks();
+		jest.resetAllMocks();
 		(SecureStore.getItemAsync as jest.Mock).mockResolvedValue(null);
 		(SecureStore.setItemAsync as jest.Mock).mockResolvedValue(undefined);
 		(Purchases.getCustomerInfo as jest.Mock).mockResolvedValue({
@@ -29,9 +40,14 @@ describe("PremiumContext", () => {
 		});
 	});
 
-	it("initializes with isPremium false and loading true", () => {
+	afterEach(async () => {
+		await flushInit();
+	});
+
+	it("initializes with isPremium false and loading true", async () => {
 		const { result } = renderHook(() => usePremium(), { wrapper });
 		expect(result.current.isPremium).toBe(false);
+		await flushInit();
 	});
 
 	it("reads cached premium status from SecureStore on mount", async () => {
@@ -43,7 +59,7 @@ describe("PremiumContext", () => {
 		});
 
 		const { result } = renderHook(() => usePremium(), { wrapper });
-		await act(async () => {});
+		await flushInit();
 
 		expect(SecureStore.getItemAsync).toHaveBeenCalledWith(
 			"outfinder_premium_status",
@@ -53,14 +69,14 @@ describe("PremiumContext", () => {
 
 	it("sets loading false after SecureStore read", async () => {
 		const { result } = renderHook(() => usePremium(), { wrapper });
-		await act(async () => {});
+		await flushInit();
 
 		expect(result.current.loading).toBe(false);
 	});
 
 	it("configures RevenueCat on mount", async () => {
 		renderHook(() => usePremium(), { wrapper });
-		await act(async () => {});
+		await flushInit();
 
 		expect(Purchases.configure).toHaveBeenCalledWith({
 			apiKey: "appl_PLACEHOLDER_REPLACE_ME",
@@ -75,7 +91,7 @@ describe("PremiumContext", () => {
 		});
 
 		const { result } = renderHook(() => usePremium(), { wrapper });
-		await act(async () => {});
+		await flushInit();
 
 		expect(result.current.isPremium).toBe(true);
 		expect(SecureStore.setItemAsync).toHaveBeenCalledWith(
@@ -92,7 +108,7 @@ describe("PremiumContext", () => {
 		});
 
 		const { result } = renderHook(() => usePremium(), { wrapper });
-		await act(async () => {});
+		await flushInit();
 
 		expect(result.current.priceString).toBe("$1.99");
 	});
@@ -104,7 +120,7 @@ describe("PremiumContext", () => {
 		const consoleSpy = jest.spyOn(console, "warn").mockImplementation();
 
 		const { result } = renderHook(() => usePremium(), { wrapper });
-		await act(async () => {});
+		await flushInit();
 
 		expect(result.current.priceString).toBe("€0.99");
 		consoleSpy.mockRestore();
@@ -117,7 +133,7 @@ describe("PremiumContext", () => {
 		const consoleSpy = jest.spyOn(console, "warn").mockImplementation();
 
 		const { result } = renderHook(() => usePremium(), { wrapper });
-		await act(async () => {});
+		await flushInit();
 
 		expect(result.current.isPremium).toBe(false);
 		expect(result.current.loading).toBe(false);
@@ -131,20 +147,22 @@ describe("PremiumContext", () => {
 		const consoleSpy = jest.spyOn(console, "warn").mockImplementation();
 
 		const { result } = renderHook(() => usePremium(), { wrapper });
-		await act(async () => {});
+		await flushInit();
 
 		expect(result.current.isPremium).toBe(false);
 		expect(result.current.loading).toBe(false);
 		consoleSpy.mockRestore();
 	});
 
-	it("exposes paywallDismissedThisSession, initially false", () => {
+	it("exposes paywallDismissedThisSession, initially false", async () => {
 		const { result } = renderHook(() => usePremium(), { wrapper });
 		expect(result.current.paywallDismissedThisSession).toBe(false);
+		await flushInit();
 	});
 
 	it("allows setting paywallDismissedThisSession", async () => {
 		const { result } = renderHook(() => usePremium(), { wrapper });
+		await flushInit();
 
 		act(() => {
 			result.current.setPaywallDismissedThisSession(true);
@@ -177,7 +195,7 @@ describe("PremiumContext", () => {
 		});
 
 		const { result } = renderHook(() => usePremium(), { wrapper });
-		await act(async () => {});
+		await flushInit();
 
 		await act(async () => {
 			await result.current.purchase();
@@ -197,7 +215,7 @@ describe("PremiumContext", () => {
 		});
 
 		const { result } = renderHook(() => usePremium(), { wrapper });
-		await act(async () => {});
+		await flushInit();
 
 		await expect(
 			act(async () => {
@@ -214,7 +232,7 @@ describe("PremiumContext", () => {
 		});
 
 		const { result } = renderHook(() => usePremium(), { wrapper });
-		await act(async () => {});
+		await flushInit();
 
 		await act(async () => {
 			await result.current.restore();
@@ -242,7 +260,7 @@ describe("PremiumContext", () => {
 		const consoleSpy = jest.spyOn(console, "warn").mockImplementation();
 
 		renderHook(() => usePremium(), { wrapper });
-		await act(async () => {});
+		await flushInit();
 
 		expect(consoleSpy).not.toHaveBeenCalled();
 
@@ -259,7 +277,7 @@ describe("PremiumContext", () => {
 		});
 
 		const { result } = renderHook(() => usePremium(), { wrapper });
-		await act(async () => {});
+		await flushInit();
 
 		await expect(
 			act(async () => {

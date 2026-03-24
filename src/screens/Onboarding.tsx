@@ -1,11 +1,11 @@
 import { useCallback, useRef, useState } from "react";
 import {
-	Dimensions,
 	FlatList,
 	type NativeScrollEvent,
 	type NativeSyntheticEvent,
 	Pressable,
 	Text,
+	useWindowDimensions,
 	View,
 	type ViewabilityConfig,
 	type ViewToken,
@@ -52,13 +52,12 @@ const ONBOARDING_SLIDES: SlideData[] = [
 	},
 ];
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-
 const viewabilityConfig: ViewabilityConfig = {
 	itemVisiblePercentThreshold: 50,
 };
 
 export function Onboarding({ onComplete }: OnboardingProps) {
+	const { width: screenWidth } = useWindowDimensions();
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const insets = useSafeAreaInsets();
 	const reducedMotion = useReducedMotion();
@@ -102,7 +101,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 		return (
 			<View
 				className="flex-1 items-center justify-center bg-paper"
-				style={{ width: SCREEN_WIDTH }}
+				style={{ width: screenWidth }}
 				accessibilityLabel={`Slide ${index + 1} of 4: ${item.titleEn}`}
 				testID={`onboarding-slide-${index}`}
 			>

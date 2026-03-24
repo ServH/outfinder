@@ -4,10 +4,10 @@ import { useCallback, useRef, useState } from "react";
 import {
 	AccessibilityInfo,
 	Alert,
-	Dimensions,
 	Pressable,
 	ScrollView,
 	Text,
+	useWindowDimensions,
 	View,
 } from "react-native";
 import { Aureola } from "@/components/Aureola";
@@ -26,8 +26,6 @@ import { shareOutfit } from "@/lib/share";
 import type { ColorsStackParamList } from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
 
-const { width: SCREEN_W } = Dimensions.get("window");
-
 type OutfitVisualizerRoute = RouteProp<
 	ColorsStackParamList,
 	"OutfitVisualizer"
@@ -45,6 +43,7 @@ function getNextGarmentLabel(
 }
 
 export function OutfitVisualizer() {
+	const { width: screenW } = useWindowDimensions();
 	const route = useRoute<OutfitVisualizerRoute>();
 	const { combinationId } = route.params;
 	const combination = getCombination(combinationId);
@@ -141,7 +140,7 @@ export function OutfitVisualizer() {
 				<View ref={shareViewRef} collapsable={false} className="flex-1">
 					<WarmBackground />
 					<View className="flex-1 items-center justify-center py-4">
-						<Aureola hex={slots[0].color.hex} width={SCREEN_W} height={500} />
+						<Aureola hex={slots[0].color.hex} width={screenW} height={500} />
 						<WadaHeader
 							nameJp={combination.nameJp}
 							colorCount={combination.colors.length}
