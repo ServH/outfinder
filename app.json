@@ -8,7 +8,7 @@
     "scheme": "outfinder",
     "userInterfaceStyle": "light",
     "ios": {
-      "bundleIdentifier": "com.outfinder.app",
+      "bundleIdentifier": "com.alejandrocamps.outfinder",
       "buildNumber": "1",
       "supportsTablet": false,
       "infoPlist": {
@@ -24,6 +24,7 @@
       ],
       "expo-secure-store",
       "expo-sharing",
+      "expo-dev-client",
       [
         "expo-build-properties",
         {
@@ -35,6 +36,12 @@
     ],
     "experiments": {
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4c5d0a44-4f09-4d97-8169-e85343dd3d18"
+      }
+    },
+    "owner": "servh"
   }
 }

@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
+import { Linking } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { Settings } from "./Settings";
@@ -221,6 +222,84 @@ describe("Settings", () => {
 	it("does not render old placeholder text", () => {
 		renderSettings();
 		expect(screen.queryByText("More settings in 6.2")).toBeNull();
+	});
+
+	// Privacy Policy and Support links (Story 6.5)
+	describe("privacy and support links", () => {
+		it("renders Privacy Policy row with correct testID", () => {
+			renderSettings();
+			expect(screen.getByTestId("settings-privacy-row")).toBeTruthy();
+			expect(screen.getByText("Privacy Policy")).toBeTruthy();
+		});
+
+		it("renders Support row with correct testID", () => {
+			renderSettings();
+			expect(screen.getByTestId("settings-support-row")).toBeTruthy();
+			expect(screen.getByText("Support")).toBeTruthy();
+		});
+
+		it("Privacy Policy row has accessibilityRole link", () => {
+			renderSettings();
+			const row = screen.getByTestId("settings-privacy-row");
+			expect(row.props.accessibilityRole).toBe("link");
+		});
+
+		it("Support row has accessibilityRole link", () => {
+			renderSettings();
+			const row = screen.getByTestId("settings-support-row");
+			expect(row.props.accessibilityRole).toBe("link");
+		});
+
+		it("Privacy Policy row opens correct URL", async () => {
+			const openURLSpy = jest
+				.spyOn(Linking, "openURL")
+				.mockResolvedValue(undefined as never);
+			renderSettings();
+
+			await act(async () => {
+				fireEvent.press(screen.getByTestId("settings-privacy-row"));
+			});
+
+			expect(openURLSpy).toHaveBeenCalledWith(
+				"https://servh.github.io/outfinder-legal/",
+			);
+			openURLSpy.mockRestore();
+		});
+
+		it("Support row opens correct URL", async () => {
+			const openURLSpy = jest
+				.spyOn(Linking, "openURL")
+				.mockResolvedValue(undefined as never);
+			renderSettings();
+
+			await act(async () => {
+				fireEvent.press(screen.getByTestId("settings-support-row"));
+			});
+
+			expect(openURLSpy).toHaveBeenCalledWith(
+				"https://servh.github.io/outfinder-legal/support.html",
+			);
+			openURLSpy.mockRestore();
+		});
+
+		it("handles Linking.openURL failure gracefully without crashing", async () => {
+			const openURLSpy = jest
+				.spyOn(Linking, "openURL")
+				.mockRejectedValue(new Error("Cannot open URL"));
+			const consoleSpy = jest.spyOn(console, "warn").mockImplementation();
+			renderSettings();
+
+			await act(async () => {
+				fireEvent.press(screen.getByTestId("settings-privacy-row"));
+			});
+
+			expect(openURLSpy).toHaveBeenCalledWith(
+				"https://servh.github.io/outfinder-legal/",
+			);
+
+			openURLSpy.mockRestore();
+			consoleSpy.mockRestore();
+		});
 	});
 
 	// accessibilityLiveRegion (Story 6.3)

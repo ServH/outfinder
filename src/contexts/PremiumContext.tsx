@@ -113,7 +113,13 @@ export function PremiumProvider({ children }: PremiumProviderProps) {
 			undefined;
 		if (active) {
 			setIsPremium(true);
-			await SecureStore.setItemAsync(SECURE_STORE_KEY, "true");
+			try {
+				await SecureStore.setItemAsync(SECURE_STORE_KEY, "true");
+			} catch (cacheError) {
+				if (__DEV__) {
+					console.warn("Failed to cache premium status:", cacheError);
+				}
+			}
 		}
 	}, []);
 
@@ -123,7 +129,16 @@ export function PremiumProvider({ children }: PremiumProviderProps) {
 			customerInfo.entitlements.active[PREMIUM_CONFIG.ENTITLEMENT_ID] !==
 			undefined;
 		setIsPremium(active);
-		await SecureStore.setItemAsync(SECURE_STORE_KEY, active ? "true" : "false");
+		try {
+			await SecureStore.setItemAsync(
+				SECURE_STORE_KEY,
+				active ? "true" : "false",
+			);
+		} catch (cacheError) {
+			if (__DEV__) {
+				console.warn("Failed to cache premium status:", cacheError);
+			}
+		}
 		if (!active) {
 			throw new Error("No previous purchase found");
 		}
