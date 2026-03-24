@@ -1,8 +1,8 @@
 import { wadaTokens } from "./theme";
 
 describe("wadaTokens", () => {
-	it("exports all 16 Wada design tokens", () => {
-		expect(Object.keys(wadaTokens)).toHaveLength(16);
+	it("exports all 18 Wada design tokens", () => {
+		expect(Object.keys(wadaTokens)).toHaveLength(18);
 	});
 
 	it("contains correct color values", () => {
@@ -22,5 +22,7 @@ describe("wadaTokens", () => {
 		expect(wadaTokens.tabBarBg).toBe("#fafaf8");
 		expect(wadaTokens.tabBarBorder).toBe("rgba(0,0,0,0.06)");
 		expect(wadaTokens.navBarBg).toBe("#fafaf8");
+		expect(wadaTokens.wadaMuted).toBe("#a09080");
+		expect(wadaTokens.warmBg).toBe("#ebe5da");
 	});
 });

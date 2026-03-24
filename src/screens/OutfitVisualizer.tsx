@@ -24,6 +24,7 @@ import { getCycleForGarment, useOutfitState } from "@/hooks/useOutfitState";
 import { hapticMedium, hapticRigid } from "@/lib/haptics";
 import { shareOutfit } from "@/lib/share";
 import type { ColorsStackParamList } from "@/navigation/types";
+import { wadaTokens } from "@/styles/theme";
 
 const { width: SCREEN_W } = Dimensions.get("window");
 
@@ -128,7 +129,7 @@ export function OutfitVisualizer() {
 	return (
 		<View
 			className="flex-1"
-			style={{ backgroundColor: "#ebe5da" }}
+			style={{ backgroundColor: wadaTokens.warmBg }}
 			accessibilityLabel="Outfit Visualizer screen"
 		>
 			{/* ScrollView handles 4-garment outfits that exceed screen height */}
@@ -162,7 +163,7 @@ export function OutfitVisualizer() {
 						<Text
 							allowFontScaling
 							className="mt-6 font-sans-medium text-sm"
-							style={{ color: "#a09080" }}
+							style={{ color: wadaTokens.wadaMuted }}
 						>
 							Outfinder
 						</Text>

@@ -14,6 +14,7 @@ import { GARMENT_REGISTRY } from "@/components/garments/index";
 import { TintedGarment } from "@/components/TintedGarment";
 import type { SlotState } from "@/hooks/useOutfitState";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { wadaTokens } from "@/styles/theme";
 
 export interface OutfitCardProps {
 	slots: SlotState[];
@@ -182,7 +183,7 @@ export function OutfitCard({
 		<View
 			accessibilityLabel="Outfit card"
 			style={{
-				backgroundColor: "#fafaf8",
+				backgroundColor: wadaTokens.bgPaper,
 				borderRadius: 16,
 				padding: 14,
 				alignItems: "center",

@@ -112,15 +112,13 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 				/>
 				<Text
 					allowFontScaling
-					className="mt-8 text-center text-primary"
-					style={{ fontFamily: "NotoSerifJP_400Regular", fontSize: 24 }}
+					className="mt-8 text-center text-primary font-serif-jp text-[24px]"
 				>
 					{item.titleJp}
 				</Text>
 				<Text
 					allowFontScaling
-					className="mt-3 text-center text-secondary"
-					style={{ fontFamily: "Inter_400Regular", fontSize: 14 }}
+					className="mt-3 text-center text-secondary font-sans text-[14px]"
 				>
 					{item.titleEn}
 				</Text>
@@ -134,22 +132,14 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 					>
 						<Text
 							allowFontScaling
-							className="text-center text-white"
-							style={{
-								fontFamily: "NotoSerifJP_400Regular",
-								fontSize: 18,
-							}}
+							className="text-center text-white font-serif-jp text-[18px]"
 						>
 							始めましょう
 						</Text>
 						<Text
 							allowFontScaling
-							className="mt-1 text-center"
-							style={{
-								fontFamily: "Inter_400Regular",
-								fontSize: 13,
-								color: "rgba(255,255,255,0.8)",
-							}}
+							className="mt-1 text-center font-sans text-[13px]"
+							style={{ color: "rgba(255,255,255,0.8)" }}
 						>
 							Let's begin
 						</Text>
@@ -170,11 +160,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 				testID="onboarding-skip"
 				onPress={handleSkip}
 			>
-				<Text
-					allowFontScaling
-					className="text-tertiary"
-					style={{ fontFamily: "Inter_400Regular", fontSize: 13 }}
-				>
+				<Text allowFontScaling className="text-tertiary font-sans text-[13px]">
 					Skip
 				</Text>
 			</Pressable>

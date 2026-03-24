@@ -1,4 +1,5 @@
 import { Text, View } from "react-native";
+import { wadaTokens } from "@/styles/theme";
 
 export interface WadaHeaderProps {
 	nameJp: string;
@@ -8,7 +9,7 @@ export interface WadaHeaderProps {
 export function WadaHeader({ nameJp, colorCount }: WadaHeaderProps) {
 	return (
 		<View
-			style={{ alignItems: "center", gap: 2, marginBottom: 4 }}
+			style={{ alignItems: "center", marginBottom: 12 }}
 			accessibilityLabel={`${nameJp}, ${colorCount} color Wada combination`}
 		>
 			<Text
@@ -16,14 +17,11 @@ export function WadaHeader({ nameJp, colorCount }: WadaHeaderProps) {
 				style={{
 					fontSize: 20,
 					fontFamily: "NotoSerifJP_500Medium",
-					color: "#2c2c2c",
+					color: wadaTokens.textPrimary,
 					letterSpacing: 2,
 				}}
 			>
 				{nameJp}
-			</Text>
-			<Text style={{ fontSize: 10, color: "#a09080", letterSpacing: 1 }}>
-				{colorCount} colors · Sanzo Wada
 			</Text>
 		</View>
 	);

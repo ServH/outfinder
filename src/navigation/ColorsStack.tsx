@@ -41,6 +41,9 @@ export function ColorsStack() {
 					title: "Outfit Visualizer",
 					headerStyle: { backgroundColor: wadaTokens.navBarBg },
 					headerTintColor: wadaTokens.textPrimary,
+					headerTitleStyle: {
+						fontFamily: "NotoSerifJP_500Medium",
+					},
 					headerBackTitle: "",
 				}}
 			/>

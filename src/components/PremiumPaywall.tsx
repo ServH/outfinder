@@ -208,7 +208,7 @@ export function PremiumPaywall({
 									width: 36,
 									height: 4,
 									borderRadius: 2,
-									backgroundColor: "rgba(0,0,0,0.12)",
+									backgroundColor: wadaTokens.hairline,
 								}}
 								accessibilityElementsHidden
 							/>
@@ -224,15 +224,13 @@ export function PremiumPaywall({
 									>
 										<Text
 											allowFontScaling
-											className="font-sans text-[11px]"
-											style={{ color: wadaTokens.textTertiary }}
+											className="font-sans text-[11px] text-text-tertiary"
 										>
 											Your collection
 										</Text>
 										<Text
 											allowFontScaling
-											className="font-sans text-[11px]"
-											style={{ color: wadaTokens.favoriteRed }}
+											className="font-sans text-[11px] text-favorite-red"
 										>
 											♥ {favCount} saved
 										</Text>
@@ -286,17 +284,15 @@ export function PremiumPaywall({
 							<View className="items-center mt-2 mb-5">
 								<View
 									testID="limit-badge"
-									className="px-3 py-[5px]"
+									className="px-3 py-[5px] rounded-full"
 									style={{
-										borderRadius: 20,
-										backgroundColor: "rgba(196,162,101,0.10)",
+										backgroundColor: `${wadaTokens.premiumAccent}1A`,
 									}}
 									accessibilityRole="text"
 								>
 									<Text
 										allowFontScaling
-										className="font-sans text-[11px] font-medium"
-										style={{ color: wadaTokens.premiumAccent }}
+										className="font-sans text-[11px] font-medium text-premium-accent"
 									>
 										{badgeText}
 									</Text>
@@ -307,11 +303,8 @@ export function PremiumPaywall({
 							<Text
 								testID="paywall-headline"
 								allowFontScaling
-								className="font-serif-jp text-[20px] text-center mb-[10px]"
-								style={{
-									color: wadaTokens.textPrimary,
-									lineHeight: 28,
-								}}
+								className="font-serif-jp text-[20px] text-center mb-[10px] text-text-primary"
+								style={{ lineHeight: 28 }}
 							>
 								{"Don't stop\ncollecting"}
 							</Text>
@@ -320,11 +313,8 @@ export function PremiumPaywall({
 							<Text
 								testID="paywall-body"
 								allowFontScaling
-								className="font-sans text-[13px] font-light text-center px-2 mb-6"
-								style={{
-									color: wadaTokens.textSecondary,
-									lineHeight: 21,
-								}}
+								className="font-sans text-[13px] font-light text-center px-2 mb-6 text-text-secondary"
+								style={{ lineHeight: 21 }}
 							>
 								You've found {favCount}{" "}
 								{favCount === 1 ? "harmony" : "harmonies"} worth keeping. There
@@ -337,30 +327,18 @@ export function PremiumPaywall({
 								{/* Price tag */}
 								<View
 									testID="price-tag"
-									className="items-center"
-									style={{
-										backgroundColor: wadaTokens.bgElevated,
-										borderRadius: 10,
-										paddingHorizontal: 16,
-										paddingVertical: 12,
-										flexShrink: 0,
-									}}
+									className="items-center bg-bg-elevated rounded-[10px] px-4 py-3 shrink-0"
 									accessibilityLabel={`${priceString}, one-time purchase`}
 								>
 									<Text
 										allowFontScaling
-										className="font-sans text-[22px] font-semibold"
-										style={{ color: wadaTokens.textPrimary }}
+										className="font-sans text-[22px] font-semibold text-text-primary"
 									>
 										{priceString}
 									</Text>
 									<Text
 										allowFontScaling
-										className="font-sans text-[10px]"
-										style={{
-											color: wadaTokens.textTertiary,
-											marginTop: 1,
-										}}
+										className="font-sans text-[10px] text-text-tertiary mt-[1px]"
 									>
 										one time
 									</Text>
@@ -369,11 +347,9 @@ export function PremiumPaywall({
 								{/* CTA button */}
 								<Pressable
 									testID="cta-unlock"
-									className="flex-1 items-center"
+									className="flex-1 items-center rounded-[14px] py-4"
 									style={{
 										backgroundColor: wadaTokens.textPrimary,
-										borderRadius: 14,
-										paddingVertical: 16,
 										opacity: isLoading ? 0.7 : 1,
 									}}
 									accessibilityRole="button"
@@ -410,7 +386,7 @@ export function PremiumPaywall({
 											<ActivityIndicator
 												testID="cta-loading"
 												size="small"
-												color="#ffffff"
+												color={wadaTokens.bgSurface}
 											/>
 										) : (
 											<Text
@@ -434,18 +410,14 @@ export function PremiumPaywall({
 									testID="error-banner"
 									accessibilityRole="alert"
 									accessibilityLiveRegion="assertive"
+									className="rounded-lg px-3 py-2 mb-3"
 									style={{
-										backgroundColor: "rgba(231,76,60,0.08)",
-										borderRadius: 8,
-										paddingHorizontal: 12,
-										paddingVertical: 8,
-										marginBottom: 12,
+										backgroundColor: `${wadaTokens.favoriteRed}14`,
 									}}
 								>
 									<Text
 										allowFontScaling
-										className="font-sans text-[13px] text-center"
-										style={{ color: wadaTokens.textSecondary }}
+										className="font-sans text-[13px] text-center text-text-secondary"
 									>
 										{errorMessage}
 									</Text>
@@ -475,8 +447,7 @@ export function PremiumPaywall({
 									) : (
 										<Text
 											allowFontScaling
-											className="font-sans text-[13px]"
-											style={{ color: wadaTokens.textTertiary }}
+											className="font-sans text-[13px] text-text-tertiary"
 										>
 											Restore Purchase
 										</Text>
@@ -492,11 +463,8 @@ export function PremiumPaywall({
 								>
 									<Text
 										allowFontScaling
-										className="font-sans text-[13px]"
-										style={{
-											color: wadaTokens.textTertiary,
-											opacity: isLoading ? 0.5 : 1,
-										}}
+										className="font-sans text-[13px] text-text-tertiary"
+										style={{ opacity: isLoading ? 0.5 : 1 }}
 									>
 										Not now
 									</Text>
