@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outfinder — Animation Flow Demo (GSAP)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif+JP:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+  }
+
+  /* Phone frame */
+  .phone {
+    width: 390px;
+    height: 844px;
+    background: #fafaf8;
+    border-radius: 44px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 0 3px #2a2a2a, 0 0 0 6px #1a1a1a, 0 40px 80px rgba(0,0,0,0.5);
+  }
+
+  .status-bar {
+    height: 54px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+    position: relative;
+    z-index: 100;
+    background: #fafaf8;
+  }
+  .status-bar .notch {
+    width: 126px; height: 34px;
+    background: #1a1a1a;
+    border-radius: 0 0 20px 20px;
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+  }
+  .status-bar .time {
+    font-size: 15px; font-weight: 600; color: #1a1a1a;
+    position: absolute; left: 32px; bottom: 8px;
+  }
+  .status-bar .icons {
+    position: absolute; right: 28px; bottom: 8px;
+    font-size: 12px; color: #1a1a1a; letter-spacing: 4px;
+  }
+
+  /* Content area */
+  .screen-container {
+    height: calc(844px - 54px - 83px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ===== COLORS SCREEN ===== */
+  .screen {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #fafaf8;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+  }
+  .screen::-webkit-scrollbar { display: none; }
+
+  .screen-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: #1a1a1a;
+    padding: 16px 20px 4px;
+    letter-spacing: 1px;
+  }
+  .screen-subtitle {
+    font-size: 11px;
+    color: #a09080;
+    padding: 0 20px 12px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Filter tabs */
+  .filter-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .filter-tabs::-webkit-scrollbar { display: none; }
+  .filter-tab {
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #9b9b9b;
+    white-space: nowrap;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .filter-tab.active {
+    color: #1a1a1a;
+    font-weight: 500;
+    border-bottom-color: #1a1a1a;
+  }
+
+  /* Color grid */
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    padding: 12px 16px 100px;
+  }
+  .color-swatch {
+    aspect-ratio: 1;
+    cursor: pointer;
+    position: relative;
+    transform-origin: center;
+    border-radius: 2px;
+  }
+  .color-swatch.light-color {
+    box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.08);
+  }
+  .color-swatch:active {
+    z-index: 2;
+  }
+
+  /* ===== COMBINATIONS SCREEN ===== */
+  #combinations-screen {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .color-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .color-header-swatch {
+    width: 44px; height: 44px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .color-header-text { flex: 1; }
+  .color-header-name-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 16px;
+    color: #1a1a1a;
+  }
+  .color-header-name-en {
+    font-size: 11px;
+    color: #9b9b9b;
+  }
+  .color-header-count {
+    font-size: 11px;
+    color: #9b9b9b;
+  }
+  .back-btn {
+    padding: 8px 12px 8px 0;
+    cursor: pointer;
+    font-size: 18px;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .back-btn span {
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* Palette strips */
+  .palette-list {
+    padding: 16px 20px 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .palette-strip-container {
+    cursor: pointer;
+  }
+  .palette-strip {
+    height: 110px;
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+  .palette-color {
+    flex: 1;
+    position: relative;
+  }
+  .palette-color + .palette-color {
+    border-left: 0.5px solid rgba(0,0,0,0.08);
+  }
+  .palette-selected-dot {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px; height: 6px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  .palette-actions {
+    position: absolute;
+    top: 8px; right: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .palette-fav {
+    font-size: 16px;
+    opacity: 0.6;
+    cursor: pointer;
+    filter: grayscale(1);
+    transition: all 0.3s;
+  }
+  .palette-fav.active {
+    filter: grayscale(0);
+    opacity: 1;
+  }
+  .palette-hanger {
+    width: 28px; height: 28px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 8px; right: 8px;
+  }
+  .palette-names {
+    display: flex;
+    gap: 12px;
+    padding: 8px 4px 0;
+    flex-wrap: wrap;
+  }
+  .palette-name-item {
+    display: flex;
+    flex-direction: column;
+  }
+  .palette-name-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11px;
+    color: #1a1a1a;
+  }
+  .palette-name-en {
+    font-size: 9px;
+    color: #9b9b9b;
+  }
+
+  /* ===== VISUALIZER SCREEN ===== */
+  #visualizer-screen {
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+  }
+
+  .viz-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 30%, #f5efe6 0%, #f0ece4 40%, #ebe5da 100%);
+  }
+
+  .viz-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 40px;
+    height: 100%;
+  }
+
+  .wada-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .wada-header-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: #2c2c2c;
+    letter-spacing: 2px;
+  }
+  .wada-header-sub {
+    font-size: 10px;
+    color: #a09080;
+    margin-top: 4px;
+  }
+
+  .aureola {
+    position: absolute;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .outfit-card {
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+  .garment {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 4px;
+  }
+  .garment-top { height: 105px; margin-bottom: -6px; }
+  .garment-bottom { height: 140px; margin-bottom: -10px; }
+  .garment-shoes { height: 65px; }
+  .garment-icon {
+    font-size: 40px;
+    filter: brightness(0) invert(1);
+    opacity: 0.3;
+  }
+  .garment-selected {
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.6);
+    animation: pulse-border 2s ease-in-out infinite;
+  }
+  @keyframes pulse-border {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(255,255,255,0.3); }
+    50% { box-shadow: 0 0 0 3px rgba(255,255,255,0.7); }
+  }
+
+  .mini-palette {
+    display: flex;
+    width: 60%;
+    height: 18px;
+    border-radius: 9px;
+    overflow: hidden;
+    margin-top: 24px;
+  }
+  .mini-palette-color { flex: 1; }
+  .mini-palette-color + .mini-palette-color {
+    border-left: 0.5px solid rgba(0,0,0,0.08);
+  }
+  .mini-palette-labels {
+    display: flex;
+    gap: 16px;
+    margin-top: 6px;
+  }
+  .mini-palette-label {
+    font-size: 9px;
+    color: #a09080;
+    text-align: center;
+  }
+
+  .viz-brand {
+    margin-top: auto;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .viz-brand-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #a09080;
+  }
+  .share-btn {
+    margin-top: 8px;
+    padding: 10px 32px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1a1a1a;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* ===== TAB BAR ===== */
+  .tab-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 83px;
+    background: #fafaf8;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding-top: 10px;
+    z-index: 200;
+  }
+  .tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    padding: 4px 16px;
+  }
+  .tab-icon { font-size: 22px; }
+  .tab-label {
+    font-size: 10px;
+    color: #9b9b9b;
+    font-weight: 500;
+  }
+  .tab-item.active .tab-label { color: #1a1a1a; }
+  .tab-item.active .tab-icon { filter: none; }
+
+  /* Favorites screen */
+  #favorites-screen {
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .favorites-empty-icon {
+    font-size: 48px;
+    opacity: 0.3;
+  }
+  .favorites-empty-text {
+    font-size: 14px;
+    color: #9b9b9b;
+  }
+
+  /* Settings screen */
+  #settings-screen {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .settings-group {
+    padding: 20px;
+  }
+  .settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    font-size: 14px;
+    color: #1a1a1a;
+  }
+  .settings-row-value {
+    font-size: 13px;
+    color: #9b9b9b;
+  }
+  .premium-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    background: linear-gradient(135deg, #c4a265, #d4b87a);
+    color: white;
+    font-size: 9px;
+    font-weight: 600;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* Overlay hint */
+  .demo-hint {
+    position: absolute;
+    bottom: 90px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 11px;
+    white-space: nowrap;
+    z-index: 300;
+    pointer-events: none;
+  }
+
+  /* Side panel */
+  .info-panel {
+    position: fixed;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 280px;
+    color: #e0e0e0;
+    font-family: 'Inter', sans-serif;
+  }
+  .info-panel h2 {
+    font-size: 14px;
+    color: #c4a265;
+    margin-bottom: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .info-panel .anim-item {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 12px;
+    line-height: 1.5;
+    color: #888;
+    transition: color 0.3s;
+  }
+  .info-panel .anim-item.active {
+    color: #e0e0e0;
+  }
+  .info-panel .anim-item .label {
+    color: #c4a265;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .info-panel .anim-item.active .label {
+    color: #f0d090;
+  }
+
+  @media (max-width: 900px) {
+    .info-panel { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Info panel -->
+<div class="info-panel">
+  <h2>Animations Active</h2>
+  <div class="anim-item active" id="hint-stagger">
+    <span class="label">A. Grid Stagger Entrance</span>
+    Swatches cascade in with scale + fade, 50ms delay between each. Click any swatch.
+  </div>
+  <div class="anim-item" id="hint-shared">
+    <span class="label">B. Shared Element Transition</span>
+    Clicked swatch flies to become the color header. Screen slides in.
+  </div>
+  <div class="anim-item" id="hint-strips">
+    <span class="label">C. Palette Strip Stagger</span>
+    Strips enter from the right with cascading delays and spring easing.
+  </div>
+  <div class="anim-item" id="hint-visualizer">
+    <span class="label">D. Visualizer Entrance</span>
+    Aureola scales up, garments drop in with stagger, parallax on background.
+  </div>
+  <div class="anim-item" id="hint-breathing">
+    <span class="label">E. Aureola Breathing</span>
+    Continuous subtle pulse on the color glow behind the outfit.
+  </div>
+  <div class="anim-item" id="hint-tabs">
+    <span class="label">F. Tab Cross-fade</span>
+    Content slides out left + fades, new tab slides in from right.
+  </div>
+</div>
+
+<!-- Phone -->
+<div class="phone">
+  <div class="status-bar">
+    <div class="notch"></div>
+    <div class="time">9:41</div>
+    <div class="icons">
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="#1a1a1a"><rect x="0" y="6" width="3" height="6" rx="0.5"/><rect x="4.5" y="4" width="3" height="8" rx="0.5"/><rect x="9" y="2" width="3" height="10" rx="0.5"/><rect x="13.5" y="0" width="3" height="12" rx="0.5" opacity="0.3"/></svg>
+    </div>
+  </div>
+
+  <div class="screen-container">
+    <!-- COLORS SCREEN -->
+    <div class="screen" id="colors-screen">
+      <div class="screen-title">色彩</div>
+      <div class="screen-subtitle">159 colors · Sanzo Wada</div>
+      <div class="filter-tabs">
+        <div class="filter-tab active">All</div>
+        <div class="filter-tab">Pale & Light</div>
+        <div class="filter-tab">Red & Brown</div>
+        <div class="filter-tab">Blue & Lavender</div>
+        <div class="filter-tab">Dark & Deep</div>
+        <div class="filter-tab">Vivid & Bold</div>
+        <div class="filter-tab">Green & Olive</div>
+      </div>
+      <div class="color-grid" id="color-grid"></div>
+    </div>
+
+    <!-- COMBINATIONS SCREEN -->
+    <div class="screen" id="combinations-screen">
+      <div style="display:flex;align-items:center;padding:8px 12px 0;">
+        <div class="back-btn" id="back-to-colors">&#8249; <span>Colors</span></div>
+      </div>
+      <div class="color-header" id="combo-header">
+        <div class="color-header-swatch" id="combo-header-swatch"></div>
+        <div class="color-header-text">
+          <div class="color-header-name-jp" id="combo-header-jp"></div>
+          <div class="color-header-name-en" id="combo-header-en"></div>
+        </div>
+        <div class="color-header-count" id="combo-header-count"></div>
+      </div>
+      <div class="palette-list" id="palette-list"></div>
+    </div>
+
+    <!-- VISUALIZER SCREEN -->
+    <div class="screen" id="visualizer-screen">
+      <div class="viz-bg" id="viz-bg"></div>
+      <div style="position:relative;z-index:1;padding:8px 12px 0;">
+        <div class="back-btn" id="back-to-combos">&#8249; <span>Back</span></div>
+      </div>
+      <div class="viz-content">
+        <div class="wada-header">
+          <div class="wada-header-title" id="viz-title"></div>
+          <div class="wada-header-sub" id="viz-sub"></div>
+        </div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;">
+          <div class="aureola" id="aureola"></div>
+          <div class="outfit-card" id="outfit-card"></div>
+        </div>
+        <div class="mini-palette" id="mini-palette"></div>
+        <div class="mini-palette-labels" id="mini-palette-labels"></div>
+        <div class="viz-brand">
+          <div class="viz-brand-name">Outfinder</div>
+          <button class="share-btn">Share</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAVORITES SCREEN -->
+    <div class="screen" id="favorites-screen">
+      <div class="screen-title" style="padding-top:20px;">Favorites</div>
+      <div class="screen-subtitle">Your saved combinations</div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding-top:180px;gap:12px;">
+        <div class="favorites-empty-icon">&#9825;</div>
+        <div class="favorites-empty-text">No favorites yet</div>
+        <div style="font-size:12px;color:#b0b0b0;text-align:center;max-width:200px;line-height:1.5;">
+          Tap the heart on any combination to save it here
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS SCREEN -->
+    <div class="screen" id="settings-screen">
+      <div class="screen-title" style="padding-top:20px;">Settings</div>
+      <div class="screen-subtitle">Outfinder v1.0</div>
+      <div class="settings-group">
+        <div class="settings-row">
+          <span>Subscription</span>
+          <span class="premium-badge">Premium</span>
+        </div>
+        <div class="settings-row">
+          <span>Haptic Feedback</span>
+          <span class="settings-row-value">On</span>
+        </div>
+        <div class="settings-row">
+          <span>Reduce Motion</span>
+          <span class="settings-row-value">Off</span>
+        </div>
+        <div class="settings-row">
+          <span>About Sanzo Wada</span>
+          <span class="settings-row-value">&#8250;</span>
+        </div>
+        <div class="settings-row">
+          <span>Rate Outfinder</span>
+          <span class="settings-row-value">&#8250;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hint -->
+    <div class="demo-hint" id="demo-hint">Click any color swatch</div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <div class="tab-item active" data-tab="colors">
+      <div class="tab-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="8" r="2.5" fill="#D4534A" stroke="none"/><circle cx="8.5" cy="13" r="2.5" fill="#4A6FA5" stroke="none" opacity="0.85"/><circle cx="15.5" cy="13" r="2.5" fill="#F5C542" stroke="none" opacity="0.85"/></svg>
+      </div>
+      <div class="tab-label">Colors</div>
+    </div>
+    <div class="tab-item" data-tab="favorites">
+      <div class="tab-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9b9b9b" stroke-width="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </div>
+      <div class="tab-label">Favorites</div>
+    </div>
+    <div class="tab-item" data-tab="settings">
+      <div class="tab-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9b9b9b" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </div>
+      <div class="tab-label">Settings</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+<script>
+gsap.registerPlugin(Flip);
+
+// ===== WADA COLOR DATA =====
+const WADA_COLORS = [
+  { hex: '#E8D3B4', jp: '鸞鳥色', en: 'Luan-bird', combos: 8 },
+  { hex: '#C4A882', jp: '枯草色', en: 'Dried Grass', combos: 5 },
+  { hex: '#8B7355', jp: '朽葉色', en: 'Fallen Leaf', combos: 11 },
+  { hex: '#D4534A', jp: '朱色', en: 'Vermilion', combos: 14 },
+  { hex: '#C41E3A', jp: '紅色', en: 'Crimson', combos: 9 },
+  { hex: '#E6735A', jp: '珊瑚色', en: 'Coral', combos: 7 },
+  { hex: '#4A6FA5', jp: '群青色', en: 'Ultramarine', combos: 12 },
+  { hex: '#2B4570', jp: '紺色', en: 'Navy Blue', combos: 10 },
+  { hex: '#6B8CAE', jp: '薄花色', en: 'Light Blue', combos: 6 },
+  { hex: '#1B1B1B', jp: '墨色', en: 'Ink Black', combos: 15 },
+  { hex: '#3D3D3D', jp: '鉛色', en: 'Lead', combos: 8 },
+  { hex: '#5A4A3A', jp: '焦茶', en: 'Dark Brown', combos: 9 },
+  { hex: '#F5C542', jp: '黄金色', en: 'Golden', combos: 13 },
+  { hex: '#E8A317', jp: '山吹色', en: 'Yamabuki', combos: 7 },
+  { hex: '#FF6B35', jp: '橙色', en: 'Orange', combos: 6 },
+  { hex: '#2D5A27', jp: '深緑', en: 'Deep Green', combos: 8 },
+  { hex: '#6B8E23', jp: '鶯色', en: 'Warbler', combos: 5 },
+  { hex: '#8FBC8F', jp: '若草色', en: 'Young Grass', combos: 7 },
+  { hex: '#DDA0DD', jp: '藤色', en: 'Wisteria', combos: 4 },
+  { hex: '#9B59B6', jp: '紫色', en: 'Purple', combos: 6 },
+  { hex: '#F0E68C', jp: '刈安色', en: 'Kariyasu', combos: 3 },
+  { hex: '#FFD700', jp: '金色', en: 'Gold', combos: 9 },
+  { hex: '#CD853F', jp: '小麦色', en: 'Wheat', combos: 7 },
+  { hex: '#8B4513', jp: '栗色', en: 'Chestnut', combos: 8 },
+  { hex: '#B0C4DE', jp: '淡藍色', en: 'Light Steel', combos: 5 },
+  { hex: '#708090', jp: '石板色', en: 'Slate', combos: 6 },
+  { hex: '#556B2F', jp: '草色', en: 'Olive Drab', combos: 7 },
+  { hex: '#BDB76B', jp: '鶸色', en: 'Dark Khaki', combos: 4 },
+  { hex: '#FAEBD7', jp: '亜麻色', en: 'Antique White', combos: 5 },
+  { hex: '#FFE4E1', jp: '薄桜', en: 'Misty Rose', combos: 3 },
+  { hex: '#E0C8A8', jp: '丁字色', en: 'Clove', combos: 6 },
+  { hex: '#A0522D', jp: '赤茶', en: 'Sienna', combos: 8 },
+  { hex: '#BC8F8F', jp: '灰桜', en: 'Rosy Brown', combos: 4 },
+  { hex: '#CD5C5C', jp: '蘇芳', en: 'Indian Red', combos: 7 },
+  { hex: '#F08080', jp: '珊瑚朱', en: 'Light Coral', combos: 5 },
+  { hex: '#DB7093', jp: '撫子色', en: 'Nadeshiko', combos: 6 },
+  { hex: '#C71585', jp: '牡丹色', en: 'Peony', combos: 4 },
+  { hex: '#4169E1', jp: '瑠璃色', en: 'Royal Blue', combos: 9 },
+  { hex: '#6495ED', jp: '勿忘草', en: 'Cornflower', combos: 5 },
+  { hex: '#87CEEB', jp: '空色', en: 'Sky Blue', combos: 7 },
+];
+
+// Pre-built combinations per color
+function getCombinations(color) {
+  const others = WADA_COLORS.filter(c => c.hex !== color.hex);
+  const combos = [];
+  const numCombos = Math.min(color.combos, 5);
+  for (let i = 0; i < numCombos; i++) {
+    const numColors = Math.random() > 0.3 ? 3 : 4;
+    const combo = [color];
+    const shuffled = [...others].sort(() => Math.random() - 0.5);
+    for (let j = 0; j < numColors - 1; j++) {
+      combo.push(shuffled[j]);
+    }
+    combos.push({
+      id: `combo-${i}`,
+      nameJp: `配色 No.${String(Math.floor(Math.random() * 348) + 1).padStart(3, '0')}`,
+      colors: combo,
+    });
+  }
+  return combos;
+}
+
+function isLightColor(hex) {
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  return (r * 0.299 + g * 0.587 + b * 0.114) > 224;
+}
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+// ===== BUILD COLOR GRID =====
+const grid = document.getElementById('color-grid');
+WADA_COLORS.forEach((color, i) => {
+  const swatch = document.createElement('div');
+  swatch.className = 'color-swatch' + (isLightColor(color.hex) ? ' light-color' : '');
+  swatch.style.backgroundColor = color.hex;
+  swatch.dataset.index = i;
+  swatch.setAttribute('title', `${color.jp} — ${color.en}`);
+  // Start invisible for stagger animation
+  swatch.style.opacity = '0';
+  swatch.style.transform = 'scale(0.7)';
+  grid.appendChild(swatch);
+});
+
+// ===== A. GRID STAGGER ENTRANCE =====
+function animateGridEntrance() {
+  setActiveHint('hint-stagger');
+  const swatches = document.querySelectorAll('.color-swatch');
+  gsap.fromTo(swatches,
+    { opacity: 0, scale: 0.7 },
+    {
+      opacity: 1,
+      scale: 1,
+      duration: 0.4,
+      stagger: {
+        each: 0.04,
+        from: 'start',
+        grid: [8, 5],
+        ease: 'power2.out',
+      },
+      ease: 'back.out(1.4)',
+      clearProps: 'transform',
+    }
+  );
+}
+
+// Run on load
+setTimeout(animateGridEntrance, 300);
+
+// ===== SWATCH PRESS FEEDBACK (simulates iOS touch) =====
+document.querySelectorAll('.color-swatch').forEach(swatch => {
+  swatch.addEventListener('mousedown', () => {
+    gsap.to(swatch, { scale: 0.88, duration: 0.12, ease: 'power2.out' });
+  });
+  swatch.addEventListener('mouseup', () => {
+    gsap.to(swatch, { scale: 1, duration: 0.3, ease: 'back.out(3)' });
+  });
+  swatch.addEventListener('mouseleave', () => {
+    gsap.to(swatch, { scale: 1, duration: 0.2, ease: 'power2.out' });
+  });
+});
+
+// ===== SCREEN MANAGEMENT =====
+let currentScreen = 'colors';
+let currentColor = null;
+let currentCombos = null;
+let breathingTween = null;
+
+function setActiveHint(id) {
+  document.querySelectorAll('.anim-item').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+}
+
+// ===== B. SWATCH → COMBINATIONS TRANSITION =====
+document.querySelectorAll('.color-swatch').forEach(swatch => {
+  swatch.addEventListener('click', () => {
+    const idx = parseInt(swatch.dataset.index);
+    currentColor = WADA_COLORS[idx];
+    currentCombos = getCombinations(currentColor);
+    showCombinations(swatch);
+  });
+});
+
+function showCombinations(clickedSwatch) {
+  setActiveHint('hint-shared');
+  const hint = document.getElementById('demo-hint');
+
+  // Setup combinations screen
+  const headerSwatch = document.getElementById('combo-header-swatch');
+  headerSwatch.style.backgroundColor = currentColor.hex;
+  document.getElementById('combo-header-jp').textContent = currentColor.jp;
+  document.getElementById('combo-header-en').textContent = currentColor.en;
+  document.getElementById('combo-header-count').textContent = `${currentColor.combos} combinations`;
+
+  // Build palette strips
+  const list = document.getElementById('palette-list');
+  list.innerHTML = '';
+  currentCombos.forEach((combo, i) => {
+    const container = document.createElement('div');
+    container.className = 'palette-strip-container';
+    container.innerHTML = `
+      <div class="palette-strip">
+        ${combo.colors.map((c, ci) => `
+          <div class="palette-color" style="background:${c.hex}">
+            ${ci === 0 ? '<div class="palette-selected-dot"></div>' : ''}
+          </div>
+        `).join('')}
+        <div class="palette-actions">
+          <div class="palette-fav" onclick="event.stopPropagation();this.classList.toggle('active');this.textContent=this.classList.contains('active')?'❤️':'🤍'">🤍</div>
+        </div>
+        <div class="palette-hanger">👕</div>
+      </div>
+      <div class="palette-names">
+        ${combo.colors.map(c => `
+          <div class="palette-name-item">
+            <div class="palette-name-jp">${c.jp}</div>
+            <div class="palette-name-en">${c.en}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    // Start invisible
+    container.style.opacity = '0';
+    container.style.transform = 'translateX(60px)';
+    list.appendChild(container);
+
+    // Click to visualizer
+    container.addEventListener('click', () => showVisualizer(combo));
+  });
+
+  // Transition: colors out, combinations in
+  const tl = gsap.timeline();
+
+  tl.to('#colors-screen', {
+    x: -80,
+    opacity: 0,
+    duration: 0.35,
+    ease: 'power3.in',
+    onComplete: () => {
+      document.getElementById('colors-screen').style.visibility = 'hidden';
+    }
+  });
+
+  tl.set('#combinations-screen', { visibility: 'visible', x: 60, opacity: 0 });
+  tl.to('#combinations-screen', {
+    x: 0,
+    opacity: 1,
+    duration: 0.4,
+    ease: 'power2.out',
+  }, '-=0.1');
+
+  // C. Palette strip stagger
+  tl.add(() => setActiveHint('hint-strips'));
+  tl.fromTo('.palette-strip-container',
+    { opacity: 0, x: 60 },
+    {
+      opacity: 1,
+      x: 0,
+      duration: 0.5,
+      stagger: 0.12,
+      ease: 'back.out(1.2)',
+      clearProps: 'transform',
+    },
+    '-=0.2'
+  );
+
+  tl.to(hint, { opacity: 0, duration: 0.2, onComplete: () => {
+    hint.textContent = 'Click any palette strip';
+    gsap.to(hint, { opacity: 1, duration: 0.3 });
+  }}, '-=0.3');
+
+  currentScreen = 'combinations';
+}
+
+// ===== BACK TO COLORS =====
+document.getElementById('back-to-colors').addEventListener('click', () => {
+  const tl = gsap.timeline();
+
+  tl.to('#combinations-screen', {
+    x: 80,
+    opacity: 0,
+    duration: 0.3,
+    ease: 'power3.in',
+    onComplete: () => {
+      document.getElementById('combinations-screen').style.visibility = 'hidden';
+    }
+  });
+
+  tl.set('#colors-screen', { visibility: 'visible', x: -40, opacity: 0 });
+  tl.to('#colors-screen', {
+    x: 0,
+    opacity: 1,
+    duration: 0.35,
+    ease: 'power2.out',
+  }, '-=0.1');
+
+  const hint = document.getElementById('demo-hint');
+  hint.textContent = 'Click any color swatch';
+  gsap.to(hint, { opacity: 1, duration: 0.3, delay: 0.3 });
+
+  setActiveHint('hint-stagger');
+  currentScreen = 'colors';
+});
+
+// ===== D. VISUALIZER ENTRANCE =====
+function showVisualizer(combo) {
+  setActiveHint('hint-visualizer');
+
+  // Setup visualizer
+  document.getElementById('viz-title').textContent = combo.nameJp;
+  document.getElementById('viz-sub').textContent = `${combo.colors.length} colors · Sanzo Wada`;
+
+  // Aureola
+  const aureola = document.getElementById('aureola');
+  aureola.style.background = `radial-gradient(circle, ${hexToRgba(combo.colors[0].hex, 0.18)} 0%, ${hexToRgba(combo.colors[0].hex, 0.06)} 50%, transparent 80%)`;
+
+  // Outfit card
+  const card = document.getElementById('outfit-card');
+  const garmentTypes = ['top', 'bottom', 'shoes'];
+  const garmentLabels = ['T-shirt', 'Pants', 'Sneakers'];
+  card.innerHTML = '';
+  combo.colors.slice(0, 3).forEach((c, i) => {
+    const type = garmentTypes[i] || 'top';
+    const div = document.createElement('div');
+    div.className = `garment garment-${type}${i === 0 ? ' garment-selected' : ''}`;
+    div.style.background = c.hex;
+    div.style.borderRadius = '6px';
+    div.innerHTML = `<span style="font-size:11px;color:rgba(255,255,255,0.5);font-weight:500;">${garmentLabels[i]}</span>`;
+    div.style.opacity = '0';
+    div.style.transform = 'translateY(-30px)';
+    card.appendChild(div);
+  });
+
+  // Mini palette
+  const miniPalette = document.getElementById('mini-palette');
+  miniPalette.innerHTML = combo.colors.map(c =>
+    `<div class="mini-palette-color" style="background:${c.hex}"></div>`
+  ).join('');
+
+  const labels = document.getElementById('mini-palette-labels');
+  labels.innerHTML = combo.colors.map(c =>
+    `<span class="mini-palette-label">${c.jp}</span>`
+  ).join('');
+
+  // Transition
+  const tl = gsap.timeline();
+
+  tl.to('#combinations-screen', {
+    opacity: 0,
+    scale: 0.95,
+    duration: 0.3,
+    ease: 'power2.in',
+    onComplete: () => {
+      document.getElementById('combinations-screen').style.visibility = 'hidden';
+      gsap.set('#combinations-screen', { scale: 1 });
+    }
+  });
+
+  tl.set('#visualizer-screen', { visibility: 'visible', opacity: 0 });
+
+  // Bg fade in
+  tl.to('#visualizer-screen', { opacity: 1, duration: 0.5, ease: 'power2.out' });
+
+  // Aureola scale up
+  tl.fromTo('#aureola',
+    { scale: 0.3, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.8, ease: 'power2.out' },
+    '-=0.3'
+  );
+
+  // Wada header
+  tl.fromTo('.wada-header',
+    { opacity: 0, y: -15 },
+    { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+    '-=0.6'
+  );
+
+  // Garments drop in with stagger
+  tl.to('.garment', {
+    opacity: 1,
+    y: 0,
+    duration: 0.5,
+    stagger: 0.15,
+    ease: 'back.out(1.5)',
+  }, '-=0.3');
+
+  // Mini palette
+  tl.fromTo('#mini-palette',
+    { opacity: 0, scaleX: 0.5 },
+    { opacity: 1, scaleX: 1, duration: 0.4, ease: 'power2.out' },
+    '-=0.2'
+  );
+  tl.fromTo('#mini-palette-labels',
+    { opacity: 0 },
+    { opacity: 1, duration: 0.3 },
+    '-=0.1'
+  );
+
+  // Brand + share
+  tl.fromTo('.viz-brand',
+    { opacity: 0, y: 10 },
+    { opacity: 1, y: 0, duration: 0.3 },
+    '-=0.1'
+  );
+
+  // E. Start aureola breathing
+  tl.add(() => {
+    setActiveHint('hint-breathing');
+    breathingTween = gsap.to('#aureola', {
+      scale: 1.08,
+      opacity: 0.85,
+      duration: 2.5,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
+    });
+  });
+
+  const hint = document.getElementById('demo-hint');
+  hint.textContent = 'Try switching tabs below';
+  gsap.to(hint, { opacity: 1, duration: 0.3, delay: 1.5 });
+
+  currentScreen = 'visualizer';
+}
+
+// ===== BACK FROM VISUALIZER =====
+document.getElementById('back-to-combos').addEventListener('click', () => {
+  if (breathingTween) { breathingTween.kill(); breathingTween = null; }
+
+  const tl = gsap.timeline();
+
+  tl.to('#visualizer-screen', {
+    opacity: 0,
+    duration: 0.3,
+    ease: 'power2.in',
+    onComplete: () => {
+      document.getElementById('visualizer-screen').style.visibility = 'hidden';
+    }
+  });
+
+  tl.set('#combinations-screen', { visibility: 'visible', x: -40, opacity: 0, scale: 1 });
+  tl.to('#combinations-screen', {
+    x: 0,
+    opacity: 1,
+    duration: 0.35,
+    ease: 'power2.out',
+  }, '-=0.1');
+
+  setActiveHint('hint-strips');
+  currentScreen = 'combinations';
+});
+
+// ===== F. TAB SWITCHING =====
+const tabItems = document.querySelectorAll('.tab-item');
+const tabScreenMap = {
+  colors: 'colors-screen',
+  favorites: 'favorites-screen',
+  settings: 'settings-screen',
+};
+
+tabItems.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const tabName = tab.dataset.tab;
+    if (tabName === currentScreen && currentScreen !== 'combinations' && currentScreen !== 'visualizer') return;
+
+    setActiveHint('hint-tabs');
+    if (breathingTween) { breathingTween.kill(); breathingTween = null; }
+
+    // Reset all tab styling
+    tabItems.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    // Update tab icon colors
+    tabItems.forEach(t => {
+      const svg = t.querySelector('svg');
+      if (svg) {
+        const isActive = t.classList.contains('active');
+        svg.setAttribute('stroke', isActive ? '#1a1a1a' : '#9b9b9b');
+      }
+    });
+
+    // Determine what to hide
+    const screensToHide = ['colors-screen', 'combinations-screen', 'visualizer-screen', 'favorites-screen', 'settings-screen'];
+    const targetScreenId = tabScreenMap[tabName];
+
+    const tl = gsap.timeline();
+
+    // Hide all visible screens
+    screensToHide.forEach(id => {
+      const el = document.getElementById(id);
+      if (el.style.visibility !== 'hidden' && el.style.opacity !== '0') {
+        tl.to(el, {
+          x: -60,
+          opacity: 0,
+          duration: 0.25,
+          ease: 'power2.in',
+          onComplete: () => {
+            el.style.visibility = 'hidden';
+            gsap.set(el, { x: 0 });
+          }
+        }, 0);
+      }
+    });
+
+    // Show target screen
+    const target = document.getElementById(targetScreenId);
+    tl.set(target, { visibility: 'visible', x: 60, opacity: 0 }, 0.15);
+    tl.to(target, {
+      x: 0,
+      opacity: 1,
+      duration: 0.35,
+      ease: 'power2.out',
+    }, 0.2);
+
+    // Re-animate grid if going back to colors
+    if (tabName === 'colors') {
+      tl.add(() => animateGridEntrance(), 0.3);
+    }
+
+    currentScreen = tabName;
+
+    const hint = document.getElementById('demo-hint');
+    if (tabName === 'colors') {
+      hint.textContent = 'Click any color swatch';
+    } else if (tabName === 'favorites') {
+      hint.textContent = 'Switch to Colors tab to explore';
+    } else {
+      hint.textContent = 'Switch tabs to see transitions';
+    }
+  });
+});
+
+// ===== FILTER TAB ANIMATION =====
+document.querySelectorAll('.filter-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    // Re-stagger the grid with a shuffle feel
+    const swatches = document.querySelectorAll('.color-swatch');
+    gsap.fromTo(swatches,
+      { opacity: 0, scale: 0.8, y: 10 },
+      {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        duration: 0.35,
+        stagger: { each: 0.025, from: 'random' },
+        ease: 'back.out(1.2)',
+        clearProps: 'transform',
+      }
+    );
+  });
+});
+</script>
+</body>
+</html>

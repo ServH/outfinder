@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outfinder — Outfit Visualizer Proposals</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500&family=Inter:wght@400;500&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#e8e4df; padding:32px 16px; font-family:Inter,-apple-system,sans-serif; }
+  h1 { text-align:center; font-family:'Noto Serif JP',Georgia,serif; color:#1a1a1a; font-size:20px; font-weight:400; margin-bottom:4px; }
+  .subtitle { text-align:center; font-size:12px; color:#9b9b9b; margin-bottom:32px; }
+
+  .proposal { margin-bottom:48px; }
+  .proposal-header { text-align:center; margin-bottom:16px; }
+  .proposal-title { font-family:'Noto Serif JP',Georgia,serif; font-size:16px; color:#1a1a1a; margin-bottom:4px; }
+  .proposal-desc { font-size:11px; color:#6b6b6b; max-width:600px; margin:0 auto; line-height:1.5; }
+
+  .wrap { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+
+  .phone { width:196px; flex-shrink:0; background:#1c1c1e; border-radius:40px; padding:8px; box-shadow:0 8px 32px rgba(0,0,0,.18); }
+  .pi { background:#fafaf8; border-radius:34px; overflow:hidden; height:430px; display:flex; flex-direction:column; }
+  .sb { background:#fafaf8; padding:8px 18px 2px; display:flex; justify-content:space-between; align-items:center; }
+  .st { font-size:11px; font-weight:600; color:#1a1a1a; }
+  .si { font-size:9px; color:#1a1a1a; }
+  .nb { padding:4px 14px; border-bottom:.5px solid rgba(0,0,0,.08); display:flex; align-items:center; justify-content:space-between; background:rgba(250,250,248,.97); }
+  .nb-back { font-size:11px; color:#c4a265; }
+  .nt { font-size:12px; font-weight:500; color:#1a1a1a; font-family:'Noto Serif JP',Georgia,serif; }
+  .slbl { font-size:10px; font-weight:500; color:#6b6b6b; text-align:center; margin-top:10px; text-transform:uppercase; letter-spacing:.08em; }
+  .note { font-size:8px; color:#9b9b9b; text-align:center; margin-top:4px; max-width:210px; line-height:1.4; }
+
+  .tb { background:rgba(250,250,248,.97); border-top:.5px solid rgba(0,0,0,.06); padding:4px 0 8px; display:flex; justify-content:space-around; }
+  .ti { display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .tl { font-size:8px; color:#9b9b9b; }
+  .tl.on { color:#1a1a1a; }
+  .ts { width:18px; height:18px; border-radius:5px; }
+
+  /* Garment shapes — simplified SVG-like with CSS */
+  .garment { display:flex; align-items:center; justify-content:center; align-self:center; position:relative; }
+  .garment-label { position:absolute; right:-2px; top:50%; transform:translateY(-50%) translateX(100%); padding-left:6px; }
+  .garment-label-jp { font-size:8px; color:#1a1a1a; font-family:'Noto Serif JP',Georgia,serif; }
+  .garment-label-en { font-size:7px; color:#9b9b9b; }
+
+  .comparison-label { font-size:9px; color:#c4a265; font-family:'Noto Serif JP',Georgia,serif; text-align:center; letter-spacing:.06em; padding:6px 0 2px; }
+</style>
+</head>
+<body>
+
+<h1>Outfit Visualizer — 3 Propuestas</h1>
+<div class="subtitle">El problema: al Visualizer le falta el alma Wada que tiene el resto de la app</div>
+
+<!-- ═══════════════════════════════════════════
+     PROPOSAL A — Wada Context Integration
+═══════════════════════════════════════════ -->
+<div class="proposal">
+<div class="proposal-header">
+  <div class="proposal-title">A — Mannequin + Contexto Wada</div>
+  <div class="proposal-desc">El mannequin se queda pero se envuelve en contexto Wada: nombre de la combinacion en japones, nombres de color junto a cada prenda, la strip original como header. El outfit no flota en el vacio — pertenece a una paleta con nombre.</div>
+</div>
+
+<div class="wrap">
+<!-- Screen A: 3 colors -->
+<div>
+<div class="phone"><div class="pi">
+  <div class="sb"><span class="st">9:41</span><span class="si">●●● ▐ 🔋</span></div>
+  <div class="nb">
+    <span class="nb-back">←</span>
+    <span class="nt">Outfit Visualizer</span>
+    <span style="font-size:11px;color:#c4a265;">↗</span>
+  </div>
+
+  <!-- Wada combination strip — thin, contextual -->
+  <div style="display:flex;height:28px;margin:0 14px 0;border-radius:8px;overflow:hidden;margin-top:6px;">
+    <div style="flex:1;background:#c26b4a;"></div>
+    <div style="flex:1;background:#7b9e7a;border-left:.5px solid rgba(0,0,0,.08);"></div>
+    <div style="flex:1;background:#f0d5b0;border-left:.5px solid rgba(0,0,0,.08);"></div>
+  </div>
+  <!-- Combination name -->
+  <div style="text-align:center;padding:4px 0 2px;">
+    <div style="font-size:11px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">萌黄 · テラコッタ · クリーム</div>
+    <div style="font-size:8px;color:#9b9b9b;">Sage · Terracotta · Cream</div>
+  </div>
+
+  <!-- Mannequin with color labels -->
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:0 8px;">
+    <div style="position:relative;width:100%;display:flex;flex-direction:column;align-items:center;">
+
+      <!-- Top — T-shirt -->
+      <div style="position:relative;width:55%;align-self:center;">
+        <div style="width:100%;height:62px;background:#c26b4a;border-radius:6px 6px 2px 2px;display:flex;align-items:center;justify-content:center;">
+          <svg width="50" height="42" viewBox="0 0 80 64" fill="none"><path d="M24 0H56V6L64 12V28H56V64H24V28H16V12L24 6V0Z" fill="white" fill-opacity=".15"/></svg>
+        </div>
+        <!-- Label -->
+        <div style="position:absolute;left:-4px;top:50%;transform:translateY(-50%) translateX(-100%);text-align:right;padding-right:6px;">
+          <div style="font-size:8px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">テラコッタ</div>
+        </div>
+      </div>
+
+      <!-- Bottom — Pants -->
+      <div style="position:relative;width:40%;align-self:center;margin-top:-4px;">
+        <div style="width:100%;height:82px;background:#7b9e7a;border-radius:2px 2px 4px 4px;display:flex;align-items:center;justify-content:center;">
+          <svg width="30" height="60" viewBox="0 0 50 90" fill="none"><path d="M5 0H45L47 6V70C47 74 44 78 40 78H28V90H22V78H10C6 78 3 74 3 70V6L5 0Z" fill="white" fill-opacity=".15"/></svg>
+        </div>
+        <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%) translateX(100%);padding-left:6px;">
+          <div style="font-size:8px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">萌黄</div>
+        </div>
+      </div>
+
+      <!-- Shoes -->
+      <div style="position:relative;width:50%;align-self:center;margin-top:-2px;">
+        <div style="width:100%;height:26px;background:#f0d5b0;border-radius:4px;display:flex;align-items:center;justify-content:center;border:.5px solid rgba(0,0,0,.06);">
+          <svg width="44" height="16" viewBox="0 0 80 28" fill="none"><path d="M8 14C8 8 12 4 18 4H62C68 4 74 8 76 16V20C76 24 72 26 68 26H12C8 26 4 24 4 20V18C4 16 5 14 8 14Z" fill="white" fill-opacity=".15"/></svg>
+        </div>
+        <div style="position:absolute;left:-4px;top:50%;transform:translateY(-50%) translateX(-100%);text-align:right;padding-right:6px;">
+          <div style="font-size:8px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">クリーム</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Palette bar -->
+  <div style="display:flex;justify-content:center;gap:16px;padding:6px 0;border-top:.5px solid rgba(0,0,0,.06);">
+    <div style="text-align:center;"><div style="width:32px;height:32px;background:#c26b4a;border-radius:8px;border:1px solid rgba(0,0,0,.08);"></div><div style="font-size:8px;color:#9b9b9b;font-family:'Noto Serif JP',Georgia,serif;margin-top:2px;">テラコッタ</div></div>
+    <div style="text-align:center;"><div style="width:32px;height:32px;background:#7b9e7a;border-radius:8px;border:1px solid rgba(0,0,0,.08);"></div><div style="font-size:8px;color:#9b9b9b;font-family:'Noto Serif JP',Georgia,serif;margin-top:2px;">萌黄</div></div>
+    <div style="text-align:center;"><div style="width:32px;height:32px;background:#f0d5b0;border-radius:8px;border:1px solid rgba(0,0,0,.08);"></div><div style="font-size:8px;color:#9b9b9b;font-family:'Noto Serif JP',Georgia,serif;margin-top:2px;">クリーム</div></div>
+  </div>
+
+  <div class="tb">
+    <div class="ti"><div class="ts" style="background:linear-gradient(135deg,#c26b4a 50%,#7b9e7a 50%);"></div><div class="tl on">Colores</div></div>
+    <div class="ti"><span style="font-size:16px;color:#9b9b9b;line-height:1;">♡</span><div class="tl">Favoritos</div></div>
+    <div class="ti"><span style="font-size:14px;color:#9b9b9b;line-height:1;">⚙</span><div class="tl">Ajustes</div></div>
+  </div>
+</div></div>
+<div class="slbl">A — Con contexto</div>
+<div class="note">Strip + nombre JP arriba. Nombres de color junto a cada prenda. El outfit pertenece a una paleta Wada.</div>
+</div>
+
+<!-- Screen A: 4 colors -->
+<div>
+<div class="phone"><div class="pi">
+  <div class="sb"><span class="st">9:41</span><span class="si">●●● ▐ 🔋</span></div>
+  <div class="nb">
+    <span class="nb-back">←</span>
+    <span class="nt">Outfit Visualizer</span>
+    <span style="font-size:11px;color:#c4a265;">↗</span>
+  </div>
+
+  <!-- Strip -->
+  <div style="display:flex;height:28px;margin:0 14px;border-radius:8px;overflow:hidden;margin-top:6px;">
+    <div style="flex:1;background:#3d5a78;"></div>
+    <div style="flex:1;background:#c26b4a;border-left:.5px solid rgba(0,0,0,.08);"></div>
+    <div style="flex:1;background:#7b9e7a;border-left:.5px solid rgba(0,0,0,.08);"></div>
+    <div style="flex:1;background:#f0d5b0;border-left:.5px solid rgba(0,0,0,.08);"></div>
+  </div>
+  <div style="text-align:center;padding:4px 0 2px;">
+    <div style="font-size:10px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">紺碧 · テラコッタ · 萌黄 · クリーム</div>
+    <div style="font-size:8px;color:#9b9b9b;">Navy · Terracotta · Sage · Cream</div>
+  </div>
+
+  <!-- 4-slot mannequin -->
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:0 8px;">
+    <div style="width:100%;display:flex;flex-direction:column;align-items:center;">
+      <!-- Layer — Jacket -->
+      <div style="position:relative;width:65%;align-self:center;">
+        <div style="width:100%;height:52px;background:#3d5a78;border-radius:6px 6px 2px 2px;display:flex;align-items:center;justify-content:center;">
+          <svg width="54" height="38" viewBox="0 0 90 60" fill="none"><path d="M16 20C16 20 10 12 10 6C10 3 14 0 20 0H70C76 0 80 3 80 6C80 12 74 20 74 20L80 28V56C80 58 78 60 76 60H14C12 60 10 58 10 56V28L16 20Z" fill="white" fill-opacity=".15"/></svg>
+        </div>
+        <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%) translateX(100%);padding-left:6px;">
+          <div style="font-size:8px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">紺碧</div>
+        </div>
+      </div>
+      <!-- Top -->
+      <div style="position:relative;width:50%;align-self:center;margin-top:-6px;">
+        <div style="width:100%;height:44px;background:#c26b4a;border-radius:2px;display:flex;align-items:center;justify-content:center;">
+          <svg width="40" height="30" viewBox="0 0 80 64" fill="none"><path d="M24 0H56V6L64 12V28H56V64H24V28H16V12L24 6V0Z" fill="white" fill-opacity=".15"/></svg>
+        </div>
+        <div style="position:absolute;left:-4px;top:50%;transform:translateY(-50%) translateX(-100%);text-align:right;padding-right:6px;">
+          <div style="font-size:8px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">テラコッタ</div>
+        </div>
+      </div>
+      <!-- Bottom -->
+      <div style="position:relative;width:40%;align-self:center;margin-top:-4px;">
+        <div style="width:100%;height:72px;background:#7b9e7a;border-radius:2px 2px 4px 4px;display:flex;align-items:center;justify-content:center;">
+          <svg width="28" height="52" viewBox="0 0 50 90" fill="none"><path d="M5 0H45L47 6V70C47 74 44 78 40 78H28V90H22V78H10C6 78 3 74 3 70V6L5 0Z" fill="white" fill-opacity=".15"/></svg>
+        </div>
+        <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%) translateX(100%);padding-left:6px;">
+          <div style="font-size:8px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">萌黄</div>
+        </div>
+      </div>
+      <!-- Shoes -->
+      <div style="position:relative;width:48%;align-self:center;margin-top:-2px;">
+        <div style="width:100%;height:22px;background:#f0d5b0;border-radius:4px;display:flex;align-items:center;justify-content:center;border:.5px solid rgba(0,0,0,.06);">
+          <svg width="40" height="14" viewBox="0 0 80 28" fill="none"><path d="M8 14C8 8 12 4 18 4H62C68 4 74 8 76 16V20C76 24 72 26 68 26H12C8 26 4 24 4 20V18C4 16 5 14 8 14Z" fill="white" fill-opacity=".15"/></svg>
+        </div>
+        <div style="position:absolute;left:-4px;top:50%;transform:translateY(-50%) translateX(-100%);text-align:right;padding-right:6px;">
+          <div style="font-size:8px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">クリーム</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Palette bar -->
+  <div style="display:flex;justify-content:center;gap:12px;padding:6px 0;border-top:.5px solid rgba(0,0,0,.06);">
+    <div style="text-align:center;"><div style="width:28px;height:28px;background:#3d5a78;border-radius:6px;border:1px solid rgba(0,0,0,.08);"></div><div style="font-size:7px;color:#9b9b9b;font-family:'Noto Serif JP',Georgia,serif;margin-top:2px;">紺碧</div></div>
+    <div style="text-align:center;"><div style="width:28px;height:28px;background:#c26b4a;border-radius:6px;border:1px solid rgba(0,0,0,.08);"></div><div style="font-size:7px;color:#9b9b9b;font-family:'Noto Serif JP',Georgia,serif;margin-top:2px;">テラコッタ</div></div>
+    <div style="text-align:center;"><div style="width:28px;height:28px;background:#7b9e7a;border-radius:6px;border:1px solid rgba(0,0,0,.08);"></div><div style="font-size:7px;color:#9b9b9b;font-family:'Noto Serif JP',Georgia,serif;margin-top:2px;">萌黄</div></div>
+    <div style="text-align:center;"><div style="width:28px;height:28px;background:#f0d5b0;border-radius:6px;border:1px solid rgba(0,0,0,.08);border:.5px solid rgba(0,0,0,.06);"></div><div style="font-size:7px;color:#9b9b9b;font-family:'Noto Serif JP',Georgia,serif;margin-top:2px;">クリーム</div></div>
+  </div>
+
+  <div class="tb">
+    <div class="ti"><div class="ts" style="background:linear-gradient(135deg,#3d5a78 50%,#c26b4a 50%);"></div><div class="tl on">Colores</div></div>
+    <div class="ti"><span style="font-size:16px;color:#9b9b9b;line-height:1;">♡</span><div class="tl">Favoritos</div></div>
+    <div class="ti"><span style="font-size:14px;color:#9b9b9b;line-height:1;">⚙</span><div class="tl">Ajustes</div></div>
+  </div>
+</div></div>
+<div class="slbl">A — 4 colores</div>
+<div class="note">Misma logica con 4 slots. Labels alternan izquierda/derecha para equilibrar.</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PROPOSAL B — Flat Lay / Editorial
+═══════════════════════════════════════════ -->
+<div class="proposal">
+<div class="proposal-header">
+  <div class="proposal-title">B — Flat Lay Editorial</div>
+  <div class="proposal-desc">Las prendas no se apilan como un cuerpo — se disponen como un flat lay de revista de moda, vistas desde arriba. Cada prenda es una carta con su color y nombre Wada. Muy Instagram-native, elimina el problema de proporciones verticales.</div>
+</div>
+
+<div class="wrap">
+<!-- Screen B: 3 colors flat lay -->
+<div>
+<div class="phone"><div class="pi">
+  <div class="sb"><span class="st">9:41</span><span class="si">●●● ▐ 🔋</span></div>
+  <div class="nb">
+    <span class="nb-back">←</span>
+    <span class="nt">Outfit Visualizer</span>
+    <span style="font-size:11px;color:#c4a265;">↗</span>
+  </div>
+
+  <!-- Combination name centered -->
+  <div style="text-align:center;padding:8px 0 4px;">
+    <div style="font-size:12px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">萌黄 · テラコッタ · クリーム</div>
+    <div style="font-size:8px;color:#9b9b9b;margin-top:1px;">3 colors · Sanzo Wada</div>
+  </div>
+
+  <!-- Flat lay grid -->
+  <div style="flex:1;display:flex;flex-direction:column;padding:4px 14px;gap:6px;">
+
+    <!-- Top row: shirt + pants -->
+    <div style="display:flex;gap:6px;flex:1;">
+      <!-- Shirt card -->
+      <div style="flex:1;background:#c26b4a;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+        <svg width="56" height="50" viewBox="0 0 80 64" fill="none"><path d="M24 0H56V6L64 12V28H56V64H24V28H16V12L24 6V0Z" fill="white" fill-opacity=".12"/></svg>
+        <div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;">
+          <div style="font-size:10px;color:rgba(255,255,255,.9);font-family:'Noto Serif JP',Georgia,serif;">テラコッタ</div>
+          <div style="font-size:7px;color:rgba(255,255,255,.6);">Terracotta</div>
+        </div>
+        <!-- Toggle hint -->
+        <div style="position:absolute;top:6px;right:6px;width:16px;height:16px;background:rgba(255,255,255,.2);border-radius:4px;display:flex;align-items:center;justify-content:center;">
+          <span style="font-size:8px;color:rgba(255,255,255,.7);">⇅</span>
+        </div>
+      </div>
+
+      <!-- Pants card -->
+      <div style="flex:1;background:#7b9e7a;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+        <svg width="36" height="60" viewBox="0 0 50 90" fill="none"><path d="M5 0H45L47 6V70C47 74 44 78 40 78H28V90H22V78H10C6 78 3 74 3 70V6L5 0Z" fill="white" fill-opacity=".12"/></svg>
+        <div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;">
+          <div style="font-size:10px;color:rgba(255,255,255,.9);font-family:'Noto Serif JP',Georgia,serif;">萌黄</div>
+          <div style="font-size:7px;color:rgba(255,255,255,.6);">Sage Green</div>
+        </div>
+        <div style="position:absolute;top:6px;right:6px;width:16px;height:16px;background:rgba(255,255,255,.2);border-radius:4px;display:flex;align-items:center;justify-content:center;">
+          <span style="font-size:8px;color:rgba(255,255,255,.7);">⇅</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom row: shoes full width -->
+    <div style="height:60px;background:#f0d5b0;border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border:.5px solid rgba(0,0,0,.04);">
+      <svg width="52" height="20" viewBox="0 0 80 28" fill="none"><path d="M8 14C8 8 12 4 18 4H62C68 4 74 8 76 16V20C76 24 72 26 68 26H12C8 26 4 24 4 20V18C4 16 5 14 8 14Z" fill="rgba(0,0,0,.08)"/></svg>
+      <div style="position:absolute;bottom:6px;right:10px;">
+        <div style="font-size:10px;color:rgba(0,0,0,.5);font-family:'Noto Serif JP',Georgia,serif;">クリーム</div>
+      </div>
+      <div style="position:absolute;top:6px;right:6px;width:16px;height:16px;background:rgba(0,0,0,.06);border-radius:4px;display:flex;align-items:center;justify-content:center;">
+        <span style="font-size:8px;color:rgba(0,0,0,.3);">⇅</span>
+      </div>
+    </div>
+
+    <!-- Swap hint -->
+    <div style="text-align:center;padding:2px 0;">
+      <div style="font-size:7.5px;color:#c4a265;font-family:'Noto Serif JP',Georgia,serif;letter-spacing:.04em;">TAP TWO CARDS TO SWAP COLORS</div>
+    </div>
+  </div>
+
+  <!-- Mini palette strip -->
+  <div style="display:flex;height:20px;margin:0 14px 4px;border-radius:6px;overflow:hidden;">
+    <div style="flex:1;background:#c26b4a;"></div>
+    <div style="flex:1;background:#7b9e7a;border-left:.5px solid rgba(0,0,0,.08);"></div>
+    <div style="flex:1;background:#f0d5b0;border-left:.5px solid rgba(0,0,0,.08);"></div>
+  </div>
+
+  <div class="tb">
+    <div class="ti"><div class="ts" style="background:linear-gradient(135deg,#c26b4a 50%,#7b9e7a 50%);"></div><div class="tl on">Colores</div></div>
+    <div class="ti"><span style="font-size:16px;color:#9b9b9b;line-height:1;">♡</span><div class="tl">Favoritos</div></div>
+    <div class="ti"><span style="font-size:14px;color:#9b9b9b;line-height:1;">⚙</span><div class="tl">Ajustes</div></div>
+  </div>
+</div></div>
+<div class="slbl">B — Flat Lay 3</div>
+<div class="note">Prendas como cartas de color. Cada una muestra silueta + nombre JP. Tap 2 cartas = swap.</div>
+</div>
+
+<!-- Screen B: 4 colors flat lay -->
+<div>
+<div class="phone"><div class="pi">
+  <div class="sb"><span class="st">9:41</span><span class="si">●●● ▐ 🔋</span></div>
+  <div class="nb">
+    <span class="nb-back">←</span>
+    <span class="nt">Outfit Visualizer</span>
+    <span style="font-size:11px;color:#c4a265;">↗</span>
+  </div>
+
+  <div style="text-align:center;padding:8px 0 4px;">
+    <div style="font-size:11px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">紺碧 · テラコッタ · 萌黄 · クリーム</div>
+    <div style="font-size:8px;color:#9b9b9b;margin-top:1px;">4 colors · Sanzo Wada</div>
+  </div>
+
+  <!-- 2x2 grid -->
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6px;padding:4px 14px;">
+    <!-- Jacket -->
+    <div style="background:#3d5a78;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+      <svg width="50" height="38" viewBox="0 0 90 60" fill="none"><path d="M16 20C16 20 10 12 10 6C10 3 14 0 20 0H70C76 0 80 3 80 6C80 12 74 20 74 20L80 28V56C80 58 78 60 76 60H14C12 60 10 58 10 56V28L16 20Z" fill="white" fill-opacity=".12"/></svg>
+      <div style="position:absolute;bottom:6px;left:0;right:0;text-align:center;">
+        <div style="font-size:9px;color:rgba(255,255,255,.9);font-family:'Noto Serif JP',Georgia,serif;">紺碧</div>
+        <div style="font-size:7px;color:rgba(255,255,255,.5);">Navy</div>
+      </div>
+      <div style="position:absolute;top:5px;right:5px;width:14px;height:14px;background:rgba(255,255,255,.2);border-radius:4px;display:flex;align-items:center;justify-content:center;"><span style="font-size:7px;color:rgba(255,255,255,.6);">⇅</span></div>
+    </div>
+
+    <!-- T-shirt -->
+    <div style="background:#c26b4a;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+      <svg width="46" height="38" viewBox="0 0 80 64" fill="none"><path d="M24 0H56V6L64 12V28H56V64H24V28H16V12L24 6V0Z" fill="white" fill-opacity=".12"/></svg>
+      <div style="position:absolute;bottom:6px;left:0;right:0;text-align:center;">
+        <div style="font-size:9px;color:rgba(255,255,255,.9);font-family:'Noto Serif JP',Georgia,serif;">テラコッタ</div>
+        <div style="font-size:7px;color:rgba(255,255,255,.5);">Terracotta</div>
+      </div>
+      <div style="position:absolute;top:5px;right:5px;width:14px;height:14px;background:rgba(255,255,255,.2);border-radius:4px;display:flex;align-items:center;justify-content:center;"><span style="font-size:7px;color:rgba(255,255,255,.6);">⇅</span></div>
+    </div>
+
+    <!-- Pants -->
+    <div style="background:#7b9e7a;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+      <svg width="30" height="50" viewBox="0 0 50 90" fill="none"><path d="M5 0H45L47 6V70C47 74 44 78 40 78H28V90H22V78H10C6 78 3 74 3 70V6L5 0Z" fill="white" fill-opacity=".12"/></svg>
+      <div style="position:absolute;bottom:6px;left:0;right:0;text-align:center;">
+        <div style="font-size:9px;color:rgba(255,255,255,.9);font-family:'Noto Serif JP',Georgia,serif;">萌黄</div>
+        <div style="font-size:7px;color:rgba(255,255,255,.5);">Sage</div>
+      </div>
+      <div style="position:absolute;top:5px;right:5px;width:14px;height:14px;background:rgba(255,255,255,.2);border-radius:4px;display:flex;align-items:center;justify-content:center;"><span style="font-size:7px;color:rgba(255,255,255,.6);">⇅</span></div>
+    </div>
+
+    <!-- Shoes -->
+    <div style="background:#f0d5b0;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;border:.5px solid rgba(0,0,0,.04);">
+      <svg width="46" height="18" viewBox="0 0 80 28" fill="none"><path d="M8 14C8 8 12 4 18 4H62C68 4 74 8 76 16V20C76 24 72 26 68 26H12C8 26 4 24 4 20V18C4 16 5 14 8 14Z" fill="rgba(0,0,0,.08)"/></svg>
+      <div style="position:absolute;bottom:6px;left:0;right:0;text-align:center;">
+        <div style="font-size:9px;color:rgba(0,0,0,.5);font-family:'Noto Serif JP',Georgia,serif;">クリーム</div>
+        <div style="font-size:7px;color:rgba(0,0,0,.3);">Cream</div>
+      </div>
+      <div style="position:absolute;top:5px;right:5px;width:14px;height:14px;background:rgba(0,0,0,.06);border-radius:4px;display:flex;align-items:center;justify-content:center;"><span style="font-size:7px;color:rgba(0,0,0,.25);">⇅</span></div>
+    </div>
+  </div>
+
+  <!-- Swap hint + strip -->
+  <div style="padding:4px 14px 2px;">
+    <div style="text-align:center;margin-bottom:4px;"><span style="font-size:7.5px;color:#c4a265;letter-spacing:.04em;">TAP TWO CARDS TO SWAP COLORS</span></div>
+    <div style="display:flex;height:18px;border-radius:6px;overflow:hidden;">
+      <div style="flex:1;background:#3d5a78;"></div>
+      <div style="flex:1;background:#c26b4a;border-left:.5px solid rgba(0,0,0,.08);"></div>
+      <div style="flex:1;background:#7b9e7a;border-left:.5px solid rgba(0,0,0,.08);"></div>
+      <div style="flex:1;background:#f0d5b0;border-left:.5px solid rgba(0,0,0,.08);"></div>
+    </div>
+  </div>
+
+  <div class="tb">
+    <div class="ti"><div class="ts" style="background:linear-gradient(135deg,#3d5a78 50%,#c26b4a 50%);"></div><div class="tl on">Colores</div></div>
+    <div class="ti"><span style="font-size:16px;color:#9b9b9b;line-height:1;">♡</span><div class="tl">Favoritos</div></div>
+    <div class="ti"><span style="font-size:14px;color:#9b9b9b;line-height:1;">⚙</span><div class="tl">Ajustes</div></div>
+  </div>
+</div></div>
+<div class="slbl">B — Flat Lay 4</div>
+<div class="note">Grid 2x2, todas las prendas iguales. Silueta como watermark sutil. Muy shareable.</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PROPOSAL C — Compact Mannequin + Wada Card
+═══════════════════════════════════════════ -->
+<div class="proposal">
+<div class="proposal-header">
+  <div class="proposal-title">C — Mannequin Compacto + Carta Wada</div>
+  <div class="proposal-desc">El mannequin ocupa solo la mitad superior, compacto y proporcionado. La mitad inferior es una "carta Wada" con el nombre de la combinacion, los colores con nombres JP, y el contexto cultural. El outfit y su historia conviven en una sola pantalla.</div>
+</div>
+
+<div class="wrap">
+<!-- Screen C: 3 colors -->
+<div>
+<div class="phone"><div class="pi">
+  <div class="sb"><span class="st">9:41</span><span class="si">●●● ▐ 🔋</span></div>
+  <div class="nb">
+    <span class="nb-back">←</span>
+    <span class="nt">Outfit Visualizer</span>
+    <span style="font-size:11px;color:#c4a265;">↗</span>
+  </div>
+
+  <!-- Top half: compact mannequin -->
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:4px 0;background:#fafaf8;">
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <!-- Top -->
+      <div style="width:72px;height:46px;background:#c26b4a;border-radius:6px 6px 2px 2px;display:flex;align-items:center;justify-content:center;">
+        <svg width="42" height="32" viewBox="0 0 80 64" fill="none"><path d="M24 0H56V6L64 12V28H56V64H24V28H16V12L24 6V0Z" fill="white" fill-opacity=".15"/></svg>
+      </div>
+      <!-- Bottom -->
+      <div style="width:52px;height:62px;background:#7b9e7a;border-radius:2px 2px 4px 4px;margin-top:-4px;display:flex;align-items:center;justify-content:center;">
+        <svg width="24" height="44" viewBox="0 0 50 90" fill="none"><path d="M5 0H45L47 6V70C47 74 44 78 40 78H28V90H22V78H10C6 78 3 74 3 70V6L5 0Z" fill="white" fill-opacity=".15"/></svg>
+      </div>
+      <!-- Shoes -->
+      <div style="width:62px;height:18px;background:#f0d5b0;border-radius:4px;margin-top:-2px;display:flex;align-items:center;justify-content:center;border:.5px solid rgba(0,0,0,.05);">
+        <svg width="36" height="12" viewBox="0 0 80 28" fill="none"><path d="M8 14C8 8 12 4 18 4H62C68 4 74 8 76 16V20C76 24 72 26 68 26H12C8 26 4 24 4 20V18C4 16 5 14 8 14Z" fill="white" fill-opacity=".15"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hairline divider -->
+  <div style="height:.5px;background:rgba(0,0,0,.08);margin:0 14px;"></div>
+
+  <!-- Bottom half: Wada card -->
+  <div style="flex:1;padding:10px 16px;display:flex;flex-direction:column;gap:8px;">
+
+    <!-- Combination strip -->
+    <div style="display:flex;height:32px;border-radius:8px;overflow:hidden;">
+      <div style="flex:1;background:#c26b4a;"></div>
+      <div style="flex:1;background:#7b9e7a;border-left:.5px solid rgba(0,0,0,.08);"></div>
+      <div style="flex:1;background:#f0d5b0;border-left:.5px solid rgba(0,0,0,.08);"></div>
+    </div>
+
+    <!-- Color details -->
+    <div style="display:flex;gap:6px;">
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:11px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">テラコッタ</div>
+        <div style="font-size:8px;color:#9b9b9b;">Terracotta</div>
+        <div style="font-size:7px;color:#c4a265;margin-top:2px;">T-shirt ⇅</div>
+      </div>
+      <div style="width:.5px;background:rgba(0,0,0,.06);"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:11px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">萌黄</div>
+        <div style="font-size:8px;color:#9b9b9b;">Sage Green</div>
+        <div style="font-size:7px;color:#c4a265;margin-top:2px;">Pants ⇅</div>
+      </div>
+      <div style="width:.5px;background:rgba(0,0,0,.06);"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:11px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">クリーム</div>
+        <div style="font-size:8px;color:#9b9b9b;">Cream</div>
+        <div style="font-size:7px;color:#c4a265;margin-top:2px;">Sneakers ⇅</div>
+      </div>
+    </div>
+
+    <!-- Wada attribution -->
+    <div style="text-align:center;padding:6px 0;border-top:.5px solid rgba(0,0,0,.04);">
+      <div style="font-size:9px;color:#9b9b9b;font-family:'Noto Serif JP',Georgia,serif;">配色辞典 · 和田三造</div>
+      <div style="font-size:7px;color:#c4a265;margin-top:2px;">A Dictionary of Color Combinations</div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;gap:8px;">
+      <div style="flex:1;background:linear-gradient(135deg,rgba(196,162,101,.08),rgba(196,162,101,.15));border-radius:10px;padding:8px;border:.5px solid rgba(196,162,101,.25);text-align:center;">
+        <div style="font-size:9px;color:#c4a265;">↗ Compartir</div>
+      </div>
+      <div style="flex:1;background:#fff;border-radius:10px;padding:8px;border:.5px solid rgba(0,0,0,.07);text-align:center;">
+        <div style="font-size:9px;color:#E74C3C;">♡ Favorito</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tb">
+    <div class="ti"><div class="ts" style="background:linear-gradient(135deg,#c26b4a 50%,#7b9e7a 50%);"></div><div class="tl on">Colores</div></div>
+    <div class="ti"><span style="font-size:16px;color:#9b9b9b;line-height:1;">♡</span><div class="tl">Favoritos</div></div>
+    <div class="ti"><span style="font-size:14px;color:#9b9b9b;line-height:1;">⚙</span><div class="tl">Ajustes</div></div>
+  </div>
+</div></div>
+<div class="slbl">C — Mannequin + Carta</div>
+<div class="note">Mannequin compacto arriba. "Carta Wada" abajo con strip, nombres, atribucion, acciones. Una sola pantalla completa.</div>
+</div>
+
+<!-- Screen C: 4 colors -->
+<div>
+<div class="phone"><div class="pi">
+  <div class="sb"><span class="st">9:41</span><span class="si">●●● ▐ 🔋</span></div>
+  <div class="nb">
+    <span class="nb-back">←</span>
+    <span class="nt">Outfit Visualizer</span>
+    <span style="font-size:11px;color:#c4a265;">↗</span>
+  </div>
+
+  <!-- Top half: 4-slot compact mannequin -->
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:4px 0;">
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <!-- Layer -->
+      <div style="width:84px;height:36px;background:#3d5a78;border-radius:6px 6px 2px 2px;display:flex;align-items:center;justify-content:center;">
+        <svg width="48" height="28" viewBox="0 0 90 60" fill="none"><path d="M16 20C16 20 10 12 10 6C10 3 14 0 20 0H70C76 0 80 3 80 6C80 12 74 20 74 20L80 28V56C80 58 78 60 76 60H14C12 60 10 58 10 56V28L16 20Z" fill="white" fill-opacity=".15"/></svg>
+      </div>
+      <!-- Top -->
+      <div style="width:68px;height:30px;background:#c26b4a;border-radius:2px;margin-top:-5px;display:flex;align-items:center;justify-content:center;">
+        <svg width="36" height="24" viewBox="0 0 80 64" fill="none"><path d="M24 0H56V6L64 12V28H56V64H24V28H16V12L24 6V0Z" fill="white" fill-opacity=".15"/></svg>
+      </div>
+      <!-- Bottom -->
+      <div style="width:52px;height:52px;background:#7b9e7a;border-radius:2px 2px 4px 4px;margin-top:-4px;display:flex;align-items:center;justify-content:center;">
+        <svg width="22" height="38" viewBox="0 0 50 90" fill="none"><path d="M5 0H45L47 6V70C47 74 44 78 40 78H28V90H22V78H10C6 78 3 74 3 70V6L5 0Z" fill="white" fill-opacity=".15"/></svg>
+      </div>
+      <!-- Shoes -->
+      <div style="width:62px;height:18px;background:#f0d5b0;border-radius:4px;margin-top:-2px;display:flex;align-items:center;justify-content:center;border:.5px solid rgba(0,0,0,.05);">
+        <svg width="36" height="12" viewBox="0 0 80 28" fill="none"><path d="M8 14C8 8 12 4 18 4H62C68 4 74 8 76 16V20C76 24 72 26 68 26H12C8 26 4 24 4 20V18C4 16 5 14 8 14Z" fill="white" fill-opacity=".15"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:.5px;background:rgba(0,0,0,.08);margin:0 14px;"></div>
+
+  <!-- Bottom half: Wada card -->
+  <div style="flex:1;padding:8px 16px;display:flex;flex-direction:column;gap:6px;">
+    <div style="display:flex;height:28px;border-radius:8px;overflow:hidden;">
+      <div style="flex:1;background:#3d5a78;"></div>
+      <div style="flex:1;background:#c26b4a;border-left:.5px solid rgba(0,0,0,.08);"></div>
+      <div style="flex:1;background:#7b9e7a;border-left:.5px solid rgba(0,0,0,.08);"></div>
+      <div style="flex:1;background:#f0d5b0;border-left:.5px solid rgba(0,0,0,.08);"></div>
+    </div>
+
+    <div style="display:flex;gap:4px;">
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">紺碧</div>
+        <div style="font-size:7px;color:#9b9b9b;">Navy</div>
+        <div style="font-size:6.5px;color:#c4a265;margin-top:1px;">Jacket ⇅</div>
+      </div>
+      <div style="width:.5px;background:rgba(0,0,0,.04);"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">テラコッタ</div>
+        <div style="font-size:7px;color:#9b9b9b;">Terracotta</div>
+        <div style="font-size:6.5px;color:#c4a265;margin-top:1px;">T-shirt ⇅</div>
+      </div>
+      <div style="width:.5px;background:rgba(0,0,0,.04);"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">萌黄</div>
+        <div style="font-size:7px;color:#9b9b9b;">Sage</div>
+        <div style="font-size:6.5px;color:#c4a265;margin-top:1px;">Pants ⇅</div>
+      </div>
+      <div style="width:.5px;background:rgba(0,0,0,.04);"></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:10px;color:#1a1a1a;font-family:'Noto Serif JP',Georgia,serif;">クリーム</div>
+        <div style="font-size:7px;color:#9b9b9b;">Cream</div>
+        <div style="font-size:6.5px;color:#c4a265;margin-top:1px;">Sneakers ⇅</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:4px 0;border-top:.5px solid rgba(0,0,0,.04);">
+      <div style="font-size:9px;color:#9b9b9b;font-family:'Noto Serif JP',Georgia,serif;">配色辞典 · 和田三造</div>
+      <div style="font-size:7px;color:#c4a265;margin-top:1px;">A Dictionary of Color Combinations</div>
+    </div>
+
+    <div style="display:flex;gap:8px;">
+      <div style="flex:1;background:linear-gradient(135deg,rgba(196,162,101,.08),rgba(196,162,101,.15));border-radius:10px;padding:7px;border:.5px solid rgba(196,162,101,.25);text-align:center;">
+        <div style="font-size:9px;color:#c4a265;">↗ Compartir</div>
+      </div>
+      <div style="flex:1;background:#fff;border-radius:10px;padding:7px;border:.5px solid rgba(0,0,0,.07);text-align:center;">
+        <div style="font-size:9px;color:#E74C3C;">♡ Favorito</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tb">
+    <div class="ti"><div class="ts" style="background:linear-gradient(135deg,#3d5a78 50%,#c26b4a 50%);"></div><div class="tl on">Colores</div></div>
+    <div class="ti"><span style="font-size:16px;color:#9b9b9b;line-height:1;">♡</span><div class="tl">Favoritos</div></div>
+    <div class="ti"><span style="font-size:14px;color:#9b9b9b;line-height:1;">⚙</span><div class="tl">Ajustes</div></div>
+  </div>
+</div></div>
+<div class="slbl">C — 4 colores</div>
+<div class="note">4 slots compactos + carta con 4 columnas de nombre/tipo. Todo en una pantalla.</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     COMPARISON TABLE
+═══════════════════════════════════════════ -->
+<div style="max-width:800px;margin:32px auto 0;background:#fff;border-radius:16px;padding:20px 24px;border:.5px solid rgba(0,0,0,.07);">
+  <div style="font-size:14px;font-family:'Noto Serif JP',Georgia,serif;color:#1a1a1a;margin-bottom:16px;text-align:center;">Comparacion</div>
+
+  <table style="width:100%;font-size:10px;border-collapse:collapse;">
+    <thead>
+      <tr style="border-bottom:1px solid rgba(0,0,0,.08);">
+        <th style="text-align:left;padding:6px 8px;font-weight:500;color:#6b6b6b;"></th>
+        <th style="text-align:center;padding:6px 8px;font-weight:500;color:#1a1a1a;">A — Contexto</th>
+        <th style="text-align:center;padding:6px 8px;font-weight:500;color:#1a1a1a;">B — Flat Lay</th>
+        <th style="text-align:center;padding:6px 8px;font-weight:500;color:#1a1a1a;">C — Carta Wada</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:.5px solid rgba(0,0,0,.04);">
+        <td style="padding:6px 8px;color:#6b6b6b;">Alma Wada</td>
+        <td style="padding:6px 8px;text-align:center;">Alta — strip + nombres JP</td>
+        <td style="padding:6px 8px;text-align:center;">Media — nombres en cartas</td>
+        <td style="padding:6px 8px;text-align:center;">Maxima — carta Wada dedicada</td>
+      </tr>
+      <tr style="border-bottom:.5px solid rgba(0,0,0,.04);">
+        <td style="padding:6px 8px;color:#6b6b6b;">Outfit como conjunto</td>
+        <td style="padding:6px 8px;text-align:center;">Si — mannequin clasico</td>
+        <td style="padding:6px 8px;text-align:center;">No — piezas separadas</td>
+        <td style="padding:6px 8px;text-align:center;">Si — compacto pero unido</td>
+      </tr>
+      <tr style="border-bottom:.5px solid rgba(0,0,0,.04);">
+        <td style="padding:6px 8px;color:#6b6b6b;">Shareability</td>
+        <td style="padding:6px 8px;text-align:center;">Media</td>
+        <td style="padding:6px 8px;text-align:center;">Maxima — muy Instagram</td>
+        <td style="padding:6px 8px;text-align:center;">Alta — outfit + contexto</td>
+      </tr>
+      <tr style="border-bottom:.5px solid rgba(0,0,0,.04);">
+        <td style="padding:6px 8px;color:#6b6b6b;">Complejidad dev</td>
+        <td style="padding:6px 8px;text-align:center;">Baja — evolucion natural</td>
+        <td style="padding:6px 8px;text-align:center;">Alta — layout nuevo</td>
+        <td style="padding:6px 8px;text-align:center;">Media — dos zonas claras</td>
+      </tr>
+      <tr style="border-bottom:.5px solid rgba(0,0,0,.04);">
+        <td style="padding:6px 8px;color:#6b6b6b;">Tap-swap UX</td>
+        <td style="padding:6px 8px;text-align:center;">Natural — tap prenda</td>
+        <td style="padding:6px 8px;text-align:center;">Claro — tap carta</td>
+        <td style="padding:6px 8px;text-align:center;">Mannequin o carta</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 8px;color:#6b6b6b;">Cambio vs actual</td>
+        <td style="padding:6px 8px;text-align:center;">Incremental</td>
+        <td style="padding:6px 8px;text-align:center;">Rewrite completo</td>
+        <td style="padding:6px 8px;text-align:center;">Moderado</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:16px;padding:12px;background:#fafaf8;border-radius:10px;border:.5px solid rgba(0,0,0,.04);">
+    <div style="font-size:10px;font-weight:500;color:#1a1a1a;margin-bottom:4px;">Mi recomendacion:</div>
+    <div style="font-size:9px;color:#6b6b6b;line-height:1.5;">
+      <strong>C</strong> es el mas armonico con Outfinder. El mannequin compacto mantiene el outfit como conjunto visual, y la carta Wada debajo le da el alma que falta — nombres JP, atribucion, strip de referencia. Todo cabe en una pantalla. Ademas, la mitad inferior es exactamente lo que se capturaria para compartir en Instagram (Epic 3). El cambio respecto a lo actual es moderado — no hay rewrite, solo redistribuir el espacio y anadir la carta.
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

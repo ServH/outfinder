@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outfinder — App Store Listing Strategy</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #111;
+    font-family: 'Inter', sans-serif;
+    color: #e0e0e0;
+    line-height: 1.6;
+  }
+
+  /* ── Hero Section ── */
+  .hero {
+    text-align: center;
+    padding: 60px 20px 40px;
+    background: linear-gradient(180deg, #1a1612 0%, #111 100%);
+  }
+  .hero h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: #fafaf8;
+    margin-bottom: 8px;
+  }
+  .hero .sub {
+    color: #9b9b9b;
+    font-size: 14px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* ── Section ── */
+  .section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  .section-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #c4a265;
+    margin-bottom: 8px;
+  }
+  .section-sub {
+    color: #9b9b9b;
+    font-size: 13px;
+    margin-bottom: 32px;
+    max-width: 700px;
+  }
+
+  /* ── Screenshots Carousel ── */
+  .screenshots-scroll {
+    overflow-x: auto;
+    padding-bottom: 20px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .screenshots-row {
+    display: flex;
+    gap: 24px;
+    padding: 0 8px;
+    width: max-content;
+  }
+
+  .screenshot-card {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .screenshot-number {
+    font-size: 11px;
+    font-weight: 600;
+    color: #c4a265;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  /* ── Phone frame ── */
+  .phone {
+    width: 260px;
+    height: 563px;
+    border-radius: 32px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5), inset 0 0 0 2px rgba(255,255,255,0.06);
+  }
+
+  /* ── Caption overlay on phone ── */
+  .caption-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: 32px 20px 60px;
+    background: linear-gradient(180deg, rgba(26,22,18,0.92) 0%, rgba(26,22,18,0.75) 65%, transparent 100%);
+    text-align: center;
+  }
+  .caption-overlay h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 19px;
+    font-weight: 400;
+    color: #fafaf8;
+    line-height: 1.35;
+    margin-bottom: 6px;
+  }
+  .caption-overlay p {
+    font-size: 11px;
+    color: rgba(250,250,248,0.65);
+    font-weight: 400;
+  }
+
+  /* Caption below (bottom gradient) */
+  .caption-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: 48px 20px 28px;
+    background: linear-gradient(0deg, rgba(26,22,18,0.92) 0%, rgba(26,22,18,0.70) 60%, transparent 100%);
+    text-align: center;
+  }
+  .caption-bottom h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #fafaf8;
+    line-height: 1.35;
+    margin-bottom: 4px;
+  }
+  .caption-bottom p {
+    font-size: 11px;
+    color: rgba(250,250,248,0.65);
+  }
+
+  /* ── Screen contents (simplified representations) ── */
+  .screen-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  /* ── Screenshot 1: Outfit Visualizer ── */
+  .sc-visualizer {
+    background: linear-gradient(180deg, #f5efe6 0%, #ebe5da 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 100px;
+  }
+  .sc-visualizer .aureola {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(199,91,91,0.20) 0%, transparent 70%);
+    position: absolute;
+    top: 140px;
+  }
+  .sc-visualizer .outfit-card {
+    width: 170px;
+    height: 240px;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    z-index: 1;
+    padding: 12px;
+  }
+  .garment {
+    border-radius: 4px;
+    width: 80%;
+  }
+  .sc-visualizer .wada-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 10px;
+    color: #1a1a1a;
+    margin-top: 12px;
+    z-index: 1;
+  }
+  .sc-visualizer .mini-strip {
+    display: flex;
+    gap: 2px;
+    margin-top: 8px;
+    z-index: 1;
+  }
+  .sc-visualizer .mini-strip .dot {
+    width: 18px;
+    height: 6px;
+    border-radius: 2px;
+  }
+
+  /* ── Screenshot 2: Color Grid ── */
+  .sc-colors {
+    background: #fafaf8;
+    padding: 84px 10px 10px;
+  }
+  .sc-colors .tab-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding: 0 4px;
+    overflow: hidden;
+  }
+  .sc-colors .tab {
+    font-size: 7px;
+    color: #9b9b9b;
+    padding: 3px 6px;
+    border-radius: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .sc-colors .tab.active {
+    color: #1a1a1a;
+    font-weight: 600;
+    border-bottom: 1.5px solid #1a1a1a;
+  }
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 3px;
+    padding: 0 4px;
+  }
+  .color-grid .swatch {
+    aspect-ratio: 1;
+    border-radius: 4px;
+  }
+
+  /* ── Screenshot 3: Combinations ── */
+  .sc-combos {
+    background: #fafaf8;
+    padding: 70px 12px 10px;
+  }
+  .sc-combos .color-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+    padding: 0 4px;
+  }
+  .sc-combos .color-header .dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }
+  .sc-combos .color-header .names {
+    display: flex;
+    flex-direction: column;
+  }
+  .sc-combos .color-header .jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11px;
+    color: #1a1a1a;
+  }
+  .sc-combos .color-header .en {
+    font-size: 8px;
+    color: #9b9b9b;
+  }
+  .combo-strip {
+    display: flex;
+    height: 56px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .combo-strip .bar { flex: 1; }
+  .combo-strip .heart {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 10px;
+    color: #E74C3C;
+  }
+  .combo-strip .cam {
+    position: absolute;
+    bottom: 4px;
+    right: 6px;
+    font-size: 9px;
+    opacity: 0.4;
+  }
+
+  /* ── Screenshot 4: Favorites ── */
+  .sc-favorites {
+    background: #fafaf8;
+    padding: 80px 12px 10px;
+  }
+  .sc-favorites .fav-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 20px;
+    color: #1a1a1a;
+    margin-bottom: 14px;
+    padding: 0 4px;
+  }
+
+  /* ── Screenshot 5: Onboarding ── */
+  .sc-onboarding {
+    background: #ebe5da;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+  }
+  .sc-onboarding .slide-color {
+    width: 120px;
+    height: 120px;
+    border-radius: 24px;
+    margin-bottom: 20px;
+  }
+  .sc-onboarding .slide-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 16px;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+  }
+  .sc-onboarding .slide-en {
+    font-size: 11px;
+    color: #6b6b6b;
+    max-width: 180px;
+    line-height: 1.5;
+  }
+  .sc-onboarding .dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 20px;
+  }
+  .sc-onboarding .dots .d {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.15);
+  }
+  .sc-onboarding .dots .d.active {
+    background: #1a1a1a;
+  }
+
+  /* ── Screenshot 6: Share ── */
+  .sc-share {
+    background: linear-gradient(180deg, #f5efe6 0%, #ebe5da 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 90px 16px 20px;
+  }
+  .sc-share .share-card {
+    width: 180px;
+    height: 260px;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    z-index: 1;
+    padding: 14px;
+    transform: rotate(-3deg);
+  }
+  .sc-share .share-btn {
+    margin-top: 16px;
+    background: #1a1a1a;
+    color: #fafaf8;
+    font-size: 10px;
+    padding: 8px 24px;
+    border-radius: 10px;
+    z-index: 1;
+  }
+  .sc-share .share-sheet {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 160px;
+    background: #f2f2f7;
+    border-radius: 14px 14px 0 0;
+    padding: 12px 16px;
+    z-index: 5;
+  }
+  .sc-share .share-sheet .share-title {
+    font-size: 9px;
+    color: #6b6b6b;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .sc-share .share-icons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  .sc-share .share-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .sc-share .share-icon-label {
+    font-size: 6px;
+    color: #6b6b6b;
+    text-align: center;
+    margin-top: 3px;
+  }
+
+  /* ── Strategy notes ── */
+  .strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    margin-top: 8px;
+  }
+  .strategy-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .strategy-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fafaf8;
+    margin-bottom: 8px;
+  }
+  .strategy-card p, .strategy-card li {
+    font-size: 13px;
+    color: #9b9b9b;
+    line-height: 1.6;
+  }
+  .strategy-card ul {
+    padding-left: 18px;
+    margin-top: 6px;
+  }
+  .strategy-card li { margin-bottom: 4px; }
+  .highlight { color: #c4a265; font-weight: 500; }
+
+  /* ── Descriptions section ── */
+  .desc-block {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .desc-block h3 {
+    font-size: 14px;
+    color: #c4a265;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .desc-text {
+    font-size: 13px;
+    color: #ccc;
+    line-height: 1.7;
+    white-space: pre-line;
+  }
+  .desc-meta {
+    font-size: 11px;
+    color: #666;
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  /* ── Keywords table ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+  }
+  th {
+    font-size: 11px;
+    color: #c4a265;
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  td {
+    font-size: 13px;
+    color: #ccc;
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  /* ── Divider ── */
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: rgba(196,162,101,0.3);
+    margin: 48px auto;
+  }
+
+  .note-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-right: 6px;
+  }
+  .note-badge.critical { background: rgba(231,76,60,0.15); color: #E74C3C; }
+  .note-badge.tip { background: rgba(196,162,101,0.15); color: #c4a265; }
+  .note-badge.data { background: rgba(91,124,91,0.15); color: #7cba7c; }
+
+  .caption-note {
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+    max-width: 200px;
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- HERO                                            -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="hero">
+  <h1>App Store Listing</h1>
+  <p class="sub">Screenshots, descriptions, keywords, and metadata strategy for Outfinder's iOS App Store page. Every element optimized for conversion.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 1: SCREENSHOT STRATEGY                  -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">1. Screenshots — The Conversion Engine</div>
+  <p class="section-sub">
+    <span class="note-badge data">DATA</span>
+    70% of users never read the description — they decide from screenshots alone.
+    The first 3 screenshots are visible without scrolling. They must tell a complete story:
+    <strong style="color:#fafaf8">hero feature → core value → emotional hook</strong>.
+  </p>
+
+  <div class="screenshots-scroll">
+    <div class="screenshots-row">
+
+      <!-- ── Screenshot 1: HERO — Outfit Visualizer ── -->
+      <div class="screenshot-card">
+        <span class="screenshot-number">Screenshot 01</span>
+        <div class="phone">
+          <div class="screen-content sc-visualizer">
+            <div class="caption-overlay">
+              <h2>See your outfit<br>before you dress</h2>
+              <p>Powered by Sanzo Wada's color harmonies</p>
+            </div>
+            <div class="aureola"></div>
+            <div class="outfit-card">
+              <div class="garment" style="background:#c75b5b; height:55px; border-radius:6px 6px 2px 2px;"></div>
+              <div class="garment" style="background:#2c3e6b; height:75px; border-radius:2px;"></div>
+              <div class="garment" style="background:#e0d0b0; height:30px; border-radius:2px 2px 6px 6px;"></div>
+            </div>
+            <span class="wada-name">3 colors · Sanzo Wada</span>
+            <div class="mini-strip">
+              <div class="dot" style="background:#c75b5b"></div>
+              <div class="dot" style="background:#2c3e6b"></div>
+              <div class="dot" style="background:#e0d0b0"></div>
+            </div>
+          </div>
+        </div>
+        <p class="caption-note"><strong style="color:#c4a265">WHY FIRST:</strong> The Visualizer is the differentiator. No competitor has this. Instant "aha" moment.</p>
+      </div>
+
+      <!-- ── Screenshot 2: Color Grid ── -->
+      <div class="screenshot-card">
+        <span class="screenshot-number">Screenshot 02</span>
+        <div class="phone">
+          <div class="screen-content sc-colors">
+            <div class="caption-overlay">
+              <h2>159 curated colors<br>from a 1934 masterwork</h2>
+              <p>Browse by family — find your shade</p>
+            </div>
+            <div class="tab-row">
+              <span class="tab active">All</span>
+              <span class="tab">Pale & Light</span>
+              <span class="tab">Red & Brown</span>
+              <span class="tab">Blue</span>
+            </div>
+            <div class="color-grid">
+              <div class="swatch" style="background:#f5e6d0"></div>
+              <div class="swatch" style="background:#e8d4b8"></div>
+              <div class="swatch" style="background:#f0dcc0"></div>
+              <div class="swatch" style="background:#fceee0"></div>
+              <div class="swatch" style="background:#d4c5a0"></div>
+              <div class="swatch" style="background:#c75b5b"></div>
+              <div class="swatch" style="background:#b04848"></div>
+              <div class="swatch" style="background:#d47070"></div>
+              <div class="swatch" style="background:#8b4040"></div>
+              <div class="swatch" style="background:#e08888"></div>
+              <div class="swatch" style="background:#2c3e6b"></div>
+              <div class="swatch" style="background:#4a6b8a"></div>
+              <div class="swatch" style="background:#7a8fa0"></div>
+              <div class="swatch" style="background:#5b6b8b"></div>
+              <div class="swatch" style="background:#8b9bbb"></div>
+              <div class="swatch" style="background:#5b7c5b"></div>
+              <div class="swatch" style="background:#4a6b4a"></div>
+              <div class="swatch" style="background:#7ca07c"></div>
+              <div class="swatch" style="background:#3a5a3a"></div>
+              <div class="swatch" style="background:#6b8b4b"></div>
+              <div class="swatch" style="background:#3a3a3a"></div>
+              <div class="swatch" style="background:#5a4a3a"></div>
+              <div class="swatch" style="background:#8b6b4b"></div>
+              <div class="swatch" style="background:#6b5b4b"></div>
+              <div class="swatch" style="background:#4a4a5a"></div>
+              <div class="swatch" style="background:#e8c4a0"></div>
+              <div class="swatch" style="background:#f0e6d0"></div>
+              <div class="swatch" style="background:#c4b090"></div>
+              <div class="swatch" style="background:#b8a888"></div>
+              <div class="swatch" style="background:#d4c0a0"></div>
+            </div>
+          </div>
+        </div>
+        <p class="caption-note"><strong style="color:#c4a265">PURPOSE:</strong> Shows the breadth of content. "1934" adds authority and intrigue. Cultural hook.</p>
+      </div>
+
+      <!-- ── Screenshot 3: Combinations ── -->
+      <div class="screenshot-card">
+        <span class="screenshot-number">Screenshot 03</span>
+        <div class="phone">
+          <div class="screen-content sc-combos">
+            <div class="caption-overlay">
+              <h2>348 expert color<br>combinations</h2>
+              <p>Tap any color — see what Wada matched</p>
+            </div>
+            <div class="color-header">
+              <div class="dot" style="background:#c75b5b"></div>
+              <div class="names">
+                <span class="jp">紅色</span>
+                <span class="en">Crimson · 7 combinations</span>
+              </div>
+            </div>
+            <div class="combo-strip">
+              <div class="bar" style="background:#c75b5b"></div>
+              <div class="bar" style="background:#e8c4a0"></div>
+              <div class="bar" style="background:#5b7c5b"></div>
+              <span class="heart">&#9829;</span>
+              <span class="cam">&#128247;</span>
+            </div>
+            <div class="combo-strip">
+              <div class="bar" style="background:#c75b5b"></div>
+              <div class="bar" style="background:#2c3e6b"></div>
+              <div class="bar" style="background:#d4c5a0"></div>
+              <span class="heart">&#9825;</span>
+              <span class="cam">&#128247;</span>
+            </div>
+            <div class="combo-strip">
+              <div class="bar" style="background:#c75b5b"></div>
+              <div class="bar" style="background:#8b6b4b"></div>
+              <div class="bar" style="background:#f0e6d0"></div>
+              <div class="bar" style="background:#3a3a3a"></div>
+              <span class="heart">&#9825;</span>
+              <span class="cam">&#128247;</span>
+            </div>
+            <div class="combo-strip">
+              <div class="bar" style="background:#c75b5b"></div>
+              <div class="bar" style="background:#e0d0b0"></div>
+              <div class="bar" style="background:#4a6b4a"></div>
+              <span class="heart">&#9829;</span>
+              <span class="cam">&#128247;</span>
+            </div>
+            <div class="combo-strip">
+              <div class="bar" style="background:#c75b5b"></div>
+              <div class="bar" style="background:#7a8fa0"></div>
+              <div class="bar" style="background:#f5efe6"></div>
+              <span class="heart">&#9825;</span>
+              <span class="cam">&#128247;</span>
+            </div>
+          </div>
+        </div>
+        <p class="caption-note"><strong style="color:#c4a265">PURPOSE:</strong> Core mechanic. Shows the Japanese names (cultural differentiation) and save/visualize icons.</p>
+      </div>
+
+      <!-- ── Screenshot 4: Share / Social ── -->
+      <div class="screenshot-card">
+        <span class="screenshot-number">Screenshot 04</span>
+        <div class="phone">
+          <div class="screen-content sc-share">
+            <div class="caption-overlay">
+              <h2>Share your style<br>to Instagram & more</h2>
+            </div>
+            <div class="share-card">
+              <div class="garment" style="background:#5b7c5b; height:50px; width:80%; border-radius:6px 6px 2px 2px;"></div>
+              <div class="garment" style="background:#d4c5a0; height:70px; width:80%; border-radius:2px;"></div>
+              <div class="garment" style="background:#3a3a3a; height:28px; width:80%; border-radius:2px 2px 6px 6px;"></div>
+            </div>
+            <div class="share-sheet">
+              <div class="share-title">Share via</div>
+              <div class="share-icons">
+                <div>
+                  <div class="share-icon" style="background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af);">
+                    <span style="filter:brightness(10);">&#9741;</span>
+                  </div>
+                  <div class="share-icon-label">Instagram</div>
+                </div>
+                <div>
+                  <div class="share-icon" style="background:#25D366;">
+                    <span style="filter:brightness(10);">&#9742;</span>
+                  </div>
+                  <div class="share-icon-label">WhatsApp</div>
+                </div>
+                <div>
+                  <div class="share-icon" style="background:#007AFF;">
+                    <span style="filter:brightness(10);">&#9993;</span>
+                  </div>
+                  <div class="share-icon-label">Messages</div>
+                </div>
+                <div>
+                  <div class="share-icon" style="background:#1DA1F2;">
+                    <span style="filter:brightness(10);">&#128038;</span>
+                  </div>
+                  <div class="share-icon-label">X</div>
+                </div>
+                <div>
+                  <div class="share-icon" style="background:#007AFF;">
+                    <span style="filter:brightness(10);">&#128279;</span>
+                  </div>
+                  <div class="share-icon-label">Copy</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="caption-note"><strong style="color:#c4a265">PURPOSE:</strong> Social proof signal. "I can share this" = higher perceived value. Shows native iOS Share Sheet.</p>
+      </div>
+
+      <!-- ── Screenshot 5: Favorites ── -->
+      <div class="screenshot-card">
+        <span class="screenshot-number">Screenshot 05</span>
+        <div class="phone">
+          <div class="screen-content sc-favorites">
+            <div class="caption-overlay">
+              <h2>Build your personal<br>color playbook</h2>
+              <p>Save combinations for your next outfit</p>
+            </div>
+            <div class="fav-title">Favorites</div>
+            <div class="combo-strip">
+              <div class="bar" style="background:#c75b5b"></div>
+              <div class="bar" style="background:#e8c4a0"></div>
+              <div class="bar" style="background:#5b7c5b"></div>
+              <span class="heart">&#9829;</span>
+            </div>
+            <div class="combo-strip">
+              <div class="bar" style="background:#2c3e6b"></div>
+              <div class="bar" style="background:#d4c5a0"></div>
+              <div class="bar" style="background:#3a3a3a"></div>
+              <span class="heart">&#9829;</span>
+            </div>
+            <div class="combo-strip">
+              <div class="bar" style="background:#5b7c5b"></div>
+              <div class="bar" style="background:#8b6b8b"></div>
+              <div class="bar" style="background:#e0d0b0"></div>
+              <span class="heart">&#9829;</span>
+            </div>
+            <div class="combo-strip">
+              <div class="bar" style="background:#e8c4a0"></div>
+              <div class="bar" style="background:#2c3e6b"></div>
+              <div class="bar" style="background:#c75b5b"></div>
+              <div class="bar" style="background:#f0e6d0"></div>
+              <span class="heart">&#9829;</span>
+            </div>
+          </div>
+        </div>
+        <p class="caption-note"><strong style="color:#c4a265">PURPOSE:</strong> Retention signal. "I'll build my collection" = reason to download.</p>
+      </div>
+
+      <!-- ── Screenshot 6: Onboarding / Wada Story ── -->
+      <div class="screenshot-card">
+        <span class="screenshot-number">Screenshot 06</span>
+        <div class="phone">
+          <div class="screen-content sc-onboarding">
+            <div class="caption-bottom">
+              <h2>Based on Sanzo Wada's<br>1934 dictionary</h2>
+              <p>A timeless guide to color harmony</p>
+            </div>
+            <div class="slide-color" style="background: linear-gradient(135deg, #c75b5b 0%, #c75b5b 33%, #e8c4a0 33%, #e8c4a0 66%, #5b7c5b 66%, #5b7c5b 100%);"></div>
+            <div class="slide-jp" style="font-size: 14px;">配色辞典</div>
+            <div class="slide-en">A Dictionary of<br>Color Combinations</div>
+            <div class="dots">
+              <div class="d active"></div>
+              <div class="d"></div>
+              <div class="d"></div>
+              <div class="d"></div>
+            </div>
+          </div>
+        </div>
+        <p class="caption-note"><strong style="color:#c4a265">PURPOSE:</strong> Emotional / cultural credibility. The "why" behind the app. Authority signal.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 2: SCREENSHOT SCIENCE                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">2. Screenshot Science</div>
+  <p class="section-sub">Rules backed by ASO research (SensorTower, AppTweak, StoreMaven data).</p>
+
+  <div class="strategy-grid">
+    <div class="strategy-card">
+      <h3><span class="note-badge critical">CRITICAL</span> First 3 Screenshots</h3>
+      <p>On iOS 17+, only <span class="highlight">the first 3 screenshots</span> are visible in search results without tapping. They must tell a complete story:</p>
+      <ul>
+        <li><strong>SS1:</strong> Hero feature (Outfit Visualizer) — instant differentiation</li>
+        <li><strong>SS2:</strong> Content depth (159 colors) — "there's a lot here"</li>
+        <li><strong>SS3:</strong> Core mechanic (combinations) — "I understand how it works"</li>
+      </ul>
+      <p style="margin-top:8px;">If the user scrolls past 3, they're already interested. SS4-6 close the deal.</p>
+    </div>
+
+    <div class="strategy-card">
+      <h3><span class="note-badge tip">TIP</span> Caption Hierarchy</h3>
+      <p>Every screenshot has two text elements:</p>
+      <ul>
+        <li><strong>Headline (large):</strong> Benefit-oriented, emotional. Answers "what's in it for me?" — not "what does this screen do"</li>
+        <li><strong>Subtitle (small):</strong> Feature-oriented, specific. Adds credibility</li>
+      </ul>
+      <p style="margin-top:8px;">Wrong: "Outfit Visualizer Screen"<br>Right: <span class="highlight">"See your outfit before you dress"</span></p>
+    </div>
+
+    <div class="strategy-card">
+      <h3><span class="note-badge data">DATA</span> Visual Consistency</h3>
+      <p>All screenshots share:</p>
+      <ul>
+        <li>Same warm gradient overlay for captions (matching app's Wada aesthetic)</li>
+        <li>Noto Serif JP for headlines (brand continuity)</li>
+        <li>Dark text-on-light-overlay top gradient</li>
+        <li>No device frames — Apple removed them from listings; raw content converts better now</li>
+        <li>Real app content, not mockups — Apple rejects fake screenshots</li>
+      </ul>
+    </div>
+
+    <div class="strategy-card">
+      <h3><span class="note-badge tip">TIP</span> Required Sizes</h3>
+      <p>iPhone screenshots required for App Store submission:</p>
+      <ul>
+        <li><strong>6.7" (iPhone 15 Pro Max):</strong> 1290 × 2796px — required</li>
+        <li><strong>6.5" (iPhone 14 Plus):</strong> 1284 × 2778px — optional but recommended</li>
+        <li><strong>5.5" (iPhone 8 Plus):</strong> 1242 × 2208px — required if supporting older devices</li>
+      </ul>
+      <p style="margin-top:8px;">Minimum <span class="highlight">3 screenshots</span>, maximum 10. We use 6 (sweet spot: tells full story without fatigue).</p>
+    </div>
+
+    <div class="strategy-card">
+      <h3><span class="note-badge critical">CRITICAL</span> What Apple Rejects</h3>
+      <ul>
+        <li>Screenshots that don't represent real app functionality</li>
+        <li>Device bezels that don't match current hardware</li>
+        <li>Text-only slides (must show actual app UI)</li>
+        <li>Pricing in screenshots (prices vary by region)</li>
+        <li>Mention of competing apps</li>
+        <li>Use of "free" if there's any IAP</li>
+      </ul>
+    </div>
+
+    <div class="strategy-card">
+      <h3><span class="note-badge data">DATA</span> Localization Strategy</h3>
+      <p>For launch, we prepare two sets:</p>
+      <ul>
+        <li><strong>English (US):</strong> Primary market. Captions in English</li>
+        <li><strong>Spanish (ES):</strong> Alejandro's market. Translated captions</li>
+      </ul>
+      <p style="margin-top:8px;">Same screenshots, different caption overlays. The app's Japanese elements stay — they're the brand identity, not a localization issue.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 3: DESCRIPTIONS                         -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">3. App Store Description</div>
+  <p class="section-sub">4000 chars max. Only the first 3 lines are visible before "more" — they must hook.</p>
+
+  <div class="desc-block">
+    <h3>Subtitle (30 chars max)</h3>
+    <div class="desc-text">Outfit Colors by Sanzo Wada</div>
+    <div class="desc-meta">29 characters. Keyword-rich: "outfit", "colors", "Sanzo Wada"</div>
+  </div>
+
+  <div class="desc-block">
+    <h3>Promotional Text (170 chars, updatable without review)</h3>
+    <div class="desc-text">Discover 348 timeless color combinations from Sanzo Wada's 1934 masterwork. Visualize outfits, save your favorites, and dress with confidence every day.</div>
+    <div class="desc-meta">155 characters. Updated seasonally or for promotions.</div>
+  </div>
+
+  <div class="desc-block">
+    <h3>Description (English)</h3>
+    <div class="desc-text">Stop guessing if your clothes match.
+
+Outfinder turns Sanzo Wada's legendary "A Dictionary of Color Combinations" — a 1934 masterwork trusted by designers for nearly a century — into a pocket styling companion.
+
+WHAT YOU GET
+- 159 curated colors organized by family
+- 348 expert-crafted color combinations
+- Outfit Visualizer: see colors as actual garments before you dress
+- Save your favorite combinations for quick reference
+- Share outfit cards to Instagram, WhatsApp, and more
+
+HOW IT WORKS
+1. Browse or search Wada's color palette
+2. Tap any color to see its harmonious combinations
+3. Tap the camera icon to visualize the combination as an outfit
+4. Save your favorites and build your personal color playbook
+
+WHO IS SANZO WADA?
+Sanzo Wada (1883-1967) was a Japanese artist and costume designer whose "Dictionary of Color Combinations" has been a trusted reference for designers, artists, and fashion professionals for nearly 90 years. Every combination in Outfinder comes directly from his original work.
+
+DESIGNED FOR YOUR MORNING ROUTINE
+Open the app, find your color, see matching combinations as outfits, and get dressed with confidence. The whole flow takes under 30 seconds.
+
+FREE TO USE
+Color exploration, combination browsing, and the Outfit Visualizer are completely free. Save unlimited favorites with a one-time purchase — no subscriptions, ever.</div>
+    <div class="desc-meta">~1100 characters. First 3 lines visible: "Stop guessing if your clothes match." is the hook. Keywords naturally distributed. No keyword stuffing.</div>
+  </div>
+
+  <div class="desc-block">
+    <h3>Description (Spanish)</h3>
+    <div class="desc-text">Deja de adivinar si tu ropa combina.
+
+Outfinder convierte el legendario "Diccionario de Combinaciones de Colores" de Sanzo Wada — una obra maestra de 1934 utilizada por disenadores durante casi un siglo — en tu companero de estilismo de bolsillo.
+
+QUE INCLUYE
+- 159 colores seleccionados organizados por familia
+- 348 combinaciones de color expertas
+- Visualizador de Outfits: ve los colores como prendas reales antes de vestirte
+- Guarda tus combinaciones favoritas para consultarlas rapidamente
+- Comparte looks en Instagram, WhatsApp y mas
+
+COMO FUNCIONA
+1. Explora la paleta de colores de Wada
+2. Toca cualquier color para ver sus combinaciones
+3. Toca el icono de camara para visualizarlo como outfit
+4. Guarda tus favoritos y construye tu guia de color personal
+
+QUIEN FUE SANZO WADA?
+Sanzo Wada (1883-1967) fue un artista y disenador de vestuario japones cuyo "Diccionario de Combinaciones de Colores" ha sido referencia para disenadores, artistas y profesionales de la moda durante casi 90 anos. Cada combinacion en Outfinder proviene directamente de su obra original.
+
+GRATIS
+La exploracion de colores, las combinaciones y el Visualizador son completamente gratis. Guarda favoritos ilimitados con una unica compra — sin suscripciones.</div>
+    <div class="desc-meta">Same structure, localized for Spain/LatAm market.</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 4: KEYWORDS                             -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">4. Keywords (100 chars max)</div>
+  <p class="section-sub">
+    <span class="note-badge critical">CRITICAL</span>
+    Comma-separated, no spaces after commas. Don't repeat words from the app name or subtitle — Apple already indexes those.
+  </p>
+
+  <div class="desc-block">
+    <h3>English Keywords</h3>
+    <div class="desc-text">palette,wardrobe,styling,fashion,harmony,coordinate,combination,dress,match,clothing,capsule</div>
+    <div class="desc-meta">93 characters. Avoids: "color" (in title), "outfit" (in subtitle), "wada" (in subtitle)</div>
+  </div>
+
+  <div class="desc-block">
+    <h3>Spanish Keywords</h3>
+    <div class="desc-text">paleta,armario,estilismo,moda,combinar,vestir,ropa,coordinacion,capsula,tendencia,prendas</div>
+    <div class="desc-meta">91 characters.</div>
+  </div>
+
+  <div class="strategy-grid" style="margin-top:24px">
+    <div class="strategy-card">
+      <h3>Keyword Strategy</h3>
+      <ul>
+        <li><strong>"capsule"</strong> — targets capsule wardrobe audience (high intent, low competition)</li>
+        <li><strong>"harmony"</strong> — differentiates from generic color picker apps</li>
+        <li><strong>"coordinate"</strong> — action verb, matches search intent "coordinate outfit colors"</li>
+        <li><strong>"styling"</strong> — broad fashion term with decent volume</li>
+        <li><strong>"match"</strong> — highest volume term: "what colors match"</li>
+      </ul>
+    </div>
+
+    <div class="strategy-card">
+      <h3>Competitor Gap</h3>
+      <p>Main competitors and where Outfinder wins:</p>
+      <ul>
+        <li><strong>Coolors</strong> — design tool, not fashion. We own "outfit" + "wardrobe"</li>
+        <li><strong>Pantone Connect</strong> — professional/expensive. We own "free" + "daily"</li>
+        <li><strong>Dresso / Cladwell</strong> — photo-based wardrobe. We own "color theory" + "Wada"</li>
+        <li>No competitor combines <span class="highlight">curated historical palettes + outfit visualization</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 5: METADATA                             -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">5. App Store Metadata</div>
+
+  <table>
+    <tr><th>Field</th><th>Value</th><th>Notes</th></tr>
+    <tr><td>App Name</td><td>Outfinder</td><td>30 chars max. Clean, memorable</td></tr>
+    <tr><td>Subtitle</td><td>Outfit Colors by Sanzo Wada</td><td>29 chars. Keyword-rich</td></tr>
+    <tr><td>Category (Primary)</td><td>Lifestyle</td><td>Best fit for fashion/styling apps</td></tr>
+    <tr><td>Category (Secondary)</td><td>Reference</td><td>Wada's dictionary is literally a reference work</td></tr>
+    <tr><td>Age Rating</td><td>4+</td><td>No objectionable content</td></tr>
+    <tr><td>Price</td><td>Free</td><td>Freemium: IAP for unlimited favorites</td></tr>
+    <tr><td>IAP</td><td>Outfinder Premium — €0.99</td><td>Non-consumable. Lifetime unlock</td></tr>
+    <tr><td>Privacy</td><td>Data Not Collected</td><td>No analytics, no tracking, no accounts</td></tr>
+    <tr><td>Minimum iOS</td><td>16.0</td><td>Covers 95%+ of active iPhones</td></tr>
+    <tr><td>Devices</td><td>iPhone only</td><td>Portrait only. No iPad (MVP)</td></tr>
+    <tr><td>Languages</td><td>English, Spanish</td><td>App content is bilingual (JP names are content, not localization)</td></tr>
+    <tr><td>Support URL</td><td>GitHub repo or landing page</td><td>Required. Can be a simple page</td></tr>
+    <tr><td>Copyright</td><td>2026 Alejandro Camps</td><td>Required field</td></tr>
+  </table>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 6: SCREENSHOT PRODUCTION                -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">6. Screenshot Production Plan</div>
+  <p class="section-sub">How to produce the actual screenshots for submission.</p>
+
+  <div class="strategy-grid">
+    <div class="strategy-card">
+      <h3>Option A: Simulator Captures + Figma Overlay</h3>
+      <ul>
+        <li>Run app in iPhone 15 Pro Max simulator</li>
+        <li>Take raw screenshots (Cmd+S in Simulator)</li>
+        <li>Add caption overlays in Figma (or Sketch/Canva)</li>
+        <li>Export at 1290 x 2796px</li>
+      </ul>
+      <p style="margin-top:8px;"><span class="highlight">Recommended.</span> Guarantees pixel-accurate app UI. Captions are the only overlay.</p>
+    </div>
+
+    <div class="strategy-card">
+      <h3>Option B: Programmatic with fastlane snapshot</h3>
+      <ul>
+        <li>Configure fastlane snapshot with UI tests</li>
+        <li>Auto-captures in all required sizes</li>
+        <li>frameit adds captions and device frames</li>
+        <li>Fully automated, reproducible</li>
+      </ul>
+      <p style="margin-top:8px;">Better for updates but higher initial setup cost. Consider for v1.1+.</p>
+    </div>
+
+    <div class="strategy-card">
+      <h3>Caption Overlay Template</h3>
+      <p>Each screenshot gets a gradient overlay at top or bottom:</p>
+      <ul>
+        <li>Gradient: dark → transparent (same direction as content allows)</li>
+        <li>Headline: Noto Serif JP, 38px @3x, white (#fafaf8)</li>
+        <li>Subtitle: Inter, 22px @3x, white at 65% opacity</li>
+        <li>Padding: 64px top, 40px sides (@3x)</li>
+      </ul>
+    </div>
+
+    <div class="strategy-card">
+      <h3>Content Preparation Checklist</h3>
+      <ul>
+        <li>Populate app with 5 favorites (visually diverse combinations)</li>
+        <li>Navigate to Crimson for SS3 (visually striking)</li>
+        <li>Set up Outfit Visualizer with a 3-color combo (red/navy/cream)</li>
+        <li>Trigger Share Sheet for SS4</li>
+        <li>Ensure onboarding is in first-slide state for SS6</li>
+        <li>Clear any debug UI or dev indicators</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

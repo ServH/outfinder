@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outfinder — Paywall Wada Style</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #2a2a2a;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 60px;
+    color: #1a1a1a;
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 400;
+    color: #fafaf8;
+    font-size: 28px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .page-sub {
+    color: #9b9b9b;
+    font-size: 13px;
+    margin-bottom: 48px;
+    text-align: center;
+    max-width: 500px;
+    line-height: 1.5;
+  }
+
+  .proposals {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .proposal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .proposal-label {
+    color: #c4a265;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .proposal-desc {
+    color: #9b9b9b;
+    font-size: 12px;
+    text-align: center;
+    max-width: 300px;
+    line-height: 1.5;
+  }
+
+  /* ── Phone Frame ── */
+  .phone {
+    width: 320px;
+    height: 693px;
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    background: #fafaf8;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 0 0 2px rgba(255,255,255,0.08);
+  }
+
+  /* ── Dimmed background (the Combinations screen behind) ── */
+  .bg-dimmed {
+    position: absolute;
+    inset: 0;
+    background: #fafaf8;
+    z-index: 0;
+  }
+  .bg-dimmed .nav-bar {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 8px;
+  }
+  .bg-dimmed .nav-bar .back {
+    font-size: 18px;
+    color: #1a1a1a;
+  }
+  .bg-dimmed .nav-bar .color-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #c75b5b;
+  }
+  .bg-dimmed .nav-bar .title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    color: #1a1a1a;
+    font-weight: 400;
+  }
+
+  /* Fake palette strips behind */
+  .bg-dimmed .palettes {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .palette-strip-bg {
+    display: flex;
+    height: 52px;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .palette-strip-bg .color-bar {
+    flex: 1;
+  }
+  .palette-strip-bg .heart {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 14px;
+    color: rgba(0,0,0,0.25);
+  }
+
+  /* The dim overlay */
+  .dim-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.30);
+    z-index: 1;
+  }
+
+  /* ── Paywall Sheet ── */
+  .paywall-sheet {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+  }
+
+  .drag-handle {
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(0,0,0,0.12);
+    margin: 10px auto 0;
+  }
+
+  /* ── Tab Bar (behind everything) ── */
+  .tab-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 82px;
+    background: #fafaf8;
+    border-top: 0.5px solid rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding-top: 8px;
+    z-index: 0;
+  }
+  .tab-bar .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 10px;
+    color: #9b9b9b;
+  }
+  .tab-bar .tab.active { color: #1a1a1a; }
+  .tab-bar .tab .icon { font-size: 20px; }
+
+  /* ═══════════════════════════════════
+     PROPOSAL A — "The Wada Page"
+     Minimal, book-like, one CTA
+     ═══════════════════════════════════ */
+  .paywall-a {
+    background: #fafaf8;
+    padding: 0 28px 40px;
+    text-align: center;
+  }
+  .paywall-a .section-line {
+    width: 40px;
+    height: 0.5px;
+    background: rgba(0,0,0,0.15);
+    margin: 24px auto 28px;
+  }
+  .paywall-a .kanji-accent {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11px;
+    font-weight: 300;
+    color: #9b9b9b;
+    letter-spacing: 4px;
+    margin-bottom: 12px;
+  }
+  .paywall-a .headline {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #1a1a1a;
+    line-height: 1.4;
+    margin-bottom: 16px;
+  }
+  .paywall-a .body-text {
+    font-size: 14px;
+    font-weight: 300;
+    color: #6b6b6b;
+    line-height: 1.6;
+    margin-bottom: 6px;
+  }
+  /* Mini palette as visual element */
+  .paywall-a .mini-palette {
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+    margin: 24px auto;
+  }
+  .paywall-a .mini-palette .swatch {
+    width: 28px;
+    height: 38px;
+    border-radius: 3px;
+  }
+  .paywall-a .section-line-2 {
+    width: 100%;
+    height: 0.5px;
+    background: rgba(0,0,0,0.06);
+    margin: 20px auto 24px;
+  }
+  .paywall-a .price-line {
+    font-size: 13px;
+    color: #9b9b9b;
+    font-weight: 300;
+    margin-bottom: 24px;
+  }
+  .paywall-a .price-line strong {
+    color: #1a1a1a;
+    font-weight: 500;
+  }
+  .paywall-a .cta-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    background: #1a1a1a;
+    color: #fafaf8;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 16px;
+    letter-spacing: 0.3px;
+  }
+  .paywall-a .secondary-actions {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+  }
+  .paywall-a .secondary-actions a {
+    font-size: 13px;
+    color: #9b9b9b;
+    text-decoration: none;
+    font-weight: 400;
+  }
+
+  /* ═══════════════════════════════════
+     PROPOSAL B — "The Warm Invitation"
+     Gold accent, softer, warmer
+     ═══════════════════════════════════ */
+  .paywall-b {
+    background: linear-gradient(180deg, #f8f3eb 0%, #fafaf8 40%);
+    padding: 0 28px 40px;
+    text-align: center;
+  }
+  .paywall-b .icon-row {
+    margin: 28px auto 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+  }
+  .paywall-b .icon-row .heart-stack {
+    position: relative;
+    width: 48px;
+    height: 48px;
+  }
+  .paywall-b .icon-row .heart-stack .h1 {
+    position: absolute;
+    font-size: 32px;
+    top: 4px;
+    left: 6px;
+    opacity: 0.15;
+    transform: rotate(-8deg);
+  }
+  .paywall-b .icon-row .heart-stack .h2 {
+    position: absolute;
+    font-size: 28px;
+    top: 6px;
+    left: 12px;
+    color: #c4a265;
+  }
+  .paywall-b .headline {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 21px;
+    font-weight: 400;
+    color: #1a1a1a;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .paywall-b .body-text {
+    font-size: 14px;
+    font-weight: 300;
+    color: #6b6b6b;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  /* Benefits as Wada-style items */
+  .paywall-b .benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+  .paywall-b .benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 0.5px solid rgba(0,0,0,0.06);
+  }
+  .paywall-b .benefit-item:last-child {
+    border-bottom: none;
+  }
+  .paywall-b .benefit-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .paywall-b .benefit-text {
+    font-size: 14px;
+    color: #1a1a1a;
+    font-weight: 400;
+  }
+  .paywall-b .benefit-sub {
+    font-size: 12px;
+    color: #9b9b9b;
+    font-weight: 300;
+    margin-top: 1px;
+  }
+  .paywall-b .cta-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    background: #c4a265;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 12px;
+    letter-spacing: 0.3px;
+  }
+  .paywall-b .price-under {
+    font-size: 12px;
+    color: #9b9b9b;
+    font-weight: 300;
+    margin-bottom: 16px;
+  }
+  .paywall-b .secondary-actions {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+  }
+  .paywall-b .secondary-actions a {
+    font-size: 13px;
+    color: #9b9b9b;
+    text-decoration: none;
+  }
+
+  /* ═══════════════════════════════════
+     PROPOSAL C — "The Collector's Edition"
+     Shows what you've saved, emotional
+     ═══════════════════════════════════ */
+  .paywall-c {
+    background: #fafaf8;
+    padding: 0 24px 40px;
+    text-align: center;
+  }
+  .paywall-c .saved-preview {
+    margin: 24px auto 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .paywall-c .saved-strip {
+    display: flex;
+    height: 32px;
+    border-radius: 5px;
+    overflow: hidden;
+    opacity: 1;
+  }
+  .paywall-c .saved-strip.faded {
+    opacity: 0.35;
+  }
+  .paywall-c .saved-strip .c {
+    flex: 1;
+  }
+  .paywall-c .saved-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .paywall-c .saved-label .count {
+    font-size: 11px;
+    color: #9b9b9b;
+    font-weight: 400;
+  }
+  .paywall-c .saved-label .heart-mini {
+    font-size: 11px;
+    color: #E74C3C;
+  }
+  .paywall-c .limit-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(196, 162, 101, 0.1);
+    color: #c4a265;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin: 8px auto 20px;
+  }
+  .paywall-c .headline {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #1a1a1a;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+  .paywall-c .body-text {
+    font-size: 13px;
+    font-weight: 300;
+    color: #6b6b6b;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    padding: 0 8px;
+  }
+  .paywall-c .price-cta-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .paywall-c .price-tag {
+    background: #f5f5f3;
+    border-radius: 10px;
+    padding: 12px 16px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .paywall-c .price-tag .amount {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+  .paywall-c .price-tag .label {
+    font-size: 10px;
+    color: #9b9b9b;
+    font-weight: 400;
+    margin-top: 1px;
+  }
+  .paywall-c .cta-btn {
+    flex: 1;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    background: #1a1a1a;
+    color: #fafaf8;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+  }
+  .paywall-c .secondary-actions {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 4px;
+  }
+  .paywall-c .secondary-actions a {
+    font-size: 13px;
+    color: #9b9b9b;
+    text-decoration: none;
+  }
+
+  /* ── Notes section ── */
+  .notes {
+    margin-top: 56px;
+    max-width: 900px;
+    color: #9b9b9b;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .notes h3 {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 400;
+    color: #c4a265;
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+  .notes ul {
+    padding-left: 20px;
+    margin-bottom: 16px;
+  }
+  .notes strong { color: #ddd; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<h1>Paywall — Wada Style</h1>
+<p class="page-sub">Three proposals. All share: bottom sheet, drag handle, dim overlay, warm paper bg, Noto Serif JP headlines, no aggressive patterns. The paywall appears when the user taps ♡ on their 6th favorite.</p>
+
+<div class="proposals">
+
+<!-- ═══════════════ PROPOSAL A — "The Wada Page" ═══════════════ -->
+<div class="proposal">
+  <span class="proposal-label">A — The Wada Page</span>
+  <p class="proposal-desc">Minimal like a book page. The palette itself is the hero — no icons, no list. Pure Wada.</p>
+
+  <div class="phone">
+    <div class="bg-dimmed">
+      <div class="nav-bar">
+        <span class="back">‹</span>
+        <span class="color-dot" style="background:#c75b5b"></span>
+        <span class="title">紅色 Crimson</span>
+      </div>
+      <div class="palettes">
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#c75b5b"></div>
+          <div class="color-bar" style="background:#e8c4a0"></div>
+          <div class="color-bar" style="background:#5b7c5b"></div>
+          <span class="heart">♥</span>
+        </div>
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#c75b5b"></div>
+          <div class="color-bar" style="background:#2c3e6b"></div>
+          <div class="color-bar" style="background:#d4c5a0"></div>
+          <span class="heart">♥</span>
+        </div>
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#c75b5b"></div>
+          <div class="color-bar" style="background:#8b6b4b"></div>
+          <div class="color-bar" style="background:#f0e6d0"></div>
+          <div class="color-bar" style="background:#3a3a3a"></div>
+          <span class="heart">♥</span>
+        </div>
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#c75b5b"></div>
+          <div class="color-bar" style="background:#e0d0b0"></div>
+          <div class="color-bar" style="background:#4a6b4a"></div>
+          <span class="heart">♡</span>
+        </div>
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#c75b5b"></div>
+          <div class="color-bar" style="background:#7a8fa0"></div>
+          <div class="color-bar" style="background:#f5efe6"></div>
+          <span class="heart">♡</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dim-overlay"></div>
+
+    <div class="paywall-sheet paywall-a">
+      <div class="drag-handle"></div>
+      <div class="section-line"></div>
+
+      <div class="kanji-accent">お 気 に 入 り</div>
+      <div class="headline">Keep your<br>favorites forever</div>
+      <p class="body-text">You've saved 5 combinations — the free limit. Unlock your personal color library with a single purchase.</p>
+
+      <div class="mini-palette">
+        <div class="swatch" style="background:#c75b5b"></div>
+        <div class="swatch" style="background:#e8c4a0"></div>
+        <div class="swatch" style="background:#5b7c5b"></div>
+        <div class="swatch" style="background:#2c3e6b"></div>
+        <div class="swatch" style="background:#d4c5a0"></div>
+      </div>
+
+      <div class="section-line-2"></div>
+
+      <p class="price-line"><strong>€0.99</strong> · one-time purchase · forever yours</p>
+
+      <button class="cta-btn">Unlock Favorites</button>
+
+      <div class="secondary-actions">
+        <a href="#">Restore Purchase</a>
+        <a href="#">Not now</a>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab active">
+        <span class="icon">🎨</span>
+        <span>Colors</span>
+      </div>
+      <div class="tab">
+        <span class="icon">♡</span>
+        <span>Favorites</span>
+      </div>
+      <div class="tab">
+        <span class="icon">⚙</span>
+        <span>Settings</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PROPOSAL B — "The Warm Invitation" ═══════════════ -->
+<div class="proposal">
+  <span class="proposal-label">B — The Warm Invitation</span>
+  <p class="proposal-desc">Gold warmth, benefit list with subtle icons. Feels like a personal invitation, not a gate.</p>
+
+  <div class="phone">
+    <div class="bg-dimmed">
+      <div class="nav-bar">
+        <span class="back">‹</span>
+        <span class="color-dot" style="background:#5b7c5b"></span>
+        <span class="title">千歳緑 Evergreen</span>
+      </div>
+      <div class="palettes">
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#5b7c5b"></div>
+          <div class="color-bar" style="background:#c75b5b"></div>
+          <div class="color-bar" style="background:#f0e6d0"></div>
+          <span class="heart">♥</span>
+        </div>
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#5b7c5b"></div>
+          <div class="color-bar" style="background:#d4c5a0"></div>
+          <div class="color-bar" style="background:#3a3a3a"></div>
+          <span class="heart">♥</span>
+        </div>
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#5b7c5b"></div>
+          <div class="color-bar" style="background:#8b6b8b"></div>
+          <div class="color-bar" style="background:#e0d0b0"></div>
+          <span class="heart">♥</span>
+        </div>
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#5b7c5b"></div>
+          <div class="color-bar" style="background:#e8c4a0"></div>
+          <div class="color-bar" style="background:#2c3e6b"></div>
+          <div class="color-bar" style="background:#c75b5b"></div>
+          <span class="heart">♥</span>
+        </div>
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#5b7c5b"></div>
+          <div class="color-bar" style="background:#7a8fa0"></div>
+          <div class="color-bar" style="background:#f5efe6"></div>
+          <span class="heart">♡</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dim-overlay"></div>
+
+    <div class="paywall-sheet paywall-b">
+      <div class="drag-handle"></div>
+
+      <div class="icon-row">
+        <div class="heart-stack">
+          <span class="h1">♥</span>
+          <span class="h2">♥</span>
+        </div>
+      </div>
+
+      <div class="headline">Your color library,<br>without limits</div>
+      <p class="body-text">Save every combination that inspires you. Build a personal collection of Wada's harmonies.</p>
+
+      <div class="benefits">
+        <div class="benefit-item">
+          <div class="benefit-icon" style="background:rgba(196,162,101,0.1)">∞</div>
+          <div>
+            <div class="benefit-text">Unlimited favorites</div>
+            <div class="benefit-sub">Save as many combinations as you discover</div>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon" style="background:rgba(196,162,101,0.1)">🔒</div>
+          <div>
+            <div class="benefit-text">Yours forever</div>
+            <div class="benefit-sub">One purchase, no subscription</div>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon" style="background:rgba(196,162,101,0.1)">♡</div>
+          <div>
+            <div class="benefit-text">Support independent development</div>
+            <div class="benefit-sub">A solo project, made with care</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="cta-btn">Unlock for €0.99</button>
+      <p class="price-under">One-time purchase · No subscription</p>
+
+      <div class="secondary-actions">
+        <a href="#">Restore Purchase</a>
+        <a href="#">Not now</a>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab active">
+        <span class="icon">🎨</span>
+        <span>Colors</span>
+      </div>
+      <div class="tab">
+        <span class="icon">♡</span>
+        <span>Favorites</span>
+      </div>
+      <div class="tab">
+        <span class="icon">⚙</span>
+        <span>Settings</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PROPOSAL C — "The Collector's Edition" ═══════════════ -->
+<div class="proposal">
+  <span class="proposal-label">C — The Collector</span>
+  <p class="proposal-desc">Shows your actual saved palettes. Emotional — "these are yours, keep them." Context-aware.</p>
+
+  <div class="phone">
+    <div class="bg-dimmed">
+      <div class="nav-bar">
+        <span class="back">‹</span>
+        <span class="color-dot" style="background:#2c3e6b"></span>
+        <span class="title">紺青 Navy Blue</span>
+      </div>
+      <div class="palettes">
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#2c3e6b"></div>
+          <div class="color-bar" style="background:#c75b5b"></div>
+          <div class="color-bar" style="background:#e0d0b0"></div>
+          <span class="heart">♥</span>
+        </div>
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#2c3e6b"></div>
+          <div class="color-bar" style="background:#d4c5a0"></div>
+          <div class="color-bar" style="background:#5b7c5b"></div>
+          <span class="heart">♥</span>
+        </div>
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#2c3e6b"></div>
+          <div class="color-bar" style="background:#f0e6d0"></div>
+          <div class="color-bar" style="background:#8b6b4b"></div>
+          <span class="heart">♥</span>
+        </div>
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#2c3e6b"></div>
+          <div class="color-bar" style="background:#c75b5b"></div>
+          <div class="color-bar" style="background:#e8c4a0"></div>
+          <div class="color-bar" style="background:#3a3a3a"></div>
+          <span class="heart">♥</span>
+        </div>
+        <div class="palette-strip-bg">
+          <div class="color-bar" style="background:#2c3e6b"></div>
+          <div class="color-bar" style="background:#7a8fa0"></div>
+          <div class="color-bar" style="background:#f5efe6"></div>
+          <span class="heart">♡</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dim-overlay"></div>
+
+    <div class="paywall-sheet paywall-c">
+      <div class="drag-handle"></div>
+
+      <div class="saved-preview">
+        <div class="saved-label">
+          <span class="count">Your collection</span>
+          <span class="heart-mini">♥ 5 saved</span>
+        </div>
+        <div class="saved-strip">
+          <div class="c" style="background:#c75b5b"></div>
+          <div class="c" style="background:#e8c4a0"></div>
+          <div class="c" style="background:#5b7c5b"></div>
+        </div>
+        <div class="saved-strip">
+          <div class="c" style="background:#2c3e6b"></div>
+          <div class="c" style="background:#d4c5a0"></div>
+          <div class="c" style="background:#3a3a3a"></div>
+        </div>
+        <div class="saved-strip">
+          <div class="c" style="background:#5b7c5b"></div>
+          <div class="c" style="background:#c75b5b"></div>
+          <div class="c" style="background:#f0e6d0"></div>
+        </div>
+        <div class="saved-strip">
+          <div class="c" style="background:#8b6b4b"></div>
+          <div class="c" style="background:#e0d0b0"></div>
+          <div class="c" style="background:#7a8fa0"></div>
+          <div class="c" style="background:#2c3e6b"></div>
+        </div>
+        <div class="saved-strip">
+          <div class="c" style="background:#5b7c5b"></div>
+          <div class="c" style="background:#d4c5a0"></div>
+          <div class="c" style="background:#e8c4a0"></div>
+        </div>
+        <div class="saved-strip faded">
+          <div class="c" style="background:#2c3e6b"></div>
+          <div class="c" style="background:#c75b5b"></div>
+          <div class="c" style="background:#e8c4a0"></div>
+          <div class="c" style="background:#3a3a3a"></div>
+        </div>
+      </div>
+
+      <div class="limit-badge">5 of 5 free favorites used</div>
+
+      <div class="headline">Don't stop<br>collecting</div>
+      <p class="body-text">You've found 5 harmonies worth keeping. There are 343 more combinations waiting to be discovered.</p>
+
+      <div class="price-cta-row">
+        <div class="price-tag">
+          <div class="amount">€0.99</div>
+          <div class="label">one time</div>
+        </div>
+        <button class="cta-btn">Unlock Unlimited</button>
+      </div>
+
+      <div class="secondary-actions">
+        <a href="#">Restore Purchase</a>
+        <a href="#">Not now</a>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab active">
+        <span class="icon">🎨</span>
+        <span>Colors</span>
+      </div>
+      <div class="tab">
+        <span class="icon">♡</span>
+        <span>Favorites</span>
+      </div>
+      <div class="tab">
+        <span class="icon">⚙</span>
+        <span>Settings</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /proposals -->
+
+<!-- ── Design Notes ── -->
+<div class="notes">
+  <h3>Design Decisions</h3>
+  <ul>
+    <li><strong>All three share:</strong> bottom sheet (not fullscreen modal), drag handle, dim overlay at 30%, warm #fafaf8 paper bg, Noto Serif JP headlines, "Not now" + "Restore Purchase" as quiet text links, no dark patterns</li>
+    <li><strong>No fullscreen takeover:</strong> the Combinations screen is visible behind the dim — the user sees where they are, doesn't feel kidnapped</li>
+    <li><strong>Price always visible:</strong> €0.99 shown clearly, never hidden behind the CTA</li>
+    <li><strong>One-time purchase emphasis:</strong> every proposal makes it clear this is NOT a subscription — reduces purchase anxiety</li>
+    <li><strong>"Not now" is always available:</strong> dismissable by swipe-down, tap "Not now", or tap dimmed area — three escape routes</li>
+  </ul>
+
+  <h3>Proposal Comparison</h3>
+  <ul>
+    <li><strong>A (The Wada Page):</strong> Most minimal. Feels like a page from Wada's book. The mini-palette is the only visual element. Kanji お気に入り (favorites) as accent. Risk: might feel too sparse</li>
+    <li><strong>B (The Warm Invitation):</strong> Warmest. Gold accent gradient, benefit list, "support independent development" emotional appeal. Most informative. Risk: benefit list could feel generic</li>
+    <li><strong>C (The Collector):</strong> Most contextual. Shows the user's actual saved palettes, the 6th one faded as "what you're about to lose." Strongest emotional trigger. Risk: slightly more complex</li>
+  </ul>
+
+  <h3>Interaction Details</h3>
+  <ul>
+    <li><strong>Trigger:</strong> User taps ♡ on their 6th combination (after 5 free saves)</li>
+    <li><strong>Animation:</strong> Sheet slides up with spring damping (300ms), dim fades in (200ms)</li>
+    <li><strong>Dismiss:</strong> Swipe down / tap "Not now" / tap dim area → spring dismiss</li>
+    <li><strong>After dismiss:</strong> Paywall does NOT appear again in the same session</li>
+    <li><strong>Haptic:</strong> .rigid on purchase confirmed, .light on dismiss</li>
+    <li><strong>CTA tap:</strong> Triggers StoreKit 2 purchase sheet (Face ID / Apple Pay)</li>
+  </ul>
+</div>
+
+</body>
+</html>

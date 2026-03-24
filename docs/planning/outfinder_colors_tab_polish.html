@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outfinder — Colors Tab Polish Proposals</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    padding: 40px 20px;
+  }
+
+  h1 {
+    text-align: center;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 28px;
+    color: #fafaf8;
+    margin-bottom: 8px;
+  }
+  .page-subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 48px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fafaf8;
+    margin-bottom: 6px;
+  }
+  .section-desc {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .phone-row {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 56px;
+  }
+
+  .phone-wrapper {
+    text-align: center;
+  }
+  .phone-label {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* iPhone frame */
+  .phone {
+    width: 320px;
+    height: 640px;
+    border-radius: 36px;
+    overflow: hidden;
+    position: relative;
+    border: 3px solid #333;
+    background: #fafaf8;
+  }
+
+  /* Status bar */
+  .status-bar {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1a1a1a;
+    background: #fafaf8;
+  }
+
+  /* Nav bar */
+  .nav-bar {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: #1a1a1a;
+    background: #fafaf8;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  /* Tab bar */
+  .tab-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 72px;
+    background: #fafaf8;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-top: 6px;
+    padding-bottom: 20px;
+  }
+  .tab-item {
+    text-align: center;
+    font-size: 10px;
+    color: #9b9b9b;
+  }
+  .tab-item.active { color: #1a1a1a; }
+  .tab-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    margin: 0 auto 3px;
+  }
+
+  /* Content area */
+  .content {
+    position: absolute;
+    top: 88px;
+    left: 0;
+    right: 0;
+    bottom: 72px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* ═══ ACTUAL STATE ═══ */
+
+  .tabs-strip {
+    display: flex;
+    gap: 16px;
+    padding: 12px 16px;
+    overflow-x: auto;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    white-space: nowrap;
+  }
+  .tab-pill {
+    font-size: 13px;
+    color: #9b9b9b;
+    padding-bottom: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .tab-pill.active {
+    color: #1a1a1a;
+    font-weight: 500;
+    border-bottom: 2px solid #1a1a1a;
+  }
+
+  .grid-5col {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    padding: 16px;
+  }
+  .swatch-cell {
+    aspect-ratio: 1;
+    border-radius: 6px;
+  }
+  .swatch-cell.light {
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+
+  /* ═══ PROPOSAL: HERO ═══ */
+
+  .hero {
+    padding: 28px 24px 20px;
+    text-align: center;
+  }
+  .hero-warm {
+    background: linear-gradient(180deg, #f5efe6 0%, #f0ece4 60%, #fafaf8 100%);
+  }
+  .hero-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: #1a1a1a;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .hero-subtitle {
+    font-size: 11px;
+    color: #a09080;
+    letter-spacing: 0.5px;
+  }
+  .hero-line {
+    width: 40px;
+    height: 1px;
+    background: #c4a265;
+    margin: 14px auto 0;
+  }
+
+  /* ═══ PROPOSAL: NAMED CELLS ═══ */
+
+  /* Option A: 3-column named grid */
+  .grid-3col-named {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    padding: 12px 16px;
+  }
+  .named-cell {
+    border-radius: 10px;
+    padding: 10px 8px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 72px;
+    position: relative;
+    overflow: hidden;
+  }
+  .named-cell .cell-name-en {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    opacity: 0.95;
+  }
+  .named-cell .cell-name-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 10px;
+    opacity: 0.8;
+    margin-top: 1px;
+  }
+  .named-cell.dark-text .cell-name-en,
+  .named-cell.dark-text .cell-name-jp { color: #1a1a1a; }
+  .named-cell.light-text .cell-name-en,
+  .named-cell.light-text .cell-name-jp { color: #fafaf8; }
+
+  /* Option B: Featured + grid */
+  .featured-row {
+    display: flex;
+    gap: 6px;
+    padding: 12px 16px 6px;
+  }
+  .featured-cell {
+    flex: 1;
+    border-radius: 12px;
+    padding: 14px 10px 10px;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .featured-cell .feat-name {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  .featured-cell .feat-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11px;
+    margin-top: 2px;
+  }
+  .featured-cell .feat-combos {
+    font-size: 8px;
+    opacity: 0.7;
+    margin-top: 4px;
+  }
+
+  /* Option C: List style (larger cells, 2 col) */
+  .grid-2col-named {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 12px 16px;
+  }
+  .named-cell-lg {
+    border-radius: 12px;
+    padding: 14px 12px 12px;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .named-cell-lg .cell-lg-en {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  .named-cell-lg .cell-lg-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 12px;
+    margin-top: 2px;
+    opacity: 0.85;
+  }
+  .named-cell-lg .cell-lg-count {
+    font-size: 8px;
+    opacity: 0.6;
+    margin-top: 6px;
+  }
+
+  /* ═══ WARM BACKGROUND ═══ */
+  .warm-bg {
+    background: linear-gradient(180deg, #f5efe6 0%, #f0ece4 40%, #ebe5da 100%);
+  }
+
+  /* ═══ DIVIDER ═══ */
+  .proposal-divider {
+    width: 100%;
+    height: 1px;
+    background: #333;
+    margin: 16px 0 48px;
+  }
+
+  /* ═══ COMPARISON SECTION ═══ */
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 700px;
+    margin: 0 auto 48px;
+  }
+
+  /* Featured combination mini */
+  .feat-combo {
+    margin: 0 16px 8px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .feat-combo-strip {
+    display: flex;
+    height: 48px;
+  }
+  .feat-combo-strip > div {
+    flex: 1;
+  }
+  .feat-combo-info {
+    padding: 8px 10px;
+    background: rgba(0,0,0,0.02);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .feat-combo-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11px;
+    color: #1a1a1a;
+  }
+  .feat-combo-sub {
+    font-size: 9px;
+    color: #a09080;
+  }
+
+  .scroll-hint {
+    text-align: center;
+    font-size: 9px;
+    color: #999;
+    padding: 8px;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Colors Tab Polish</h1>
+<p class="page-subtitle">Propuestas para la primera impresión de Outfinder</p>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- ACTUAL STATE -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="section-title">Estado Actual</div>
+<div class="section-desc">Grid de 5 columnas, fondo plano, sin nombres, sin identidad Wada.</div>
+
+<div class="phone-row">
+  <div class="phone-wrapper">
+    <div class="phone-label">Actual</div>
+    <div class="phone">
+      <div class="status-bar">9:41</div>
+      <div class="nav-bar">Outfinder</div>
+      <div class="content">
+        <div class="tabs-strip">
+          <div class="tab-pill active">All</div>
+          <div class="tab-pill">Pale & Light</div>
+          <div class="tab-pill">Red & Brown</div>
+          <div class="tab-pill">Blue & Lav...</div>
+        </div>
+        <div class="grid-5col">
+          <div class="swatch-cell light" style="background:#E8D3B4"></div>
+          <div class="swatch-cell light" style="background:#F5E6CC"></div>
+          <div class="swatch-cell light" style="background:#F2E8D5"></div>
+          <div class="swatch-cell light" style="background:#EDDCB3"></div>
+          <div class="swatch-cell light" style="background:#F0D8A8"></div>
+          <div class="swatch-cell light" style="background:#E8C89E"></div>
+          <div class="swatch-cell light" style="background:#F5DEB3"></div>
+          <div class="swatch-cell light" style="background:#E8D3D0"></div>
+          <div class="swatch-cell light" style="background:#F2C9AC"></div>
+          <div class="swatch-cell light" style="background:#F5E1C0"></div>
+          <div class="swatch-cell light" style="background:#F0CEA0"></div>
+          <div class="swatch-cell light" style="background:#E8CDA8"></div>
+          <div class="swatch-cell light" style="background:#F0D5B0"></div>
+          <div class="swatch-cell light" style="background:#F5D6C6"></div>
+          <div class="swatch-cell light" style="background:#E8DCC8"></div>
+          <div class="swatch-cell light" style="background:#F2DAB8"></div>
+          <div class="swatch-cell light" style="background:#F0C8B4"></div>
+          <div class="swatch-cell light" style="background:#F5E0D0"></div>
+          <div class="swatch-cell light" style="background:#E8D0B0"></div>
+          <div class="swatch-cell light" style="background:#F2DFC8"></div>
+          <div class="swatch-cell" style="background:#B91C26"></div>
+          <div class="swatch-cell" style="background:#8B4513"></div>
+          <div class="swatch-cell" style="background:#7B3F00"></div>
+          <div class="swatch-cell" style="background:#A0522D"></div>
+          <div class="swatch-cell" style="background:#CD853F"></div>
+          <div class="swatch-cell" style="background:#D2691E"></div>
+          <div class="swatch-cell" style="background:#C41E3A"></div>
+          <div class="swatch-cell" style="background:#8B0000"></div>
+          <div class="swatch-cell" style="background:#A52A2A"></div>
+          <div class="swatch-cell" style="background:#BC8F8F"></div>
+          <div class="swatch-cell" style="background:#164A84"></div>
+          <div class="swatch-cell" style="background:#4682B4"></div>
+          <div class="swatch-cell" style="background:#5F9EA0"></div>
+          <div class="swatch-cell" style="background:#6495ED"></div>
+          <div class="swatch-cell" style="background:#8B81C3"></div>
+          <div class="swatch-cell" style="background:#2E4057"></div>
+          <div class="swatch-cell" style="background:#1E4D2B"></div>
+          <div class="swatch-cell" style="background:#556B2F"></div>
+          <div class="swatch-cell" style="background:#808000"></div>
+          <div class="swatch-cell" style="background:#6B8E4E"></div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item active"><div class="tab-icon"></div>Colors</div>
+        <div class="tab-item"><div class="tab-icon"></div>Favorites</div>
+        <div class="tab-item"><div class="tab-icon"></div>Settings</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="proposal-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PROPOSAL A: Hero + 3-col named + warm bg -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="section-title">Propuesta A — Hero + Celdas con nombre (3 columnas)</div>
+<div class="section-desc">
+  Header editorial con identidad Wada. Grid de 3 columnas donde cada color muestra su nombre inglés + japonés.<br>
+  Fondo cálido (gradiente papel japonés). Más editorial, más lento de recorrer (menos colores por fila).
+</div>
+
+<div class="phone-row">
+  <div class="phone-wrapper">
+    <div class="phone-label">Propuesta A</div>
+    <div class="phone">
+      <div class="status-bar">9:41</div>
+      <div class="nav-bar">Outfinder</div>
+      <div class="content warm-bg">
+        <!-- Hero -->
+        <div class="hero hero-warm">
+          <div class="hero-title">A Dictionary of<br>Color Combinations</div>
+          <div class="hero-subtitle">Sanzo Wada · 1933 · 159 colors</div>
+          <div class="hero-line"></div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-strip" style="background:transparent; border-bottom-color: rgba(0,0,0,0.04);">
+          <div class="tab-pill active">All</div>
+          <div class="tab-pill">Pale & Light</div>
+          <div class="tab-pill">Red & Brown</div>
+          <div class="tab-pill">Blue</div>
+        </div>
+
+        <!-- 3-col named grid -->
+        <div class="grid-3col-named">
+          <div class="named-cell dark-text" style="background:#E8D3B4">
+            <div class="cell-name-en">Luan-bird</div>
+            <div class="cell-name-jp">鸞鳥色</div>
+          </div>
+          <div class="named-cell dark-text" style="background:#F5E6CC">
+            <div class="cell-name-en">Eggshell</div>
+            <div class="cell-name-jp">鳥の子色</div>
+          </div>
+          <div class="named-cell dark-text" style="background:#F2E8D5">
+            <div class="cell-name-en">Ivory</div>
+            <div class="cell-name-jp">象牙色</div>
+          </div>
+          <div class="named-cell dark-text" style="background:#E8D3D0">
+            <div class="cell-name-en">Cherry Blossom</div>
+            <div class="cell-name-jp">桜色</div>
+          </div>
+          <div class="named-cell dark-text" style="background:#F2C9AC">
+            <div class="cell-name-en">Apricot</div>
+            <div class="cell-name-jp">杏色</div>
+          </div>
+          <div class="named-cell dark-text" style="background:#F0CEA0">
+            <div class="cell-name-en">Honey</div>
+            <div class="cell-name-jp">蜜蜜色</div>
+          </div>
+          <div class="named-cell light-text" style="background:#B91C26">
+            <div class="cell-name-en">Crimson</div>
+            <div class="cell-name-jp">紅色</div>
+          </div>
+          <div class="named-cell light-text" style="background:#8B4513">
+            <div class="cell-name-en">Chestnut</div>
+            <div class="cell-name-jp">栗色</div>
+          </div>
+          <div class="named-cell light-text" style="background:#A0522D">
+            <div class="cell-name-en">Sienna</div>
+            <div class="cell-name-jp">黄土色</div>
+          </div>
+          <div class="named-cell light-text" style="background:#164A84">
+            <div class="cell-name-en">Ultramarine</div>
+            <div class="cell-name-jp">群青色</div>
+          </div>
+          <div class="named-cell light-text" style="background:#4682B4">
+            <div class="cell-name-en">Steel Blue</div>
+            <div class="cell-name-jp">鉄紺色</div>
+          </div>
+          <div class="named-cell light-text" style="background:#1E4D2B">
+            <div class="cell-name-en">Evergreen</div>
+            <div class="cell-name-jp">常磐色</div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item active"><div class="tab-icon"></div>Colors</div>
+        <div class="tab-item"><div class="tab-icon"></div>Favorites</div>
+        <div class="tab-item"><div class="tab-icon"></div>Settings</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="proposal-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PROPOSAL B: Hero + Featured combo + 2-col named -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="section-title">Propuesta B — Hero + Combinación destacada + Celdas grandes (2 columnas)</div>
+<div class="section-desc">
+  Hero editorial + una combinación destacada que muestra el resultado antes de explorar.<br>
+  Grid de 2 columnas con más espacio — nombre, japonés y nº de combinaciones visibles.<br>
+  Más inmersivo, el usuario entiende la app al instante. Más scroll para ver todos los colores.
+</div>
+
+<div class="phone-row">
+  <div class="phone-wrapper">
+    <div class="phone-label">Propuesta B</div>
+    <div class="phone">
+      <div class="status-bar">9:41</div>
+      <div class="nav-bar">Outfinder</div>
+      <div class="content warm-bg">
+        <!-- Hero -->
+        <div class="hero hero-warm">
+          <div class="hero-title">A Dictionary of<br>Color Combinations</div>
+          <div class="hero-subtitle">Sanzo Wada · 1933 · 159 colors</div>
+          <div class="hero-line"></div>
+        </div>
+
+        <!-- Featured combination -->
+        <div class="feat-combo">
+          <div class="feat-combo-strip">
+            <div style="background:#E8D3B4"></div>
+            <div style="background:#B91C26"></div>
+            <div style="background:#164A84"></div>
+          </div>
+          <div class="feat-combo-info">
+            <div>
+              <div class="feat-combo-name">Dawn Sky</div>
+              <div class="feat-combo-sub">暁の空 · 3 colors</div>
+            </div>
+            <div class="feat-combo-sub">Explore →</div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-strip" style="background:transparent; border-bottom-color: rgba(0,0,0,0.04);">
+          <div class="tab-pill active">All</div>
+          <div class="tab-pill">Pale & Light</div>
+          <div class="tab-pill">Red & Brown</div>
+        </div>
+
+        <!-- 2-col named grid -->
+        <div class="grid-2col-named">
+          <div class="named-cell-lg dark-text" style="background:#E8D3B4">
+            <div class="cell-lg-en">Luan-bird</div>
+            <div class="cell-lg-jp" style="color:#1a1a1a; opacity:0.7;">鸞鳥色</div>
+            <div class="cell-lg-count" style="color:#1a1a1a;">12 combinations</div>
+          </div>
+          <div class="named-cell-lg dark-text" style="background:#F5E6CC">
+            <div class="cell-lg-en">Eggshell</div>
+            <div class="cell-lg-jp" style="color:#1a1a1a; opacity:0.7;">鳥の子色</div>
+            <div class="cell-lg-count" style="color:#1a1a1a;">8 combinations</div>
+          </div>
+          <div class="named-cell-lg dark-text" style="background:#E8D3D0">
+            <div class="cell-lg-en">Cherry Blossom</div>
+            <div class="cell-lg-jp" style="color:#1a1a1a; opacity:0.7;">桜色</div>
+            <div class="cell-lg-count" style="color:#1a1a1a;">15 combinations</div>
+          </div>
+          <div class="named-cell-lg dark-text" style="background:#F0CEA0">
+            <div class="cell-lg-en">Honey</div>
+            <div class="cell-lg-jp" style="color:#1a1a1a; opacity:0.7;">蜜蜜色</div>
+            <div class="cell-lg-count" style="color:#1a1a1a;">10 combinations</div>
+          </div>
+          <div class="named-cell-lg light-text" style="background:#B91C26">
+            <div class="cell-lg-en">Crimson</div>
+            <div class="cell-lg-jp" style="color:#fafaf8; opacity:0.8;">紅色</div>
+            <div class="cell-lg-count" style="color:#fafaf8;">22 combinations</div>
+          </div>
+          <div class="named-cell-lg light-text" style="background:#164A84">
+            <div class="cell-lg-en">Ultramarine</div>
+            <div class="cell-lg-jp" style="color:#fafaf8; opacity:0.8;">群青色</div>
+            <div class="cell-lg-count" style="color:#fafaf8;">18 combinations</div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item active"><div class="tab-icon"></div>Colors</div>
+        <div class="tab-item"><div class="tab-icon"></div>Favorites</div>
+        <div class="tab-item"><div class="tab-icon"></div>Settings</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="proposal-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PROPOSAL C: Hero + Featured + Compact named (4 col) -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="section-title">Propuesta C — Hero + Destacado + Grid compacto con nombres (4 columnas)</div>
+<div class="section-desc">
+  Compromiso: el hero y la combinación destacada dan identidad, pero el grid mantiene 4 columnas<br>
+  para que se recorran los 159 colores rápido. Nombre solo en inglés debajo de cada celda (sin japonés en el grid).<br>
+  El japonés aparece al tocar el color. Menos inmersivo que B, pero más práctico.
+</div>
+
+<div class="phone-row">
+  <div class="phone-wrapper">
+    <div class="phone-label">Propuesta C</div>
+    <div class="phone">
+      <div class="status-bar">9:41</div>
+      <div class="nav-bar">Outfinder</div>
+      <div class="content warm-bg">
+        <!-- Hero (más compacto) -->
+        <div class="hero hero-warm" style="padding: 20px 24px 14px;">
+          <div class="hero-title" style="font-size:19px;">A Dictionary of Color Combinations</div>
+          <div class="hero-subtitle">Sanzo Wada · 159 colors</div>
+          <div class="hero-line"></div>
+        </div>
+
+        <!-- Featured combination -->
+        <div class="feat-combo">
+          <div class="feat-combo-strip" style="height:40px;">
+            <div style="background:#A8C8E0"></div>
+            <div style="background:#2050A0"></div>
+            <div style="background:#164A84"></div>
+          </div>
+          <div class="feat-combo-info" style="padding:6px 10px;">
+            <div>
+              <div class="feat-combo-name" style="font-size:10px;">Deep Sea Dream</div>
+              <div class="feat-combo-sub" style="font-size:8px;">深海の夢</div>
+            </div>
+            <div class="feat-combo-sub" style="font-size:8px;">→</div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-strip" style="background:transparent; border-bottom-color: rgba(0,0,0,0.04); padding: 8px 16px;">
+          <div class="tab-pill active" style="font-size:12px;">All</div>
+          <div class="tab-pill" style="font-size:12px;">Pale & Light</div>
+          <div class="tab-pill" style="font-size:12px;">Red & Brown</div>
+          <div class="tab-pill" style="font-size:12px;">Blue</div>
+        </div>
+
+        <!-- 4-col compact named grid -->
+        <div style="display:grid; grid-template-columns: repeat(4,1fr); gap:6px; padding:10px 16px;">
+          <div style="text-align:center;">
+            <div class="swatch-cell" style="background:#E8D3B4; aspect-ratio:1; border-radius:8px; border:1px solid rgba(0,0,0,0.06);"></div>
+            <div style="font-size:7.5px; color:#6b6b6b; margin-top:3px; line-height:1.2;">Luan-bird</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="swatch-cell" style="background:#F5E6CC; aspect-ratio:1; border-radius:8px; border:1px solid rgba(0,0,0,0.06);"></div>
+            <div style="font-size:7.5px; color:#6b6b6b; margin-top:3px; line-height:1.2;">Eggshell</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="swatch-cell" style="background:#F2E8D5; aspect-ratio:1; border-radius:8px; border:1px solid rgba(0,0,0,0.06);"></div>
+            <div style="font-size:7.5px; color:#6b6b6b; margin-top:3px; line-height:1.2;">Ivory</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="swatch-cell" style="background:#EDDCB3; aspect-ratio:1; border-radius:8px; border:1px solid rgba(0,0,0,0.06);"></div>
+            <div style="font-size:7.5px; color:#6b6b6b; margin-top:3px; line-height:1.2;">Pale Yellow</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="swatch-cell" style="background:#E8D3D0; aspect-ratio:1; border-radius:8px; border:1px solid rgba(0,0,0,0.06);"></div>
+            <div style="font-size:7.5px; color:#6b6b6b; margin-top:3px; line-height:1.2;">Cherry Blossom</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="swatch-cell" style="background:#F2C9AC; aspect-ratio:1; border-radius:8px; border:1px solid rgba(0,0,0,0.06);"></div>
+            <div style="font-size:7.5px; color:#6b6b6b; margin-top:3px; line-height:1.2;">Apricot</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="swatch-cell" style="background:#F0CEA0; aspect-ratio:1; border-radius:8px; border:1px solid rgba(0,0,0,0.06);"></div>
+            <div style="font-size:7.5px; color:#6b6b6b; margin-top:3px; line-height:1.2;">Honey</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="swatch-cell" style="background:#E8CDA8; aspect-ratio:1; border-radius:8px; border:1px solid rgba(0,0,0,0.06);"></div>
+            <div style="font-size:7.5px; color:#6b6b6b; margin-top:3px; line-height:1.2;">Clove</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="swatch-cell" style="background:#B91C26; aspect-ratio:1; border-radius:8px;"></div>
+            <div style="font-size:7.5px; color:#6b6b6b; margin-top:3px; line-height:1.2;">Crimson</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="swatch-cell" style="background:#8B4513; aspect-ratio:1; border-radius:8px;"></div>
+            <div style="font-size:7.5px; color:#6b6b6b; margin-top:3px; line-height:1.2;">Chestnut</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="swatch-cell" style="background:#164A84; aspect-ratio:1; border-radius:8px;"></div>
+            <div style="font-size:7.5px; color:#6b6b6b; margin-top:3px; line-height:1.2;">Ultramarine</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="swatch-cell" style="background:#1E4D2B; aspect-ratio:1; border-radius:8px;"></div>
+            <div style="font-size:7.5px; color:#6b6b6b; margin-top:3px; line-height:1.2;">Evergreen</div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item active"><div class="tab-icon"></div>Colors</div>
+        <div class="tab-item"><div class="tab-icon"></div>Favorites</div>
+        <div class="tab-item"><div class="tab-icon"></div>Settings</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="proposal-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SIDE BY SIDE COMPARISON -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="section-title" style="text-align:center;">Comparación lado a lado</div>
+<div class="section-desc" style="text-align:center;">
+  Actual vs las 3 propuestas. Todas incluyen hero + fondo cálido. Varían en cómo muestran los colores.
+</div>
+
+<div style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin-bottom:48px;">
+
+  <!-- Mini actual -->
+  <div style="text-align:center;">
+    <div class="phone-label">Actual</div>
+    <div style="width:160px; height:320px; border-radius:18px; border:2px solid #333; overflow:hidden; background:#fafaf8;">
+      <div style="height:22px; display:flex; align-items:center; justify-content:center; font-size:6px; color:#1a1a1a;">9:41</div>
+      <div style="height:22px; display:flex; align-items:center; justify-content:center; font-size:8.5px; font-family:'Noto Serif JP',serif; color:#1a1a1a; border-bottom:1px solid rgba(0,0,0,0.06);">Outfinder</div>
+      <div style="padding:4px; display:flex; gap:4px; font-size:5.5px; color:#9b9b9b; border-bottom:1px solid rgba(0,0,0,0.06);">
+        <span style="color:#1a1a1a; font-weight:500; border-bottom:1px solid #1a1a1a; padding-bottom:2px;">All</span>
+        <span>Pale</span><span>Red</span><span>Blue</span>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:2px; padding:4px;">
+        <div style="aspect-ratio:1; background:#E8D3B4; border-radius:2px; border:0.5px solid rgba(0,0,0,0.06);"></div>
+        <div style="aspect-ratio:1; background:#F5E6CC; border-radius:2px; border:0.5px solid rgba(0,0,0,0.06);"></div>
+        <div style="aspect-ratio:1; background:#F2E8D5; border-radius:2px; border:0.5px solid rgba(0,0,0,0.06);"></div>
+        <div style="aspect-ratio:1; background:#EDDCB3; border-radius:2px; border:0.5px solid rgba(0,0,0,0.06);"></div>
+        <div style="aspect-ratio:1; background:#F0D8A8; border-radius:2px; border:0.5px solid rgba(0,0,0,0.06);"></div>
+        <div style="aspect-ratio:1; background:#E8C89E; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#F5DEB3; border-radius:2px; border:0.5px solid rgba(0,0,0,0.06);"></div>
+        <div style="aspect-ratio:1; background:#E8D3D0; border-radius:2px; border:0.5px solid rgba(0,0,0,0.06);"></div>
+        <div style="aspect-ratio:1; background:#F2C9AC; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#F5E1C0; border-radius:2px; border:0.5px solid rgba(0,0,0,0.06);"></div>
+        <div style="aspect-ratio:1; background:#B91C26; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#8B4513; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#7B3F00; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#A0522D; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#CD853F; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#164A84; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#4682B4; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#5F9EA0; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#6495ED; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#8B81C3; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#1E4D2B; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#556B2F; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#808000; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#6B8E4E; border-radius:2px;"></div>
+        <div style="aspect-ratio:1; background:#2C2C38; border-radius:2px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mini A -->
+  <div style="text-align:center;">
+    <div class="phone-label">A · 3 col</div>
+    <div style="width:160px; height:320px; border-radius:18px; border:2px solid #333; overflow:hidden; background:linear-gradient(180deg,#f5efe6,#f0ece4,#ebe5da);">
+      <div style="height:22px; display:flex; align-items:center; justify-content:center; font-size:6px; color:#1a1a1a;">9:41</div>
+      <div style="height:22px; display:flex; align-items:center; justify-content:center; font-size:8.5px; font-family:'Noto Serif JP',serif; color:#1a1a1a; border-bottom:1px solid rgba(0,0,0,0.06);">Outfinder</div>
+      <div style="text-align:center; padding:12px 8px 8px;">
+        <div style="font-family:'Noto Serif JP',serif; font-size:9px; color:#1a1a1a;">A Dictionary of<br>Color Combinations</div>
+        <div style="font-size:5px; color:#a09080; margin-top:2px;">Sanzo Wada · 159 colors</div>
+        <div style="width:16px; height:1px; background:#c4a265; margin:6px auto 0;"></div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:3px; padding:4px 6px;">
+        <div style="background:#E8D3B4; border-radius:4px; padding:3px; min-height:32px; display:flex; flex-direction:column; justify-content:flex-end;">
+          <div style="font-size:4.5px; color:#1a1a1a;">Luan-bird</div>
+          <div style="font-size:4.5px; color:#1a1a1a; opacity:0.6; font-family:'Noto Serif JP',serif;">鸞鳥色</div>
+        </div>
+        <div style="background:#F5E6CC; border-radius:4px; padding:3px; min-height:32px; display:flex; flex-direction:column; justify-content:flex-end;">
+          <div style="font-size:4.5px; color:#1a1a1a;">Eggshell</div>
+          <div style="font-size:4.5px; color:#1a1a1a; opacity:0.6; font-family:'Noto Serif JP',serif;">鳥の子色</div>
+        </div>
+        <div style="background:#F2E8D5; border-radius:4px; padding:3px; min-height:32px; display:flex; flex-direction:column; justify-content:flex-end;">
+          <div style="font-size:4.5px; color:#1a1a1a;">Ivory</div>
+          <div style="font-size:4.5px; color:#1a1a1a; opacity:0.6; font-family:'Noto Serif JP',serif;">象牙色</div>
+        </div>
+        <div style="background:#B91C26; border-radius:4px; padding:3px; min-height:32px; display:flex; flex-direction:column; justify-content:flex-end;">
+          <div style="font-size:4.5px; color:#fafaf8;">Crimson</div>
+          <div style="font-size:4.5px; color:#fafaf8; opacity:0.7; font-family:'Noto Serif JP',serif;">紅色</div>
+        </div>
+        <div style="background:#8B4513; border-radius:4px; padding:3px; min-height:32px; display:flex; flex-direction:column; justify-content:flex-end;">
+          <div style="font-size:4.5px; color:#fafaf8;">Chestnut</div>
+          <div style="font-size:4.5px; color:#fafaf8; opacity:0.7; font-family:'Noto Serif JP',serif;">栗色</div>
+        </div>
+        <div style="background:#164A84; border-radius:4px; padding:3px; min-height:32px; display:flex; flex-direction:column; justify-content:flex-end;">
+          <div style="font-size:4.5px; color:#fafaf8;">Ultramarine</div>
+          <div style="font-size:4.5px; color:#fafaf8; opacity:0.7; font-family:'Noto Serif JP',serif;">群青色</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mini B -->
+  <div style="text-align:center;">
+    <div class="phone-label">B · 2 col</div>
+    <div style="width:160px; height:320px; border-radius:18px; border:2px solid #333; overflow:hidden; background:linear-gradient(180deg,#f5efe6,#f0ece4,#ebe5da);">
+      <div style="height:22px; display:flex; align-items:center; justify-content:center; font-size:6px; color:#1a1a1a;">9:41</div>
+      <div style="height:22px; display:flex; align-items:center; justify-content:center; font-size:8.5px; font-family:'Noto Serif JP',serif; color:#1a1a1a; border-bottom:1px solid rgba(0,0,0,0.06);">Outfinder</div>
+      <div style="text-align:center; padding:10px 8px 6px;">
+        <div style="font-family:'Noto Serif JP',serif; font-size:9px; color:#1a1a1a;">A Dictionary of<br>Color Combinations</div>
+        <div style="font-size:5px; color:#a09080; margin-top:2px;">Sanzo Wada · 159 colors</div>
+        <div style="width:16px; height:1px; background:#c4a265; margin:5px auto 0;"></div>
+      </div>
+      <!-- Featured combo -->
+      <div style="margin:4px 6px; border-radius:4px; overflow:hidden;">
+        <div style="display:flex; height:20px;">
+          <div style="flex:1; background:#E8D3B4;"></div>
+          <div style="flex:1; background:#B91C26;"></div>
+          <div style="flex:1; background:#164A84;"></div>
+        </div>
+        <div style="padding:3px 4px; background:rgba(0,0,0,0.02); display:flex; justify-content:space-between;">
+          <div style="font-size:4.5px; font-family:'Noto Serif JP',serif; color:#1a1a1a;">Dawn Sky · 暁の空</div>
+          <div style="font-size:4px; color:#a09080;">→</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:4px; padding:6px;">
+        <div style="background:#E8D3B4; border-radius:5px; padding:4px; min-height:38px; display:flex; flex-direction:column; justify-content:flex-end;">
+          <div style="font-size:5px; color:#1a1a1a; font-weight:500;">Luan-bird</div>
+          <div style="font-size:4.5px; color:#1a1a1a; opacity:0.6; font-family:'Noto Serif JP',serif;">鸞鳥色</div>
+          <div style="font-size:3.5px; color:#1a1a1a; opacity:0.5; margin-top:2px;">12 combinations</div>
+        </div>
+        <div style="background:#F5E6CC; border-radius:5px; padding:4px; min-height:38px; display:flex; flex-direction:column; justify-content:flex-end;">
+          <div style="font-size:5px; color:#1a1a1a; font-weight:500;">Eggshell</div>
+          <div style="font-size:4.5px; color:#1a1a1a; opacity:0.6; font-family:'Noto Serif JP',serif;">鳥の子色</div>
+          <div style="font-size:3.5px; color:#1a1a1a; opacity:0.5; margin-top:2px;">8 combinations</div>
+        </div>
+        <div style="background:#B91C26; border-radius:5px; padding:4px; min-height:38px; display:flex; flex-direction:column; justify-content:flex-end;">
+          <div style="font-size:5px; color:#fafaf8; font-weight:500;">Crimson</div>
+          <div style="font-size:4.5px; color:#fafaf8; opacity:0.7; font-family:'Noto Serif JP',serif;">紅色</div>
+          <div style="font-size:3.5px; color:#fafaf8; opacity:0.6; margin-top:2px;">22 combinations</div>
+        </div>
+        <div style="background:#164A84; border-radius:5px; padding:4px; min-height:38px; display:flex; flex-direction:column; justify-content:flex-end;">
+          <div style="font-size:5px; color:#fafaf8; font-weight:500;">Ultramarine</div>
+          <div style="font-size:4.5px; color:#fafaf8; opacity:0.7; font-family:'Noto Serif JP',serif;">群青色</div>
+          <div style="font-size:3.5px; color:#fafaf8; opacity:0.6; margin-top:2px;">18 combinations</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mini C -->
+  <div style="text-align:center;">
+    <div class="phone-label">C · 4 col</div>
+    <div style="width:160px; height:320px; border-radius:18px; border:2px solid #333; overflow:hidden; background:linear-gradient(180deg,#f5efe6,#f0ece4,#ebe5da);">
+      <div style="height:22px; display:flex; align-items:center; justify-content:center; font-size:6px; color:#1a1a1a;">9:41</div>
+      <div style="height:22px; display:flex; align-items:center; justify-content:center; font-size:8.5px; font-family:'Noto Serif JP',serif; color:#1a1a1a; border-bottom:1px solid rgba(0,0,0,0.06);">Outfinder</div>
+      <div style="text-align:center; padding:8px 8px 6px;">
+        <div style="font-family:'Noto Serif JP',serif; font-size:8px; color:#1a1a1a;">A Dictionary of Color Combinations</div>
+        <div style="font-size:5px; color:#a09080; margin-top:2px;">Sanzo Wada · 159 colors</div>
+        <div style="width:16px; height:1px; background:#c4a265; margin:5px auto 0;"></div>
+      </div>
+      <!-- Featured combo -->
+      <div style="margin:3px 6px; border-radius:4px; overflow:hidden;">
+        <div style="display:flex; height:16px;">
+          <div style="flex:1; background:#A8C8E0;"></div>
+          <div style="flex:1; background:#2050A0;"></div>
+          <div style="flex:1; background:#164A84;"></div>
+        </div>
+        <div style="padding:2px 4px; background:rgba(0,0,0,0.02); display:flex; justify-content:space-between;">
+          <div style="font-size:4px; font-family:'Noto Serif JP',serif; color:#1a1a1a;">Deep Sea Dream · 深海の夢</div>
+          <div style="font-size:3.5px; color:#a09080;">→</div>
+        </div>
+      </div>
+      <div style="padding:2px 4px; display:flex; gap:4px; font-size:5px; color:#9b9b9b;">
+        <span style="color:#1a1a1a; font-weight:500; border-bottom:1px solid #1a1a1a; padding-bottom:1px;">All</span>
+        <span>Pale</span><span>Red</span><span>Blue</span>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:3px; padding:4px 6px;">
+        <div style="text-align:center;">
+          <div style="aspect-ratio:1; background:#E8D3B4; border-radius:3px; border:0.5px solid rgba(0,0,0,0.06);"></div>
+          <div style="font-size:3.5px; color:#6b6b6b; margin-top:1px;">Luan-bird</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="aspect-ratio:1; background:#F5E6CC; border-radius:3px; border:0.5px solid rgba(0,0,0,0.06);"></div>
+          <div style="font-size:3.5px; color:#6b6b6b; margin-top:1px;">Eggshell</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="aspect-ratio:1; background:#F2E8D5; border-radius:3px; border:0.5px solid rgba(0,0,0,0.06);"></div>
+          <div style="font-size:3.5px; color:#6b6b6b; margin-top:1px;">Ivory</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="aspect-ratio:1; background:#E8D3D0; border-radius:3px; border:0.5px solid rgba(0,0,0,0.06);"></div>
+          <div style="font-size:3.5px; color:#6b6b6b; margin-top:1px;">Cherry Bl.</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="aspect-ratio:1; background:#B91C26; border-radius:3px;"></div>
+          <div style="font-size:3.5px; color:#6b6b6b; margin-top:1px;">Crimson</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="aspect-ratio:1; background:#8B4513; border-radius:3px;"></div>
+          <div style="font-size:3.5px; color:#6b6b6b; margin-top:1px;">Chestnut</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="aspect-ratio:1; background:#164A84; border-radius:3px;"></div>
+          <div style="font-size:3.5px; color:#6b6b6b; margin-top:1px;">Ultramarine</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="aspect-ratio:1; background:#1E4D2B; border-radius:3px;"></div>
+          <div style="font-size:3.5px; color:#6b6b6b; margin-top:1px;">Evergreen</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="aspect-ratio:1; background:#4682B4; border-radius:3px;"></div>
+          <div style="font-size:3.5px; color:#6b6b6b; margin-top:1px;">Steel Blue</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="aspect-ratio:1; background:#A0522D; border-radius:3px;"></div>
+          <div style="font-size:3.5px; color:#6b6b6b; margin-top:1px;">Sienna</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="aspect-ratio:1; background:#556B2F; border-radius:3px;"></div>
+          <div style="font-size:3.5px; color:#6b6b6b; margin-top:1px;">Olive</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="aspect-ratio:1; background:#6B8E4E; border-radius:3px;"></div>
+          <div style="font-size:3.5px; color:#6b6b6b; margin-top:1px;">Moss</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- TRADE-OFFS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div style="max-width:680px; margin:0 auto 48px; padding:24px; background:#222; border-radius:12px;">
+  <div class="section-title" style="margin-bottom:16px;">Trade-offs</div>
+  <table style="width:100%; font-size:12px; border-collapse:collapse;">
+    <tr style="border-bottom:1px solid #333;">
+      <th style="text-align:left; padding:8px 4px; color:#888;">Aspecto</th>
+      <th style="text-align:center; padding:8px 4px; color:#888;">A · 3 col</th>
+      <th style="text-align:center; padding:8px 4px; color:#888;">B · 2 col</th>
+      <th style="text-align:center; padding:8px 4px; color:#888;">C · 4 col</th>
+    </tr>
+    <tr style="border-bottom:1px solid #333;">
+      <td style="padding:8px 4px;">Identidad Wada</td>
+      <td style="text-align:center; padding:8px 4px;">Alta</td>
+      <td style="text-align:center; padding:8px 4px; color:#c4a265;">Muy alta</td>
+      <td style="text-align:center; padding:8px 4px;">Alta</td>
+    </tr>
+    <tr style="border-bottom:1px solid #333;">
+      <td style="padding:8px 4px;">Nombres visibles</td>
+      <td style="text-align:center; padding:8px 4px;">EN + JP</td>
+      <td style="text-align:center; padding:8px 4px; color:#c4a265;">EN + JP + count</td>
+      <td style="text-align:center; padding:8px 4px;">Solo EN</td>
+    </tr>
+    <tr style="border-bottom:1px solid #333;">
+      <td style="padding:8px 4px;">Velocidad de browsing</td>
+      <td style="text-align:center; padding:8px 4px;">Media</td>
+      <td style="text-align:center; padding:8px 4px;">Lenta</td>
+      <td style="text-align:center; padding:8px 4px; color:#c4a265;">Rápida</td>
+    </tr>
+    <tr style="border-bottom:1px solid #333;">
+      <td style="padding:8px 4px;">Colores visibles (above fold)</td>
+      <td style="text-align:center; padding:8px 4px;">~9</td>
+      <td style="text-align:center; padding:8px 4px;">~4</td>
+      <td style="text-align:center; padding:8px 4px; color:#c4a265;">~12</td>
+    </tr>
+    <tr style="border-bottom:1px solid #333;">
+      <td style="padding:8px 4px;">Combinación destacada</td>
+      <td style="text-align:center; padding:8px 4px;">No</td>
+      <td style="text-align:center; padding:8px 4px; color:#c4a265;">Sí</td>
+      <td style="text-align:center; padding:8px 4px; color:#c4a265;">Sí</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 4px;">Scroll para ver 159 colores</td>
+      <td style="text-align:center; padding:8px 4px;">~53 filas</td>
+      <td style="text-align:center; padding:8px 4px;">~80 filas</td>
+      <td style="text-align:center; padding:8px 4px; color:#c4a265;">~40 filas</td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>
