@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { PremiumProvider } from "@/contexts/PremiumContext";
 import { TabNavigator } from "@/navigation/TabNavigator";
@@ -66,17 +67,19 @@ export function App() {
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<SafeAreaProvider>
-				{onboardingSeen === false ? (
-					<Onboarding onComplete={handleOnboardingComplete} />
-				) : (
-					<FavoritesProvider>
-						<PremiumProvider>
-							<NavigationContainer>
-								<TabNavigator />
-							</NavigationContainer>
-						</PremiumProvider>
-					</FavoritesProvider>
-				)}
+				<ErrorBoundary>
+					{onboardingSeen === false ? (
+						<Onboarding onComplete={handleOnboardingComplete} />
+					) : (
+						<FavoritesProvider>
+							<PremiumProvider>
+								<NavigationContainer>
+									<TabNavigator />
+								</NavigationContainer>
+							</PremiumProvider>
+						</FavoritesProvider>
+					)}
+				</ErrorBoundary>
 			</SafeAreaProvider>
 		</GestureHandlerRootView>
 	);

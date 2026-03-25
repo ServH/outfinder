@@ -28,6 +28,10 @@ jest.mock("@/contexts/FavoritesContext", () => ({
 	FavoritesProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
+jest.mock("@/contexts/PremiumContext", () => ({
+	PremiumProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
 jest.mock("expo-font", () => ({
 	useFonts: () => [true],
 }));
@@ -44,6 +48,7 @@ jest.mock("react-native-gesture-handler", () => ({
 
 jest.mock("react-native-safe-area-context", () => ({
 	SafeAreaProvider: ({ children }: { children: React.ReactNode }) => children,
+	SafeAreaView: ({ children }: { children: React.ReactNode }) => children,
 	useSafeAreaInsets: () => ({ top: 44, bottom: 34, left: 0, right: 0 }),
 }));
 
@@ -162,5 +167,32 @@ describe("App", () => {
 		});
 
 		expect(SplashScreen.hideAsync).toHaveBeenCalled();
+	});
+
+	it("shows ErrorBoundary fallback when a child throws during render", async () => {
+		(AsyncStorage.getItem as jest.Mock).mockResolvedValue("true");
+
+		// Override TabNavigator mock to throw
+		const TabNavigatorMock =
+			require("@/navigation/TabNavigator") as typeof import("@/navigation/TabNavigator");
+		const originalTabNavigator = TabNavigatorMock.TabNavigator;
+		(TabNavigatorMock as Record<string, unknown>).TabNavigator = () => {
+			throw new Error("Test crash");
+		};
+
+		const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+
+		render(<App />);
+
+		await waitFor(() => {
+			expect(screen.getByText("Something went wrong")).toBeTruthy();
+		});
+
+		expect(screen.getByText("Outfinder")).toBeTruthy();
+		expect(screen.getByTestId("error-boundary-restart")).toBeTruthy();
+
+		consoleSpy.mockRestore();
+		(TabNavigatorMock as Record<string, unknown>).TabNavigator =
+			originalTabNavigator;
 	});
 });

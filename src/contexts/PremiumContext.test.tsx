@@ -79,7 +79,7 @@ describe("PremiumContext", () => {
 		await flushInit();
 
 		expect(Purchases.configure).toHaveBeenCalledWith({
-			apiKey: "appl_PLACEHOLDER_REPLACE_ME",
+			apiKey: "appl_ghlHoyKQjEzsvNtrrSWcJprbMuJ",
 		});
 	});
 
@@ -284,5 +284,74 @@ describe("PremiumContext", () => {
 				await result.current.restore();
 			}),
 		).rejects.toThrow("No previous purchase found");
+	});
+
+	// SecureStore failure resilience (Story 6.5)
+	it("purchase() succeeds even when SecureStore.setItemAsync throws", async () => {
+		const mockPkg = { product: { priceString: "€0.99" } };
+		(Purchases.getOfferings as jest.Mock).mockResolvedValue({
+			current: { availablePackages: [mockPkg] },
+		});
+		(Purchases.purchasePackage as jest.Mock).mockResolvedValue({
+			customerInfo: {
+				entitlements: {
+					active: { outfinder_premium: { isActive: true } },
+				},
+			},
+		});
+		(SecureStore.setItemAsync as jest.Mock).mockRejectedValue(
+			new Error("Keychain full"),
+		);
+		const consoleSpy = jest.spyOn(console, "warn").mockImplementation();
+
+		const { result } = renderHook(() => usePremium(), { wrapper });
+		await flushInit();
+
+		// Reset the mock to fail specifically for the purchase call
+		(SecureStore.setItemAsync as jest.Mock).mockRejectedValue(
+			new Error("Keychain full"),
+		);
+
+		await act(async () => {
+			await result.current.purchase();
+		});
+
+		expect(result.current.isPremium).toBe(true);
+		expect(consoleSpy).toHaveBeenCalledWith(
+			"Failed to cache premium status:",
+			expect.any(Error),
+		);
+		consoleSpy.mockRestore();
+	});
+
+	it("restore() succeeds even when SecureStore.setItemAsync throws", async () => {
+		(Purchases.restorePurchases as jest.Mock).mockResolvedValue({
+			entitlements: {
+				active: { outfinder_premium: { isActive: true } },
+			},
+		});
+		(SecureStore.setItemAsync as jest.Mock).mockRejectedValue(
+			new Error("Keychain full"),
+		);
+		const consoleSpy = jest.spyOn(console, "warn").mockImplementation();
+
+		const { result } = renderHook(() => usePremium(), { wrapper });
+		await flushInit();
+
+		// Reset the mock to fail specifically for the restore call
+		(SecureStore.setItemAsync as jest.Mock).mockRejectedValue(
+			new Error("Keychain full"),
+		);
+
+		await act(async () => {
+			await result.current.restore();
+		});
+
+		expect(result.current.isPremium).toBe(true);
+		expect(consoleSpy).toHaveBeenCalledWith(
+			"Failed to cache premium status:",
+			expect.any(Error),
+		);
+		consoleSpy.mockRestore();
 	});
 });

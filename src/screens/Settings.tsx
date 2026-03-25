@@ -2,6 +2,7 @@ import Constants from "expo-constants";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
 	ActivityIndicator,
+	Linking,
 	Pressable,
 	ScrollView,
 	Text,
@@ -12,6 +13,9 @@ import { useFavorites } from "@/contexts/FavoritesContext";
 import { usePremium } from "@/contexts/PremiumContext";
 import { getRestoreErrorMessage, usePremiumGate } from "@/hooks/usePremiumGate";
 import { wadaTokens } from "@/styles/theme";
+
+const PRIVACY_URL = "https://servh.github.io/outfinder-legal/";
+const SUPPORT_URL = "https://servh.github.io/outfinder-legal/support.html";
 
 type SettingsProps = Record<string, never>;
 
@@ -222,6 +226,80 @@ export function Settings(_props: SettingsProps) {
 								{Constants.expoConfig?.version ?? "1.0.0"}
 							</Text>
 						</View>
+
+						{/* Divider */}
+						<View className="h-[1px] bg-divider mx-4" />
+
+						{/* Privacy Policy row */}
+						<Pressable
+							testID="settings-privacy-row"
+							className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+							accessibilityRole="link"
+							accessibilityLabel="Privacy Policy"
+							onPress={() => {
+								try {
+									Linking.openURL(PRIVACY_URL).catch((error: unknown) => {
+										if (__DEV__) {
+											console.warn("Failed to open URL:", error);
+										}
+									});
+								} catch (error) {
+									if (__DEV__) {
+										console.warn("Failed to open URL:", error);
+									}
+								}
+							}}
+						>
+							<Text
+								allowFontScaling
+								className="font-sans text-[14px] text-text-primary"
+							>
+								Privacy Policy
+							</Text>
+							<Text
+								allowFontScaling
+								className="font-sans text-[14px] text-text-tertiary"
+							>
+								›
+							</Text>
+						</Pressable>
+
+						{/* Divider */}
+						<View className="h-[1px] bg-divider mx-4" />
+
+						{/* Support row */}
+						<Pressable
+							testID="settings-support-row"
+							className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+							accessibilityRole="link"
+							accessibilityLabel="Support"
+							onPress={() => {
+								try {
+									Linking.openURL(SUPPORT_URL).catch((error: unknown) => {
+										if (__DEV__) {
+											console.warn("Failed to open URL:", error);
+										}
+									});
+								} catch (error) {
+									if (__DEV__) {
+										console.warn("Failed to open URL:", error);
+									}
+								}
+							}}
+						>
+							<Text
+								allowFontScaling
+								className="font-sans text-[14px] text-text-primary"
+							>
+								Support
+							</Text>
+							<Text
+								allowFontScaling
+								className="font-sans text-[14px] text-text-tertiary"
+							>
+								›
+							</Text>
+						</Pressable>
 					</View>
 				</View>
 			</ScrollView>
