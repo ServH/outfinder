@@ -1,6 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { RouteProp } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
 	AccessibilityInfo,
 	Alert,
@@ -10,6 +11,11 @@ import {
 	useWindowDimensions,
 	View,
 } from "react-native";
+import Animated, {
+	useAnimatedStyle,
+	useSharedValue,
+	withTiming,
+} from "react-native-reanimated";
 import { Aureola } from "@/components/Aureola";
 import {
 	GARMENT_REGISTRY,
@@ -21,6 +27,7 @@ import { WadaHeader } from "@/components/WadaHeader";
 import { WarmBackground } from "@/components/WarmBackground";
 import { getCombination } from "@/data/colorIndex";
 import { getCycleForGarment, useOutfitState } from "@/hooks/useOutfitState";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { hapticMedium, hapticRigid } from "@/lib/haptics";
 import { shareOutfit } from "@/lib/share";
 import type { ColorsStackParamList } from "@/navigation/types";
@@ -47,14 +54,85 @@ export function OutfitVisualizer() {
 	const route = useRoute<OutfitVisualizerRoute>();
 	const { combinationId } = route.params;
 	const combination = getCombination(combinationId);
+	const reducedMotion = useReducedMotion();
 
 	const shareViewRef = useRef<View>(null);
 
 	const [sharing, setSharing] = useState(false);
+	const [hasSwipedInSession, setHasSwipedInSession] = useState(false);
+	const [hintSeen, setHintSeen] = useState(true);
+	const dismissedRef = useRef(false);
 
 	const { slots, selectedSlotIndex, selectSlot, cycleVariant } = useOutfitState(
 		combination?.colors ?? [],
 	);
+
+	// Chevron animation
+	const chevronOpacity = useSharedValue(0);
+	const chevronStyle = useAnimatedStyle(() => ({
+		opacity: chevronOpacity.value,
+	}));
+
+	useEffect(() => {
+		if (selectedSlotIndex !== null && !hasSwipedInSession) {
+			chevronOpacity.value = reducedMotion
+				? 0.6
+				: withTiming(0.6, { duration: 200 });
+		} else {
+			chevronOpacity.value = reducedMotion
+				? 0
+				: withTiming(0, { duration: 300 });
+		}
+	}, [selectedSlotIndex, hasSwipedInSession, reducedMotion, chevronOpacity]);
+
+	// Tooltip animation
+	const tooltipOpacity = useSharedValue(1);
+	const tooltipAnimStyle = useAnimatedStyle(() => ({
+		opacity: tooltipOpacity.value,
+	}));
+
+	// Read hint flag on mount
+	useEffect(() => {
+		(async () => {
+			try {
+				const value = await AsyncStorage.getItem("@outfinder/hintSeen");
+				if (value !== "true") {
+					setHintSeen(false);
+					AccessibilityInfo.announceForAccessibility(
+						"Tap a garment to swap its color. Swipe left or right to change garment style.",
+					);
+				}
+			} catch {
+				// AsyncStorage read failed — show tooltip as fallback
+				setHintSeen(false);
+				AccessibilityInfo.announceForAccessibility(
+					"Tap a garment to swap its color. Swipe left or right to change garment style.",
+				);
+			}
+		})();
+	}, []);
+
+	const dismissHint = useCallback(() => {
+		if (dismissedRef.current) return;
+		dismissedRef.current = true;
+		setHintSeen(true);
+		if (reducedMotion) {
+			tooltipOpacity.value = 0;
+		} else {
+			tooltipOpacity.value = withTiming(0, { duration: 300 });
+		}
+		AsyncStorage.setItem("@outfinder/hintSeen", "true").catch(() => {
+			// Best-effort persistence
+		});
+	}, [reducedMotion, tooltipOpacity]);
+
+	// Auto-dismiss tooltip after 8s
+	useEffect(() => {
+		if (!hintSeen) {
+			const timer = setTimeout(dismissHint, 8000);
+			return () => clearTimeout(timer);
+		}
+	}, [hintSeen, dismissHint]);
 
 	const handleShare = useCallback(async () => {
 		if (sharing) return;
@@ -108,8 +186,11 @@ export function OutfitVisualizer() {
 			);
 			cycleVariant(index, direction);
 			AccessibilityInfo.announceForAccessibility(`Changed to ${newLabel}`);
+			if (!hasSwipedInSession) {
+				setHasSwipedInSession(true);
+			}
 		},
-		[slots, cycleVariant],
+		[slots, cycleVariant, hasSwipedInSession],
 	);
 
 	if (!combination) {
@@ -145,12 +226,62 @@ export function OutfitVisualizer() {
 							nameJp={combination.nameJp}
 							colorCount={combination.colors.length}
 						/>
-						<OutfitCard
-							slots={slots}
-							selectedSlotIndex={selectedSlotIndex}
-							onSlotTap={handleSlotTap}
-							onVariantCycle={handleVariantCycle}
-						/>
+						<View style={{ position: "relative", overflow: "visible" }}>
+							<OutfitCard
+								slots={slots}
+								selectedSlotIndex={selectedSlotIndex}
+								onSlotTap={handleSlotTap}
+								onVariantCycle={handleVariantCycle}
+							/>
+							{selectedSlotIndex !== null && !sharing && (
+								<>
+									<Animated.View
+										style={[
+											{
+												position: "absolute",
+												left: -28,
+												top: 0,
+												bottom: 0,
+												justifyContent: "center",
+											},
+											chevronStyle,
+										]}
+										accessibilityElementsHidden={true}
+									>
+										<Text
+											style={{
+												fontSize: 28,
+												color: wadaTokens.premiumAccent,
+											}}
+										>
+											{"‹"}
+										</Text>
+									</Animated.View>
+									<Animated.View
+										style={[
+											{
+												position: "absolute",
+												right: -28,
+												top: 0,
+												bottom: 0,
+												justifyContent: "center",
+											},
+											chevronStyle,
+										]}
+										accessibilityElementsHidden={true}
+									>
+										<Text
+											style={{
+												fontSize: 28,
+												color: wadaTokens.premiumAccent,
+											}}
+										>
+											{"›"}
+										</Text>
+									</Animated.View>
+								</>
+							)}
+						</View>
 						<View className="mt-4">
 							<MiniPaletteStrip
 								colors={slots.map((s) => ({
@@ -187,6 +318,57 @@ export function OutfitVisualizer() {
 					</Text>
 				</Pressable>
 			</View>
+			{/* First-visit tooltip overlay — outside shareViewRef */}
+			{!hintSeen && (
+				<Animated.View
+					style={[
+						{
+							position: "absolute",
+							top: 0,
+							left: 0,
+							right: 0,
+							bottom: 0,
+							zIndex: 10,
+						},
+						tooltipAnimStyle,
+					]}
+				>
+					<Pressable
+						style={{
+							flex: 1,
+							backgroundColor: "rgba(0,0,0,0.5)",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+						onPress={dismissHint}
+						accessibilityLabel="Tap a garment to swap its color. Swipe left or right to change garment style. Tap to dismiss."
+						accessibilityRole="button"
+					>
+						<View
+							style={{
+								backgroundColor: "#1a1a1a",
+								borderRadius: 12,
+								padding: 24,
+								marginHorizontal: 40,
+								maxWidth: 300,
+							}}
+						>
+							<Text
+								style={{
+									color: "#fafaf8",
+									fontFamily: "Inter_500Medium",
+									fontSize: 15,
+									textAlign: "center",
+									lineHeight: 22,
+								}}
+							>
+								Tap a garment to swap its color{"\n\n"}Swipe left or right to
+								change garment style
+							</Text>
+						</View>
+					</Pressable>
+				</Animated.View>
+			)}
 		</View>
 	);
 }

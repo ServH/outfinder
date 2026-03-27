@@ -14,7 +14,7 @@ const CURATED_OUTFIT: {
 	marginTop: number;
 }[] = [
 	{ garmentType: "top-tshirt", hex: "#E34234", height: 80, marginTop: 0 },
-	{ garmentType: "bottom-pants", hex: "#1C1C1C", height: 100, marginTop: 4 },
+	{ garmentType: "bottom-pants", hex: "#8B6914", height: 100, marginTop: 4 },
 	{
 		garmentType: "shoes-sneakers",
 		hex: "#E8D8C4",
@@ -49,9 +49,6 @@ export function OutfitPreview(_props: Props) {
 						alignItems: "center",
 						width: GARMENT_WIDTH,
 						height: item.height,
-						backgroundColor: item.hex,
-						borderRadius: 4,
-						overflow: "hidden",
 					}}
 				>
 					<TintedGarment

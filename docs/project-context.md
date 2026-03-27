@@ -18,8 +18,8 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 | Sharing | expo-sharing ~55.0.11 (native iOS Share Sheet / UIActivityViewController) |
 | Icons | expo-symbols (SF Symbols) |
 | Storage | AsyncStorage (favorites persistence) |
-| IAP | RevenueCat (react-native-purchases) — not yet implemented |
-| Secure Storage | expo-secure-store — not yet implemented |
+| IAP | RevenueCat (react-native-purchases) — PremiumContext + purchase/restore flow |
+| Secure Storage | expo-secure-store — premium status caching |
 | Linting | Biome 2.4.6 (tabs, double quotes) |
 | Testing | Jest ~29.7.0 + jest-expo + React Native Testing Library |
 | Fonts | Noto Serif JP (Regular/Medium) + Inter (Regular/Medium) via expo-font |
@@ -39,15 +39,17 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 - **Epic 3: DONE** — Social Sharing (2/2 stories — share image capture + native share sheet)
 - **Epic 4: DONE** — Favorites & Collections (2/2 stories — FavoritesContext + FavoritesList)
 - **Epic 5: DONE** — Premium & In-App Purchases (2/2 stories — PremiumContext + IAP purchase/restore flow)
-- **Epic 6: IN-PROGRESS** — Onboarding & App Store Launch (3/4 stories done: 6.1 Onboarding, 6.2 Settings/EAS, 6.3 A11y polish; 6.4 remaining)
-- **Tests:** 360 across 29 suites (all passing)
+- **Epic 6: DONE** — Onboarding & App Store Launch (5/5 stories: 6.1 Onboarding, 6.2 Settings/EAS, 6.3 A11y polish, 6.4 Code quality, 6.5 Error boundary/privacy/IAP hardening)
+- **Epic 7: IN-PROGRESS** — Post-launch polish (7.1 Onboarding visual refresh DONE, 7.2 Visualizer interaction affordances DONE, 7.3 Tinted garment fallback PENDING)
+- **Tests:** 396 across 31 suites (all passing)
 - **Code Reviews:** Adversarial review on every story since Epic 1
 - **Retrospectives:** Epic 1, 2, 3, 4 completed
+- **App Store:** v1.0.0 submitted 2026-03-26, v1.0.1 bumped for onboarding refresh
 
 ### Epic Execution Order (non-sequential)
 
 Epics were NOT executed in numerical order:
-1. Epic 1 → Epic 2 → **Epic 4** → **Epic 3** → Epic 5 → Epic 6 (in-progress)
+1. Epic 1 → Epic 2 → **Epic 4** → **Epic 3** → Epic 5 → Epic 6 → Epic 7 (in-progress)
 
 Epic 3 was postponed after Epic 2 because the Visualizer was visually flat for social sharing. Epic 4 (Favorites) was independent and executed first. Story 2.5 (Skia rewrite) + bugfix polish branch resolved the visual debt, unblocking Epic 3.
 
@@ -79,12 +81,19 @@ outfinder/
 │   │   ├── MiniPaletteStrip.tsx     # Thin horizontal color strip with names below the card
 │   │   ├── FavoriteButton.tsx       # Heart toggle (SF Symbol), spring animation, hapticLight, a11y
 │   │   ├── EmptyState.tsx           # Empty favorites guidance with heart icon and message
+│   │   ├── ErrorBoundary.tsx        # App-level error boundary with recovery UI
+│   │   ├── PremiumPaywall.tsx       # Paywall modal — Wada-styled, RevenueCat purchase/restore
 │   │   ├── presentation.test.tsx    # Shared presentation component tests
+│   │   ├── onboarding/             # Onboarding step preview components
+│   │   │   ├── ColorSpecimenPreview.tsx  # Mini color specimen for onboarding
+│   │   │   ├── OutfitPreview.tsx         # Mini outfit preview for onboarding
+│   │   │   ├── PalettePreview.tsx        # Mini palette preview for onboarding
+│   │   │   └── SwatchGridPreview.tsx     # Mini swatch grid for onboarding
 │   │   └── garments/
 │   │       └── index.ts             # GARMENT_REGISTRY — GarmentType union, GarmentConfig (image, label, heightHint)
 │   ├── contexts/
 │   │   ├── FavoritesContext.tsx     # FavoritesProvider + useFavorites() — Set<combinationId>, AsyncStorage persistence, toggle/isFavorite/count
-│   │   └── PremiumContext.tsx       # PremiumProvider + usePremium() — RevenueCat IAP, SecureStore cache, purchase/restore
+│   │   └── PremiumContext.tsx       # PremiumProvider + usePremium() — RevenueCat IAP, SecureStore cache, purchase/restore, isPremium/isLoading
 │   ├── data/
 │   │   ├── types.ts                 # Color, Combination, SwatchGroup types
 │   │   ├── colors.json              # 159 Wada colors (hex, nameJp, nameEn, id, swatchGroup, combinationCount)
@@ -92,6 +101,7 @@ outfinder/
 │   │   └── colorIndex.ts            # Pre-computed Map indexes — O(1) lookups: getColor, getCombination, getCombinations, getColorsByGroup, getAllColors, getAllCombinations
 │   ├── hooks/
 │   │   ├── useOutfitState.ts        # Outfit state hook — slots, selectedSlotIndex, selectSlot (tap-swap), toggleVariant
+│   │   ├── usePremiumGate.ts        # Gate hook — checks premium status, triggers paywall if needed
 │   │   └── useReducedMotion.ts      # AccessibilityInfo.isReduceMotionEnabled() + listener
 │   ├── lib/
 │   │   ├── color.ts                 # isLightColor(hex) — luminance-based light color detection for contrast-aware UI
@@ -108,7 +118,8 @@ outfinder/
 │   │   ├── Combinations.tsx         # ColorHeader + CombinationList for selected color
 │   │   ├── OutfitVisualizer.tsx     # Outfit visualization with Skia tinting, editorial card, Wada identity, share button, branding, haptics, VoiceOver
 │   │   ├── FavoritesList.tsx        # Saved combinations list, CombinationList reuse, EmptyState when empty
-│   │   └── Settings.tsx             # PLACEHOLDER — Epic 6 implements
+│   │   ├── Onboarding.tsx            # 4-step onboarding flow with real mini-previews, Wada styling
+│   │   └── Settings.tsx             # Settings screen — version info, privacy links, restore purchases, contact
 │   ├── styles/
 │   │   └── theme.ts                 # 16 Wada design token constants (camelCase) for programmatic access
 │   └── global.css                   # Tailwind directives (@tailwind base/components/utilities)
