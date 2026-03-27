@@ -20,25 +20,13 @@ describe("Onboarding", () => {
 		mockOnComplete.mockClear();
 	});
 
-	it("renders all 4 slides with Japanese and English text", () => {
+	it("renders all 4 slides with English text", () => {
 		render(<Onboarding onComplete={mockOnComplete} />);
 
 		expect(screen.getByTestId("onboarding-screen")).toBeTruthy();
-
-		// Slide 1
-		expect(screen.getByText("あなたの服を開いて")).toBeTruthy();
 		expect(screen.getByText("Open your wardrobe")).toBeTruthy();
-
-		// Slide 2
-		expect(screen.getByText("好きな一着を選んで")).toBeTruthy();
 		expect(screen.getByText("Pick your favorite piece")).toBeTruthy();
-
-		// Slide 3
-		expect(screen.getByText("その色を見つけて")).toBeTruthy();
 		expect(screen.getByText("Find its color")).toBeTruthy();
-
-		// Slide 4
-		expect(screen.getByText("組み合わせを発見しよう")).toBeTruthy();
 		expect(screen.getByText("Discover your combinations")).toBeTruthy();
 	});
 
@@ -160,5 +148,45 @@ describe("Onboarding", () => {
 
 		expect(dot0.props.className).toContain("bg-primary");
 		expect(dot1.props.className).toContain("bg-tertiary");
+	});
+
+	it("slide 1 renders SwatchGridPreview", () => {
+		render(<Onboarding onComplete={mockOnComplete} />);
+
+		expect(
+			screen.getByTestId("swatch-grid-preview", {
+				includeHiddenElements: true,
+			}),
+		).toBeTruthy();
+	});
+
+	it("slide 2 renders ColorSpecimenPreview", () => {
+		render(<Onboarding onComplete={mockOnComplete} />);
+
+		expect(
+			screen.getByTestId("color-specimen-preview", {
+				includeHiddenElements: true,
+			}),
+		).toBeTruthy();
+	});
+
+	it("slide 3 renders PalettePreview", () => {
+		render(<Onboarding onComplete={mockOnComplete} />);
+
+		expect(
+			screen.getByTestId("palette-preview", {
+				includeHiddenElements: true,
+			}),
+		).toBeTruthy();
+	});
+
+	it("slide 4 renders OutfitPreview", () => {
+		render(<Onboarding onComplete={mockOnComplete} />);
+
+		expect(
+			screen.getByTestId("outfit-preview", {
+				includeHiddenElements: true,
+			}),
+		).toBeTruthy();
 	});
 });
