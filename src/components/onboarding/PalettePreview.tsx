@@ -4,7 +4,7 @@ type Props = Record<string, never>;
 
 const CURATED_PALETTE = [
 	{ hex: "#E8D8C4", nameEn: "Unbleached Silk" },
-	{ hex: "#1C1C1C", nameEn: "Ink Black" },
+	{ hex: "#8B6914", nameEn: "Raw Umber" },
 	{ hex: "#E34234", nameEn: "Vermillion" },
 ];
 

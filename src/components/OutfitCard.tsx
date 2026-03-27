@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import { Pressable, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
+	Easing,
 	runOnJS,
 	useAnimatedStyle,
 	useSharedValue,
 	withRepeat,
-	withSpring,
 	withTiming,
 } from "react-native-reanimated";
 
@@ -48,32 +48,32 @@ function CardSlot({
 	const label = `${config.label}, colored ${slot.color.nameEn}, tap to select for swap`;
 	const reducedMotion = useReducedMotion();
 
-	const borderOpacity = useSharedValue(0);
+	const underlineOpacity = useSharedValue(0);
 	const translateX = useSharedValue(0);
 	const slideOpacity = useSharedValue(1);
 
 	useEffect(() => {
 		if (isSelected) {
 			if (reducedMotion) {
-				borderOpacity.value = 1;
+				underlineOpacity.value = 1;
 			} else {
-				borderOpacity.value = withRepeat(
-					withSpring(1, { damping: 12, stiffness: 120 }),
+				underlineOpacity.value = 0.5;
+				underlineOpacity.value = withRepeat(
+					withTiming(1, {
+						duration: 1200,
+						easing: Easing.inOut(Easing.ease),
+					}),
 					-1,
 					true,
 				);
 			}
 		} else {
-			borderOpacity.value = withTiming(0, { duration: 150 });
+			underlineOpacity.value = withTiming(0, { duration: 150 });
 		}
-	}, [isSelected, reducedMotion, borderOpacity]);
+	}, [isSelected, reducedMotion, underlineOpacity]);
 
-	const borderStyle = useAnimatedStyle(() => ({
-		borderWidth: 2,
-		borderColor: isSelected
-			? `rgba(0, 0, 0, ${borderOpacity.value * 0.8})`
-			: "transparent",
-		borderRadius: 8,
+	const underlineStyle = useAnimatedStyle(() => ({
+		opacity: underlineOpacity.value,
 	}));
 
 	const slideStyle = useAnimatedStyle(() => ({
@@ -148,14 +148,11 @@ function CardSlot({
 					onPress={onTap}
 				>
 					{({ pressed }) => (
-						<Animated.View
-							style={[
-								borderStyle,
-								{
-									opacity: pressed ? 0.88 : 1,
-									alignItems: "center",
-								},
-							]}
+						<View
+							style={{
+								opacity: pressed ? 0.88 : 1,
+								alignItems: "center",
+							}}
 						>
 							<Animated.View style={slideStyle}>
 								<TintedGarment
@@ -165,7 +162,21 @@ function CardSlot({
 									height={config.heightHint}
 								/>
 							</Animated.View>
-						</Animated.View>
+							<Animated.View
+								testID="underline-bar"
+								style={[
+									{
+										height: 4,
+										width: 132,
+										alignSelf: "center",
+										borderRadius: 2,
+										backgroundColor: wadaTokens.premiumAccent,
+										marginTop: 4,
+									},
+									underlineStyle,
+								]}
+							/>
+						</View>
 					)}
 				</Pressable>
 			</GestureDetector>

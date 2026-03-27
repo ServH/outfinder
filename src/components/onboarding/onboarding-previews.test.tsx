@@ -51,7 +51,7 @@ describe("PalettePreview", () => {
 
 		expect(screen.getByTestId("palette-preview", hidden)).toBeTruthy();
 		expect(screen.getByTestId("palette-segment-#E8D8C4", hidden)).toBeTruthy();
-		expect(screen.getByTestId("palette-segment-#1C1C1C", hidden)).toBeTruthy();
+		expect(screen.getByTestId("palette-segment-#8B6914", hidden)).toBeTruthy();
 		expect(screen.getByTestId("palette-segment-#E34234", hidden)).toBeTruthy();
 	});
 
@@ -59,7 +59,7 @@ describe("PalettePreview", () => {
 		render(<PalettePreview />);
 
 		expect(screen.getByText("Unbleached Silk", hidden)).toBeTruthy();
-		expect(screen.getByText("Ink Black", hidden)).toBeTruthy();
+		expect(screen.getByText("Raw Umber", hidden)).toBeTruthy();
 		expect(screen.getByText("Vermillion", hidden)).toBeTruthy();
 	});
 
@@ -101,28 +101,16 @@ describe("OutfitPreview", () => {
 		expect(container.props.accessibilityElementsHidden).toBe(true);
 	});
 
-	it("shows colored fallback when garment images have not loaded", () => {
-		const skia = require("@shopify/react-native-skia");
-		const originalUseImage = skia.useImage;
-		skia.useImage.mockReturnValue(null);
-
+	it("garment wrappers render without background color", () => {
 		render(<OutfitPreview />);
 
 		const tshirt = screen.getByTestId("outfit-garment-top-tshirt", hidden);
-		expect(tshirt.props.style).toMatchObject({
-			backgroundColor: "#E34234",
-		});
+		expect(tshirt.props.style).not.toHaveProperty("backgroundColor");
 
 		const pants = screen.getByTestId("outfit-garment-bottom-pants", hidden);
-		expect(pants.props.style).toMatchObject({
-			backgroundColor: "#1C1C1C",
-		});
+		expect(pants.props.style).not.toHaveProperty("backgroundColor");
 
 		const shoes = screen.getByTestId("outfit-garment-shoes-sneakers", hidden);
-		expect(shoes.props.style).toMatchObject({
-			backgroundColor: "#E8D8C4",
-		});
-
-		skia.useImage = originalUseImage;
+		expect(shoes.props.style).not.toHaveProperty("backgroundColor");
 	});
 });

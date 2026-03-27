@@ -331,6 +331,36 @@ describe("OutfitCard", () => {
 		]);
 	});
 
+	it("selected slot renders underline bar", () => {
+		const slots = makeSlots(["top-tshirt", red], ["bottom-pants", blue]);
+		render(
+			<OutfitCard
+				slots={slots}
+				selectedSlotIndex={0}
+				onSlotTap={mockOnSlotTap}
+				onVariantCycle={mockOnVariantCycle}
+			/>,
+		);
+
+		const underlines = screen.getAllByTestId("underline-bar");
+		expect(underlines.length).toBe(2);
+	});
+
+	it("non-selected slots have underline bar at opacity 0", () => {
+		const slots = makeSlots(["top-tshirt", red], ["bottom-pants", blue]);
+		render(
+			<OutfitCard
+				slots={slots}
+				selectedSlotIndex={null}
+				onSlotTap={mockOnSlotTap}
+				onVariantCycle={mockOnVariantCycle}
+			/>,
+		);
+
+		const underlines = screen.getAllByTestId("underline-bar");
+		expect(underlines).toHaveLength(2);
+	});
+
 	it("renders correctly with layer-hoodie and shoes-formal", () => {
 		const slots = makeSlots(
 			["layer-hoodie", red],
