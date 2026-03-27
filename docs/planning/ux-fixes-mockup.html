@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outfinder — UX Fixes Mockup (Stories 7.1, 7.2, 7.3)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #111;
+    font-family: 'Inter', sans-serif;
+    color: #e0e0e0;
+    padding: 40px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #c4a265;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+
+  .section {
+    margin-bottom: 60px;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #c4a265;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .section-desc {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .compare {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .compare-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .compare-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 4px;
+  }
+  .label-before { color: #e74c3c; background: rgba(231,76,60,0.1); }
+  .label-after { color: #27ae60; background: rgba(39,174,96,0.1); }
+  .label-demo { color: #c4a265; background: rgba(196,162,101,0.1); }
+
+  /* Phone mockup */
+  .phone {
+    width: 320px;
+    background: #fafaf8;
+    border-radius: 36px;
+    overflow: hidden;
+    border: 8px solid #1c1c1e;
+    position: relative;
+  }
+  .phone-notch {
+    width: 64px; height: 18px;
+    background: #1c1c1e;
+    border-radius: 0 0 10px 10px;
+    margin: 0 auto;
+    position: relative;
+    top: -1px;
+  }
+  .phone-content {
+    padding: 0;
+    min-height: 500px;
+    position: relative;
+  }
+
+  /* ===== STORY 7.1: ONBOARDING ===== */
+  .onboarding-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px 80px;
+    background: #fafaf8;
+    min-height: 580px;
+    position: relative;
+  }
+  .onboarding-skip {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-size: 13px;
+    color: #9b9b9b;
+  }
+  .onboarding-title-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    color: #1a1a1a;
+    text-align: center;
+    margin-top: 28px;
+  }
+  .onboarding-title-en {
+    font-size: 14px;
+    color: #6b6b6b;
+    text-align: center;
+    margin-top: 6px;
+  }
+  .onboarding-dots {
+    position: absolute;
+    bottom: 40px;
+    display: flex;
+    gap: 8px;
+  }
+  .onboarding-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #d0d0d0;
+  }
+  .onboarding-dot.active { background: #1a1a1a; }
+
+  /* Old placeholder */
+  .old-placeholder {
+    width: 160px; height: 160px;
+    border-radius: 24px;
+    margin-top: 20px;
+  }
+
+  /* New: mini swatch grid */
+  .mini-swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    width: 170px;
+    margin-top: 20px;
+  }
+  .mini-swatch {
+    aspect-ratio: 1;
+    border-radius: 3px;
+  }
+
+  /* New: color specimen */
+  .color-specimen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+  }
+  .specimen-swatch {
+    width: 100px; height: 100px;
+    border-radius: 12px;
+  }
+  .specimen-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 16px;
+    color: #1a1a1a;
+  }
+  .specimen-en {
+    font-size: 12px;
+    color: #9b9b9b;
+    margin-top: -6px;
+  }
+
+  /* New: palette preview */
+  .palette-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    gap: 8px;
+  }
+  .palette-bar {
+    display: flex;
+    width: 220px;
+    height: 64px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .palette-bar > div { flex: 1; }
+  .palette-labels {
+    display: flex;
+    gap: 20px;
+    font-size: 9px;
+    color: #a09080;
+  }
+
+  /* New: outfit preview */
+  .outfit-preview-card {
+    background: #fafaf8;
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-top: 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    width: 150px;
+  }
+  .garment-placeholder {
+    border-radius: 6px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 10px;
+    font-weight: 500;
+  }
+
+  /* ===== STORY 7.2: VISUALIZER ===== */
+  .viz-bg {
+    background: radial-gradient(ellipse at 50% 30%, #f5efe6 0%, #f0ece4 40%, #ebe5da 100%);
+    min-height: 580px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 0;
+    position: relative;
+  }
+  .viz-back {
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    font-size: 16px;
+    color: #1a1a1a;
+  }
+  .viz-header {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    color: #2c2c2c;
+    letter-spacing: 1.5px;
+    margin-top: 32px;
+  }
+  .viz-header-sub {
+    font-size: 10px;
+    color: #a09080;
+    margin-top: 3px;
+    margin-bottom: 16px;
+  }
+  .viz-card {
+    width: 200px;
+    background: #fafaf8;
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    position: relative;
+  }
+  .viz-garment {
+    width: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.5);
+    font-size: 9px;
+    font-weight: 500;
+    position: relative;
+  }
+
+  /* OLD: black border (the problem) */
+  .old-selection {
+    border: 2px solid rgba(0,0,0,0.7);
+    border-radius: 8px;
+  }
+
+  /* NEW: warm underline bar */
+  .new-underline {
+    width: 60%;
+    height: 4px;
+    background: #c4a265;
+    border-radius: 2px;
+    margin: 4px auto 0;
+    animation: underline-pulse 2s ease-in-out infinite;
+  }
+  @keyframes underline-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  /* Chevrons */
+  .chevron {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #a09080;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .chevron-left { left: -20px; }
+  .chevron-right { right: -20px; }
+
+  /* Hint text */
+  .viz-hint {
+    font-size: 11px;
+    color: #a09080;
+    text-align: center;
+    margin-top: 16px;
+    letter-spacing: 0.3px;
+    animation: hint-fade 4s ease-in-out forwards;
+  }
+  @keyframes hint-fade {
+    0%, 70% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  .viz-mini-strip {
+    display: flex;
+    width: 55%;
+    height: 14px;
+    border-radius: 7px;
+    overflow: hidden;
+    margin-top: 16px;
+  }
+  .viz-mini-strip > div { flex: 1; }
+  .viz-mini-labels {
+    display: flex;
+    gap: 12px;
+    font-size: 8px;
+    color: #a09080;
+    margin-top: 4px;
+  }
+
+  /* ===== STORY 7.3: FALLBACK ===== */
+  .fallback-demo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    background: #f0ece4;
+    min-height: 400px;
+  }
+  .fallback-card {
+    width: 200px;
+    background: #fafaf8;
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  }
+  .fallback-empty {
+    width: 100%;
+    border-radius: 6px;
+    border: 1px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+    font-size: 10px;
+  }
+  .fallback-colored {
+    width: 100%;
+    border-radius: 6px;
+    opacity: 0.2;
+  }
+
+  /* Arrow between before/after */
+  .arrow {
+    font-size: 28px;
+    color: #555;
+    align-self: center;
+    padding: 0 8px;
+  }
+</style>
+</head>
+<body>
+
+<h1>UX Fixes Mockup — Stories 7.1 / 7.2 / 7.3</h1>
+
+<!-- ======================== STORY 7.1 ======================== -->
+<div class="section">
+  <div class="section-title">Story 7.1 — Onboarding Visual Refresh</div>
+  <div class="section-desc">
+    Replace generic colored squares with real mini-previews of the app.<br>
+    Each slide shows what the user will actually find inside the app.
+  </div>
+
+  <div class="compare">
+    <!-- BEFORE: Slide 1 -->
+    <div class="compare-col">
+      <div class="compare-label label-before">Before — Slide 1</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="onboarding-slide">
+          <div class="onboarding-skip">Skip</div>
+          <div class="old-placeholder" style="background: #d4c4b0;"></div>
+          <div class="onboarding-title-jp">あなたの服を開いて</div>
+          <div class="onboarding-title-en">Open your wardrobe</div>
+          <div class="onboarding-dots">
+            <div class="onboarding-dot active"></div>
+            <div class="onboarding-dot"></div>
+            <div class="onboarding-dot"></div>
+            <div class="onboarding-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- AFTER: Slide 1 — Swatch Grid -->
+    <div class="compare-col">
+      <div class="compare-label label-after">After — Slide 1</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="onboarding-slide">
+          <div class="onboarding-skip">Skip</div>
+          <div class="mini-swatch-grid">
+            <div class="mini-swatch" style="background:#E8D3B4;"></div>
+            <div class="mini-swatch" style="background:#C4A882;"></div>
+            <div class="mini-swatch" style="background:#D4C4AE;"></div>
+            <div class="mini-swatch" style="background:#B0C4DE;"></div>
+            <div class="mini-swatch" style="background:#F0E68C;"></div>
+            <div class="mini-swatch" style="background:#D4534A;"></div>
+            <div class="mini-swatch" style="background:#8B7355;"></div>
+            <div class="mini-swatch" style="background:#E6735A;"></div>
+            <div class="mini-swatch" style="background:#4A6FA5;"></div>
+            <div class="mini-swatch" style="background:#FFD700;"></div>
+            <div class="mini-swatch" style="background:#2B4570;"></div>
+            <div class="mini-swatch" style="background:#6B8E23;"></div>
+            <div class="mini-swatch" style="background:#9B59B6;"></div>
+            <div class="mini-swatch" style="background:#C41E3A;"></div>
+            <div class="mini-swatch" style="background:#8FBC8F;"></div>
+          </div>
+          <div class="onboarding-title-jp">あなたの服を開いて</div>
+          <div class="onboarding-title-en">Open your wardrobe</div>
+          <div class="onboarding-dots">
+            <div class="onboarding-dot active"></div>
+            <div class="onboarding-dot"></div>
+            <div class="onboarding-dot"></div>
+            <div class="onboarding-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:20px;"></div>
+
+    <!-- AFTER: Slide 2 — Color Specimen -->
+    <div class="compare-col">
+      <div class="compare-label label-after">After — Slide 2</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="onboarding-slide">
+          <div class="onboarding-skip">Skip</div>
+          <div class="color-specimen">
+            <div class="specimen-swatch" style="background:#D4534A;"></div>
+            <div class="specimen-jp">朱色</div>
+            <div class="specimen-en">Vermilion</div>
+          </div>
+          <div class="onboarding-title-jp">好きな一着を選んで</div>
+          <div class="onboarding-title-en">Pick your favorite piece</div>
+          <div class="onboarding-dots">
+            <div class="onboarding-dot"></div>
+            <div class="onboarding-dot active"></div>
+            <div class="onboarding-dot"></div>
+            <div class="onboarding-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTER: Slide 3 — Palette Strip -->
+    <div class="compare-col">
+      <div class="compare-label label-after">After — Slide 3</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="onboarding-slide">
+          <div class="onboarding-skip">Skip</div>
+          <div class="palette-preview">
+            <div class="palette-bar">
+              <div style="background:#D4534A;"></div>
+              <div style="background:#2B4570;"></div>
+              <div style="background:#E8D3B4;"></div>
+            </div>
+            <div class="palette-labels">
+              <span>Vermilion</span>
+              <span>Navy Blue</span>
+              <span>Luan-bird</span>
+            </div>
+          </div>
+          <div class="onboarding-title-jp">その色を見つけて</div>
+          <div class="onboarding-title-en">Find its color</div>
+          <div class="onboarding-dots">
+            <div class="onboarding-dot"></div>
+            <div class="onboarding-dot"></div>
+            <div class="onboarding-dot active"></div>
+            <div class="onboarding-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTER: Slide 4 — Outfit Preview -->
+    <div class="compare-col">
+      <div class="compare-label label-after">After — Slide 4</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="onboarding-slide">
+          <div class="onboarding-skip">Skip</div>
+          <div class="outfit-preview-card">
+            <div class="garment-placeholder" style="background:#D4534A; height:70px;">T-shirt</div>
+            <div class="garment-placeholder" style="background:#2B4570; height:90px;">Pants</div>
+            <div class="garment-placeholder" style="background:#E8D3B4; height:40px;">Sneakers</div>
+          </div>
+          <div class="onboarding-title-jp">組み合わせを発見しよう</div>
+          <div class="onboarding-title-en">Discover your combinations</div>
+          <div class="onboarding-dots">
+            <div class="onboarding-dot"></div>
+            <div class="onboarding-dot"></div>
+            <div class="onboarding-dot"></div>
+            <div class="onboarding-dot active"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== STORY 7.2 ======================== -->
+<div class="section">
+  <div class="section-title">Story 7.2 — Visualizer Interaction Affordances</div>
+  <div class="section-desc">
+    Replace the confusing black selection border with a warm gold underline bar.<br>
+    Add chevron hints for swipe gesture. Add first-time instructional text.
+  </div>
+
+  <div class="compare">
+    <!-- BEFORE -->
+    <div class="compare-col">
+      <div class="compare-label label-before">Before — Black Border</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="viz-bg">
+          <div class="viz-back">‹</div>
+          <div class="viz-header">秋の山里</div>
+          <div class="viz-header-sub">3 colors · Sanzo Wada</div>
+          <div class="viz-card">
+            <div class="viz-garment old-selection" style="background:#E8D3B4; height:70px;">T-shirt</div>
+            <div class="viz-garment" style="background:#D4534A; height:90px; margin-top:4px;">Pants</div>
+            <div class="viz-garment" style="background:#8B7355; height:40px; margin-top:4px;">Sneakers</div>
+          </div>
+          <div class="viz-mini-strip" style="margin-top:20px;">
+            <div style="background:#E8D3B4;"></div>
+            <div style="background:#D4534A;"></div>
+            <div style="background:#8B7355;"></div>
+          </div>
+          <div class="viz-mini-labels">
+            <span>Luan-bird</span>
+            <span>Vermilion</span>
+            <span>Fallen Leaf</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- AFTER -->
+    <div class="compare-col">
+      <div class="compare-label label-after">After — Gold Underline + Chevrons + Hint</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="viz-bg">
+          <div class="viz-back">‹</div>
+          <div class="viz-header">秋の山里</div>
+          <div class="viz-header-sub">3 colors · Sanzo Wada</div>
+          <div class="viz-card">
+            <div style="position:relative;">
+              <div class="chevron chevron-left">‹</div>
+              <div class="chevron chevron-right">›</div>
+              <div class="viz-garment" style="background:#E8D3B4; height:70px;">T-shirt</div>
+              <div class="new-underline"></div>
+            </div>
+            <div class="viz-garment" style="background:#D4534A; height:90px; margin-top:4px;">Pants</div>
+            <div class="viz-garment" style="background:#8B7355; height:40px; margin-top:4px;">Sneakers</div>
+          </div>
+          <div class="viz-hint">Tap a garment to select · Swipe to change style</div>
+          <div class="viz-mini-strip">
+            <div style="background:#E8D3B4;"></div>
+            <div style="background:#D4534A;"></div>
+            <div style="background:#8B7355;"></div>
+          </div>
+          <div class="viz-mini-labels">
+            <span>Luan-bird</span>
+            <span>Vermilion</span>
+            <span>Fallen Leaf</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== STORY 7.3 ======================== -->
+<div class="section">
+  <div class="section-title">Story 7.3 — TintedGarment Fallback</div>
+  <div class="section-desc">
+    When a garment image is loading or fails, show a colored placeholder instead of blank space.
+  </div>
+
+  <div class="compare">
+    <!-- BEFORE -->
+    <div class="compare-col">
+      <div class="compare-label label-before">Before — Blank Space</div>
+      <div class="phone" style="min-height: auto;">
+        <div class="phone-notch"></div>
+        <div class="fallback-demo">
+          <div style="font-size:11px; color:#a09080; margin-bottom:16px;">Image loading / failed to load:</div>
+          <div class="fallback-card">
+            <div class="fallback-empty" style="height:70px;">( empty )</div>
+            <div class="viz-garment" style="background:#D4534A; height:90px;">Pants</div>
+            <div class="viz-garment" style="background:#8B7355; height:40px;">Sneakers</div>
+          </div>
+          <div style="font-size:10px; color:#e74c3c; margin-top:12px;">User sees blank hole where T-shirt should be</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- AFTER -->
+    <div class="compare-col">
+      <div class="compare-label label-after">After — 20% Opacity Color Fill</div>
+      <div class="phone" style="min-height: auto;">
+        <div class="phone-notch"></div>
+        <div class="fallback-demo">
+          <div style="font-size:11px; color:#a09080; margin-bottom:16px;">Image loading / failed to load:</div>
+          <div class="fallback-card">
+            <div class="fallback-colored" style="background:#E8D3B4; height:70px;"></div>
+            <div class="viz-garment" style="background:#D4534A; height:90px;">Pants</div>
+            <div class="viz-garment" style="background:#8B7355; height:40px;">Sneakers</div>
+          </div>
+          <div style="font-size:10px; color:#27ae60; margin-top:12px;">Subtle colored placeholder maintains layout</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

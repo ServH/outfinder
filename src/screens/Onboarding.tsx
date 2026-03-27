@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { type ComponentType, useCallback, useRef, useState } from "react";
 import {
 	FlatList,
 	type NativeScrollEvent,
@@ -11,6 +11,10 @@ import {
 	type ViewToken,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ColorSpecimenPreview } from "@/components/onboarding/ColorSpecimenPreview";
+import { OutfitPreview } from "@/components/onboarding/OutfitPreview";
+import { PalettePreview } from "@/components/onboarding/PalettePreview";
+import { SwatchGridPreview } from "@/components/onboarding/SwatchGridPreview";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { hapticLight } from "@/lib/haptics";
 
@@ -20,35 +24,30 @@ export interface OnboardingProps {
 
 interface SlideData {
 	id: string;
-	titleJp: string;
 	titleEn: string;
-	placeholderColor: string;
+	Preview: ComponentType;
 }
 
 const ONBOARDING_SLIDES: SlideData[] = [
 	{
 		id: "1",
-		titleJp: "あなたの服を開いて",
 		titleEn: "Open your wardrobe",
-		placeholderColor: "#d4c4b0",
+		Preview: SwatchGridPreview,
 	},
 	{
 		id: "2",
-		titleJp: "好きな一着を選んで",
 		titleEn: "Pick your favorite piece",
-		placeholderColor: "#b8c4b8",
+		Preview: ColorSpecimenPreview,
 	},
 	{
 		id: "3",
-		titleJp: "その色を見つけて",
 		titleEn: "Find its color",
-		placeholderColor: "#c4b8c8",
+		Preview: PalettePreview,
 	},
 	{
 		id: "4",
-		titleJp: "組み合わせを発見しよう",
 		titleEn: "Discover your combinations",
-		placeholderColor: "#c8c0b0",
+		Preview: OutfitPreview,
 	},
 ];
 
@@ -98,6 +97,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 	}
 
 	function renderSlide({ item, index }: { item: SlideData; index: number }) {
+		const { Preview } = item;
 		return (
 			<View
 				className="flex-1 items-center justify-center bg-paper"
@@ -105,19 +105,10 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 				accessibilityLabel={`Slide ${index + 1} of 4: ${item.titleEn}`}
 				testID={`onboarding-slide-${index}`}
 			>
-				<View
-					className="h-40 w-40 rounded-3xl"
-					style={{ backgroundColor: item.placeholderColor }}
-				/>
+				<Preview />
 				<Text
 					allowFontScaling
 					className="mt-8 text-center text-primary font-serif-jp text-[24px]"
-				>
-					{item.titleJp}
-				</Text>
-				<Text
-					allowFontScaling
-					className="mt-3 text-center text-secondary font-sans text-[14px]"
 				>
 					{item.titleEn}
 				</Text>
