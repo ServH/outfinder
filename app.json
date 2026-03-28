@@ -2,14 +2,14 @@
   "expo": {
     "name": "Outfinder",
     "slug": "outfinder",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "outfinder",
     "userInterfaceStyle": "light",
     "ios": {
       "bundleIdentifier": "com.alejandrocamps.outfinder",
-      "buildNumber": "1",
+      "buildNumber": "2",
       "supportsTablet": false,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
