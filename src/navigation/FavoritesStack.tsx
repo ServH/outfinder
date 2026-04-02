@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { Combinations } from "@/screens/Combinations";
 import { FavoritesList } from "@/screens/FavoritesList";
 import { OutfitVisualizer } from "@/screens/OutfitVisualizer";
 import { wadaTokens } from "@/styles/theme";
@@ -22,16 +21,6 @@ export function FavoritesStack() {
 					headerTitleStyle: {
 						fontFamily: "NotoSerifJP_500Medium",
 					},
-				}}
-			/>
-			<Stack.Screen
-				name="Combinations"
-				component={Combinations}
-				options={{
-					headerStyle: { backgroundColor: wadaTokens.navBarBg },
-					headerTintColor: wadaTokens.textPrimary,
-					headerTitle: "",
-					headerBackTitle: "",
 				}}
 			/>
 			<Stack.Screen

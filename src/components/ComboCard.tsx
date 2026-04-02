@@ -124,6 +124,7 @@ export function ComboCard({
 							<View className="flex-row items-center">
 								<FavoriteButton
 									combinationId={combination.id}
+									combinationName={combination.nameEn}
 									isFavorite={isFavorite}
 									onToggle={onToggleFavorite}
 									onPremiumGate={onPremiumGate}
@@ -180,6 +181,7 @@ export function ComboCard({
 						<View className="mt-1 flex-row items-center justify-end">
 							<FavoriteButton
 								combinationId={combination.id}
+								combinationName={combination.nameEn}
 								isFavorite={isFavorite}
 								onToggle={onToggleFavorite}
 								onPremiumGate={onPremiumGate}

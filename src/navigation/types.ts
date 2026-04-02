@@ -7,7 +7,6 @@ export type ColorsStackParamList = {
 
 export type FavoritesStackParamList = {
 	FavoritesList: undefined;
-	Combinations: { colorId: string };
 	OutfitVisualizer: { combinationId: string };
 };
 
