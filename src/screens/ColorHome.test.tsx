@@ -34,6 +34,7 @@ jest.mock("@/contexts/FavoritesContext", () => ({
 const mockHandlePremiumGate = jest.fn();
 jest.mock("@/hooks/usePremiumGate", () => ({
 	usePremiumGate: () => ({
+		isPremium: false,
 		paywallVisible: false,
 		blockedCombination: undefined,
 		toastVisible: false,
@@ -419,5 +420,49 @@ describe("ColorHome (reduced motion)", () => {
 		fireEvent.press(screen.getByTestId("state2-back-button"));
 		expect(screen.queryByTestId("state-2")).toBeNull();
 		expect(screen.getByText("Outfinder")).toBeTruthy();
+	});
+});
+
+// === Premium user tests ===
+
+describe("ColorHome (premium user)", () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+		(getCombinations as jest.Mock).mockReturnValue(mockCombinations);
+
+		// Override usePremiumGate to return isPremium: true
+		jest
+			.spyOn(require("@/hooks/usePremiumGate"), "usePremiumGate")
+			.mockReturnValue({
+				isPremium: true,
+				paywallVisible: false,
+				blockedCombination: undefined,
+				toastVisible: false,
+				toastOpacity: { current: 1 },
+				favoriteCombinationIds: [],
+				priceString: "$2.99",
+				purchaseState: "idle",
+				errorMessage: null,
+				handlePremiumGate: jest.fn(),
+				handleDismiss: jest.fn(),
+				handlePurchase: jest.fn(),
+				handleRestore: jest.fn(),
+				openPaywall: jest.fn(),
+			});
+	});
+
+	afterEach(() => {
+		jest.restoreAllMocks();
+	});
+
+	it("premium user can favorite without paywall gate", () => {
+		render(<ColorHome />);
+		fireEvent.press(screen.getByTestId("fabric-swatch-brown"));
+
+		// Tap favorite on first combo card
+		fireEvent.press(screen.getByTestId("favorite-button-combo-1"));
+
+		// toggleFavorite should be called directly (no paywall gate)
+		expect(mockToggleFavorite).toHaveBeenCalledWith("combo-1");
 	});
 });

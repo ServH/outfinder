@@ -24,7 +24,7 @@ export function ColorsStack() {
 				name="BrowseAllColors"
 				component={BrowseAllColors}
 				options={{
-					title: "All Colors",
+					title: "All 159 Colors",
 					headerStyle: { backgroundColor: wadaTokens.navBarBg },
 					headerTintColor: wadaTokens.textPrimary,
 					headerTitleStyle: {

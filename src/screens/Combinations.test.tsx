@@ -39,6 +39,7 @@ jest.mock("react-native-reanimated");
 let mockToastVisible = false;
 jest.mock("@/hooks/usePremiumGate", () => ({
 	usePremiumGate: () => ({
+		isPremium: false,
 		paywallVisible: false,
 		toastVisible: mockToastVisible,
 		toastOpacity: { current: 1 },
@@ -90,9 +91,7 @@ describe("Combinations", () => {
 		renderCombinations("c001");
 
 		expect(screen.getByTestId("combo-count")).toBeTruthy();
-		expect(
-			screen.getByText(`${realCombinations.length} combos`),
-		).toBeTruthy();
+		expect(screen.getByText(`${realCombinations.length} combos`)).toBeTruthy();
 	});
 
 	it("renders header with accessibility label", () => {

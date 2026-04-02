@@ -6,8 +6,8 @@ import { PremiumPaywall } from "@/components/PremiumPaywall";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { getColor, getCombinations } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
-import { isLightColor } from "@/lib/color";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
+import { isLightColor } from "@/lib/color";
 import type { ColorsStackParamList } from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
 
@@ -39,13 +39,19 @@ export function Combinations({ route }: CombinationsProps) {
 				isFavorite={isFavorite(item.id)}
 				onToggleFavorite={() => toggleFavorite(item.id)}
 				onPremiumGate={
-					!isFavorite(item.id)
+					!gate.isPremium && !isFavorite(item.id)
 						? () => gate.handlePremiumGate(item.id)
 						: undefined
 				}
 			/>
 		),
-		[colorId, isFavorite, toggleFavorite, gate.handlePremiumGate],
+		[
+			colorId,
+			isFavorite,
+			toggleFavorite,
+			gate.isPremium,
+			gate.handlePremiumGate,
+		],
 	);
 
 	if (!color) {

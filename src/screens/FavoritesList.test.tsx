@@ -47,6 +47,7 @@ jest.mock("@/lib/haptics", () => ({
 let mockToastVisible = false;
 jest.mock("@/hooks/usePremiumGate", () => ({
 	usePremiumGate: () => ({
+		isPremium: false,
 		paywallVisible: false,
 		toastVisible: mockToastVisible,
 		toastOpacity: { current: 1 },

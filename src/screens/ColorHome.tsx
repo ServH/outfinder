@@ -199,7 +199,7 @@ export function ColorHome() {
 				isFavorite={isFavorite(item.id)}
 				onToggleFavorite={() => toggleFavorite(item.id)}
 				onPremiumGate={
-					!isFavorite(item.id)
+					!premiumGate.isPremium && !isFavorite(item.id)
 						? () => premiumGate.handlePremiumGate(item.id)
 						: undefined
 				}
@@ -209,6 +209,7 @@ export function ColorHome() {
 			selectedShade?.id,
 			isFavorite,
 			toggleFavorite,
+			premiumGate.isPremium,
 			premiumGate.handlePremiumGate,
 		],
 	);
@@ -264,164 +265,164 @@ export function ColorHome() {
 
 				{/* Grid + dots + link centered in remaining space */}
 				<View style={{ flex: 1, justifyContent: "center" }}>
-				{/* Paginated swatch grid */}
-				<ScrollView
-					ref={scrollRef}
-					horizontal
-					showsHorizontalScrollIndicator={false}
-					snapToInterval={PAGE_WIDTH}
-					decelerationRate="fast"
-					onScroll={handleScroll}
-					onMomentumScrollEnd={handleMomentumEnd}
-					scrollEventThrottle={16}
-					contentContainerStyle={{ paddingLeft: pagePadding }}
-					testID="swatch-scroll"
-				>
-					{/* Page 1: Basics */}
-					<View
-						style={{ width: PAGE_WIDTH - pagePadding }}
-						testID="page-basics"
+					{/* Paginated swatch grid */}
+					<ScrollView
+						ref={scrollRef}
+						horizontal
+						showsHorizontalScrollIndicator={false}
+						snapToInterval={PAGE_WIDTH}
+						decelerationRate="fast"
+						onScroll={handleScroll}
+						onMomentumScrollEnd={handleMomentumEnd}
+						scrollEventThrottle={16}
+						contentContainerStyle={{ paddingLeft: pagePadding }}
+						testID="swatch-scroll"
 					>
-						<View className="flex-row flex-wrap" style={{ gap }}>
-							{BASICS.map((category) => (
-								<View key={category} style={{ width: cardWidth }}>
-									<FabricSwatch
-										category={category}
-										onPress={handleFamilyPress}
-									/>
-								</View>
-							))}
-						</View>
-					</View>
-
-					{/* Page 2: Accents + "All 159 colors" */}
-					<View
-						style={{
-							width: PAGE_WIDTH,
-							paddingLeft: gap,
-							paddingRight: pagePadding,
-						}}
-						testID="page-accents"
-					>
-						<View className="flex-row flex-wrap" style={{ gap }}>
-							{ACCENTS.map((category) => (
-								<View key={category} style={{ width: cardWidth }}>
-									<FabricSwatch
-										category={category}
-										onPress={handleFamilyPress}
-									/>
-								</View>
-							))}
-
-							{/* Dashed "All 159 colors" card */}
-							<View style={{ width: cardWidth }}>
-								<Pressable
-									onPress={handleBrowseAllPress}
-									accessibilityRole="button"
-									accessibilityLabel="Browse all 159 colors"
-									testID="browse-all-card"
-								>
-									{({ pressed }) => (
-										<View
-											className="items-center justify-center rounded-2xl"
-											style={{
-												aspectRatio: 1,
-												borderWidth: 2,
-												borderStyle: "dashed",
-												borderColor: wadaTokens.wadaMuted,
-												opacity: pressed ? 0.88 : 1,
-											}}
-										>
-											{/* Simple 3x3 grid icon */}
-											<View className="mb-2" style={{ gap: 4 }}>
-												{[0, 1, 2].map((row) => (
-													<View
-														key={row}
-														className="flex-row"
-														style={{ gap: 4 }}
-													>
-														{[0, 1, 2].map((col) => (
-															<View
-																key={col}
-																style={{
-																	width: 8,
-																	height: 8,
-																	borderRadius: 2,
-																	backgroundColor: wadaTokens.wadaMuted,
-																}}
-															/>
-														))}
-													</View>
-												))}
-											</View>
-											<Text
-												style={{
-													fontFamily: "Inter_500Medium",
-													fontSize: 13,
-													color: wadaTokens.wadaMuted,
-													textAlign: "center",
-												}}
-											>
-												All 159{"\n"}colors
-											</Text>
-										</View>
-									)}
-								</Pressable>
+						{/* Page 1: Basics */}
+						<View
+							style={{ width: PAGE_WIDTH - pagePadding }}
+							testID="page-basics"
+						>
+							<View className="flex-row flex-wrap" style={{ gap }}>
+								{BASICS.map((category) => (
+									<View key={category} style={{ width: cardWidth }}>
+										<FabricSwatch
+											category={category}
+											onPress={handleFamilyPress}
+										/>
+									</View>
+								))}
 							</View>
 						</View>
-					</View>
-				</ScrollView>
 
-				{/* Page dots */}
-				<View
-					className="flex-row items-center justify-center py-4"
-					style={{ gap: 8 }}
-					testID="page-dots"
-				>
-					<RNAnimated.View
-						style={{
-							width: 8,
-							height: 8,
-							borderRadius: 4,
-							backgroundColor: dot0Color,
-						}}
-						testID="dot-0"
-					/>
-					<RNAnimated.View
-						style={{
-							width: 8,
-							height: 8,
-							borderRadius: 4,
-							backgroundColor: dot1Color,
-						}}
-						testID="dot-1"
-					/>
-				</View>
-
-				{/* "Browse all 159 colors" link — fades out as user scrolls to Page 2 */}
-				<RNAnimated.View
-					style={{ opacity: linkOpacity }}
-					pointerEvents={currentPage === 0 ? "auto" : "none"}
-				>
-					<Pressable
-						onPress={handleBrowseAllPress}
-						className="items-center pb-4"
-						testID="browse-all-link"
-						accessibilityRole="link"
-						accessibilityLabel="Browse all 159 colors"
-					>
-						<Text
+						{/* Page 2: Accents + "All 159 colors" */}
+						<View
 							style={{
-								fontFamily: "Inter_400Regular",
-								fontSize: 14,
-								color: wadaTokens.textSecondary,
-								textDecorationLine: "underline",
+								width: PAGE_WIDTH,
+								paddingLeft: gap,
+								paddingRight: pagePadding,
 							}}
+							testID="page-accents"
 						>
-							Browse all 159 colors
-						</Text>
-					</Pressable>
-				</RNAnimated.View>
+							<View className="flex-row flex-wrap" style={{ gap }}>
+								{ACCENTS.map((category) => (
+									<View key={category} style={{ width: cardWidth }}>
+										<FabricSwatch
+											category={category}
+											onPress={handleFamilyPress}
+										/>
+									</View>
+								))}
+
+								{/* Dashed "All 159 colors" card */}
+								<View style={{ width: cardWidth }}>
+									<Pressable
+										onPress={handleBrowseAllPress}
+										accessibilityRole="button"
+										accessibilityLabel="Browse all 159 colors"
+										testID="browse-all-card"
+									>
+										{({ pressed }) => (
+											<View
+												className="items-center justify-center rounded-2xl"
+												style={{
+													aspectRatio: 1,
+													borderWidth: 2,
+													borderStyle: "dashed",
+													borderColor: wadaTokens.wadaMuted,
+													opacity: pressed ? 0.88 : 1,
+												}}
+											>
+												{/* Simple 3x3 grid icon */}
+												<View className="mb-2" style={{ gap: 4 }}>
+													{[0, 1, 2].map((row) => (
+														<View
+															key={row}
+															className="flex-row"
+															style={{ gap: 4 }}
+														>
+															{[0, 1, 2].map((col) => (
+																<View
+																	key={col}
+																	style={{
+																		width: 8,
+																		height: 8,
+																		borderRadius: 2,
+																		backgroundColor: wadaTokens.wadaMuted,
+																	}}
+																/>
+															))}
+														</View>
+													))}
+												</View>
+												<Text
+													style={{
+														fontFamily: "Inter_500Medium",
+														fontSize: 13,
+														color: wadaTokens.wadaMuted,
+														textAlign: "center",
+													}}
+												>
+													All 159{"\n"}colors
+												</Text>
+											</View>
+										)}
+									</Pressable>
+								</View>
+							</View>
+						</View>
+					</ScrollView>
+
+					{/* Page dots */}
+					<View
+						className="flex-row items-center justify-center py-4"
+						style={{ gap: 8 }}
+						testID="page-dots"
+					>
+						<RNAnimated.View
+							style={{
+								width: 8,
+								height: 8,
+								borderRadius: 4,
+								backgroundColor: dot0Color,
+							}}
+							testID="dot-0"
+						/>
+						<RNAnimated.View
+							style={{
+								width: 8,
+								height: 8,
+								borderRadius: 4,
+								backgroundColor: dot1Color,
+							}}
+							testID="dot-1"
+						/>
+					</View>
+
+					{/* "Browse all 159 colors" link — fades out as user scrolls to Page 2 */}
+					<RNAnimated.View
+						style={{ opacity: linkOpacity }}
+						pointerEvents={currentPage === 0 ? "auto" : "none"}
+					>
+						<Pressable
+							onPress={handleBrowseAllPress}
+							className="items-center pb-4"
+							testID="browse-all-link"
+							accessibilityRole="link"
+							accessibilityLabel="Browse all 159 colors"
+						>
+							<Text
+								style={{
+									fontFamily: "Inter_400Regular",
+									fontSize: 14,
+									color: wadaTokens.textSecondary,
+									textDecorationLine: "underline",
+								}}
+							>
+								Browse all 159 colors
+							</Text>
+						</Pressable>
+					</RNAnimated.View>
 				</View>
 			</Animated.View>
 
