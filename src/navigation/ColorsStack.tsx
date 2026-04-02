@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+import { BrowseAllColors } from "@/screens/BrowseAllColors";
 import { ColorHome } from "@/screens/ColorHome";
 import { Combinations } from "@/screens/Combinations";
 import { OutfitVisualizer } from "@/screens/OutfitVisualizer";
@@ -16,12 +17,20 @@ export function ColorsStack() {
 				name="ColorHome"
 				component={ColorHome}
 				options={{
-					title: "Outfinder",
+					headerShown: false,
+				}}
+			/>
+			<Stack.Screen
+				name="BrowseAllColors"
+				component={BrowseAllColors}
+				options={{
+					title: "All Colors",
 					headerStyle: { backgroundColor: wadaTokens.navBarBg },
 					headerTintColor: wadaTokens.textPrimary,
 					headerTitleStyle: {
 						fontFamily: "NotoSerifJP_500Medium",
 					},
+					headerBackTitle: "",
 				}}
 			/>
 			<Stack.Screen
