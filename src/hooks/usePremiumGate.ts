@@ -9,6 +9,7 @@ import { hapticLight, hapticRigid } from "@/lib/haptics";
 export type PurchaseState = "idle" | "purchasing" | "restoring" | "error";
 
 export interface PremiumGateState {
+	isPremium: boolean;
 	paywallVisible: boolean;
 	blockedCombination: Combination | undefined;
 	toastVisible: boolean;
@@ -55,6 +56,7 @@ export function getRestoreErrorMessage(error: unknown): string {
 
 export function usePremiumGate(favorites: Set<string>): PremiumGateState {
 	const {
+		isPremium,
 		paywallDismissedThisSession,
 		setPaywallDismissedThisSession,
 		priceString,
@@ -199,6 +201,7 @@ export function usePremiumGate(favorites: Set<string>): PremiumGateState {
 		: undefined;
 
 	return {
+		isPremium,
 		paywallVisible,
 		blockedCombination,
 		toastVisible,
