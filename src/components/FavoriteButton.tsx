@@ -11,6 +11,7 @@ import { wadaTokens } from "@/styles/theme";
 
 export interface FavoriteButtonProps {
 	combinationId: string;
+	combinationName?: string;
 	isFavorite: boolean;
 	onToggle: () => void;
 	onPremiumGate?: () => void;
@@ -21,6 +22,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function FavoriteButton({
 	combinationId,
+	combinationName,
 	isFavorite,
 	onToggle,
 	onPremiumGate,
@@ -53,7 +55,13 @@ export function FavoriteButton({
 			testID={`favorite-button-${combinationId}`}
 			accessibilityRole="button"
 			accessibilityLabel={
-				isFavorite ? "Remove from favorites" : "Save to favorites"
+				isFavorite
+					? combinationName
+						? `Remove ${combinationName} from favorites`
+						: "Remove from favorites"
+					: combinationName
+						? `Save ${combinationName} to favorites`
+						: "Save to favorites"
 			}
 			className="min-w-[44px] min-h-[44px] items-center justify-center"
 			style={animatedStyle}

@@ -489,13 +489,17 @@ describe("ComboCard", () => {
 		it("heart button has proper accessibility labels", () => {
 			render(<ComboCard {...defaultProps} isFavorite={false} />);
 
-			expect(screen.getByLabelText("Save to favorites")).toBeTruthy();
+			expect(
+				screen.getByLabelText("Save Three Color Set to favorites"),
+			).toBeTruthy();
 		});
 
 		it("heart button label changes when favorited", () => {
 			render(<ComboCard {...defaultProps} isFavorite={true} />);
 
-			expect(screen.getByLabelText("Remove from favorites")).toBeTruthy();
+			expect(
+				screen.getByLabelText("Remove Three Color Set from favorites"),
+			).toBeTruthy();
 		});
 
 		it("card has accessibilityHint describing the action", () => {

@@ -1,27 +1,19 @@
 import { useCallback, useMemo } from "react";
-import { Animated, FlatList, Text, View } from "react-native";
+import { Animated, Dimensions, FlatList, Text, View } from "react-native";
+import { ComboCard } from "@/components/ComboCard";
 import { EmptyState } from "@/components/EmptyState";
-import { PaletteStrip } from "@/components/PaletteStrip";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
 import { useFavorites } from "@/contexts/FavoritesContext";
-import { usePremium } from "@/contexts/PremiumContext";
 import { getCombination } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
 
 type FavoritesListProps = Record<string, never>;
 
-function ItemSeparator() {
-	return (
-		<View className="my-3">
-			<View className="h-[1px] bg-divider" testID="favorites-divider" />
-		</View>
-	);
-}
+const cardWidth = (Dimensions.get("window").width - 32 - 12) / 2;
 
 export function FavoritesList(_props: FavoritesListProps) {
-	const { favorites, toggleFavorite, isFavorite, count } = useFavorites();
-	const { isPremium } = usePremium();
+	const { favorites, toggleFavorite, isFavorite } = useFavorites();
 
 	const gate = usePremiumGate(favorites);
 
@@ -36,24 +28,27 @@ export function FavoritesList(_props: FavoritesListProps) {
 		return result;
 	}, [favorites]);
 
-	const renderItem = useCallback(
+	const renderComboCard = useCallback(
 		({ item }: { item: Combination }) => {
-			const isCurrentlyFav = isFavorite(item.id);
-			const shouldGate = !isPremium && !isCurrentlyFav && count >= 5;
-
+			const currentlyFav = isFavorite(item.id);
 			return (
-				<PaletteStrip
-					combination={item}
-					selectedColorId=""
-					isFavorite={isCurrentlyFav}
-					onToggleFavorite={() => toggleFavorite(item.id)}
-					onPremiumGate={
-						shouldGate ? () => gate.handlePremiumGate(item.id) : undefined
-					}
-				/>
+				<View style={{ width: cardWidth }}>
+					<ComboCard
+						variant="compact"
+						combination={item}
+						showYoursLabel={false}
+						isFavorite={currentlyFav}
+						onToggleFavorite={() => toggleFavorite(item.id)}
+						onPremiumGate={
+							!gate.isPremium && !currentlyFav
+								? () => gate.handlePremiumGate(item.id)
+								: undefined
+						}
+					/>
+				</View>
 			);
 		},
-		[toggleFavorite, isFavorite, isPremium, count, gate.handlePremiumGate],
+		[isFavorite, toggleFavorite, gate.isPremium, gate.handlePremiumGate],
 	);
 
 	if (combinations.length === 0) {
@@ -77,10 +72,11 @@ export function FavoritesList(_props: FavoritesListProps) {
 				testID="favorites-list"
 				className="flex-1"
 				data={combinations}
+				numColumns={2}
+				columnWrapperStyle={{ gap: 12, paddingHorizontal: 16 }}
+				contentContainerStyle={{ gap: 12, paddingTop: 12, paddingBottom: 20 }}
 				keyExtractor={(item) => item.id}
-				contentContainerStyle={{ padding: 16 }}
-				ItemSeparatorComponent={ItemSeparator}
-				renderItem={renderItem}
+				renderItem={renderComboCard}
 				accessibilityLabel="Favorites List screen"
 			/>
 
