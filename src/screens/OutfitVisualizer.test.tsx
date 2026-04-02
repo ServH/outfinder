@@ -10,8 +10,10 @@ import { OutfitVisualizer } from "./OutfitVisualizer";
 
 // Mock navigation
 const mockRouteParams = { combinationId: "" };
+const mockSetOptions = jest.fn();
 jest.mock("@react-navigation/native", () => ({
 	useRoute: () => ({ params: mockRouteParams }),
+	useNavigation: () => ({ setOptions: mockSetOptions }),
 }));
 
 // Mock colorIndex
@@ -79,6 +81,7 @@ describe("OutfitVisualizer", () => {
 		mockAnnounce.mockReset();
 		mockGetItem.mockReset();
 		mockSetItem.mockReset();
+		mockSetOptions.mockReset();
 		// Default: hint already seen (most tests don't need tooltip)
 		mockGetItem.mockResolvedValue("true");
 		mockSetItem.mockResolvedValue(undefined);
@@ -999,5 +1002,64 @@ describe("OutfitVisualizer", () => {
 		// No garment selected — chevrons should not be in tree
 		expect(screen.queryByText("‹", { includeHiddenElements: true })).toBeNull();
 		expect(screen.queryByText("›", { includeHiddenElements: true })).toBeNull();
+	});
+
+	// --- nameEn tests ---
+
+	it("renders nameEn in WadaHeader", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "秋の暮",
+			nameEn: "Autumn Dusk",
+		});
+
+		render(<OutfitVisualizer />);
+
+		expect(screen.getByText("Autumn Dusk")).toBeTruthy();
+	});
+
+	// --- Dynamic title tests ---
+
+	it("navigation.setOptions called with combination nameEn", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Autumn Dusk",
+		});
+
+		render(<OutfitVisualizer />);
+
+		expect(mockSetOptions).toHaveBeenCalledWith({ title: "Autumn Dusk" });
+	});
+
+	it("navigation.setOptions not called when combination not found", () => {
+		mockRouteParams.combinationId = "invalid";
+		mockGetCombination.mockReturnValue(undefined);
+
+		render(<OutfitVisualizer />);
+
+		expect(mockSetOptions).not.toHaveBeenCalled();
+	});
+
+	// --- WadaHeader accessibility ---
+
+	it("WadaHeader a11y label includes nameEn", () => {
+		mockRouteParams.combinationId = "combo-2";
+		mockGetCombination.mockReturnValue({
+			id: "combo-2",
+			colors: [red, blue],
+			nameJp: "秋の暮",
+			nameEn: "Autumn Dusk",
+		});
+
+		render(<OutfitVisualizer />);
+
+		expect(
+			screen.getByLabelText("秋の暮, Autumn Dusk, 2 color Wada combination"),
+		).toBeTruthy();
 	});
 });

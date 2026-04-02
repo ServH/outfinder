@@ -1,7 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { RouteProp } from "@react-navigation/native";
-import { useRoute } from "@react-navigation/native";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import {
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from "react";
 import {
 	AccessibilityInfo,
 	Alert,
@@ -11,7 +18,7 @@ import {
 	useWindowDimensions,
 	View,
 } from "react-native";
-import Animated, {
+import ReanimatedAnimated, {
 	useAnimatedStyle,
 	useSharedValue,
 	withTiming,
@@ -52,9 +59,19 @@ function getNextGarmentLabel(
 export function OutfitVisualizer() {
 	const { width: screenW } = useWindowDimensions();
 	const route = useRoute<OutfitVisualizerRoute>();
+	const navigation =
+		useNavigation<
+			NativeStackNavigationProp<{ OutfitVisualizer: { combinationId: string } }>
+		>();
 	const { combinationId } = route.params;
 	const combination = getCombination(combinationId);
 	const reducedMotion = useReducedMotion();
+
+	useLayoutEffect(() => {
+		if (combination) {
+			navigation.setOptions({ title: combination.nameEn });
+		}
+	}, [combination, navigation]);
 
 	const shareViewRef = useRef<View>(null);
 
@@ -224,6 +241,7 @@ export function OutfitVisualizer() {
 						<Aureola hex={slots[0].color.hex} width={screenW} height={500} />
 						<WadaHeader
 							nameJp={combination.nameJp}
+							nameEn={combination.nameEn}
 							colorCount={combination.colors.length}
 						/>
 						<View style={{ position: "relative", overflow: "visible" }}>
@@ -235,7 +253,7 @@ export function OutfitVisualizer() {
 							/>
 							{selectedSlotIndex !== null && !sharing && (
 								<>
-									<Animated.View
+									<ReanimatedAnimated.View
 										style={[
 											{
 												position: "absolute",
@@ -256,8 +274,8 @@ export function OutfitVisualizer() {
 										>
 											{"‹"}
 										</Text>
-									</Animated.View>
-									<Animated.View
+									</ReanimatedAnimated.View>
+									<ReanimatedAnimated.View
 										style={[
 											{
 												position: "absolute",
@@ -278,7 +296,7 @@ export function OutfitVisualizer() {
 										>
 											{"›"}
 										</Text>
-									</Animated.View>
+									</ReanimatedAnimated.View>
 								</>
 							)}
 						</View>
@@ -320,7 +338,7 @@ export function OutfitVisualizer() {
 			</View>
 			{/* First-visit tooltip overlay — outside shareViewRef */}
 			{!hintSeen && (
-				<Animated.View
+				<ReanimatedAnimated.View
 					style={[
 						{
 							position: "absolute",
@@ -367,7 +385,7 @@ export function OutfitVisualizer() {
 							</Text>
 						</View>
 					</Pressable>
-				</Animated.View>
+				</ReanimatedAnimated.View>
 			)}
 		</View>
 	);

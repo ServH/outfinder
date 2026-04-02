@@ -38,7 +38,7 @@ export function ColorsStack() {
 				name="OutfitVisualizer"
 				component={OutfitVisualizer}
 				options={{
-					title: "Outfit Visualizer",
+					title: "",
 					headerStyle: { backgroundColor: wadaTokens.navBarBg },
 					headerTintColor: wadaTokens.textPrimary,
 					headerTitleStyle: {
