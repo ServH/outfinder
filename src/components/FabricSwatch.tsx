@@ -66,18 +66,23 @@ export function FabricSwatch({ category, onPress }: FabricSwatchProps) {
 			{({ pressed }) => (
 				<View
 					className="overflow-hidden rounded-2xl"
-					style={{ aspectRatio: 1, opacity: pressed ? 0.88 : 1 }}
+					style={{
+						aspectRatio: 1,
+						opacity: pressed ? 0.88 : 1,
+						borderWidth: category === "white" ? 1 : 0,
+						borderColor: "#e0dcd6",
+					}}
 				>
 					<LinearGradient
 						colors={gradientColors}
 						start={{ x: 0, y: 0 }}
 						end={{ x: 1, y: 1 }}
-						className="flex-1 p-3"
+						style={{ flex: 1, padding: 12 }}
 					>
 						<Text
 							style={{
 								fontFamily: "Inter_500Medium",
-								fontSize: 20,
+								fontSize: 16,
 								color: useDarkText ? "#1a1a1a" : "#ffffff",
 							}}
 						>

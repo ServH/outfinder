@@ -253,7 +253,7 @@ export function ColorHome() {
 					<Text
 						style={{
 							fontFamily: "Inter_400Regular",
-							fontSize: 15,
+							fontSize: 16,
 							color: wadaTokens.textSecondary,
 							marginTop: 4,
 						}}
@@ -262,6 +262,8 @@ export function ColorHome() {
 					</Text>
 				</View>
 
+				{/* Grid + dots + link centered in remaining space */}
+				<View style={{ flex: 1, justifyContent: "center" }}>
 				{/* Paginated swatch grid */}
 				<ScrollView
 					ref={scrollRef}
@@ -420,6 +422,7 @@ export function ColorHome() {
 						</Text>
 					</Pressable>
 				</RNAnimated.View>
+				</View>
 			</Animated.View>
 
 			{/* State 2 — Shade picker + combo feed overlay */}

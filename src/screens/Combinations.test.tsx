@@ -1,13 +1,17 @@
-import { render, screen } from "@testing-library/react-native";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 import { getColor, getCombinations } from "@/data/colorIndex";
+import { hapticMedium } from "@/lib/haptics";
 import { Combinations } from "./Combinations";
+
+jest.mock("@/lib/haptics");
 
 jest.mock("@react-navigation/native-stack", () => ({
 	createNativeStackNavigator: jest.fn(),
 }));
 
+const mockPush = jest.fn();
 jest.mock("@react-navigation/native", () => ({
-	useNavigation: () => ({ push: jest.fn() }),
+	useNavigation: () => ({ push: mockPush }),
 }));
 
 jest.mock("@/hooks/useReducedMotion", () => ({
@@ -23,18 +27,6 @@ jest.mock("@/contexts/FavoritesContext", () => ({
 		isFavorite: mockIsFavorite,
 		toggleFavorite: mockToggleFavorite,
 		count: 0,
-	}),
-}));
-
-jest.mock("@/contexts/PremiumContext", () => ({
-	usePremium: () => ({
-		isPremium: false,
-		loading: false,
-		paywallDismissedThisSession: false,
-		setPaywallDismissedThisSession: jest.fn(),
-		priceString: "€0.99",
-		purchase: jest.fn(),
-		restore: jest.fn(),
 	}),
 }));
 
@@ -78,10 +70,34 @@ function renderCombinations(colorId: string) {
 }
 
 describe("Combinations", () => {
-	it("renders ColorHeader with the correct color name", () => {
+	beforeEach(() => {
+		mockPush.mockClear();
+		mockToggleFavorite.mockClear();
+		mockIsFavorite.mockReturnValue(false);
+		(hapticMedium as jest.Mock).mockClear();
+		mockToastVisible = false;
+	});
+
+	it("renders color header with swatch and English name", () => {
 		renderCombinations("c001");
 
 		expect(screen.getByTestId("color-header")).toBeTruthy();
+		expect(screen.getByTestId("color-header-swatch")).toBeTruthy();
+		expect(screen.getByText(realColor.nameEn)).toBeTruthy();
+	});
+
+	it("renders combo count in header", () => {
+		renderCombinations("c001");
+
+		expect(screen.getByTestId("combo-count")).toBeTruthy();
+		expect(
+			screen.getByText(`${realCombinations.length} combos`),
+		).toBeTruthy();
+	});
+
+	it("renders header with accessibility label", () => {
+		renderCombinations("c001");
+
 		expect(
 			screen.getByLabelText(
 				`${realColor.nameEn}, ${realCombinations.length} combinations`,
@@ -89,30 +105,25 @@ describe("Combinations", () => {
 		).toBeTruthy();
 	});
 
-	it("renders ColorHeader with correct combination count", () => {
+	it("renders ComboCards in the feed", () => {
 		renderCombinations("c001");
 
-		expect(
-			screen.getByText(`${realCombinations.length} combinations`),
-		).toBeTruthy();
+		const feed = screen.getByTestId("combo-feed");
+		expect(feed.props.data).toHaveLength(realCombinations.length);
 	});
 
-	it("renders CombinationList with combinations for selected color", () => {
+	it("ComboCard navigates to OutfitVisualizer on press", () => {
 		renderCombinations("c001");
 
-		const flatList = screen.getByTestId("combination-list");
-		expect(flatList.props.data).toHaveLength(realCombinations.length);
-	});
+		const firstComboId = realCombinations.sort(
+			(a, b) => a.colors.length - b.colors.length,
+		)[0].id;
+		fireEvent.press(screen.getByTestId(`combo-card-${firstComboId}`));
 
-	it("passes selectedColorId to CombinationList", () => {
-		renderCombinations("c001");
-
-		const flatList = screen.getByTestId("combination-list");
-		const rendered = flatList.props.renderItem({
-			item: realCombinations[0],
-			index: 0,
+		expect(hapticMedium).toHaveBeenCalled();
+		expect(mockPush).toHaveBeenCalledWith("OutfitVisualizer", {
+			combinationId: firstComboId,
 		});
-		expect(rendered.props.selectedColorId).toBe("c001");
 	});
 
 	it("renders null for invalid colorId", () => {
@@ -128,19 +139,14 @@ describe("Combinations", () => {
 		expect(toJSON()).toBeNull();
 	});
 
-	it("passes isFavorite and onToggleFavorite to CombinationList", () => {
+	it("shows 'yours' label on the user's color in combo card strip", () => {
 		renderCombinations("c001");
 
-		const flatList = screen.getByTestId("combination-list");
-		const rendered = flatList.props.renderItem({
-			item: realCombinations[0],
-			index: 0,
-		});
-		expect(rendered.props.isFavorite).toBe(false);
-		expect(rendered.props.onToggleFavorite).toBeDefined();
+		// The selected color should have a "yours" label in at least one combo card
+		const yoursLabels = screen.queryAllByTestId("yours-label");
+		expect(yoursLabels.length).toBeGreaterThanOrEqual(1);
 	});
 
-	// accessibilityLiveRegion (Story 6.3)
 	it("has polite liveRegion on premium toast", () => {
 		mockToastVisible = true;
 		renderCombinations("c001");
