@@ -1,6 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { RouteProp } from "@react-navigation/native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+	useNavigation,
+	useNavigationState,
+	useRoute,
+} from "@react-navigation/native";
 import {
 	useCallback,
 	useEffect,
@@ -30,7 +34,7 @@ import { MiniPaletteStrip } from "@/components/MiniPaletteStrip";
 import { OutfitCard } from "@/components/OutfitCard";
 import { WadaHeader } from "@/components/WadaHeader";
 import { WarmBackground } from "@/components/WarmBackground";
-import { getCombination } from "@/data/colorIndex";
+import { getColor, getCombination } from "@/data/colorIndex";
 import { getCycleForGarment, useOutfitState } from "@/hooks/useOutfitState";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { hapticMedium, hapticRigid } from "@/lib/haptics";
@@ -58,9 +62,26 @@ export function OutfitVisualizer() {
 	const { width: screenW } = useWindowDimensions();
 	const route = useRoute<OutfitVisualizerRoute>();
 	const navigation = useNavigation();
+	const prevRoute = useNavigationState((state) =>
+		state.index > 0 ? state.routes[state.index - 1] : undefined,
+	);
 	const { combinationId } = route.params;
 	const combination = getCombination(combinationId);
 	const reducedMotion = useReducedMotion();
+
+	let backLabel = "";
+	if (prevRoute?.name === "FavoritesList") {
+		backLabel = "Favorites";
+	} else if (prevRoute?.name === "Combinations") {
+		const params = prevRoute.params as { colorId: string } | undefined;
+		if (params?.colorId) {
+			backLabel = getColor(params.colorId)?.nameEn ?? "";
+		}
+	} else if (prevRoute?.name === "ColorHome") {
+		backLabel = "Colors";
+	} else if (prevRoute?.name === "BrowseAllColors") {
+		backLabel = "All Colors";
+	}
 
 	const shareViewRef = useRef<View>(null);
 
@@ -234,7 +255,7 @@ export function OutfitVisualizer() {
 							color: wadaTokens.textPrimary,
 						}}
 					>
-						←
+						← {backLabel}
 					</Text>
 				</Pressable>
 			</View>

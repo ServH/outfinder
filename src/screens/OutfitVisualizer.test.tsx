@@ -13,6 +13,7 @@ const mockRouteParams = { combinationId: "" };
 jest.mock("@react-navigation/native", () => ({
 	useRoute: () => ({ params: mockRouteParams }),
 	useNavigation: () => ({ goBack: jest.fn() }),
+	useNavigationState: () => undefined,
 }));
 
 // Mock colorIndex
