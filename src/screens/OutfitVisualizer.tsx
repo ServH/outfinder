@@ -1,11 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { RouteProp } from "@react-navigation/native";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useRoute } from "@react-navigation/native";
 import {
 	useCallback,
 	useEffect,
-	useLayoutEffect,
 	useRef,
 	useState,
 } from "react";
@@ -59,19 +57,9 @@ function getNextGarmentLabel(
 export function OutfitVisualizer() {
 	const { width: screenW } = useWindowDimensions();
 	const route = useRoute<OutfitVisualizerRoute>();
-	const navigation =
-		useNavigation<
-			NativeStackNavigationProp<{ OutfitVisualizer: { combinationId: string } }>
-		>();
 	const { combinationId } = route.params;
 	const combination = getCombination(combinationId);
 	const reducedMotion = useReducedMotion();
-
-	useLayoutEffect(() => {
-		if (combination) {
-			navigation.setOptions({ title: combination.nameEn });
-		}
-	}, [combination, navigation]);
 
 	const shareViewRef = useRef<View>(null);
 
