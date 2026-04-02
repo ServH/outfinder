@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { RouteProp } from "@react-navigation/native";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import {
 	useCallback,
 	useEffect,
@@ -57,6 +57,7 @@ function getNextGarmentLabel(
 export function OutfitVisualizer() {
 	const { width: screenW } = useWindowDimensions();
 	const route = useRoute<OutfitVisualizerRoute>();
+	const navigation = useNavigation();
 	const { combinationId } = route.params;
 	const combination = getCombination(combinationId);
 	const reducedMotion = useReducedMotion();
@@ -217,6 +218,26 @@ export function OutfitVisualizer() {
 			style={{ backgroundColor: wadaTokens.warmBg }}
 			accessibilityLabel="Outfit Visualizer screen"
 		>
+			{/* Back button — matches State 2 custom style */}
+			<View className="px-4 pt-4 pb-1" style={{ paddingTop: 60 }}>
+				<Pressable
+					onPress={() => navigation.goBack()}
+					accessibilityRole="button"
+					accessibilityLabel="Go back"
+					className="min-h-[48px] flex-row items-center"
+					testID="visualizer-back-button"
+				>
+					<Text
+						style={{
+							fontFamily: "NotoSerifJP_500Medium",
+							fontSize: 28,
+							color: wadaTokens.textPrimary,
+						}}
+					>
+						←
+					</Text>
+				</Pressable>
+			</View>
 			{/* ScrollView handles 4-garment outfits that exceed screen height */}
 			<ScrollView
 				contentContainerStyle={{ flexGrow: 1 }}

@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCallback } from "react";
-import { Animated, FlatList, Text, View } from "react-native";
+import { Animated, FlatList, Pressable, Text, View } from "react-native";
 import { ComboCard } from "@/components/ComboCard";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
 import { useFavorites } from "@/contexts/FavoritesContext";
@@ -20,7 +20,7 @@ function ComboSeparator() {
 	return <View style={{ height: 12 }} />;
 }
 
-export function Combinations({ route }: CombinationsProps) {
+export function Combinations({ route, navigation }: CombinationsProps) {
 	const { colorId } = route.params;
 	const color = getColor(colorId);
 	const combinations = getCombinations(colorId).sort(
@@ -63,38 +63,34 @@ export function Combinations({ route }: CombinationsProps) {
 
 	return (
 		<View className="flex-1" style={{ backgroundColor: wadaTokens.bgPaper }}>
-			{/* Header: color swatch + English name + combo count */}
+			{/* Header: ← ColorName + combo count (matches State 2 style) */}
 			<View
 				testID="color-header"
-				className="flex-row items-center px-4 py-3"
+				className="flex-row items-center justify-between px-4 pt-4 pb-2"
+				style={{ paddingTop: 60 }}
 				accessibilityLabel={`${color.nameEn}, ${comboCount} ${comboCount === 1 ? "combination" : "combinations"}`}
 			>
-				<View
-					style={{
-						width: 36,
-						height: 36,
-						borderRadius: 10,
-						backgroundColor: color.hex,
-						borderWidth: needsBorder ? 1 : 0,
-						borderColor: "#e0dcd6",
-						marginRight: 10,
-					}}
-					testID="color-header-swatch"
-				/>
-				<Text
-					style={{
-						fontFamily: "Inter_500Medium",
-						fontSize: 17,
-						color: wadaTokens.textPrimary,
-						flex: 1,
-					}}
+				<Pressable
+					onPress={() => navigation.goBack()}
+					accessibilityRole="button"
+					accessibilityLabel={`Back to ${color.nameEn}`}
+					className="min-h-[48px] flex-row items-center"
+					testID="combinations-back-button"
 				>
-					{color.nameEn}
-				</Text>
+					<Text
+						style={{
+							fontFamily: "NotoSerifJP_500Medium",
+							fontSize: 28,
+							color: wadaTokens.textPrimary,
+						}}
+					>
+						← {color.nameEn}
+					</Text>
+				</Pressable>
 				<Text
 					style={{
 						fontFamily: "Inter_400Regular",
-						fontSize: 14,
+						fontSize: 15,
 						color: wadaTokens.textSecondary,
 					}}
 					testID="combo-count"

@@ -12,6 +12,7 @@ import { OutfitVisualizer } from "./OutfitVisualizer";
 const mockRouteParams = { combinationId: "" };
 jest.mock("@react-navigation/native", () => ({
 	useRoute: () => ({ params: mockRouteParams }),
+	useNavigation: () => ({ goBack: jest.fn() }),
 }));
 
 // Mock colorIndex

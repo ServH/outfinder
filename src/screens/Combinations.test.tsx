@@ -79,12 +79,12 @@ describe("Combinations", () => {
 		mockToastVisible = false;
 	});
 
-	it("renders color header with swatch and English name", () => {
+	it("renders color header with back button and English name", () => {
 		renderCombinations("c001");
 
 		expect(screen.getByTestId("color-header")).toBeTruthy();
-		expect(screen.getByTestId("color-header-swatch")).toBeTruthy();
-		expect(screen.getByText(realColor.nameEn)).toBeTruthy();
+		expect(screen.getByTestId("combinations-back-button")).toBeTruthy();
+		expect(screen.getByText(`← ${realColor.nameEn}`)).toBeTruthy();
 	});
 
 	it("renders combo count in header", () => {

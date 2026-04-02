@@ -26,15 +26,7 @@ export function FavoritesStack() {
 			<Stack.Screen
 				name="OutfitVisualizer"
 				component={OutfitVisualizer}
-				options={{
-					title: "",
-					headerStyle: { backgroundColor: wadaTokens.navBarBg },
-					headerTintColor: wadaTokens.textPrimary,
-					headerTitleStyle: {
-						fontFamily: "NotoSerifJP_500Medium",
-					},
-					headerBackTitle: "",
-				}}
+				options={{ headerShown: false }}
 			/>
 		</Stack.Navigator>
 	);
