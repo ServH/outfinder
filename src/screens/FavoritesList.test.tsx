@@ -1,9 +1,10 @@
-import { fireEvent, render, screen } from "@testing-library/react-native";
+import { act, fireEvent, render, screen } from "@testing-library/react-native";
 import { getCombination } from "@/data/colorIndex";
-import { hapticMedium } from "@/lib/haptics";
+import { hapticLight, hapticMedium } from "@/lib/haptics";
 import { FavoritesList } from "./FavoritesList";
 
 const mockPush = jest.fn();
+let mockFocusEffectCallback: (() => void) | null = null;
 
 jest.mock("@react-navigation/native", () => ({
 	useNavigation: () => ({
@@ -11,6 +12,9 @@ jest.mock("@react-navigation/native", () => ({
 		navigate: jest.fn(),
 		goBack: jest.fn(),
 	}),
+	useFocusEffect: (cb: () => void) => {
+		mockFocusEffectCallback = cb;
+	},
 }));
 
 jest.mock("@react-navigation/native-stack", () => ({
@@ -78,8 +82,9 @@ jest.mock("@/hooks/usePremiumGate", () => ({
 	getRestoreErrorMessage: jest.fn(),
 }));
 
-const realCombo1 = getCombination("p001")!;
-const realCombo2 = getCombination("p002")!;
+const realCombo1 = getCombination("p001")!; // Dawn Sky, 3 colors
+const realCombo2 = getCombination("p002")!; // Spring Tidings, 2 colors
+const realCombo4 = getCombination("p004")!; // Autumn Garden, 4 colors
 
 describe("FavoritesList", () => {
 	beforeEach(() => {
@@ -88,6 +93,8 @@ describe("FavoritesList", () => {
 		mockPush.mockClear();
 		mockHandlePremiumGate.mockClear();
 		mockToastVisible = false;
+		mockFocusEffectCallback = null;
+		(hapticLight as jest.Mock).mockClear();
 	});
 
 	// --- AC #1: 2-column grid layout ---
@@ -197,7 +204,9 @@ describe("FavoritesList", () => {
 		expect(screen.getByTestId("empty-state")).toBeTruthy();
 		expect(screen.getByText("No favorites yet")).toBeTruthy();
 		expect(
-			screen.getByText("Tap ♡ on any combination to save it here"),
+			screen.getByText(
+				"Pick a color, explore combinations, and tap ♡ to save the ones you love",
+			),
 		).toBeTruthy();
 	});
 
@@ -206,7 +215,7 @@ describe("FavoritesList", () => {
 
 		expect(
 			screen.getByLabelText(
-				"No favorites yet. Tap ♡ on any combination to save it here",
+				"No favorites yet. Pick a color, explore combinations, and tap ♡ to save the ones you love",
 			),
 		).toBeTruthy();
 	});
@@ -268,5 +277,178 @@ describe("FavoritesList", () => {
 		expect(
 			screen.getByLabelText(`Remove ${realCombo1.nameEn} from favorites`),
 		).toBeTruthy();
+	});
+
+	// --- Story 9.2: Sort pills rendering ---
+
+	it("renders 3 sort pills: Recent, A-Z, By size", () => {
+		mockFavorites = new Set(["p001", "p002"]);
+		render(<FavoritesList />);
+
+		expect(screen.getByTestId("sort-pill-recent")).toBeTruthy();
+		expect(screen.getByTestId("sort-pill-a-z")).toBeTruthy();
+		expect(screen.getByTestId("sort-pill-by-size")).toBeTruthy();
+	});
+
+	it("Recent pill is active by default", () => {
+		mockFavorites = new Set(["p001", "p002"]);
+		render(<FavoritesList />);
+
+		const recentPill = screen.getByTestId("sort-pill-recent");
+		expect(recentPill.props.accessibilityState).toEqual({ selected: true });
+
+		const azPill = screen.getByTestId("sort-pill-a-z");
+		expect(azPill.props.accessibilityState).toEqual({ selected: false });
+	});
+
+	it("sort pills do NOT render in empty state", () => {
+		mockFavorites = new Set<string>();
+		render(<FavoritesList />);
+
+		expect(screen.queryByTestId("sort-pills-row")).toBeNull();
+	});
+
+	// --- Story 9.2: Sort interactions ---
+
+	it("tapping A-Z fires hapticLight and sorts alphabetically", () => {
+		// Insertion order: p004 (Autumn Garden), p001 (Dawn Sky), p002 (Spring Tidings)
+		mockFavorites = new Set(["p004", "p001", "p002"]);
+		render(<FavoritesList />);
+
+		fireEvent.press(screen.getByTestId("sort-pill-a-z"));
+
+		expect(hapticLight).toHaveBeenCalledTimes(1);
+
+		// Verify A-Z order: Autumn Garden, Dawn Sky, Spring Tidings
+		const cards = screen.getAllByTestId(/^combo-card-p/);
+		expect(cards[0].props.testID).toBe(`combo-card-${realCombo4.id}`);
+		expect(cards[1].props.testID).toBe(`combo-card-${realCombo1.id}`);
+		expect(cards[2].props.testID).toBe(`combo-card-${realCombo2.id}`);
+	});
+
+	it("tapping By size fires hapticLight and sorts by color count", () => {
+		// p001: 3 colors, p002: 2 colors, p004: 4 colors
+		mockFavorites = new Set(["p001", "p002", "p004"]);
+		render(<FavoritesList />);
+
+		fireEvent.press(screen.getByTestId("sort-pill-by-size"));
+
+		expect(hapticLight).toHaveBeenCalledTimes(1);
+
+		// Verify size order: p002 (2), p001 (3), p004 (4)
+		const cards = screen.getAllByTestId(/^combo-card-p/);
+		expect(cards[0].props.testID).toBe(`combo-card-${realCombo2.id}`);
+		expect(cards[1].props.testID).toBe(`combo-card-${realCombo1.id}`);
+		expect(cards[2].props.testID).toBe(`combo-card-${realCombo4.id}`);
+	});
+
+	it("tapping Recent restores insertion order", () => {
+		// Insertion order: p004, p001, p002
+		mockFavorites = new Set(["p004", "p001", "p002"]);
+		render(<FavoritesList />);
+
+		// Sort A-Z first
+		fireEvent.press(screen.getByTestId("sort-pill-a-z"));
+		// Then switch back to Recent
+		fireEvent.press(screen.getByTestId("sort-pill-recent"));
+
+		const cards = screen.getAllByTestId(/^combo-card-p/);
+		expect(cards[0].props.testID).toBe(`combo-card-${realCombo4.id}`);
+		expect(cards[1].props.testID).toBe(`combo-card-${realCombo1.id}`);
+		expect(cards[2].props.testID).toBe(`combo-card-${realCombo2.id}`);
+	});
+
+	// --- Story 9.2: Sort pill styling ---
+
+	it("active pill has dark background class", () => {
+		mockFavorites = new Set(["p001", "p002"]);
+		render(<FavoritesList />);
+
+		fireEvent.press(screen.getByTestId("sort-pill-a-z"));
+
+		const azPill = screen.getByTestId("sort-pill-a-z");
+		expect(azPill.props.accessibilityState).toEqual({ selected: true });
+
+		const recentPill = screen.getByTestId("sort-pill-recent");
+		expect(recentPill.props.accessibilityState).toEqual({ selected: false });
+	});
+
+	// --- Story 9.2: Sort reset on tab refocus ---
+
+	it("sort resets to Recent on tab refocus", () => {
+		mockFavorites = new Set(["p001", "p002"]);
+		render(<FavoritesList />);
+
+		// Sort by A-Z
+		fireEvent.press(screen.getByTestId("sort-pill-a-z"));
+		expect(
+			screen.getByTestId("sort-pill-a-z").props.accessibilityState.selected,
+		).toBe(true);
+
+		// Simulate tab refocus via useFocusEffect callback
+		act(() => {
+			if (mockFocusEffectCallback) {
+				mockFocusEffectCallback();
+			}
+		});
+
+		// Recent should be active again
+		expect(
+			screen.getByTestId("sort-pill-recent").props.accessibilityState.selected,
+		).toBe(true);
+		expect(
+			screen.getByTestId("sort-pill-a-z").props.accessibilityState.selected,
+		).toBe(false);
+	});
+
+	// --- Story 9.2: Empty state updated subtitle ---
+
+	it("empty state shows updated subtitle text", () => {
+		mockFavorites = new Set<string>();
+		render(<FavoritesList />);
+
+		expect(
+			screen.getByText(
+				"Pick a color, explore combinations, and tap ♡ to save the ones you love",
+			),
+		).toBeTruthy();
+	});
+
+	// --- Story 9.2: VoiceOver accessibility ---
+
+	it("pills have accessibilityRole tab", () => {
+		mockFavorites = new Set(["p001", "p002"]);
+		render(<FavoritesList />);
+
+		expect(screen.getByTestId("sort-pill-recent").props.accessibilityRole).toBe(
+			"tab",
+		);
+		expect(screen.getByTestId("sort-pill-a-z").props.accessibilityRole).toBe(
+			"tab",
+		);
+		expect(
+			screen.getByTestId("sort-pill-by-size").props.accessibilityRole,
+		).toBe("tab");
+	});
+
+	it("active pill has accessibilityState selected", () => {
+		mockFavorites = new Set(["p001", "p002"]);
+		render(<FavoritesList />);
+
+		expect(
+			screen.getByTestId("sort-pill-recent").props.accessibilityState,
+		).toEqual({ selected: true });
+		expect(
+			screen.getByTestId("sort-pill-a-z").props.accessibilityState,
+		).toEqual({ selected: false });
+
+		fireEvent.press(screen.getByTestId("sort-pill-a-z"));
+
+		expect(
+			screen.getByTestId("sort-pill-a-z").props.accessibilityState,
+		).toEqual({ selected: true });
+		expect(
+			screen.getByTestId("sort-pill-recent").props.accessibilityState,
+		).toEqual({ selected: false });
 	});
 });
