@@ -23,15 +23,7 @@ export function ColorsStack() {
 			<Stack.Screen
 				name="BrowseAllColors"
 				component={BrowseAllColors}
-				options={{
-					title: "All 159 Colors",
-					headerStyle: { backgroundColor: wadaTokens.navBarBg },
-					headerTintColor: wadaTokens.textPrimary,
-					headerTitleStyle: {
-						fontFamily: "NotoSerifJP_500Medium",
-					},
-					headerBackTitle: "",
-				}}
+				options={{ headerShown: false }}
 			/>
 			<Stack.Screen
 				name="Combinations"

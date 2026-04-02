@@ -97,6 +97,17 @@ export function Settings(_props: SettingsProps) {
 
 	return (
 		<View className="flex-1 bg-paper" accessibilityLabel="Settings screen">
+			<View className="px-4 pt-4 pb-2" style={{ paddingTop: 60 }}>
+				<Text
+					style={{
+						fontFamily: "NotoSerifJP_500Medium",
+						fontSize: 28,
+						color: wadaTokens.textPrimary,
+					}}
+				>
+					Settings
+				</Text>
+			</View>
 			<ScrollView
 				contentContainerStyle={{ padding: 24 }}
 				showsVerticalScrollIndicator={false}

@@ -1,13 +1,7 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useMemo, useState } from "react";
-import {
-	Animated,
-	Dimensions,
-	FlatList,
-	Pressable,
-	Text,
-	View,
-} from "react-native";
+import { Animated, Dimensions, FlatList, Pressable, Text, View } from "react-native";
+import { wadaTokens } from "@/styles/theme";
 import { ComboCard } from "@/components/ComboCard";
 import { EmptyState } from "@/components/EmptyState";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
@@ -125,6 +119,17 @@ export function FavoritesList(_props: FavoritesListProps) {
 				className="flex-1 bg-paper"
 				accessibilityLabel="Favorites List screen"
 			>
+				<View className="px-4 pt-4 pb-2" style={{ paddingTop: 60 }}>
+					<Text
+						style={{
+							fontFamily: "NotoSerifJP_500Medium",
+							fontSize: 28,
+							color: wadaTokens.textPrimary,
+						}}
+					>
+						Favorites
+					</Text>
+				</View>
 				<EmptyState
 					title="No favorites yet"
 					subtitle="Pick a color, explore combinations, and tap ♡ to save the ones you love"
@@ -135,6 +140,17 @@ export function FavoritesList(_props: FavoritesListProps) {
 
 	return (
 		<View className="flex-1 bg-paper">
+			<View className="px-4 pt-4 pb-2" style={{ paddingTop: 60 }}>
+				<Text
+					style={{
+						fontFamily: "NotoSerifJP_500Medium",
+						fontSize: 28,
+						color: wadaTokens.textPrimary,
+					}}
+				>
+					Favorites
+				</Text>
+			</View>
 			<FlatList
 				testID="favorites-list"
 				className="flex-1"

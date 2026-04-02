@@ -37,7 +37,8 @@ describe("BrowseAllColors", () => {
 
 		const swatches = screen.getAllByRole("button");
 		const expectedCount = getColorsByGroup(1).length;
-		expect(swatches).toHaveLength(expectedCount);
+		// +1 for the custom back button
+		expect(swatches).toHaveLength(expectedCount + 1);
 	});
 
 	it("navigates to Combinations with colorId on swatch press", () => {

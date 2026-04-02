@@ -13,14 +13,7 @@ export function SettingsStack() {
 			<Stack.Screen
 				name="Settings"
 				component={Settings}
-				options={{
-					title: "Settings",
-					headerStyle: { backgroundColor: wadaTokens.navBarBg },
-					headerTintColor: wadaTokens.textPrimary,
-					headerTitleStyle: {
-						fontFamily: "NotoSerifJP_500Medium",
-					},
-				}}
+				options={{ headerShown: false }}
 			/>
 		</Stack.Navigator>
 	);
