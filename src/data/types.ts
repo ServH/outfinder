@@ -1,5 +1,18 @@
 export type SwatchGroup = 0 | 1 | 2 | 3 | 4 | 5;
 
+export type WardrobeCategory =
+	| "white"
+	| "black"
+	| "blue"
+	| "grey"
+	| "brown"
+	| "green"
+	| "red"
+	| "pink"
+	| "yellow"
+	| "purple"
+	| "orange";
+
 export interface Color {
 	id: string;
 	hex: string;
