@@ -41,10 +41,11 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 - **Epic 5: DONE** — Premium & In-App Purchases (2/2 stories — PremiumContext + IAP purchase/restore flow)
 - **Epic 6: DONE** — Onboarding & App Store Launch (5/5 stories: 6.1 Onboarding, 6.2 Settings/EAS, 6.3 A11y polish, 6.4 Code quality, 6.5 Error boundary/privacy/IAP hardening)
 - **Epic 7: IN-PROGRESS** — Post-launch polish (7.1 Onboarding visual refresh DONE, 7.2 Visualizer interaction affordances DONE, 7.3 Tinted garment fallback PENDING)
-- **Tests:** 396 across 31 suites (all passing)
+- **Epic 8: IN-PROGRESS** — Home redesign v2.0 (8.1 Wardrobe data layer DONE, 8.2 Home State 1 fabric swatches DONE, 8.3 ComboCard component DONE, 8.4 Home State 2 PENDING, 8.5 BrowseAllColors cleanup PENDING)
+- **Tests:** 471 across 35 suites (all passing)
 - **Code Reviews:** Adversarial review on every story since Epic 1
 - **Retrospectives:** Epic 1, 2, 3, 4 completed
-- **App Store:** v1.0.0 submitted 2026-03-26, v1.0.1 bumped for onboarding refresh
+- **App Store:** v1.0.0 submitted 2026-03-26, v1.0.1 onboarding refresh, v1.0.2 (build 2) visualizer affordances
 
 ### Epic Execution Order (non-sequential)
 
@@ -79,7 +80,8 @@ outfinder/
 │   │   ├── Aureola.tsx              # Radial glow behind outfit card using dominant color
 │   │   ├── WadaHeader.tsx           # Japanese combination name + "N colors · Sanzo Wada" subtitle
 │   │   ├── MiniPaletteStrip.tsx     # Thin horizontal color strip with names below the card
-│   │   ├── FavoriteButton.tsx       # Heart toggle (SF Symbol), spring animation, hapticLight, a11y
+│   │   ├── ComboCard.tsx             # Full + compact combo card: color strip, "yours" label, heart, "See outfit" pill
+│   │   ├── FavoriteButton.tsx       # Heart toggle (SF Symbol), spring animation, hapticLight, a11y, configurable size
 │   │   ├── EmptyState.tsx           # Empty favorites guidance with heart icon and message
 │   │   ├── ErrorBoundary.tsx        # App-level error boundary with recovery UI
 │   │   ├── PremiumPaywall.tsx       # Paywall modal — Wada-styled, RevenueCat purchase/restore
@@ -245,6 +247,36 @@ Use `push()` to allow stacking multiple instances (cross-navigation). `navigate(
 |---|------|----------|-------|
 | 1 | `biome.json` uses overrides workaround for CSS @tailwind | LOW | Epic 1 — Biome 2.4.6 bug, revisit on update |
 | 2 | Reanimated mock `createAnimatedComponent` uses identity function | LOW | Epic 1 — could break with animated props |
+
+## Upcoming: v2.0 Redesign (Validated Specs)
+
+Three validated design specs ready for implementation:
+
+### Home Redesign (Major)
+- Replace 159-color grid with 6 wardrobe-first fabric swatches ("What color are you wearing?")
+- 2-page home: Page 1 = 6 basics (White, Black, Blue, Grey, Brown, Green), Page 2 = 5 accents + "All 159 colors"
+- Transform in-place to State 2: shade picker (5 pills) + combo cards with "See outfit" pill
+- Reduces navigation depth from 3 to 2 taps
+- New data mapping: 159 Wada colors → 11 wardrobe categories
+- Spec: `designs/home-redesign-spec.md`
+
+### Favorites Redesign (Medium)
+- 2-column compact grid (8 visible vs 3 current)
+- Sort pills: Recent, A-Z, By size
+- Shared ComboCard component (full + compact variants)
+- Simplified stack: FavoritesList → OutfitVisualizer (remove Combinations)
+- Spec: `designs/favorites-redesign-spec.md`
+
+### Visualizer Adjustments (Minor)
+- Add nameEn to WadaHeader
+- Add heart/favorite button next to Share
+- Dynamic nav title (combination name instead of "Outfit Visualizer")
+- Spec: `designs/visualizer-adjustments-spec.md`
+
+### Design Exploration Archive
+- Full design exploration (30+ concepts) in `designs/pencil-new.pen`
+- Concepts A-F → G/H/I → H1-H3 → v3 flow → v4.1 (validated)
+- Deferred features: "Do these match?" (future epic), Wada's Journal (premium content)
 
 ## Key Learnings from Retrospectives
 

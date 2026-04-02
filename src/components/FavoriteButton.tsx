@@ -14,6 +14,7 @@ export interface FavoriteButtonProps {
 	isFavorite: boolean;
 	onToggle: () => void;
 	onPremiumGate?: () => void;
+	size?: number;
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -23,6 +24,7 @@ export function FavoriteButton({
 	isFavorite,
 	onToggle,
 	onPremiumGate,
+	size = 24,
 }: FavoriteButtonProps) {
 	const scale = useSharedValue(1);
 	const reducedMotion = useReducedMotion();
@@ -60,7 +62,7 @@ export function FavoriteButton({
 			<SymbolView
 				testID={`favorite-icon-${combinationId}`}
 				name={isFavorite ? "heart.fill" : "heart"}
-				style={{ width: 24, height: 24 }}
+				style={{ width: size, height: size }}
 				tintColor={
 					isFavorite ? wadaTokens.favoriteRed : wadaTokens.textTertiary
 				}
