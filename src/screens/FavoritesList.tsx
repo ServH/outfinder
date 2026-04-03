@@ -1,15 +1,23 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useMemo, useState } from "react";
-import { Animated, Dimensions, FlatList, Pressable, Text, View } from "react-native";
-import { wadaTokens } from "@/styles/theme";
+import {
+	Animated,
+	Dimensions,
+	FlatList,
+	Pressable,
+	Text,
+	View,
+} from "react-native";
 import { ComboCard } from "@/components/ComboCard";
 import { EmptyState } from "@/components/EmptyState";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
+import { PREMIUM_CONFIG } from "@/config/premium";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { getCombination } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
 import { hapticLight } from "@/lib/haptics";
+import { wadaTokens } from "@/styles/theme";
 
 type FavoritesListProps = Record<string, never>;
 
@@ -65,7 +73,9 @@ export function FavoritesList(_props: FavoritesListProps) {
 						isFavorite={currentlyFav}
 						onToggleFavorite={() => toggleFavorite(item.id)}
 						onPremiumGate={
-							!gate.isPremium && !currentlyFav
+							!gate.isPremium &&
+							!currentlyFav &&
+							favorites.size >= PREMIUM_CONFIG.FREE_FAVORITES_LIMIT
 								? () => gate.handlePremiumGate(item.id)
 								: undefined
 						}
@@ -73,7 +83,13 @@ export function FavoritesList(_props: FavoritesListProps) {
 				</View>
 			);
 		},
-		[isFavorite, toggleFavorite, gate.isPremium, gate.handlePremiumGate],
+		[
+			isFavorite,
+			toggleFavorite,
+			favorites.size,
+			gate.isPremium,
+			gate.handlePremiumGate,
+		],
 	);
 
 	const listHeaderComponent = useMemo(

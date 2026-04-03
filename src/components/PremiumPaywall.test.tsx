@@ -145,7 +145,7 @@ describe("PremiumPaywall", () => {
 		renderPaywall();
 		const badge = screen.getByTestId("limit-badge");
 		expect(badge).toBeTruthy();
-		expect(screen.getByText("5 of 5 free favorites used")).toBeTruthy();
+		expect(screen.getByText("2 of 5 free favorites used")).toBeTruthy();
 	});
 
 	it("renders headline", () => {

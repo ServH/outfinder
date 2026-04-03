@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { Animated, FlatList, Pressable, Text, View } from "react-native";
 import { ComboCard } from "@/components/ComboCard";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
+import { PREMIUM_CONFIG } from "@/config/premium";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { getColor, getCombinations } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
@@ -39,7 +40,9 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 				isFavorite={isFavorite(item.id)}
 				onToggleFavorite={() => toggleFavorite(item.id)}
 				onPremiumGate={
-					!gate.isPremium && !isFavorite(item.id)
+					!gate.isPremium &&
+					!isFavorite(item.id) &&
+					favorites.size >= PREMIUM_CONFIG.FREE_FAVORITES_LIMIT
 						? () => gate.handlePremiumGate(item.id)
 						: undefined
 				}
@@ -49,6 +52,7 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 			colorId,
 			isFavorite,
 			toggleFavorite,
+			favorites.size,
 			gate.isPremium,
 			gate.handlePremiumGate,
 		],

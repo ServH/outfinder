@@ -158,9 +158,7 @@ export function PremiumPaywall({
 	const isSettingsEntry = !blockedCombination;
 	const showPalettePreview = favCount > 0 || !isSettingsEntry;
 
-	const badgeText = isSettingsEntry
-		? `${favCount} of 5 free favorites used`
-		: "5 of 5 free favorites used";
+	const badgeText = `${favCount} of 5 free favorites used`;
 
 	if (!visible) {
 		return null;

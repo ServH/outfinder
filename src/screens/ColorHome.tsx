@@ -21,6 +21,7 @@ import { ComboCard } from "@/components/ComboCard";
 import { FabricSwatch } from "@/components/FabricSwatch";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
 import { ShadePicker } from "@/components/ShadePicker";
+import { PREMIUM_CONFIG } from "@/config/premium";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { getCombinations } from "@/data/colorIndex";
 import type { Color, Combination, WardrobeCategory } from "@/data/types";
@@ -52,9 +53,7 @@ const ACCENTS: WardrobeCategory[] = [
 	"orange",
 ];
 
-const PEEK_WIDTH = 28;
-const SCREEN_WIDTH = Dimensions.get("window").width;
-const PAGE_WIDTH = SCREEN_WIDTH - PEEK_WIDTH;
+const PAGE_WIDTH = Dimensions.get("window").width;
 
 function ComboSeparator() {
 	return <View style={{ height: 12 }} />;
@@ -199,7 +198,9 @@ export function ColorHome() {
 				isFavorite={isFavorite(item.id)}
 				onToggleFavorite={() => toggleFavorite(item.id)}
 				onPremiumGate={
-					!premiumGate.isPremium && !isFavorite(item.id)
+					!premiumGate.isPremium &&
+					!isFavorite(item.id) &&
+					favorites.size >= PREMIUM_CONFIG.FREE_FAVORITES_LIMIT
 						? () => premiumGate.handlePremiumGate(item.id)
 						: undefined
 				}
@@ -209,6 +210,7 @@ export function ColorHome() {
 			selectedShade?.id,
 			isFavorite,
 			toggleFavorite,
+			favorites.size,
 			premiumGate.isPremium,
 			premiumGate.handlePremiumGate,
 		],
@@ -253,10 +255,10 @@ export function ColorHome() {
 					</Text>
 					<Text
 						style={{
-							fontFamily: "Inter_400Regular",
-							fontSize: 16,
+							fontFamily: "NotoSerifJP_400Regular",
+							fontSize: 18,
 							color: wadaTokens.textSecondary,
-							marginTop: 4,
+							marginTop: 6,
 						}}
 					>
 						What color are you wearing?
@@ -264,23 +266,24 @@ export function ColorHome() {
 				</View>
 
 				{/* Grid + dots + link centered in remaining space */}
-				<View style={{ flex: 1, justifyContent: "center" }}>
+				<View style={{ flex: 1, justifyContent: "center", paddingBottom: 8 }}>
 					{/* Paginated swatch grid */}
 					<ScrollView
 						ref={scrollRef}
 						horizontal
+						pagingEnabled
 						showsHorizontalScrollIndicator={false}
-						snapToInterval={PAGE_WIDTH}
-						decelerationRate="fast"
 						onScroll={handleScroll}
 						onMomentumScrollEnd={handleMomentumEnd}
 						scrollEventThrottle={16}
-						contentContainerStyle={{ paddingLeft: pagePadding }}
 						testID="swatch-scroll"
 					>
 						{/* Page 1: Basics */}
 						<View
-							style={{ width: PAGE_WIDTH - pagePadding }}
+							style={{
+								width: PAGE_WIDTH,
+								paddingHorizontal: pagePadding,
+							}}
 							testID="page-basics"
 						>
 							<View className="flex-row flex-wrap" style={{ gap }}>
@@ -299,8 +302,7 @@ export function ColorHome() {
 						<View
 							style={{
 								width: PAGE_WIDTH,
-								paddingLeft: gap,
-								paddingRight: pagePadding,
+								paddingHorizontal: pagePadding,
 							}}
 							testID="page-accents"
 						>
@@ -375,7 +377,7 @@ export function ColorHome() {
 
 					{/* Page dots */}
 					<View
-						className="flex-row items-center justify-center py-4"
+						className="flex-row items-center justify-center py-2"
 						style={{ gap: 8 }}
 						testID="page-dots"
 					>
@@ -406,7 +408,7 @@ export function ColorHome() {
 					>
 						<Pressable
 							onPress={handleBrowseAllPress}
-							className="items-center pb-4"
+							className="items-center pb-2"
 							testID="browse-all-link"
 							accessibilityRole="link"
 							accessibilityLabel="Browse all 159 colors"
