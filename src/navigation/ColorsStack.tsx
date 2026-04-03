@@ -12,7 +12,7 @@ const Stack = createNativeStackNavigator<ColorsStackParamList>();
 
 export function ColorsStack() {
 	return (
-		<Stack.Navigator>
+		<Stack.Navigator screenOptions={{ animation: "fade" }}>
 			<Stack.Screen
 				name="ColorHome"
 				component={ColorHome}

@@ -16,7 +16,7 @@ export function EmptyState({ title, subtitle }: EmptyStateProps) {
 			<Text className="font-serif-jp text-lg text-primary text-center">
 				{title}
 			</Text>
-			<Text className="font-sans text-sm text-text-secondary text-center mt-2">
+			<Text className="font-sans text-sm text-secondary text-center mt-2">
 				{subtitle}
 			</Text>
 		</View>

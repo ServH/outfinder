@@ -30,19 +30,22 @@ export function BrowseAllColors() {
 	}
 
 	return (
-		<View className="flex-1 bg-paper">
+		<View className="flex-1 bg-paper" accessibilityLabel="Browse All Colors screen">
 			<View
-				className="flex-row items-center justify-between px-4 pt-4 pb-2"
+				className="flex-row items-center px-4 pt-4 pb-2"
 				style={{ paddingTop: 60 }}
 			>
 				<Pressable
 					onPress={() => navigation.goBack()}
 					accessibilityRole="button"
 					accessibilityLabel="Back to Colors"
-					className="min-h-[48px] flex-row items-center"
+					className="min-h-[48px] flex-1 flex-row items-center"
 					testID="browse-back-button"
 				>
 					<Text
+						numberOfLines={1}
+						adjustsFontSizeToFit
+						minimumFontScale={0.7}
 						style={{
 							fontFamily: "NotoSerifJP_500Medium",
 							fontSize: 28,

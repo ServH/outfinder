@@ -139,14 +139,10 @@ export function usePremiumGate(favorites: Set<string>): PremiumGateState {
 
 	const handlePremiumGate = useCallback(
 		(combinationId: string) => {
-			if (paywallDismissedThisSession) {
-				showToast();
-				return;
-			}
 			setBlockedCombinationId(combinationId);
 			setPaywallVisible(true);
 		},
-		[paywallDismissedThisSession, showToast],
+		[],
 	);
 
 	const handleDismiss = useCallback(() => {

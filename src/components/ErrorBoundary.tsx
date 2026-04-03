@@ -40,20 +40,20 @@ export class ErrorBoundary extends Component<
 					>
 						<Text
 							allowFontScaling
-							className="font-serif-jp-medium text-[20px] text-text-primary"
+							className="font-serif-jp-medium text-[20px] text-primary"
 							accessibilityRole="header"
 						>
 							Outfinder
 						</Text>
 						<Text
 							allowFontScaling
-							className="font-sans text-[14px] text-text-secondary mt-3"
+							className="font-sans text-[14px] text-secondary mt-3"
 						>
 							Something went wrong
 						</Text>
 						<Pressable
 							testID="error-boundary-restart"
-							className="min-h-[48px] rounded-full bg-text-primary px-8 mt-6 items-center justify-center"
+							className="min-h-[48px] rounded-full bg-primary px-8 mt-6 items-center justify-center"
 							accessibilityRole="button"
 							accessibilityLabel="Restart"
 							onPress={() => this.setState({ hasError: false })}

@@ -59,9 +59,9 @@ export function ComboCard({
 				className="overflow-hidden rounded-lg bg-white"
 				style={{
 					shadowColor: "#000",
-					shadowOffset: { width: 0, height: 1 },
-					shadowOpacity: 0.08,
-					shadowRadius: 4,
+					shadowOffset: { width: 0, height: 3 },
+					shadowOpacity: 0.12,
+					shadowRadius: 8,
 				}}
 			>
 				{/* Color Strip */}

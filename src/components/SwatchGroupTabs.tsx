@@ -54,7 +54,7 @@ export function SwatchGroupTabs({
 						<Text
 							className={
 								isActive
-									? "text-text-primary font-sans-medium"
+									? "text-primary font-sans-medium"
 									: "text-tab-inactive font-sans"
 							}
 						>

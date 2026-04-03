@@ -9,6 +9,7 @@ import {
 	View,
 } from "react-native";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
+import { PREMIUM_CONFIG } from "@/config/premium";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { usePremium } from "@/contexts/PremiumContext";
 import { getRestoreErrorMessage, usePremiumGate } from "@/hooks/usePremiumGate";
@@ -87,7 +88,7 @@ export function Settings(_props: SettingsProps) {
 				return (
 					<Text
 						allowFontScaling
-						className="font-sans text-[14px] text-text-primary"
+						className="font-sans text-[14px] text-primary"
 					>
 						Restore Purchases
 					</Text>
@@ -116,12 +117,12 @@ export function Settings(_props: SettingsProps) {
 				<View testID="premium-section">
 					<Text
 						allowFontScaling
-						className="font-sans text-[16px] font-bold mb-3 text-text-primary"
+						className="font-sans text-[16px] font-bold mb-3 text-primary"
 					>
 						Plans
 					</Text>
 
-					<View className="bg-bg-elevated rounded-xl overflow-hidden">
+					<View className="bg-elevated rounded-xl overflow-hidden">
 						{/* Status row */}
 						<View
 							testID="premium-status-row"
@@ -129,7 +130,7 @@ export function Settings(_props: SettingsProps) {
 							accessibilityLabel={
 								isPremium
 									? "Premium Active"
-									: `Free Plan, ${count} of 5 favorites used`
+									: `Free Plan, ${count} of ${PREMIUM_CONFIG.FREE_FAVORITES_LIMIT} favorites used`
 							}
 						>
 							{isPremium ? (
@@ -144,7 +145,7 @@ export function Settings(_props: SettingsProps) {
 								<Text
 									testID="free-plan-badge"
 									allowFontScaling
-									className="font-sans text-[14px] text-text-secondary"
+									className="font-sans text-[14px] text-secondary"
 								>
 									Free Plan · {count} favorites
 								</Text>
@@ -178,7 +179,7 @@ export function Settings(_props: SettingsProps) {
 							>
 								<Text
 									allowFontScaling
-									className="font-sans text-[12px] text-text-secondary"
+									className="font-sans text-[12px] text-secondary"
 								>
 									{restoreMessage}
 								</Text>
@@ -212,12 +213,12 @@ export function Settings(_props: SettingsProps) {
 				<View testID="about-section" className="mt-8">
 					<Text
 						allowFontScaling
-						className="font-sans text-[16px] font-bold mb-3 text-text-primary"
+						className="font-sans text-[16px] font-bold mb-3 text-primary"
 					>
 						About
 					</Text>
 
-					<View className="bg-bg-elevated rounded-xl overflow-hidden">
+					<View className="bg-elevated rounded-xl overflow-hidden">
 						{/* Version row */}
 						<View
 							testID="settings-version-row"
@@ -226,13 +227,13 @@ export function Settings(_props: SettingsProps) {
 						>
 							<Text
 								allowFontScaling
-								className="font-sans text-[14px] text-text-primary"
+								className="font-sans text-[14px] text-primary"
 							>
 								Version
 							</Text>
 							<Text
 								allowFontScaling
-								className="font-sans text-[14px] text-text-secondary"
+								className="font-sans text-[14px] text-secondary"
 							>
 								{Constants.expoConfig?.version ?? "1.0.0"}
 							</Text>
@@ -263,13 +264,13 @@ export function Settings(_props: SettingsProps) {
 						>
 							<Text
 								allowFontScaling
-								className="font-sans text-[14px] text-text-primary"
+								className="font-sans text-[14px] text-primary"
 							>
 								Privacy Policy
 							</Text>
 							<Text
 								allowFontScaling
-								className="font-sans text-[14px] text-text-tertiary"
+								className="font-sans text-[14px] text-tertiary"
 							>
 								›
 							</Text>
@@ -300,13 +301,13 @@ export function Settings(_props: SettingsProps) {
 						>
 							<Text
 								allowFontScaling
-								className="font-sans text-[14px] text-text-primary"
+								className="font-sans text-[14px] text-primary"
 							>
 								Support
 							</Text>
 							<Text
 								allowFontScaling
-								className="font-sans text-[14px] text-text-tertiary"
+								className="font-sans text-[14px] text-tertiary"
 							>
 								›
 							</Text>

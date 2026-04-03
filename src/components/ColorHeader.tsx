@@ -19,14 +19,14 @@ export function ColorHeader({ color, combinationCount }: ColorHeaderProps) {
 				testID="color-header-swatch"
 			/>
 			<View className="flex-1">
-				<Text className="font-serif-jp text-lg text-text-primary">
+				<Text className="font-serif-jp text-lg text-primary">
 					{color.nameJp}
 				</Text>
-				<Text className="font-sans text-xs text-text-secondary">
+				<Text className="font-sans text-xs text-secondary">
 					{color.nameEn}
 				</Text>
 			</View>
-			<Text className="font-sans text-xs text-text-tertiary">
+			<Text className="font-sans text-xs text-tertiary">
 				{combinationCount}{" "}
 				{combinationCount === 1 ? "combination" : "combinations"}
 			</Text>

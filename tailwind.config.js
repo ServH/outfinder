@@ -5,12 +5,12 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
-				"bg-paper": "#fafaf8",
-				"bg-surface": "#ffffff",
-				"bg-elevated": "#f5f5f3",
-				"text-primary": "#1a1a1a",
-				"text-secondary": "#6b6b6b",
-				"text-tertiary": "#767676",
+				paper: "#fafaf8",
+				surface: "#ffffff",
+				elevated: "#f5f5f3",
+				primary: "#1a1a1a",
+				secondary: "#6b6b6b",
+				tertiary: "#767676",
 				hairline: "rgba(0,0,0,0.08)",
 				divider: "rgba(0,0,0,0.06)",
 				"premium-accent": "#c4a265",

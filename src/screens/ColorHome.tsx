@@ -21,6 +21,7 @@ import { ComboCard } from "@/components/ComboCard";
 import { FabricSwatch } from "@/components/FabricSwatch";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
 import { ShadePicker } from "@/components/ShadePicker";
+import { PREMIUM_CONFIG } from "@/config/premium";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { getCombinations } from "@/data/colorIndex";
 import type { Color, Combination, WardrobeCategory } from "@/data/types";
@@ -52,9 +53,7 @@ const ACCENTS: WardrobeCategory[] = [
 	"orange",
 ];
 
-const PEEK_WIDTH = 28;
-const SCREEN_WIDTH = Dimensions.get("window").width;
-const PAGE_WIDTH = SCREEN_WIDTH - PEEK_WIDTH;
+const PAGE_WIDTH = Dimensions.get("window").width;
 
 function ComboSeparator() {
 	return <View style={{ height: 12 }} />;
@@ -72,6 +71,7 @@ export function ColorHome() {
 	);
 	const [selectedShade, setSelectedShade] = useState<Color | null>(null);
 	const [isAnimating, setIsAnimating] = useState(false);
+	const [linkEnabled, setLinkEnabled] = useState(true);
 
 	// All hooks called before any early returns (Rules of Hooks)
 	const { favorites, isFavorite, toggleFavorite } = useFavorites();
@@ -167,6 +167,14 @@ export function ColorHome() {
 		extrapolate: "clamp",
 	});
 
+	useEffect(() => {
+		const threshold = PAGE_WIDTH * 0.3;
+		const id = scrollX.addListener(({ value }) => {
+			setLinkEnabled(value < threshold);
+		});
+		return () => scrollX.removeListener(id);
+	}, [scrollX]);
+
 	const dot0Color = scrollX.interpolate({
 		inputRange: [0, PAGE_WIDTH],
 		outputRange: ["#1a1a1a", "#d4d4d4"],
@@ -199,7 +207,9 @@ export function ColorHome() {
 				isFavorite={isFavorite(item.id)}
 				onToggleFavorite={() => toggleFavorite(item.id)}
 				onPremiumGate={
-					!premiumGate.isPremium && !isFavorite(item.id)
+					!premiumGate.isPremium &&
+					!isFavorite(item.id) &&
+					favorites.size >= PREMIUM_CONFIG.FREE_FAVORITES_LIMIT
 						? () => premiumGate.handlePremiumGate(item.id)
 						: undefined
 				}
@@ -209,16 +219,18 @@ export function ColorHome() {
 			selectedShade?.id,
 			isFavorite,
 			toggleFavorite,
+			favorites.size,
 			premiumGate.isPremium,
 			premiumGate.handlePremiumGate,
 		],
 	);
 
-	// Back-to-Page-1: when selectedFamily is cleared, scroll paginated view to Page 1
+	// Restore scroll position: when returning from State 2, stay on the same page
+	const currentPageRef = useRef(0);
+	currentPageRef.current = currentPage;
 	useEffect(() => {
 		if (selectedFamily === null) {
-			scrollRef.current?.scrollTo({ x: 0, animated: false });
-			setCurrentPage(0);
+			scrollRef.current?.scrollTo({ x: currentPageRef.current * PAGE_WIDTH, animated: false });
 		}
 	}, [selectedFamily]);
 
@@ -253,10 +265,10 @@ export function ColorHome() {
 					</Text>
 					<Text
 						style={{
-							fontFamily: "Inter_400Regular",
-							fontSize: 16,
+							fontFamily: "NotoSerifJP_400Regular",
+							fontSize: 18,
 							color: wadaTokens.textSecondary,
-							marginTop: 4,
+							marginTop: 6,
 						}}
 					>
 						What color are you wearing?
@@ -264,23 +276,24 @@ export function ColorHome() {
 				</View>
 
 				{/* Grid + dots + link centered in remaining space */}
-				<View style={{ flex: 1, justifyContent: "center" }}>
+				<View style={{ flex: 1, justifyContent: "center", paddingBottom: 8 }}>
 					{/* Paginated swatch grid */}
 					<ScrollView
 						ref={scrollRef}
 						horizontal
+						pagingEnabled
 						showsHorizontalScrollIndicator={false}
-						snapToInterval={PAGE_WIDTH}
-						decelerationRate="fast"
 						onScroll={handleScroll}
 						onMomentumScrollEnd={handleMomentumEnd}
 						scrollEventThrottle={16}
-						contentContainerStyle={{ paddingLeft: pagePadding }}
 						testID="swatch-scroll"
 					>
 						{/* Page 1: Basics */}
 						<View
-							style={{ width: PAGE_WIDTH - pagePadding }}
+							style={{
+								width: PAGE_WIDTH,
+								paddingHorizontal: pagePadding,
+							}}
 							testID="page-basics"
 						>
 							<View className="flex-row flex-wrap" style={{ gap }}>
@@ -299,8 +312,7 @@ export function ColorHome() {
 						<View
 							style={{
 								width: PAGE_WIDTH,
-								paddingLeft: gap,
-								paddingRight: pagePadding,
+								paddingHorizontal: pagePadding,
 							}}
 							testID="page-accents"
 						>
@@ -375,7 +387,7 @@ export function ColorHome() {
 
 					{/* Page dots */}
 					<View
-						className="flex-row items-center justify-center py-4"
+						className="flex-row items-center justify-center py-2"
 						style={{ gap: 8 }}
 						testID="page-dots"
 					>
@@ -402,11 +414,11 @@ export function ColorHome() {
 					{/* "Browse all 159 colors" link — fades out as user scrolls to Page 2 */}
 					<RNAnimated.View
 						style={{ opacity: linkOpacity }}
-						pointerEvents={currentPage === 0 ? "auto" : "none"}
+						pointerEvents={linkEnabled ? "auto" : "none"}
 					>
 						<Pressable
 							onPress={handleBrowseAllPress}
-							className="items-center pb-4"
+							className="items-center pb-2"
 							testID="browse-all-link"
 							accessibilityRole="link"
 							accessibilityLabel="Browse all 159 colors"
@@ -450,10 +462,13 @@ export function ColorHome() {
 							onPress={handleBackPress}
 							accessibilityRole="button"
 							accessibilityLabel="Back to color families"
-							className="min-h-[48px] flex-row items-center"
+							className="min-h-[48px] flex-1 flex-row items-center"
 							testID="state2-back-button"
 						>
 							<Text
+								numberOfLines={1}
+								adjustsFontSizeToFit
+								minimumFontScale={0.7}
 								style={{
 									fontFamily: "NotoSerifJP_500Medium",
 									fontSize: 28,
@@ -468,6 +483,7 @@ export function ColorHome() {
 								fontFamily: "Inter_400Regular",
 								fontSize: 15,
 								color: wadaTokens.textSecondary,
+								flexShrink: 0,
 							}}
 							testID="combo-count"
 						>

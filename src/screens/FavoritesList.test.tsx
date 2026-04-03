@@ -187,15 +187,6 @@ describe("FavoritesList", () => {
 
 	// --- AC #8: Premium gate preserved ---
 
-	it("has polite liveRegion on premium toast", () => {
-		mockFavorites = new Set(["p001"]);
-		mockToastVisible = true;
-		render(<FavoritesList />);
-
-		const toast = screen.getByTestId("premium-toast");
-		expect(toast.props.accessibilityLiveRegion).toBe("polite");
-	});
-
 	// --- Empty state ---
 
 	it("renders empty state when no favorites", () => {

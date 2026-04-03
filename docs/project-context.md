@@ -41,16 +41,19 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 - **Epic 5: DONE** — Premium & In-App Purchases (2/2 stories — PremiumContext + IAP purchase/restore flow)
 - **Epic 6: DONE** — Onboarding & App Store Launch (5/5 stories: 6.1 Onboarding, 6.2 Settings/EAS, 6.3 A11y polish, 6.4 Code quality, 6.5 Error boundary/privacy/IAP hardening)
 - **Epic 7: IN-PROGRESS** — Post-launch polish (7.1 Onboarding visual refresh DONE, 7.2 Visualizer interaction affordances DONE, 7.3 Tinted garment fallback PENDING)
-- **Epic 8: IN-PROGRESS** — Home redesign v2.0 (8.1 Wardrobe data layer DONE, 8.2 Home State 1 fabric swatches DONE, 8.3 ComboCard component DONE, 8.4 Home State 2 PENDING, 8.5 BrowseAllColors cleanup PENDING)
-- **Tests:** 471 across 35 suites (all passing)
-- **Code Reviews:** Adversarial review on every story since Epic 1
+- **Epic 8: DONE** — Home redesign v2.0 (8.1–8.5 all stories complete, merged to epic-1)
+- **Epic 9: DONE** — Favorites redesign (9.1 2-col grid + ComboCard compact, 9.2 Sort pills + empty state)
+- **Story 10.1: DONE** — Visualizer adjustments (nameEn in WadaHeader + dynamic nav title)
+- **Bugfix branch: `fix/premium-gate-and-home-polish`** — Premium gate count check, home layout, token naming, dead code cleanup, fade transitions
+- **Tests:** 518 across 37 suites (all passing)
+- **Code Reviews:** Adversarial review on every story since Epic 1. Per-screen code analysis on 2026-04-03
 - **Retrospectives:** Epic 1, 2, 3, 4 completed
-- **App Store:** v1.0.0 submitted 2026-03-26, v1.0.1 onboarding refresh, v1.0.2 (build 2) visualizer affordances
+- **App Store:** v1.0.0 submitted 2026-03-26, v1.0.1 onboarding refresh, v1.0.2 (build 4) visualizer affordances
 
 ### Epic Execution Order (non-sequential)
 
 Epics were NOT executed in numerical order:
-1. Epic 1 → Epic 2 → **Epic 4** → **Epic 3** → Epic 5 → Epic 6 → Epic 7 (in-progress)
+1. Epic 1 → Epic 2 → **Epic 4** → **Epic 3** → Epic 5 → Epic 6 → Epic 7 → Epic 8 → Epic 9 → Story 10.1 → bugfix polish
 
 Epic 3 was postponed after Epic 2 because the Visualizer was visually flat for social sharing. Epic 4 (Favorites) was independent and executed first. Story 2.5 (Skia rewrite) + bugfix polish branch resolved the visual debt, unblocking Epic 3.
 
@@ -247,30 +250,67 @@ Use `push()` to allow stacking multiple instances (cross-navigation). `navigate(
 |---|------|----------|-------|
 | 1 | `biome.json` uses overrides workaround for CSS @tailwind | LOW | Epic 1 — Biome 2.4.6 bug, revisit on update |
 | 2 | Reanimated mock `createAnimatedComponent` uses identity function | LOW | Epic 1 — could break with animated props |
+| 3 | `usePremiumGate` still exports toast-related state (`toastVisible`, `toastOpacity`, `showToast`) but toast is never triggered after removing `paywallDismissedThisSession` guard | LOW | Bugfix 2026-04-03 — dead code in hook, screens already cleaned |
+| 4 | `handleScroll` in ColorHome uses `useNativeDriver: false` for dot/link interpolations | LOW | Epic 8 — JS thread scroll tracking, fine for 2 pages |
+| 5 | No StoreKit Configuration file for simulator IAP testing | MEDIUM | Since Epic 5 — purchases only testable on real device with sandbox |
 
-## Upcoming: v2.0 Redesign (Validated Specs)
+## Bugfix Branch: `fix/premium-gate-and-home-polish` (2026-04-03)
 
-Three validated design specs ready for implementation:
+Per-screen code review with targeted fixes:
 
-### Home Redesign (Major)
-- Replace 159-color grid with 6 wardrobe-first fabric swatches ("What color are you wearing?")
-- 2-page home: Page 1 = 6 basics (White, Black, Blue, Grey, Brown, Green), Page 2 = 5 accents + "All 159 colors"
-- Transform in-place to State 2: shade picker (5 pills) + combo cards with "See outfit" pill
-- Reduces navigation depth from 3 to 2 taps
-- New data mapping: 159 Wada colors → 11 wardrobe categories
+### Premium Gate (Critical Bug)
+- **Root cause:** `onPremiumGate` passed to ALL unfavorited items for free users — missing `favorites.size >= FREE_FAVORITES_LIMIT` check in Combinations, ColorHome, FavoritesList
+- **Badge text:** PremiumPaywall hardcoded "5 of 5" from heart tap — now dynamic `${favCount} of 5`
+- **Paywall repeat:** Removed `paywallDismissedThisSession` guard — paywall always shows on explicit heart taps (user-initiated action deserves purchase option)
+
+### Home Layout
+- **PEEK_WIDTH removed:** `PAGE_WIDTH = SCREEN_WIDTH - 28` was causing Page 2 cards to bleed through — now `PAGE_WIDTH = Dimensions.get("window").width`
+- **pagingEnabled:** Replaced `snapToInterval` with native iOS `pagingEnabled` for proper page clipping
+- **Symmetric padding:** Both pages use `paddingHorizontal: pagePadding` (was asymmetric)
+- **Scroll restore:** Returns to correct page after State 2 back (was always resetting to Page 1)
+- **Subtitle serif:** "What color are you wearing?" now `NotoSerifJP_400Regular` 18px (was Inter 16px)
+
+### Tailwind Token Naming (Systemic Fix)
+- **Problem:** Color keys like `"text-primary"`, `"bg-elevated"` generated utilities `text-text-primary`, `bg-bg-elevated` — double prefix. `bg-paper` class never worked (key was `"bg-paper"`, utility would be `bg-bg-paper`)
+- **Fix:** Renamed keys to `primary`, `secondary`, `tertiary`, `surface`, `elevated`, `paper` — now `text-primary`, `bg-elevated`, `bg-paper` resolve correctly
+- **Impact:** 23 files, all className usages updated
+
+### Navigation & Transitions
+- **Fade on all tabs:** `animation: "fade"` in TabNavigator screenOptions
+- **Fade on all stacks:** ColorsStack, FavoritesStack, SettingsStack `screenOptions={{ animation: "fade" }}`
+- **Header auto-scale:** `adjustsFontSizeToFit` + `numberOfLines={1}` + `minimumFontScale={0.7}` on all back buttons (Combinations, ColorHome State 2, BrowseAllColors, OutfitVisualizer)
+
+### Dead Code Cleanup
+- Removed toast JSX + `Animated` imports from Combinations and FavoritesList (dead after paywall guard removal)
+- Removed `isLightColor` import + `needsBorder` from Combinations
+- Removed premium gate from FavoritesList `renderComboCard` (items always favorited — gate never triggers)
+- Merged duplicate `handleSkip`/`handleCta` in Onboarding → `handleComplete`
+- Extracted shared header in FavoritesList (was duplicated in empty/non-empty branches)
+
+### Minor Polish
+- FabricSwatch shadow: 2px offset, 8% opacity, 6px blur
+- ComboCard shadow increased: offset 1→3, opacity 0.08→0.12, blur 4→8
+- SwatchGroupTabs vertical alignment fix (`paddingTop: 0` when ListHeaderComponent present)
+- Settings hardcoded "5" → `PREMIUM_CONFIG.FREE_FAVORITES_LIMIT`
+- OutfitVisualizer tooltip colors → wadaTokens
+- BrowseAllColors: removed redundant `justify-between`, added `accessibilityLabel`
+- Combinations back button a11y: "Back to ColorName" → "Go back"
+- ColorHome link `pointerEvents` driven by `scrollX` listener (instant during swipe)
+
+## Implemented: v2.0 Redesign (All DONE)
+
+### Home Redesign — Epic 8 (DONE, Stories 8.1–8.5)
+- Wardrobe-first fabric swatches, 2-page paged scroll (6 basics + 5 accents + "All 159 colors" dashed card)
+- State 2 crossfade: shade picker + combo feed
 - Spec: `designs/home-redesign-spec.md`
 
-### Favorites Redesign (Medium)
-- 2-column compact grid (8 visible vs 3 current)
-- Sort pills: Recent, A-Z, By size
-- Shared ComboCard component (full + compact variants)
-- Simplified stack: FavoritesList → OutfitVisualizer (remove Combinations)
+### Favorites Redesign — Epic 9 (DONE, Stories 9.1–9.2)
+- 2-column compact grid, sort pills (Recent, A-Z, By size), shared ComboCard
+- Simplified stack: FavoritesList → OutfitVisualizer
 - Spec: `designs/favorites-redesign-spec.md`
 
-### Visualizer Adjustments (Minor)
-- Add nameEn to WadaHeader
-- Add heart/favorite button next to Share
-- Dynamic nav title (combination name instead of "Outfit Visualizer")
+### Visualizer Adjustments — Story 10.1 (DONE)
+- nameEn in WadaHeader, dynamic nav title
 - Spec: `designs/visualizer-adjustments-spec.md`
 
 ### Design Exploration Archive

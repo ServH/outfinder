@@ -158,9 +158,7 @@ export function PremiumPaywall({
 	const isSettingsEntry = !blockedCombination;
 	const showPalettePreview = favCount > 0 || !isSettingsEntry;
 
-	const badgeText = isSettingsEntry
-		? `${favCount} of 5 free favorites used`
-		: "5 of 5 free favorites used";
+	const badgeText = `${favCount} of 5 free favorites used`;
 
 	if (!visible) {
 		return null;
@@ -231,7 +229,7 @@ export function PremiumPaywall({
 									>
 										<Text
 											allowFontScaling
-											className="font-sans text-[11px] text-text-tertiary"
+											className="font-sans text-[11px] text-tertiary"
 										>
 											Your collection
 										</Text>
@@ -310,7 +308,7 @@ export function PremiumPaywall({
 							<Text
 								testID="paywall-headline"
 								allowFontScaling
-								className="font-serif-jp text-[20px] text-center mb-[10px] text-text-primary"
+								className="font-serif-jp text-[20px] text-center mb-[10px] text-primary"
 								style={{ lineHeight: 28 }}
 							>
 								{"Don't stop\ncollecting"}
@@ -320,7 +318,7 @@ export function PremiumPaywall({
 							<Text
 								testID="paywall-body"
 								allowFontScaling
-								className="font-sans text-[13px] font-light text-center px-2 mb-6 text-text-secondary"
+								className="font-sans text-[13px] font-light text-center px-2 mb-6 text-secondary"
 								style={{ lineHeight: 21 }}
 							>
 								You've found {favCount}{" "}
@@ -334,18 +332,18 @@ export function PremiumPaywall({
 								{/* Price tag */}
 								<View
 									testID="price-tag"
-									className="items-center bg-bg-elevated rounded-[10px] px-4 py-3 shrink-0"
+									className="items-center bg-elevated rounded-[10px] px-4 py-3 shrink-0"
 									accessibilityLabel={`${priceString}, one-time purchase`}
 								>
 									<Text
 										allowFontScaling
-										className="font-sans text-[22px] font-semibold text-text-primary"
+										className="font-sans text-[22px] font-semibold text-primary"
 									>
 										{priceString}
 									</Text>
 									<Text
 										allowFontScaling
-										className="font-sans text-[10px] text-text-tertiary mt-[1px]"
+										className="font-sans text-[10px] text-tertiary mt-[1px]"
 									>
 										one time
 									</Text>
@@ -424,7 +422,7 @@ export function PremiumPaywall({
 								>
 									<Text
 										allowFontScaling
-										className="font-sans text-[13px] text-center text-text-secondary"
+										className="font-sans text-[13px] text-center text-secondary"
 									>
 										{errorMessage}
 									</Text>
@@ -454,7 +452,7 @@ export function PremiumPaywall({
 									) : (
 										<Text
 											allowFontScaling
-											className="font-sans text-[13px] text-text-tertiary"
+											className="font-sans text-[13px] text-tertiary"
 										>
 											Restore Purchase
 										</Text>
@@ -470,7 +468,7 @@ export function PremiumPaywall({
 								>
 									<Text
 										allowFontScaling
-										className="font-sans text-[13px] text-text-tertiary"
+										className="font-sans text-[13px] text-tertiary"
 										style={{ opacity: isLoading ? 0.5 : 1 }}
 									>
 										Not now
