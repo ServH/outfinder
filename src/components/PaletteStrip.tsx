@@ -114,10 +114,10 @@ export function PaletteStrip({
 			<View className="mt-2 flex-row">
 				{combination.colors.map((color) => (
 					<View key={color.id} className="flex-1 items-center">
-						<Text className="font-serif-jp text-[11px] text-text-primary">
+						<Text className="font-serif-jp text-[11px] text-primary">
 							{color.nameJp}
 						</Text>
-						<Text className="font-sans text-[10px] text-text-secondary">
+						<Text className="font-sans text-[10px] text-secondary">
 							{color.nameEn}
 						</Text>
 					</View>

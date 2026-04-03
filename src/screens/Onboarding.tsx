@@ -74,12 +74,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 		{ viewabilityConfig, onViewableItemsChanged },
 	]);
 
-	function handleSkip() {
-		hapticLight();
-		onComplete();
-	}
-
-	function handleCta() {
+	function handleComplete() {
 		hapticLight();
 		onComplete();
 	}
@@ -118,7 +113,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 						accessibilityRole="button"
 						accessibilityLabel="Let's begin"
 						testID="onboarding-cta"
-						onPress={handleCta}
+						onPress={handleComplete}
 					>
 						<Text
 							allowFontScaling
@@ -148,7 +143,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 				accessibilityRole="button"
 				accessibilityLabel="Skip onboarding"
 				testID="onboarding-skip"
-				onPress={handleSkip}
+				onPress={handleComplete}
 			>
 				<Text allowFontScaling className="text-tertiary font-sans text-[13px]">
 					Skip

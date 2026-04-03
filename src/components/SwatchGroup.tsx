@@ -21,7 +21,12 @@ export function SwatchGroup({
 			numColumns={5}
 			keyExtractor={(item) => item.id}
 			columnWrapperStyle={{ gap: 4 }}
-			contentContainerStyle={{ gap: 4, padding: 16 }}
+			contentContainerStyle={{
+				gap: 4,
+				paddingHorizontal: 16,
+				paddingBottom: 16,
+				paddingTop: ListHeaderComponent ? 0 : 16,
+			}}
 			ListHeaderComponent={ListHeaderComponent}
 			renderItem={({ item }) => (
 				<ColorSwatch color={item} onPress={onColorPress} />

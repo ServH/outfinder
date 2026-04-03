@@ -146,11 +146,4 @@ describe("Combinations", () => {
 		expect(yoursLabels.length).toBeGreaterThanOrEqual(1);
 	});
 
-	it("has polite liveRegion on premium toast", () => {
-		mockToastVisible = true;
-		renderCombinations("c001");
-
-		const toast = screen.getByTestId("premium-toast");
-		expect(toast.props.accessibilityLiveRegion).toBe("polite");
-	});
 });

@@ -249,6 +249,9 @@ export function OutfitVisualizer() {
 					testID="visualizer-back-button"
 				>
 					<Text
+						numberOfLines={1}
+						adjustsFontSizeToFit
+						minimumFontScale={0.7}
 						style={{
 							fontFamily: "NotoSerifJP_500Medium",
 							fontSize: 28,
@@ -355,7 +358,7 @@ export function OutfitVisualizer() {
 					disabled={sharing}
 					accessibilityLabel="Share outfit image"
 					accessibilityRole="button"
-					className="min-h-[48px] items-center justify-center rounded-full bg-bg-surface px-6 py-3"
+					className="min-h-[48px] items-center justify-center rounded-full bg-surface px-6 py-3"
 					style={{ opacity: sharing ? 0.5 : 1 }}
 				>
 					<Text
@@ -394,7 +397,7 @@ export function OutfitVisualizer() {
 					>
 						<View
 							style={{
-								backgroundColor: "#1a1a1a",
+								backgroundColor: wadaTokens.textPrimary,
 								borderRadius: 12,
 								padding: 24,
 								marginHorizontal: 40,
@@ -403,7 +406,7 @@ export function OutfitVisualizer() {
 						>
 							<Text
 								style={{
-									color: "#fafaf8",
+									color: wadaTokens.bgPaper,
 									fontFamily: "Inter_500Medium",
 									fontSize: 15,
 									textAlign: "center",

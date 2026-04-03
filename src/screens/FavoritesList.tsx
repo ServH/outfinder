@@ -1,17 +1,9 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useMemo, useState } from "react";
-import {
-	Animated,
-	Dimensions,
-	FlatList,
-	Pressable,
-	Text,
-	View,
-} from "react-native";
+import { Dimensions, FlatList, Pressable, Text, View } from "react-native";
 import { ComboCard } from "@/components/ComboCard";
 import { EmptyState } from "@/components/EmptyState";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
-import { PREMIUM_CONFIG } from "@/config/premium";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { getCombination } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
@@ -72,24 +64,11 @@ export function FavoritesList(_props: FavoritesListProps) {
 						showYoursLabel={false}
 						isFavorite={currentlyFav}
 						onToggleFavorite={() => toggleFavorite(item.id)}
-						onPremiumGate={
-							!gate.isPremium &&
-							!currentlyFav &&
-							favorites.size >= PREMIUM_CONFIG.FREE_FAVORITES_LIMIT
-								? () => gate.handlePremiumGate(item.id)
-								: undefined
-						}
 					/>
 				</View>
 			);
 		},
-		[
-			isFavorite,
-			toggleFavorite,
-			favorites.size,
-			gate.isPremium,
-			gate.handlePremiumGate,
-		],
+		[isFavorite, toggleFavorite],
 	);
 
 	const listHeaderComponent = useMemo(
@@ -101,7 +80,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 						<Pressable
 							key={mode}
 							testID={`sort-pill-${mode}`}
-							className={`px-3 py-2 min-h-[44px] justify-center rounded-full ${isActive ? "bg-[#1a1a1a]" : "bg-[#F0F0EE]"}`}
+							className={`px-3 py-2 min-h-[44px] justify-center rounded-full ${isActive ? "bg-primary" : "bg-elevated"}`}
 							accessibilityRole="tab"
 							accessibilityLabel={
 								isActive ? `${a11yLabel}, selected` : a11yLabel
@@ -114,7 +93,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 						>
 							{({ pressed }) => (
 								<Text
-									className={`font-sans text-[13px] ${isActive ? "font-medium text-white" : "text-[#6b6b6b]"}`}
+									className={`font-sans text-[13px] ${isActive ? "font-medium text-white" : "text-secondary"}`}
 									style={{ opacity: pressed ? 0.7 : 1 }}
 								>
 									{label}
@@ -128,6 +107,20 @@ export function FavoritesList(_props: FavoritesListProps) {
 		[sortMode],
 	);
 
+	const header = (
+		<View className="px-4 pt-4 pb-2" style={{ paddingTop: 60 }}>
+			<Text
+				style={{
+					fontFamily: "NotoSerifJP_500Medium",
+					fontSize: 28,
+					color: wadaTokens.textPrimary,
+				}}
+			>
+				Favorites
+			</Text>
+		</View>
+	);
+
 	if (combinations.length === 0) {
 		return (
 			<View
@@ -135,17 +128,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 				className="flex-1 bg-paper"
 				accessibilityLabel="Favorites List screen"
 			>
-				<View className="px-4 pt-4 pb-2" style={{ paddingTop: 60 }}>
-					<Text
-						style={{
-							fontFamily: "NotoSerifJP_500Medium",
-							fontSize: 28,
-							color: wadaTokens.textPrimary,
-						}}
-					>
-						Favorites
-					</Text>
-				</View>
+				{header}
 				<EmptyState
 					title="No favorites yet"
 					subtitle="Pick a color, explore combinations, and tap ♡ to save the ones you love"
@@ -156,17 +139,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 
 	return (
 		<View className="flex-1 bg-paper">
-			<View className="px-4 pt-4 pb-2" style={{ paddingTop: 60 }}>
-				<Text
-					style={{
-						fontFamily: "NotoSerifJP_500Medium",
-						fontSize: 28,
-						color: wadaTokens.textPrimary,
-					}}
-				>
-					Favorites
-				</Text>
-			</View>
+			{header}
 			<FlatList
 				testID="favorites-list"
 				className="flex-1"
@@ -192,26 +165,6 @@ export function FavoritesList(_props: FavoritesListProps) {
 				onDismiss={gate.handleDismiss}
 			/>
 
-			{gate.toastVisible && (
-				<Animated.View
-					testID="premium-toast"
-					className="absolute bottom-12 left-6 right-6 items-center"
-					style={{ opacity: gate.toastOpacity }}
-					accessibilityLiveRegion="polite"
-				>
-					<View
-						className="px-4 py-3 rounded-xl"
-						style={{ backgroundColor: "rgba(0,0,0,0.75)" }}
-					>
-						<Text
-							allowFontScaling
-							className="font-sans text-[13px] text-white text-center"
-						>
-							Upgrade to save more favorites
-						</Text>
-					</View>
-				</Animated.View>
-			)}
 		</View>
 	);
 }

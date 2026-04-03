@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCallback } from "react";
-import { Animated, FlatList, Pressable, Text, View } from "react-native";
+import { FlatList, Pressable, Text, View } from "react-native";
 import { ComboCard } from "@/components/ComboCard";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
 import { PREMIUM_CONFIG } from "@/config/premium";
@@ -8,7 +8,6 @@ import { useFavorites } from "@/contexts/FavoritesContext";
 import { getColor, getCombinations } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
-import { isLightColor } from "@/lib/color";
 import type { ColorsStackParamList } from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
 
@@ -63,7 +62,6 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 	}
 
 	const comboCount = combinations.length;
-	const needsBorder = isLightColor(color.hex);
 
 	return (
 		<View className="flex-1" style={{ backgroundColor: wadaTokens.bgPaper }}>
@@ -77,7 +75,7 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 				<Pressable
 					onPress={() => navigation.goBack()}
 					accessibilityRole="button"
-					accessibilityLabel={`Back to ${color.nameEn}`}
+					accessibilityLabel="Go back"
 					className="min-h-[48px] flex-1 flex-row items-center"
 					testID="combinations-back-button"
 				>
@@ -133,26 +131,6 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 				onDismiss={gate.handleDismiss}
 			/>
 
-			{gate.toastVisible && (
-				<Animated.View
-					testID="premium-toast"
-					className="absolute bottom-12 left-6 right-6 items-center"
-					style={{ opacity: gate.toastOpacity }}
-					accessibilityLiveRegion="polite"
-				>
-					<View
-						className="px-4 py-3 rounded-xl"
-						style={{ backgroundColor: "rgba(0,0,0,0.75)" }}
-					>
-						<Text
-							allowFontScaling
-							className="font-sans text-[13px] text-white text-center"
-						>
-							Upgrade to save more favorites
-						</Text>
-					</View>
-				</Animated.View>
-			)}
 		</View>
 	);
 }

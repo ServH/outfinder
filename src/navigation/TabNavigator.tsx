@@ -15,6 +15,7 @@ export function TabNavigator() {
 		<Tab.Navigator
 			screenOptions={{
 				headerShown: false,
+				animation: "fade",
 				tabBarStyle: {
 					backgroundColor: wadaTokens.tabBarBg,
 					borderTopColor: wadaTokens.tabBarBorder,

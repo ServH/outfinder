@@ -30,9 +30,9 @@ export function BrowseAllColors() {
 	}
 
 	return (
-		<View className="flex-1 bg-paper">
+		<View className="flex-1 bg-paper" accessibilityLabel="Browse All Colors screen">
 			<View
-				className="flex-row items-center justify-between px-4 pt-4 pb-2"
+				className="flex-row items-center px-4 pt-4 pb-2"
 				style={{ paddingTop: 60 }}
 			>
 				<Pressable

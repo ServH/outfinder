@@ -71,6 +71,7 @@ export function ColorHome() {
 	);
 	const [selectedShade, setSelectedShade] = useState<Color | null>(null);
 	const [isAnimating, setIsAnimating] = useState(false);
+	const [linkEnabled, setLinkEnabled] = useState(true);
 
 	// All hooks called before any early returns (Rules of Hooks)
 	const { favorites, isFavorite, toggleFavorite } = useFavorites();
@@ -166,6 +167,14 @@ export function ColorHome() {
 		extrapolate: "clamp",
 	});
 
+	useEffect(() => {
+		const threshold = PAGE_WIDTH * 0.3;
+		const id = scrollX.addListener(({ value }) => {
+			setLinkEnabled(value < threshold);
+		});
+		return () => scrollX.removeListener(id);
+	}, [scrollX]);
+
 	const dot0Color = scrollX.interpolate({
 		inputRange: [0, PAGE_WIDTH],
 		outputRange: ["#1a1a1a", "#d4d4d4"],
@@ -216,11 +225,12 @@ export function ColorHome() {
 		],
 	);
 
-	// Back-to-Page-1: when selectedFamily is cleared, scroll paginated view to Page 1
+	// Restore scroll position: when returning from State 2, stay on the same page
+	const currentPageRef = useRef(0);
+	currentPageRef.current = currentPage;
 	useEffect(() => {
 		if (selectedFamily === null) {
-			scrollRef.current?.scrollTo({ x: 0, animated: false });
-			setCurrentPage(0);
+			scrollRef.current?.scrollTo({ x: currentPageRef.current * PAGE_WIDTH, animated: false });
 		}
 	}, [selectedFamily]);
 
@@ -404,7 +414,7 @@ export function ColorHome() {
 					{/* "Browse all 159 colors" link — fades out as user scrolls to Page 2 */}
 					<RNAnimated.View
 						style={{ opacity: linkOpacity }}
-						pointerEvents={currentPage === 0 ? "auto" : "none"}
+						pointerEvents={linkEnabled ? "auto" : "none"}
 					>
 						<Pressable
 							onPress={handleBrowseAllPress}

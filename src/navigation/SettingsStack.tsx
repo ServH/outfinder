@@ -9,7 +9,7 @@ const Stack = createNativeStackNavigator<SettingsStackParamList>();
 
 export function SettingsStack() {
 	return (
-		<Stack.Navigator>
+		<Stack.Navigator screenOptions={{ animation: "fade" }}>
 			<Stack.Screen
 				name="Settings"
 				component={Settings}

@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator<FavoritesStackParamList>();
 
 export function FavoritesStack() {
 	return (
-		<Stack.Navigator>
+		<Stack.Navigator screenOptions={{ animation: "fade" }}>
 			<Stack.Screen
 				name="FavoritesList"
 				component={FavoritesList}

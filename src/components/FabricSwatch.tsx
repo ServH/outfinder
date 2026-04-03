@@ -71,6 +71,10 @@ export function FabricSwatch({ category, onPress }: FabricSwatchProps) {
 						opacity: pressed ? 0.88 : 1,
 						borderWidth: category === "white" ? 1 : 0,
 						borderColor: "#e0dcd6",
+						shadowColor: "#000",
+						shadowOffset: { width: 0, height: 2 },
+						shadowOpacity: 0.08,
+						shadowRadius: 6,
 					}}
 				>
 					<LinearGradient
