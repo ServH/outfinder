@@ -452,10 +452,13 @@ export function ColorHome() {
 							onPress={handleBackPress}
 							accessibilityRole="button"
 							accessibilityLabel="Back to color families"
-							className="min-h-[48px] flex-row items-center"
+							className="min-h-[48px] flex-1 flex-row items-center"
 							testID="state2-back-button"
 						>
 							<Text
+								numberOfLines={1}
+								adjustsFontSizeToFit
+								minimumFontScale={0.7}
 								style={{
 									fontFamily: "NotoSerifJP_500Medium",
 									fontSize: 28,
@@ -470,6 +473,7 @@ export function ColorHome() {
 								fontFamily: "Inter_400Regular",
 								fontSize: 15,
 								color: wadaTokens.textSecondary,
+								flexShrink: 0,
 							}}
 							testID="combo-count"
 						>
