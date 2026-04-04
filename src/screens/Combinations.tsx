@@ -9,6 +9,7 @@ import { useFavorites } from "@/contexts/FavoritesContext";
 import { getColor, getCombinations } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
+import { useIsIPad } from "@/lib/device";
 import type { ColorsStackParamList } from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
 
@@ -17,19 +18,21 @@ type CombinationsProps = NativeStackScreenProps<
 	"Combinations"
 >;
 
-function ComboSeparator() {
-	return <View style={{ height: 12 }} />;
-}
-
 export function Combinations({ route, navigation }: CombinationsProps) {
 	const { t } = useTranslation();
 	const { colorId } = route.params;
+	const isTablet = useIsIPad();
 	const color = getColor(colorId);
 	const combinations = getCombinations(colorId).sort(
 		(a, b) => a.colors.length - b.colors.length,
 	);
 	const { isFavorite, toggleFavorite, favorites } = useFavorites();
 	const gate = usePremiumGate(favorites);
+
+	const renderSeparator = useCallback(
+		() => <View style={{ height: isTablet ? 16 : 12 }} />,
+		[isTablet],
+	);
 
 	const renderComboCard = useCallback(
 		({ item }: { item: Combination }) => (
@@ -70,8 +73,8 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 			{/* Header: ← ColorName + combo count (matches State 2 style) */}
 			<View
 				testID="color-header"
-				className="flex-row items-center justify-between px-4 pt-4 pb-2"
-				style={{ paddingTop: 60 }}
+				className="flex-row items-center justify-between pb-2"
+				style={{ paddingTop: 60, paddingHorizontal: isTablet ? 24 : 16 }}
 				accessibilityLabel={`${color.nameEn}, ${comboCount} ${t("combinations.combination", { count: comboCount })}`}
 			>
 				<Pressable
@@ -113,10 +116,10 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 				keyExtractor={(item) => item.id}
 				renderItem={renderComboCard}
 				contentContainerStyle={{
-					paddingHorizontal: 16,
+					paddingHorizontal: isTablet ? 24 : 16,
 					paddingBottom: 24,
 				}}
-				ItemSeparatorComponent={ComboSeparator}
+				ItemSeparatorComponent={renderSeparator}
 				testID="combo-feed"
 			/>
 

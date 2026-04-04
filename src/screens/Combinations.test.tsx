@@ -146,3 +146,34 @@ describe("Combinations", () => {
 		expect(yoursLabels.length).toBeGreaterThanOrEqual(1);
 	});
 });
+
+describe("Combinations iPad layout", () => {
+	beforeEach(() => {
+		jest.spyOn(require("@/lib/device"), "useIsIPad").mockReturnValue(true);
+	});
+
+	afterEach(() => {
+		jest.restoreAllMocks();
+	});
+
+	it("uses wider padding on iPad", () => {
+		renderCombinations("c001");
+		const feed = screen.getByTestId("combo-feed");
+		expect(feed.props.contentContainerStyle.paddingHorizontal).toBe(24);
+	});
+
+	it("uses wider padding on iPad header", () => {
+		renderCombinations("c001");
+		const header = screen.getByTestId("color-header");
+		expect(header.props.style).toMatchObject({ paddingHorizontal: 24 });
+	});
+
+	it("uses taller separator on iPad", () => {
+		// biome-ignore lint/suspicious/noExplicitAny: testing internal FlatList props
+		const { FlatList } = require("react-native") as any;
+		const { UNSAFE_getByType } = renderCombinations("c001");
+		const flatList = UNSAFE_getByType(FlatList);
+		const separatorResult = flatList.props.ItemSeparatorComponent();
+		expect(separatorResult.props.style.height).toBe(16);
+	});
+});

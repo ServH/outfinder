@@ -14,6 +14,7 @@ import { PREMIUM_CONFIG } from "@/config/premium";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { usePremium } from "@/contexts/PremiumContext";
 import { getRestoreErrorMessage, usePremiumGate } from "@/hooks/usePremiumGate";
+import { useIsIPad } from "@/lib/device";
 import { wadaTokens } from "@/styles/theme";
 
 const PRIVACY_URL = "https://servh.github.io/outfinder-legal/";
@@ -28,6 +29,7 @@ export function Settings(_props: SettingsProps) {
 	const { isPremium, restore } = usePremium();
 	const { favorites, toggleFavorite, count } = useFavorites();
 	const gate = usePremiumGate(favorites);
+	const isTablet = useIsIPad();
 
 	const [restoreState, setRestoreState] = useState<RestoreState>("idle");
 	const [restoreMessage, setRestoreMessage] = useState<string | null>(null);
@@ -100,7 +102,10 @@ export function Settings(_props: SettingsProps) {
 			className="flex-1 bg-paper"
 			accessibilityLabel={t("settings.screenLabel")}
 		>
-			<View className="px-4 pt-4 pb-2" style={{ paddingTop: 60 }}>
+			<View
+				className="pb-2"
+				style={{ paddingTop: 60, paddingHorizontal: isTablet ? 24 : 16 }}
+			>
 				<Text
 					style={{
 						fontFamily: "NotoSerifJP_500Medium",
@@ -112,211 +117,220 @@ export function Settings(_props: SettingsProps) {
 				</Text>
 			</View>
 			<ScrollView
-				contentContainerStyle={{ padding: 24 }}
+				contentContainerStyle={{ padding: isTablet ? 32 : 24 }}
 				showsVerticalScrollIndicator={false}
 			>
-				{/* Plans section */}
-				<View testID="premium-section">
-					<Text
-						allowFontScaling
-						className="font-sans text-[16px] font-bold mb-3 text-primary"
-					>
-						{t("settings.plans")}
-					</Text>
-
-					<View className="bg-elevated rounded-xl overflow-hidden">
-						{/* Status row */}
-						<View
-							testID="premium-status-row"
-							className="px-4 py-3"
-							accessibilityLabel={
-								isPremium
-									? t("settings.premiumActive")
-									: t("settings.freePlanLabel", {
-											count,
-											limit: PREMIUM_CONFIG.FREE_FAVORITES_LIMIT,
-										})
-							}
+				<View
+					testID="settings-content-container"
+					style={
+						isTablet
+							? { maxWidth: 560, alignSelf: "center", width: "100%" }
+							: undefined
+					}
+				>
+					{/* Plans section */}
+					<View testID="premium-section">
+						<Text
+							allowFontScaling
+							className="font-sans text-[16px] font-bold mb-3 text-primary"
 						>
-							{isPremium ? (
-								<Text
-									testID="premium-active-badge"
-									allowFontScaling
-									className="font-sans text-[14px] font-medium text-premium-accent"
-								>
-									{t("settings.premiumBadge")}
-								</Text>
-							) : (
-								<Text
-									testID="free-plan-badge"
-									allowFontScaling
-									className="font-sans text-[14px] text-secondary"
-								>
-									{t("settings.freePlanBadge", { count })}
-								</Text>
-							)}
-						</View>
+							{t("settings.plans")}
+						</Text>
 
-						{/* Divider */}
-						<View className="h-[1px] bg-divider mx-4" />
-
-						{/* Restore Purchases button */}
-						<Pressable
-							testID="settings-restore-button"
-							className="px-4 min-h-[44px] justify-center"
-							accessibilityRole="button"
-							accessibilityLabel={t("settings.restorePurchases")}
-							disabled={restoreState === "loading"}
-							onPress={handleSettingsRestore}
-						>
-							<View testID="restore-content" accessibilityLiveRegion="polite">
-								{restoreButtonContent()}
-							</View>
-						</Pressable>
-
-						{/* Restore error message */}
-						{restoreState === "error" && restoreMessage && (
+						<View className="bg-elevated rounded-xl overflow-hidden">
+							{/* Status row */}
 							<View
-								testID="settings-restore-error"
-								accessibilityRole="alert"
-								accessibilityLiveRegion="assertive"
-								className="px-4 pb-3"
+								testID="premium-status-row"
+								className="px-4 py-3"
+								accessibilityLabel={
+									isPremium
+										? t("settings.premiumActive")
+										: t("settings.freePlanLabel", {
+												count,
+												limit: PREMIUM_CONFIG.FREE_FAVORITES_LIMIT,
+											})
+								}
 							>
-								<Text
-									allowFontScaling
-									className="font-sans text-[12px] text-secondary"
-								>
-									{restoreMessage}
-								</Text>
-							</View>
-						)}
-
-						{/* Upgrade row (free users only) */}
-						{!isPremium && (
-							<>
-								<View className="h-[1px] bg-divider mx-4" />
-								<Pressable
-									testID="settings-upgrade-button"
-									className="px-4 min-h-[44px] justify-center"
-									accessibilityRole="button"
-									accessibilityLabel={t("settings.upgradeToPremium")}
-									onPress={gate.openPaywall}
-								>
+								{isPremium ? (
 									<Text
+										testID="premium-active-badge"
 										allowFontScaling
 										className="font-sans text-[14px] font-medium text-premium-accent"
 									>
-										{t("settings.upgradeToPremium")}
+										{t("settings.premiumBadge")}
 									</Text>
-								</Pressable>
-							</>
-						)}
-					</View>
-				</View>
+								) : (
+									<Text
+										testID="free-plan-badge"
+										allowFontScaling
+										className="font-sans text-[14px] text-secondary"
+									>
+										{t("settings.freePlanBadge", { count })}
+									</Text>
+								)}
+							</View>
 
-				{/* About section */}
-				<View testID="about-section" className="mt-8">
-					<Text
-						allowFontScaling
-						className="font-sans text-[16px] font-bold mb-3 text-primary"
-					>
-						{t("settings.about")}
-					</Text>
+							{/* Divider */}
+							<View className="h-[1px] bg-divider mx-4" />
 
-					<View className="bg-elevated rounded-xl overflow-hidden">
-						{/* Version row */}
-						<View
-							testID="settings-version-row"
-							className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
-							accessibilityLabel={`${t("settings.version")} ${Constants.expoConfig?.version ?? "1.0.0"}`}
-						>
-							<Text
-								allowFontScaling
-								className="font-sans text-[14px] text-primary"
+							{/* Restore Purchases button */}
+							<Pressable
+								testID="settings-restore-button"
+								className="px-4 min-h-[44px] justify-center"
+								accessibilityRole="button"
+								accessibilityLabel={t("settings.restorePurchases")}
+								disabled={restoreState === "loading"}
+								onPress={handleSettingsRestore}
 							>
-								{t("settings.version")}
-							</Text>
-							<Text
-								allowFontScaling
-								className="font-sans text-[14px] text-secondary"
-							>
-								{Constants.expoConfig?.version ?? "1.0.0"}
-							</Text>
+								<View testID="restore-content" accessibilityLiveRegion="polite">
+									{restoreButtonContent()}
+								</View>
+							</Pressable>
+
+							{/* Restore error message */}
+							{restoreState === "error" && restoreMessage && (
+								<View
+									testID="settings-restore-error"
+									accessibilityRole="alert"
+									accessibilityLiveRegion="assertive"
+									className="px-4 pb-3"
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[12px] text-secondary"
+									>
+										{restoreMessage}
+									</Text>
+								</View>
+							)}
+
+							{/* Upgrade row (free users only) */}
+							{!isPremium && (
+								<>
+									<View className="h-[1px] bg-divider mx-4" />
+									<Pressable
+										testID="settings-upgrade-button"
+										className="px-4 min-h-[44px] justify-center"
+										accessibilityRole="button"
+										accessibilityLabel={t("settings.upgradeToPremium")}
+										onPress={gate.openPaywall}
+									>
+										<Text
+											allowFontScaling
+											className="font-sans text-[14px] font-medium text-premium-accent"
+										>
+											{t("settings.upgradeToPremium")}
+										</Text>
+									</Pressable>
+								</>
+							)}
 						</View>
+					</View>
 
-						{/* Divider */}
-						<View className="h-[1px] bg-divider mx-4" />
+					{/* About section */}
+					<View testID="about-section" className="mt-8">
+						<Text
+							allowFontScaling
+							className="font-sans text-[16px] font-bold mb-3 text-primary"
+						>
+							{t("settings.about")}
+						</Text>
 
-						{/* Privacy Policy row */}
-						<Pressable
-							testID="settings-privacy-row"
-							className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
-							accessibilityRole="link"
-							accessibilityLabel={t("settings.privacyPolicy")}
-							onPress={() => {
-								try {
-									Linking.openURL(PRIVACY_URL).catch((error: unknown) => {
+						<View className="bg-elevated rounded-xl overflow-hidden">
+							{/* Version row */}
+							<View
+								testID="settings-version-row"
+								className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+								accessibilityLabel={`${t("settings.version")} ${Constants.expoConfig?.version ?? "1.0.0"}`}
+							>
+								<Text
+									allowFontScaling
+									className="font-sans text-[14px] text-primary"
+								>
+									{t("settings.version")}
+								</Text>
+								<Text
+									allowFontScaling
+									className="font-sans text-[14px] text-secondary"
+								>
+									{Constants.expoConfig?.version ?? "1.0.0"}
+								</Text>
+							</View>
+
+							{/* Divider */}
+							<View className="h-[1px] bg-divider mx-4" />
+
+							{/* Privacy Policy row */}
+							<Pressable
+								testID="settings-privacy-row"
+								className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+								accessibilityRole="link"
+								accessibilityLabel={t("settings.privacyPolicy")}
+								onPress={() => {
+									try {
+										Linking.openURL(PRIVACY_URL).catch((error: unknown) => {
+											if (__DEV__) {
+												console.warn("Failed to open URL:", error);
+											}
+										});
+									} catch (error) {
 										if (__DEV__) {
 											console.warn("Failed to open URL:", error);
 										}
-									});
-								} catch (error) {
-									if (__DEV__) {
-										console.warn("Failed to open URL:", error);
 									}
-								}
-							}}
-						>
-							<Text
-								allowFontScaling
-								className="font-sans text-[14px] text-primary"
+								}}
 							>
-								{t("settings.privacyPolicy")}
-							</Text>
-							<Text
-								allowFontScaling
-								className="font-sans text-[14px] text-tertiary"
-							>
-								›
-							</Text>
-						</Pressable>
+								<Text
+									allowFontScaling
+									className="font-sans text-[14px] text-primary"
+								>
+									{t("settings.privacyPolicy")}
+								</Text>
+								<Text
+									allowFontScaling
+									className="font-sans text-[14px] text-tertiary"
+								>
+									›
+								</Text>
+							</Pressable>
 
-						{/* Divider */}
-						<View className="h-[1px] bg-divider mx-4" />
+							{/* Divider */}
+							<View className="h-[1px] bg-divider mx-4" />
 
-						{/* Support row */}
-						<Pressable
-							testID="settings-support-row"
-							className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
-							accessibilityRole="link"
-							accessibilityLabel={t("settings.support")}
-							onPress={() => {
-								try {
-									Linking.openURL(SUPPORT_URL).catch((error: unknown) => {
+							{/* Support row */}
+							<Pressable
+								testID="settings-support-row"
+								className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+								accessibilityRole="link"
+								accessibilityLabel={t("settings.support")}
+								onPress={() => {
+									try {
+										Linking.openURL(SUPPORT_URL).catch((error: unknown) => {
+											if (__DEV__) {
+												console.warn("Failed to open URL:", error);
+											}
+										});
+									} catch (error) {
 										if (__DEV__) {
 											console.warn("Failed to open URL:", error);
 										}
-									});
-								} catch (error) {
-									if (__DEV__) {
-										console.warn("Failed to open URL:", error);
 									}
-								}
-							}}
-						>
-							<Text
-								allowFontScaling
-								className="font-sans text-[14px] text-primary"
+								}}
 							>
-								{t("settings.support")}
-							</Text>
-							<Text
-								allowFontScaling
-								className="font-sans text-[14px] text-tertiary"
-							>
-								›
-							</Text>
-						</Pressable>
+								<Text
+									allowFontScaling
+									className="font-sans text-[14px] text-primary"
+								>
+									{t("settings.support")}
+								</Text>
+								<Text
+									allowFontScaling
+									className="font-sans text-[14px] text-tertiary"
+								>
+									›
+								</Text>
+							</Pressable>
+						</View>
 					</View>
 				</View>
 			</ScrollView>

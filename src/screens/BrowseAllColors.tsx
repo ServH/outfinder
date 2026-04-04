@@ -7,6 +7,7 @@ import { SwatchGroup } from "@/components/SwatchGroup";
 import { SwatchGroupTabs } from "@/components/SwatchGroupTabs";
 import { getAllColors, getColorsByGroup } from "@/data/colorIndex";
 import type { Color, SwatchGroup as SwatchGroupType } from "@/data/types";
+import { useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
 import type { ColorsStackParamList } from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
@@ -20,6 +21,7 @@ export function BrowseAllColors() {
 	const { t } = useTranslation();
 	const [activeGroup, setActiveGroup] = useState("all");
 	const navigation = useNavigation<BrowseAllColorsNav>();
+	const isTablet = useIsIPad();
 
 	const colors =
 		activeGroup === "all"
@@ -37,8 +39,8 @@ export function BrowseAllColors() {
 			accessibilityLabel={t("browseAll.screenLabel")}
 		>
 			<View
-				className="flex-row items-center px-4 pt-4 pb-2"
-				style={{ paddingTop: 60 }}
+				className="flex-row items-center pb-2"
+				style={{ paddingTop: 60, paddingHorizontal: isTablet ? 24 : 16 }}
 			>
 				<Pressable
 					onPress={() => navigation.goBack()}
@@ -64,6 +66,7 @@ export function BrowseAllColors() {
 			<SwatchGroup
 				colors={colors}
 				onColorPress={handleColorPress}
+				numColumns={isTablet ? 7 : 5}
 				ListHeaderComponent={
 					<SwatchGroupTabs
 						activeGroup={activeGroup}

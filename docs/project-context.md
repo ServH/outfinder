@@ -30,7 +30,7 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 - **Client-side only** — no backend, no API, no database
 - **Static JSON dataset** (~60KB) bundled in binary at build time
 - **Offline-first** — full functionality without network
-- **iOS only MVP** — iPhone SE 3rd gen to iPhone 16 Pro Max, portrait only
+- **iOS + iPadOS** — iPhone SE 3rd gen to iPhone 16 Pro Max + iPad Air/Pro (768pt+ breakpoint), portrait only
 - **Entry point:** `App.tsx` at project root (NOT expo-router — migrated to React Navigation 7 in Story 1.2)
 
 ## Current Status
@@ -45,8 +45,8 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 - **Epic 8: DONE** — Home redesign v2.0 (8.1–8.5 all stories complete, merged to epic-1)
 - **Epic 9: DONE** — Favorites redesign (9.1 2-col grid + ComboCard compact, 9.2 Sort pills + empty state)
 - **Story 10.1: DONE** — Visualizer adjustments (nameEn in WadaHeader + dynamic nav title)
-- **Epic 11: IN-PROGRESS** — Story 11.1 DONE: Onboarding v2 — old 4-step onboarding removed, 2-step coach mark overlay in Visualizer, permanent ‹ › navigation arrows. Story 11.2 DONE: EN/ES localization (react-i18next, Intl.DateTimeFormat locale detection, 135 keys, `detectLanguage()` export, `iap.*` error namespace)
-- **Tests:** 510 across 36 suites (all passing)
+- **Epic 11: IN-PROGRESS** — Story 11.1 DONE: Onboarding v2 (coach marks + permanent arrows). Story 11.2 DONE: EN/ES localization (react-i18next, 135 keys). Story 11.3a DONE: iPad primary screens (ColorHome, Favorites, OutfitVisualizer). Story 11.3b DONE: iPad secondary screens (Combinations, Settings, BrowseAllColors, SwatchGroup numColumns).
+- **Tests:** 539 across 37 suites (all passing)
 - **Code Reviews:** Adversarial review on every story since Epic 1. Per-screen code analysis on 2026-04-03
 - **Retrospectives:** Epic 1, 2, 3, 4 completed
 - **App Store:** v1.0.0 submitted 2026-03-26, v1.0.1 onboarding refresh, v1.0.2 (build 4) visualizer affordances
@@ -75,7 +75,7 @@ outfinder/
 │   ├── components/
 │   │   ├── ColorSwatch.tsx          # 62x62px Pressable, Reanimated spring scale (1.05x), pale border detection
 │   │   ├── SwatchGroupTabs.tsx      # Horizontal ScrollView, 7 tabs (All + 6 families), hapticLight on tap
-│   │   ├── SwatchGroup.tsx          # FlatList numColumns=5, renders ColorSwatch grid
+│   │   ├── SwatchGroup.tsx          # FlatList with optional numColumns (default 5, 7 on iPad), gap/padding scale with numColumns
 │   │   ├── ColorHeader.tsx          # 40x40 swatch + JP/EN names + combination count
 │   │   ├── PaletteStrip.tsx         # 2-4 color rectangles, cross-navigation, haptics, selected dot, FavoriteButton
 │   │   ├── CombinationList.tsx      # FlatList of PaletteStrips with 24px spacing + dividers
@@ -120,6 +120,7 @@ outfinder/
 │   │       └── i18n.test.ts         # Key parity, locale detection (es/es-MX/es-ES/en/fr/ja/Intl-throws), plurals, Wada name handling
 │   ├── lib/
 │   │   ├── color.ts                 # isLightColor(hex) — luminance-based light color detection for contrast-aware UI
+│   │   ├── device.ts                # useIsIPad() hook (768pt breakpoint), isIPad() static, useFavoritesNumCols() (1024pt breakpoint)
 │   │   ├── haptics.ts               # hapticLight(), hapticMedium(), hapticRigid() — all with try/catch + .catch()
 │   │   └── share.ts                 # captureShareImage(viewRef) + shareOutfit(viewRef) — view-shot capture + expo-sharing
 │   ├── navigation/
