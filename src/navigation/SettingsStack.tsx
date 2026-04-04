@@ -1,8 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { Settings } from "@/screens/Settings";
-import { wadaTokens } from "@/styles/theme";
-
 import type { SettingsStackParamList } from "./types";
 
 const Stack = createNativeStackNavigator<SettingsStackParamList>();

@@ -58,7 +58,6 @@ export function getRestoreErrorMessage(error: unknown): string {
 export function usePremiumGate(favorites: Set<string>): PremiumGateState {
 	const {
 		isPremium,
-		paywallDismissedThisSession,
 		setPaywallDismissedThisSession,
 		priceString,
 		purchase,
@@ -114,7 +113,7 @@ export function usePremiumGate(favorites: Set<string>): PremiumGateState {
 		[clearError],
 	);
 
-	const showToast = useCallback(() => {
+	const _showToast = useCallback(() => {
 		setToastVisible(true);
 		Animated.timing(toastOpacity, {
 			toValue: 1,

@@ -4,8 +4,6 @@ import { BrowseAllColors } from "@/screens/BrowseAllColors";
 import { ColorHome } from "@/screens/ColorHome";
 import { Combinations } from "@/screens/Combinations";
 import { OutfitVisualizer } from "@/screens/OutfitVisualizer";
-import { wadaTokens } from "@/styles/theme";
-
 import type { ColorsStackParamList } from "./types";
 
 const Stack = createNativeStackNavigator<ColorsStackParamList>();
