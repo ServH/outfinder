@@ -220,7 +220,7 @@ describe("PremiumPaywall", () => {
 
 	it("has accessible Restore label", () => {
 		renderPaywall();
-		expect(screen.getByLabelText("Restore previous purchase")).toBeTruthy();
+		expect(screen.getByLabelText("Restore Purchase")).toBeTruthy();
 	});
 
 	it("has accessible dismiss labels", () => {

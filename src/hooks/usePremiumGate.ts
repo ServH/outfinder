@@ -4,6 +4,7 @@ import { PURCHASES_ERROR_CODE } from "react-native-purchases";
 import { usePremium } from "@/contexts/PremiumContext";
 import { getCombination } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
+import { i18n } from "@/i18n";
 import { hapticLight, hapticRigid } from "@/lib/haptics";
 
 export type PurchaseState = "idle" | "purchasing" | "restoring" | "error";
@@ -31,27 +32,27 @@ function getPurchaseErrorMessage(error: unknown): string | null {
 		return null; // Silent — user cancelled
 	}
 	if (code === PURCHASES_ERROR_CODE.NETWORK_ERROR) {
-		return "Check your internet connection and try again.";
+		return i18n.t("iap.networkError");
 	}
 	if (code === PURCHASES_ERROR_CODE.STORE_PROBLEM_ERROR) {
-		return "The App Store is temporarily unavailable. Try again later.";
+		return i18n.t("iap.storeUnavailable");
 	}
 	if (code === PURCHASES_ERROR_CODE.PURCHASE_NOT_ALLOWED_ERROR) {
-		return "In-app purchases are disabled on this device.";
+		return i18n.t("iap.purchasesDisabled");
 	}
-	return "Something went wrong. Please try again.";
+	return i18n.t("iap.genericError");
 }
 
 export function getRestoreErrorMessage(error: unknown): string {
 	const message = (error as { message?: string })?.message;
 	if (message === "No previous purchase found") {
-		return "No previous purchase found for this Apple ID.";
+		return i18n.t("iap.noPreviousPurchase");
 	}
 	const code = (error as { code?: string })?.code;
 	if (code === PURCHASES_ERROR_CODE.NETWORK_ERROR) {
-		return "Check your internet connection and try again.";
+		return i18n.t("iap.networkError");
 	}
-	return "Something went wrong. Please try again.";
+	return i18n.t("iap.genericError");
 }
 
 export function usePremiumGate(favorites: Set<string>): PremiumGateState {
@@ -137,13 +138,10 @@ export function usePremiumGate(favorites: Set<string>): PremiumGateState {
 		setPaywallVisible(true);
 	}, []);
 
-	const handlePremiumGate = useCallback(
-		(combinationId: string) => {
-			setBlockedCombinationId(combinationId);
-			setPaywallVisible(true);
-		},
-		[],
-	);
+	const handlePremiumGate = useCallback((combinationId: string) => {
+		setBlockedCombinationId(combinationId);
+		setPaywallVisible(true);
+	}, []);
 
 	const handleDismiss = useCallback(() => {
 		setPaywallVisible(false);

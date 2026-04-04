@@ -1,24 +1,20 @@
+import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, Text } from "react-native";
 import type { SwatchGroup } from "@/data/types";
 import { hapticLight } from "@/lib/haptics";
-
-const SWATCH_GROUP_LABELS: Record<SwatchGroup, string> = {
-	0: "Pale & Light",
-	1: "Red & Brown",
-	2: "Blue & Lavender",
-	3: "Dark & Deep",
-	4: "Vivid & Bold",
-	5: "Green & Olive",
-};
 
 type TabKey = "all" | `${SwatchGroup}`;
 
 const TAB_KEYS: TabKey[] = ["all", "0", "1", "2", "3", "4", "5"];
 
-function getTabLabel(key: TabKey): string {
-	if (key === "all") return "All";
-	return SWATCH_GROUP_LABELS[Number(key) as SwatchGroup];
-}
+const SWATCH_GROUP_KEY_MAP: Record<SwatchGroup, string> = {
+	0: "swatchGroups.paleLight",
+	1: "swatchGroups.redBrown",
+	2: "swatchGroups.blueLavender",
+	3: "swatchGroups.darkDeep",
+	4: "swatchGroups.vividBold",
+	5: "swatchGroups.greenOlive",
+};
 
 export interface SwatchGroupTabsProps {
 	activeGroup: string;
@@ -29,6 +25,13 @@ export function SwatchGroupTabs({
 	activeGroup,
 	onTabChange,
 }: SwatchGroupTabsProps) {
+	const { t } = useTranslation();
+
+	function getTabLabel(key: TabKey): string {
+		if (key === "all") return t("swatchGroups.all");
+		return t(SWATCH_GROUP_KEY_MAP[Number(key) as SwatchGroup]);
+	}
+
 	return (
 		<ScrollView
 			horizontal

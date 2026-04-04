@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 import type { Color } from "@/data/types";
 
@@ -7,11 +8,12 @@ export interface ColorHeaderProps {
 }
 
 export function ColorHeader({ color, combinationCount }: ColorHeaderProps) {
+	const { t } = useTranslation();
 	return (
 		<View
 			testID="color-header"
 			className="flex-row items-center px-4 py-3"
-			accessibilityLabel={`${color.nameEn}, ${combinationCount} ${combinationCount === 1 ? "combination" : "combinations"}`}
+			accessibilityLabel={`${color.nameEn}, ${combinationCount} ${t("colorHeader.combination", { count: combinationCount })}`}
 		>
 			<View
 				className="mr-3 h-[40px] w-[40px] rounded-lg"
@@ -22,13 +24,11 @@ export function ColorHeader({ color, combinationCount }: ColorHeaderProps) {
 				<Text className="font-serif-jp text-lg text-primary">
 					{color.nameJp}
 				</Text>
-				<Text className="font-sans text-xs text-secondary">
-					{color.nameEn}
-				</Text>
+				<Text className="font-sans text-xs text-secondary">{color.nameEn}</Text>
 			</View>
 			<Text className="font-sans text-xs text-tertiary">
 				{combinationCount}{" "}
-				{combinationCount === 1 ? "combination" : "combinations"}
+				{t("colorHeader.combination", { count: combinationCount })}
 			</Text>
 		</View>
 	);

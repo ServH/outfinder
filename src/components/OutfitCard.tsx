@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -21,6 +22,7 @@ export interface OutfitCardProps {
 	selectedSlotIndex: number | null;
 	onSlotTap: (index: number) => void;
 	onVariantCycle: (index: number, direction: 1 | -1) => void;
+	cardWidth?: number;
 }
 
 const CARD_WIDTH = 220;
@@ -35,6 +37,7 @@ interface CardSlotProps {
 	isSelected: boolean;
 	onTap: () => void;
 	onVariantCycle: (direction: 1 | -1) => void;
+	effectiveCardWidth: number;
 }
 
 function CardSlot({
@@ -43,9 +46,14 @@ function CardSlot({
 	isSelected,
 	onTap,
 	onVariantCycle,
+	effectiveCardWidth,
 }: CardSlotProps) {
+	const { t } = useTranslation();
 	const config = GARMENT_REGISTRY[slot.garmentType];
-	const label = `${config.label}, colored ${slot.color.nameEn}, tap to select for swap`;
+	const label = t("outfitCard.tapToSwap", {
+		garment: config.label,
+		color: slot.color.nameEn,
+	});
 	const reducedMotion = useReducedMotion();
 
 	const underlineOpacity = useSharedValue(0);
@@ -134,8 +142,8 @@ function CardSlot({
 					accessibilityLabel={label}
 					accessibilityState={{ selected: isSelected }}
 					accessibilityActions={[
-						{ name: "increment", label: "Next variant" },
-						{ name: "decrement", label: "Previous variant" },
+						{ name: "increment", label: t("outfitCard.nextVariant") },
+						{ name: "decrement", label: t("outfitCard.previousVariant") },
 					]}
 					onAccessibilityAction={(event) => {
 						if (event.nativeEvent.actionName === "increment") {
@@ -158,8 +166,8 @@ function CardSlot({
 								<TintedGarment
 									garmentType={slot.garmentType}
 									colorHex={slot.color.hex}
-									width={CARD_WIDTH}
-									height={config.heightHint}
+									width={effectiveCardWidth}
+									height={config.heightHint * (effectiveCardWidth / CARD_WIDTH)}
 								/>
 							</Animated.View>
 							<Animated.View
@@ -167,7 +175,7 @@ function CardSlot({
 								style={[
 									{
 										height: 4,
-										width: 132,
+										width: Math.round(132 * (effectiveCardWidth / CARD_WIDTH)),
 										alignSelf: "center",
 										borderRadius: 2,
 										backgroundColor: wadaTokens.premiumAccent,
@@ -189,10 +197,13 @@ export function OutfitCard({
 	selectedSlotIndex,
 	onSlotTap,
 	onVariantCycle,
+	cardWidth,
 }: OutfitCardProps) {
+	const { t } = useTranslation();
+	const effectiveCardWidth = cardWidth ?? CARD_WIDTH;
 	return (
 		<View
-			accessibilityLabel="Outfit card"
+			accessibilityLabel={t("outfitCard.cardLabel")}
 			style={{
 				backgroundColor: wadaTokens.bgPaper,
 				borderRadius: 16,
@@ -213,6 +224,7 @@ export function OutfitCard({
 					isSelected={selectedSlotIndex === i}
 					onTap={() => onSlotTap(i)}
 					onVariantCycle={(dir) => onVariantCycle(i, dir)}
+					effectiveCardWidth={effectiveCardWidth}
 				/>
 			))}
 		</View>

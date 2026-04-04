@@ -1,8 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
 import { SymbolView } from "expo-symbols";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 import type { Combination } from "@/data/types";
 import { isLightColor } from "@/lib/color";
+import { useIsIPad } from "@/lib/device";
 import { hapticMedium } from "@/lib/haptics";
 import { wadaTokens } from "@/styles/theme";
 import { FavoriteButton } from "./FavoriteButton";
@@ -30,9 +32,11 @@ export function ComboCard({
 	onToggleFavorite,
 	onPremiumGate,
 }: ComboCardProps) {
+	const { t } = useTranslation();
+	const isTablet = useIsIPad();
 	const navigation = useNavigation<ComboCardNav>();
 	const isFull = variant === "full";
-	const stripHeight = isFull ? 60 : 52;
+	const stripHeight = isFull ? (isTablet ? 68 : 60) : isTablet ? 60 : 52;
 
 	if (combination.colors.length === 0) {
 		return null;
@@ -51,8 +55,11 @@ export function ComboCard({
 		<Pressable
 			testID={`combo-card-${combination.id}`}
 			accessibilityRole="button"
-			accessibilityLabel={`${combination.nameEn} combination: ${colorNames}`}
-			accessibilityHint="Opens outfit visualizer"
+			accessibilityLabel={t("comboCard.combinationLabel", {
+				name: combination.nameEn,
+				colors: colorNames,
+			})}
+			accessibilityHint={t("comboCard.openHint")}
 			onPress={handleCardPress}
 		>
 			<View
@@ -86,11 +93,11 @@ export function ComboCard({
 											className="font-sans-medium"
 											style={{
 												color: isLightColor(color.hex) ? "#1a1a1a" : "#ffffff",
-												fontSize: 9,
+												fontSize: isTablet ? 11 : 9,
 											}}
 											testID="yours-label"
 										>
-											yours
+											{t("comboCard.yours")}
 										</Text>
 									</View>
 								)}
@@ -106,7 +113,7 @@ export function ComboCard({
 							<View className="mr-2 flex-1">
 								<Text
 									className="font-serif-jp-medium"
-									style={{ fontSize: 14, color: "#1a1a1a" }}
+									style={{ fontSize: isTablet ? 16 : 14, color: "#1a1a1a" }}
 									numberOfLines={1}
 									testID="combo-card-name-jp"
 								>
@@ -114,7 +121,7 @@ export function ComboCard({
 								</Text>
 								<Text
 									className="font-sans"
-									style={{ fontSize: 11, color: "#6b6b6b" }}
+									style={{ fontSize: isTablet ? 13 : 11, color: "#6b6b6b" }}
 									numberOfLines={1}
 									testID="combo-card-name-en"
 								>
@@ -135,7 +142,7 @@ export function ComboCard({
 									accessibilityElementsHidden={true}
 									style={{
 										backgroundColor: "#1a1a1a",
-										height: 32,
+										height: isTablet ? 36 : 32,
 										paddingHorizontal: 12,
 									}}
 									testID="see-outfit-pill"
@@ -148,12 +155,12 @@ export function ComboCard({
 									<Text
 										className="font-sans"
 										style={{
-											fontSize: 11,
+											fontSize: isTablet ? 13 : 11,
 											color: "#ffffff",
 											marginLeft: 4,
 										}}
 									>
-										See outfit
+										{t("comboCard.seeOutfit")}
 									</Text>
 								</View>
 							</View>
@@ -164,7 +171,7 @@ export function ComboCard({
 					<View className="px-3 py-2">
 						<Text
 							className="font-serif-jp-medium"
-							style={{ fontSize: 13, color: "#1a1a1a" }}
+							style={{ fontSize: isTablet ? 15 : 13, color: "#1a1a1a" }}
 							numberOfLines={1}
 							testID="combo-card-name-jp"
 						>
@@ -172,7 +179,7 @@ export function ComboCard({
 						</Text>
 						<Text
 							className="font-sans"
-							style={{ fontSize: 10, color: "#6b6b6b" }}
+							style={{ fontSize: isTablet ? 12 : 10, color: "#6b6b6b" }}
 							numberOfLines={1}
 							testID="combo-card-name-en"
 						>
@@ -185,7 +192,7 @@ export function ComboCard({
 								isFavorite={isFavorite}
 								onToggle={onToggleFavorite}
 								onPremiumGate={onPremiumGate}
-								size={16}
+								size={isTablet ? 20 : 16}
 							/>
 							<View
 								className="ml-1 items-center justify-center"
@@ -194,7 +201,10 @@ export function ComboCard({
 								<SymbolView
 									name="tshirt"
 									tintColor={wadaTokens.wadaMuted}
-									style={{ width: 16, height: 16 }}
+									style={{
+										width: isTablet ? 20 : 16,
+										height: isTablet ? 20 : 16,
+									}}
 									testID="compact-shirt-icon"
 								/>
 							</View>

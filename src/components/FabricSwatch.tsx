@@ -1,4 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 import type { WardrobeCategory } from "@/data/types";
 import { hapticLight } from "@/lib/haptics";
@@ -27,28 +28,15 @@ const DARK_TEXT_CATEGORIES: ReadonlySet<WardrobeCategory> = new Set([
 	"orange",
 ]);
 
-const FABRIC_LABELS: Record<WardrobeCategory, string> = {
-	white: "White",
-	black: "Black",
-	blue: "Blue",
-	grey: "Grey",
-	brown: "Brown",
-	green: "Green",
-	red: "Red",
-	pink: "Pink",
-	yellow: "Yellow",
-	purple: "Purple",
-	orange: "Orange",
-};
-
 export interface FabricSwatchProps {
 	category: WardrobeCategory;
 	onPress: (category: WardrobeCategory) => void;
 }
 
 export function FabricSwatch({ category, onPress }: FabricSwatchProps) {
+	const { t } = useTranslation();
 	const gradientColors = FABRIC_GRADIENTS[category];
-	const label = FABRIC_LABELS[category];
+	const label = t(`fabric.${category}`);
 	const useDarkText = DARK_TEXT_CATEGORIES.has(category);
 
 	function handlePress() {
@@ -60,7 +48,7 @@ export function FabricSwatch({ category, onPress }: FabricSwatchProps) {
 		<Pressable
 			onPress={handlePress}
 			accessibilityRole="button"
-			accessibilityLabel={`${label}, tap to see combinations`}
+			accessibilityLabel={t("fabric.tapHint", { label })}
 			testID={`fabric-swatch-${category}`}
 		>
 			{({ pressed }) => (

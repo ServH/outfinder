@@ -1,3 +1,4 @@
+import "./src/i18n"; // Must be FIRST import — initializes i18n synchronously before components render
 import "./src/global.css";
 
 import { Inter_400Regular, Inter_500Medium } from "@expo-google-fonts/inter";
@@ -5,11 +6,10 @@ import {
 	NotoSerifJP_400Regular,
 	NotoSerifJP_500Medium,
 } from "@expo-google-fonts/noto-serif-jp";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -17,11 +17,8 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { PremiumProvider } from "@/contexts/PremiumContext";
 import { TabNavigator } from "@/navigation/TabNavigator";
-import { Onboarding } from "@/screens/Onboarding";
 
 SplashScreen.preventAutoHideAsync();
-
-const ONBOARDING_KEY = "@outfinder/onboarding_seen";
 
 export function App() {
 	const [fontsLoaded] = useFonts({
@@ -31,58 +28,30 @@ export function App() {
 		Inter_500Medium,
 	});
 
-	const [onboardingSeen, setOnboardingSeen] = useState<boolean | null>(null);
-
 	useEffect(() => {
-		async function checkOnboarding() {
-			try {
-				const value = await AsyncStorage.getItem(ONBOARDING_KEY);
-				setOnboardingSeen(value === "true");
-			} catch {
-				setOnboardingSeen(false);
-			}
-		}
-		checkOnboarding();
-	}, []);
-
-	useEffect(() => {
-		if (fontsLoaded && onboardingSeen !== null) {
+		if (fontsLoaded) {
 			SplashScreen.hideAsync();
 		}
-	}, [fontsLoaded, onboardingSeen]);
+	}, [fontsLoaded]);
 
-	if (!fontsLoaded || onboardingSeen === null) {
-		return null;
-	}
-
-	const handleOnboardingComplete = async () => {
-		try {
-			await AsyncStorage.setItem(ONBOARDING_KEY, "true");
-		} catch {
-			// If write fails, still navigate to app
-		}
-		setOnboardingSeen(true);
-	};
+	if (!fontsLoaded) return null;
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<SafeAreaProvider>
 				<ErrorBoundary>
-					{onboardingSeen === false ? (
-						<Onboarding onComplete={handleOnboardingComplete} />
-					) : (
-						<FavoritesProvider>
-							<PremiumProvider>
-								<NavigationContainer>
-									<TabNavigator />
-								</NavigationContainer>
-							</PremiumProvider>
-						</FavoritesProvider>
-					)}
+					<FavoritesProvider>
+						<PremiumProvider>
+							<NavigationContainer>
+								<TabNavigator />
+							</NavigationContainer>
+						</PremiumProvider>
+					</FavoritesProvider>
 				</ErrorBoundary>
 			</SafeAreaProvider>
 		</GestureHandlerRootView>
 	);
 }
 
+// Required by Expo's entry point convention — intentional exception to the "no default export" rule
 export default App;

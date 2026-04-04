@@ -1,6 +1,13 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useMemo, useState } from "react";
-import { Dimensions, FlatList, Pressable, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
+import {
+	FlatList,
+	Pressable,
+	Text,
+	useWindowDimensions,
+	View,
+} from "react-native";
 import { ComboCard } from "@/components/ComboCard";
 import { EmptyState } from "@/components/EmptyState";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
@@ -8,6 +15,7 @@ import { useFavorites } from "@/contexts/FavoritesContext";
 import { getCombination } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
+import { useFavoritesNumCols, useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
 import { wadaTokens } from "@/styles/theme";
 
@@ -15,20 +23,39 @@ type FavoritesListProps = Record<string, never>;
 
 type SortMode = "recent" | "a-z" | "by-size";
 
-const cardWidth = (Dimensions.get("window").width - 32 - 12) / 2;
-
-const SORT_PILLS: { mode: SortMode; label: string; a11yLabel: string }[] = [
-	{ mode: "recent", label: "Recent", a11yLabel: "Sort by recent" },
-	{ mode: "a-z", label: "A-Z", a11yLabel: "Sort alphabetically" },
-	{ mode: "by-size", label: "By size", a11yLabel: "Sort by size" },
+const SORT_PILLS: { mode: SortMode; labelKey: string; a11yKey: string }[] = [
+	{
+		mode: "recent",
+		labelKey: "favorites.sortRecent",
+		a11yKey: "favorites.sortRecentLabel",
+	},
+	{
+		mode: "a-z",
+		labelKey: "favorites.sortAZ",
+		a11yKey: "favorites.sortAZLabel",
+	},
+	{
+		mode: "by-size",
+		labelKey: "favorites.sortSize",
+		a11yKey: "favorites.sortSizeLabel",
+	},
 ];
 
 export function FavoritesList(_props: FavoritesListProps) {
+	const { t } = useTranslation();
+	const { width: screenWidth } = useWindowDimensions();
+	const isTablet = useIsIPad();
+	const numCols = useFavoritesNumCols();
 	const { favorites, toggleFavorite, isFavorite } = useFavorites();
 
 	const gate = usePremiumGate(favorites);
 
 	const [sortMode, setSortMode] = useState<SortMode>("recent");
+
+	const hPadding = isTablet ? 24 : 16;
+	const cardGap = isTablet ? 16 : 12;
+	const cardWidth =
+		(screenWidth - hPadding * 2 - cardGap * (numCols - 1)) / numCols;
 
 	useFocusEffect(
 		useCallback(() => {
@@ -68,14 +95,15 @@ export function FavoritesList(_props: FavoritesListProps) {
 				</View>
 			);
 		},
-		[isFavorite, toggleFavorite],
+		[isFavorite, toggleFavorite, cardWidth],
 	);
 
 	const listHeaderComponent = useMemo(
 		() => (
 			<View testID="sort-pills-row" className="flex-row gap-2 px-4 py-3">
-				{SORT_PILLS.map(({ mode, label, a11yLabel }) => {
+				{SORT_PILLS.map(({ mode, labelKey, a11yKey }) => {
 					const isActive = sortMode === mode;
+					const a11yLabel = t(a11yKey);
 					return (
 						<Pressable
 							key={mode}
@@ -96,7 +124,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 									className={`font-sans text-[13px] ${isActive ? "font-medium text-white" : "text-secondary"}`}
 									style={{ opacity: pressed ? 0.7 : 1 }}
 								>
-									{label}
+									{t(labelKey)}
 								</Text>
 							)}
 						</Pressable>
@@ -104,7 +132,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 				})}
 			</View>
 		),
-		[sortMode],
+		[sortMode, t],
 	);
 
 	const header = (
@@ -112,11 +140,11 @@ export function FavoritesList(_props: FavoritesListProps) {
 			<Text
 				style={{
 					fontFamily: "NotoSerifJP_500Medium",
-					fontSize: 28,
+					fontSize: isTablet ? 34 : 28,
 					color: wadaTokens.textPrimary,
 				}}
 			>
-				Favorites
+				{t("favorites.title")}
 			</Text>
 		</View>
 	);
@@ -126,12 +154,12 @@ export function FavoritesList(_props: FavoritesListProps) {
 			<View
 				testID="favorites-list"
 				className="flex-1 bg-paper"
-				accessibilityLabel="Favorites List screen"
+				accessibilityLabel={t("favorites.screenLabel")}
 			>
 				{header}
 				<EmptyState
-					title="No favorites yet"
-					subtitle="Pick a color, explore combinations, and tap ♡ to save the ones you love"
+					title={t("favorites.emptyTitle")}
+					subtitle={t("favorites.emptySubtitle")}
 				/>
 			</View>
 		);
@@ -140,17 +168,24 @@ export function FavoritesList(_props: FavoritesListProps) {
 	return (
 		<View className="flex-1 bg-paper">
 			{header}
+			{/* testID for column-count assertions in tests */}
+			<View testID={`grid-${numCols}col`} style={{ height: 0 }} />
 			<FlatList
+				key={`grid-${numCols}`}
 				testID="favorites-list"
 				className="flex-1"
 				data={combinations}
-				numColumns={2}
-				columnWrapperStyle={{ gap: 12, paddingHorizontal: 16 }}
-				contentContainerStyle={{ gap: 12, paddingTop: 12, paddingBottom: 20 }}
+				numColumns={numCols}
+				columnWrapperStyle={{ gap: cardGap, paddingHorizontal: hPadding }}
+				contentContainerStyle={{
+					gap: cardGap,
+					paddingTop: 12,
+					paddingBottom: 20,
+				}}
 				keyExtractor={(item) => item.id}
 				renderItem={renderComboCard}
 				ListHeaderComponent={listHeaderComponent}
-				accessibilityLabel="Favorites List screen"
+				accessibilityLabel={t("favorites.screenLabel")}
 			/>
 
 			<PremiumPaywall
@@ -164,7 +199,6 @@ export function FavoritesList(_props: FavoritesListProps) {
 				onRestore={gate.handleRestore}
 				onDismiss={gate.handleDismiss}
 			/>
-
 		</View>
 	);
 }

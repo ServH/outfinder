@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 import type { Color } from "@/data/types";
 import { wadaTokens } from "@/styles/theme";
@@ -13,6 +14,7 @@ export function ShadePicker({
 	selectedShadeId,
 	onShadePress,
 }: ShadePickerProps) {
+	const { t } = useTranslation();
 	return (
 		<View
 			className="flex-row"
@@ -34,8 +36,8 @@ export function ShadePicker({
 						accessibilityState={{ selected: isSelected }}
 						accessibilityLabel={
 							isSelected
-								? `${shade.nameEn}, selected`
-								: `${shade.nameEn}, tap to filter`
+								? t("shadePicker.selected", { name: shade.nameEn })
+								: t("shadePicker.tapToFilter", { name: shade.nameEn })
 						}
 						testID={`shade-pill-${shade.id}`}
 					>

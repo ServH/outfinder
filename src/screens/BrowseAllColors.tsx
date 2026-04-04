@@ -1,11 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 import { SwatchGroup } from "@/components/SwatchGroup";
 import { SwatchGroupTabs } from "@/components/SwatchGroupTabs";
 import { getAllColors, getColorsByGroup } from "@/data/colorIndex";
 import type { Color, SwatchGroup as SwatchGroupType } from "@/data/types";
+import { useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
 import type { ColorsStackParamList } from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
@@ -16,8 +18,10 @@ type BrowseAllColorsNav = NativeStackNavigationProp<
 >;
 
 export function BrowseAllColors() {
+	const { t } = useTranslation();
 	const [activeGroup, setActiveGroup] = useState("all");
 	const navigation = useNavigation<BrowseAllColorsNav>();
+	const isTablet = useIsIPad();
 
 	const colors =
 		activeGroup === "all"
@@ -30,15 +34,18 @@ export function BrowseAllColors() {
 	}
 
 	return (
-		<View className="flex-1 bg-paper" accessibilityLabel="Browse All Colors screen">
+		<View
+			className="flex-1 bg-paper"
+			accessibilityLabel={t("browseAll.screenLabel")}
+		>
 			<View
-				className="flex-row items-center px-4 pt-4 pb-2"
-				style={{ paddingTop: 60 }}
+				className="flex-row items-center pb-2"
+				style={{ paddingTop: 60, paddingHorizontal: isTablet ? 24 : 16 }}
 			>
 				<Pressable
 					onPress={() => navigation.goBack()}
 					accessibilityRole="button"
-					accessibilityLabel="Back to Colors"
+					accessibilityLabel={t("browseAll.backLabel")}
 					className="min-h-[48px] flex-1 flex-row items-center"
 					testID="browse-back-button"
 				>
@@ -52,13 +59,14 @@ export function BrowseAllColors() {
 							color: wadaTokens.textPrimary,
 						}}
 					>
-						← Colors
+						← {t("browseAll.backButton")}
 					</Text>
 				</Pressable>
 			</View>
 			<SwatchGroup
 				colors={colors}
 				onColorPress={handleColorPress}
+				numColumns={isTablet ? 7 : 5}
 				ListHeaderComponent={
 					<SwatchGroupTabs
 						activeGroup={activeGroup}

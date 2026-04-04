@@ -10,7 +10,7 @@
     "ios": {
       "bundleIdentifier": "com.alejandrocamps.outfinder",
       "buildNumber": "2",
-      "supportsTablet": false,
+      "supportsTablet": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }

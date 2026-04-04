@@ -1,4 +1,5 @@
 import { SymbolView } from "expo-symbols";
+import { useTranslation } from "react-i18next";
 import { Pressable } from "react-native";
 import Animated, {
 	useAnimatedStyle,
@@ -28,6 +29,7 @@ export function FavoriteButton({
 	onPremiumGate,
 	size = 24,
 }: FavoriteButtonProps) {
+	const { t } = useTranslation();
 	const scale = useSharedValue(1);
 	const reducedMotion = useReducedMotion();
 
@@ -57,11 +59,11 @@ export function FavoriteButton({
 			accessibilityLabel={
 				isFavorite
 					? combinationName
-						? `Remove ${combinationName} from favorites`
-						: "Remove from favorites"
+						? t("favoriteButton.removeNamed", { name: combinationName })
+						: t("favoriteButton.remove")
 					: combinationName
-						? `Save ${combinationName} to favorites`
-						: "Save to favorites"
+						? t("favoriteButton.saveNamed", { name: combinationName })
+						: t("favoriteButton.save")
 			}
 			className="min-w-[44px] min-h-[44px] items-center justify-center"
 			style={animatedStyle}

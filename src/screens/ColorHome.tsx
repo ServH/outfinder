@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
 	Dimensions,
 	FlatList,
@@ -28,6 +29,7 @@ import type { Color, Combination, WardrobeCategory } from "@/data/types";
 import { getDefaultShade, getRepresentativeShades } from "@/data/wardrobeIndex";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
 import type { ColorsStackParamList } from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
@@ -53,6 +55,8 @@ const ACCENTS: WardrobeCategory[] = [
 	"orange",
 ];
 
+// Portrait-only: captured once at load. iPad path uses useWindowDimensions for layout,
+// not this constant. This value drives scroll pagination for the iPhone paged path only.
 const PAGE_WIDTH = Dimensions.get("window").width;
 
 function ComboSeparator() {
@@ -60,6 +64,8 @@ function ComboSeparator() {
 }
 
 export function ColorHome() {
+	const { t } = useTranslation();
+	const isTablet = useIsIPad();
 	const navigation = useNavigation<ColorHomeNav>();
 	const insets = useSafeAreaInsets();
 	const scrollRef = useRef<ScrollView>(null);
@@ -97,9 +103,7 @@ export function ColorHome() {
 		[selectedShade],
 	);
 
-	const familyLabel = selectedFamily
-		? selectedFamily.charAt(0).toUpperCase() + selectedFamily.slice(1)
-		: "";
+	const familyLabel = selectedFamily ? t(`fabric.${selectedFamily}`) : "";
 
 	function clearState2() {
 		setSelectedFamily(null);
@@ -230,13 +234,18 @@ export function ColorHome() {
 	currentPageRef.current = currentPage;
 	useEffect(() => {
 		if (selectedFamily === null) {
-			scrollRef.current?.scrollTo({ x: currentPageRef.current * PAGE_WIDTH, animated: false });
+			scrollRef.current?.scrollTo({
+				x: currentPageRef.current * PAGE_WIDTH,
+				animated: false,
+			});
 		}
 	}, [selectedFamily]);
 
-	const gap = 12;
-	const pagePadding = 16;
-	const cardWidth = (PAGE_WIDTH - pagePadding * 2 - gap) / 2;
+	const gap = isTablet ? 16 : 12;
+	const pagePadding = isTablet ? 24 : 16;
+	const numSwatchCols = isTablet ? 3 : 2;
+	const cardWidth =
+		(PAGE_WIDTH - pagePadding * 2 - gap * (numSwatchCols - 1)) / numSwatchCols;
 
 	return (
 		<View
@@ -271,171 +280,249 @@ export function ColorHome() {
 							marginTop: 6,
 						}}
 					>
-						What color are you wearing?
+						{t("home.subtitle")}
 					</Text>
 				</View>
 
-				{/* Grid + dots + link centered in remaining space */}
-				<View style={{ flex: 1, justifyContent: "center", paddingBottom: 8 }}>
-					{/* Paginated swatch grid */}
+				{/* Grid area — single non-paginated grid on iPad, paginated scroll on iPhone */}
+				{isTablet ? (
+					/* iPad: all categories in one vertical grid, no paging, no dots, no text link */
 					<ScrollView
-						ref={scrollRef}
-						horizontal
-						pagingEnabled
-						showsHorizontalScrollIndicator={false}
-						onScroll={handleScroll}
-						onMomentumScrollEnd={handleMomentumEnd}
-						scrollEventThrottle={16}
+						showsVerticalScrollIndicator={false}
+						contentContainerStyle={{
+							paddingHorizontal: pagePadding,
+							paddingTop: 8,
+							paddingBottom: 24,
+						}}
 						testID="swatch-scroll"
 					>
-						{/* Page 1: Basics */}
-						<View
-							style={{
-								width: PAGE_WIDTH,
-								paddingHorizontal: pagePadding,
-							}}
-							testID="page-basics"
-						>
-							<View className="flex-row flex-wrap" style={{ gap }}>
-								{BASICS.map((category) => (
-									<View key={category} style={{ width: cardWidth }}>
-										<FabricSwatch
-											category={category}
-											onPress={handleFamilyPress}
-										/>
-									</View>
-								))}
-							</View>
-						</View>
-
-						{/* Page 2: Accents + "All 159 colors" */}
-						<View
-							style={{
-								width: PAGE_WIDTH,
-								paddingHorizontal: pagePadding,
-							}}
-							testID="page-accents"
-						>
-							<View className="flex-row flex-wrap" style={{ gap }}>
-								{ACCENTS.map((category) => (
-									<View key={category} style={{ width: cardWidth }}>
-										<FabricSwatch
-											category={category}
-											onPress={handleFamilyPress}
-										/>
-									</View>
-								))}
-
-								{/* Dashed "All 159 colors" card */}
-								<View style={{ width: cardWidth }}>
-									<Pressable
-										onPress={handleBrowseAllPress}
-										accessibilityRole="button"
-										accessibilityLabel="Browse all 159 colors"
-										testID="browse-all-card"
-									>
-										{({ pressed }) => (
-											<View
-												className="items-center justify-center rounded-2xl"
+						<View className="flex-row flex-wrap" style={{ gap }}>
+							{[...BASICS, ...ACCENTS].map((category) => (
+								<View key={category} style={{ width: cardWidth }}>
+									<FabricSwatch
+										category={category}
+										onPress={handleFamilyPress}
+									/>
+								</View>
+							))}
+							{/* Browse all card — last item */}
+							<View style={{ width: cardWidth }}>
+								<Pressable
+									onPress={handleBrowseAllPress}
+									accessibilityRole="button"
+									accessibilityLabel={t("home.browseAll")}
+									testID="browse-all-card"
+								>
+									{({ pressed }) => (
+										<View
+											className="items-center justify-center rounded-2xl"
+											style={{
+												aspectRatio: 1,
+												borderWidth: 2,
+												borderStyle: "dashed",
+												borderColor: wadaTokens.wadaMuted,
+												opacity: pressed ? 0.88 : 1,
+											}}
+										>
+											<View className="mb-2" style={{ gap: 4 }}>
+												{[0, 1, 2].map((row) => (
+													<View
+														key={row}
+														className="flex-row"
+														style={{ gap: 4 }}
+													>
+														{[0, 1, 2].map((col) => (
+															<View
+																key={col}
+																style={{
+																	width: 8,
+																	height: 8,
+																	borderRadius: 2,
+																	backgroundColor: wadaTokens.wadaMuted,
+																}}
+															/>
+														))}
+													</View>
+												))}
+											</View>
+											<Text
 												style={{
-													aspectRatio: 1,
-													borderWidth: 2,
-													borderStyle: "dashed",
-													borderColor: wadaTokens.wadaMuted,
-													opacity: pressed ? 0.88 : 1,
+													fontFamily: "Inter_500Medium",
+													fontSize: 13,
+													color: wadaTokens.wadaMuted,
+													textAlign: "center",
 												}}
 											>
-												{/* Simple 3x3 grid icon */}
-												<View className="mb-2" style={{ gap: 4 }}>
-													{[0, 1, 2].map((row) => (
-														<View
-															key={row}
-															className="flex-row"
-															style={{ gap: 4 }}
-														>
-															{[0, 1, 2].map((col) => (
-																<View
-																	key={col}
-																	style={{
-																		width: 8,
-																		height: 8,
-																		borderRadius: 2,
-																		backgroundColor: wadaTokens.wadaMuted,
-																	}}
-																/>
-															))}
-														</View>
-													))}
-												</View>
-												<Text
-													style={{
-														fontFamily: "Inter_500Medium",
-														fontSize: 13,
-														color: wadaTokens.wadaMuted,
-														textAlign: "center",
-													}}
-												>
-													All 159{"\n"}colors
-												</Text>
-											</View>
-										)}
-									</Pressable>
-								</View>
+												{t("home.allColors")}
+											</Text>
+										</View>
+									)}
+								</Pressable>
 							</View>
 						</View>
 					</ScrollView>
-
-					{/* Page dots */}
-					<View
-						className="flex-row items-center justify-center py-2"
-						style={{ gap: 8 }}
-						testID="page-dots"
-					>
-						<RNAnimated.View
-							style={{
-								width: 8,
-								height: 8,
-								borderRadius: 4,
-								backgroundColor: dot0Color,
-							}}
-							testID="dot-0"
-						/>
-						<RNAnimated.View
-							style={{
-								width: 8,
-								height: 8,
-								borderRadius: 4,
-								backgroundColor: dot1Color,
-							}}
-							testID="dot-1"
-						/>
-					</View>
-
-					{/* "Browse all 159 colors" link — fades out as user scrolls to Page 2 */}
-					<RNAnimated.View
-						style={{ opacity: linkOpacity }}
-						pointerEvents={linkEnabled ? "auto" : "none"}
-					>
-						<Pressable
-							onPress={handleBrowseAllPress}
-							className="items-center pb-2"
-							testID="browse-all-link"
-							accessibilityRole="link"
-							accessibilityLabel="Browse all 159 colors"
+				) : (
+					/* iPhone: paginated horizontal scroll (unchanged) */
+					<View style={{ flex: 1, justifyContent: "center", paddingBottom: 8 }}>
+						{/* Paginated swatch grid */}
+						<ScrollView
+							ref={scrollRef}
+							horizontal
+							pagingEnabled
+							showsHorizontalScrollIndicator={false}
+							onScroll={handleScroll}
+							onMomentumScrollEnd={handleMomentumEnd}
+							scrollEventThrottle={16}
+							testID="swatch-scroll"
 						>
-							<Text
+							{/* Page 1: Basics */}
+							<View
 								style={{
-									fontFamily: "Inter_400Regular",
-									fontSize: 14,
-									color: wadaTokens.textSecondary,
-									textDecorationLine: "underline",
+									width: PAGE_WIDTH,
+									paddingHorizontal: pagePadding,
 								}}
+								testID="page-basics"
 							>
-								Browse all 159 colors
-							</Text>
-						</Pressable>
-					</RNAnimated.View>
-				</View>
+								<View className="flex-row flex-wrap" style={{ gap }}>
+									{BASICS.map((category) => (
+										<View key={category} style={{ width: cardWidth }}>
+											<FabricSwatch
+												category={category}
+												onPress={handleFamilyPress}
+											/>
+										</View>
+									))}
+								</View>
+							</View>
+
+							{/* Page 2: Accents + "All 159 colors" */}
+							<View
+								style={{
+									width: PAGE_WIDTH,
+									paddingHorizontal: pagePadding,
+								}}
+								testID="page-accents"
+							>
+								<View className="flex-row flex-wrap" style={{ gap }}>
+									{ACCENTS.map((category) => (
+										<View key={category} style={{ width: cardWidth }}>
+											<FabricSwatch
+												category={category}
+												onPress={handleFamilyPress}
+											/>
+										</View>
+									))}
+
+									{/* Dashed "All 159 colors" card */}
+									<View style={{ width: cardWidth }}>
+										<Pressable
+											onPress={handleBrowseAllPress}
+											accessibilityRole="button"
+											accessibilityLabel={t("home.browseAll")}
+											testID="browse-all-card"
+										>
+											{({ pressed }) => (
+												<View
+													className="items-center justify-center rounded-2xl"
+													style={{
+														aspectRatio: 1,
+														borderWidth: 2,
+														borderStyle: "dashed",
+														borderColor: wadaTokens.wadaMuted,
+														opacity: pressed ? 0.88 : 1,
+													}}
+												>
+													<View className="mb-2" style={{ gap: 4 }}>
+														{[0, 1, 2].map((row) => (
+															<View
+																key={row}
+																className="flex-row"
+																style={{ gap: 4 }}
+															>
+																{[0, 1, 2].map((col) => (
+																	<View
+																		key={col}
+																		style={{
+																			width: 8,
+																			height: 8,
+																			borderRadius: 2,
+																			backgroundColor: wadaTokens.wadaMuted,
+																		}}
+																	/>
+																))}
+															</View>
+														))}
+													</View>
+													<Text
+														style={{
+															fontFamily: "Inter_500Medium",
+															fontSize: 13,
+															color: wadaTokens.wadaMuted,
+															textAlign: "center",
+														}}
+													>
+														{t("home.allColors")}
+													</Text>
+												</View>
+											)}
+										</Pressable>
+									</View>
+								</View>
+							</View>
+						</ScrollView>
+
+						{/* Page dots */}
+						<View
+							className="flex-row items-center justify-center py-2"
+							style={{ gap: 8 }}
+							testID="page-dots"
+						>
+							<RNAnimated.View
+								style={{
+									width: 8,
+									height: 8,
+									borderRadius: 4,
+									backgroundColor: dot0Color,
+								}}
+								testID="dot-0"
+							/>
+							<RNAnimated.View
+								style={{
+									width: 8,
+									height: 8,
+									borderRadius: 4,
+									backgroundColor: dot1Color,
+								}}
+								testID="dot-1"
+							/>
+						</View>
+
+						{/* "Browse all 159 colors" link — fades out as user scrolls to Page 2 */}
+						<RNAnimated.View
+							style={{ opacity: linkOpacity }}
+							pointerEvents={linkEnabled ? "auto" : "none"}
+						>
+							<Pressable
+								onPress={handleBrowseAllPress}
+								className="items-center pb-2"
+								testID="browse-all-link"
+								accessibilityRole="link"
+								accessibilityLabel={t("home.browseAll")}
+							>
+								<Text
+									style={{
+										fontFamily: "Inter_400Regular",
+										fontSize: 14,
+										color: wadaTokens.textSecondary,
+										textDecorationLine: "underline",
+									}}
+								>
+									{t("home.browseAll")}
+								</Text>
+							</Pressable>
+						</RNAnimated.View>
+					</View>
+				)}
 			</Animated.View>
 
 			{/* State 2 — Shade picker + combo feed overlay */}
@@ -461,7 +548,7 @@ export function ColorHome() {
 						<Pressable
 							onPress={handleBackPress}
 							accessibilityRole="button"
-							accessibilityLabel="Back to color families"
+							accessibilityLabel={t("home.backToFamilies")}
 							className="min-h-[48px] flex-1 flex-row items-center"
 							testID="state2-back-button"
 						>
@@ -487,7 +574,7 @@ export function ColorHome() {
 							}}
 							testID="combo-count"
 						>
-							{combos.length} {combos.length === 1 ? "combo" : "combos"}
+							{combos.length} {t("home.combo", { count: combos.length })}
 						</Text>
 					</View>
 
@@ -509,7 +596,7 @@ export function ColorHome() {
 									textAlign: "center",
 								}}
 							>
-								No combinations for this shade. Try another.
+								{t("home.noShades")}
 							</Text>
 						</View>
 					) : (

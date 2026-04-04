@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
+import * as ReactNative from "react-native";
 import { getCombination } from "@/data/colorIndex";
 import { hapticLight, hapticMedium } from "@/lib/haptics";
 import { FavoritesList } from "./FavoritesList";
@@ -441,5 +442,77 @@ describe("FavoritesList", () => {
 		expect(
 			screen.getByTestId("sort-pill-recent").props.accessibilityState,
 		).toEqual({ selected: false });
+	});
+});
+
+// --- iPad layout tests (AC: #4) ---
+
+describe("FavoritesList iPad layout", () => {
+	beforeEach(() => {
+		mockFavorites = new Set(["p001", "p002", "p004"]);
+		mockToggleFavorite.mockClear();
+	});
+
+	afterEach(() => {
+		jest.restoreAllMocks();
+	});
+
+	it("renders all combo cards on iPad Pro 13 (width 1024, 3-col grid)", () => {
+		jest.spyOn(ReactNative, "useWindowDimensions").mockReturnValue({
+			width: 1024,
+			height: 1366,
+			scale: 2,
+			fontScale: 1,
+		});
+		render(<FavoritesList />);
+
+		// All cards render correctly at iPad Pro width
+		expect(screen.getByTestId(`combo-card-${realCombo1.id}`)).toBeTruthy();
+		expect(screen.getByTestId(`combo-card-${realCombo2.id}`)).toBeTruthy();
+		expect(screen.getByTestId(`combo-card-${realCombo4.id}`)).toBeTruthy();
+	});
+
+	it("uses 3-column grid on iPad Pro 13 (width 1024, AC: #4)", () => {
+		jest
+			.spyOn(require("@/lib/device"), "useFavoritesNumCols")
+			.mockReturnValue(3);
+		render(<FavoritesList />);
+
+		expect(screen.getByTestId("grid-3col")).toBeTruthy();
+	});
+
+	it("renders all combo cards on iPad Air 11 (width 820, 2-col grid)", () => {
+		jest.spyOn(ReactNative, "useWindowDimensions").mockReturnValue({
+			width: 820,
+			height: 1180,
+			scale: 2,
+			fontScale: 1,
+		});
+		render(<FavoritesList />);
+
+		expect(screen.getByTestId(`combo-card-${realCombo1.id}`)).toBeTruthy();
+		expect(screen.getByTestId(`combo-card-${realCombo2.id}`)).toBeTruthy();
+	});
+
+	it("uses 2-column grid on iPad Air 11 (width 820, AC: #4)", () => {
+		jest
+			.spyOn(require("@/lib/device"), "useFavoritesNumCols")
+			.mockReturnValue(2);
+		render(<FavoritesList />);
+
+		expect(screen.getByTestId("grid-2col")).toBeTruthy();
+	});
+
+	it("renders all combo cards on iPhone (width 375, 2-col grid)", () => {
+		jest.spyOn(ReactNative, "useWindowDimensions").mockReturnValue({
+			width: 375,
+			height: 667,
+			scale: 2,
+			fontScale: 1,
+		});
+		render(<FavoritesList />);
+
+		expect(screen.getByTestId(`combo-card-${realCombo1.id}`)).toBeTruthy();
+		expect(screen.getByTestId(`combo-card-${realCombo2.id}`)).toBeTruthy();
 	});
 });

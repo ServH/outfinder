@@ -63,3 +63,34 @@ describe("SwatchGroup", () => {
 		expect(flatList.props.numColumns).toBe(5);
 	});
 });
+
+describe("SwatchGroup numColumns prop", () => {
+	it("scales gap and padding with numColumns=5 (default)", () => {
+		const { UNSAFE_getByType } = render(
+			<SwatchGroup colors={mockColors} onColorPress={jest.fn()} />,
+		);
+		// biome-ignore lint/suspicious/noExplicitAny: testing internal FlatList props
+		const { FlatList } = require("react-native") as any;
+		const flatList = UNSAFE_getByType(FlatList);
+		expect(flatList.props.columnWrapperStyle.gap).toBe(4);
+		expect(flatList.props.contentContainerStyle.paddingHorizontal).toBe(16);
+		expect(flatList.props.contentContainerStyle.gap).toBe(4);
+	});
+
+	it("scales gap and padding with numColumns=7", () => {
+		const { UNSAFE_getByType } = render(
+			<SwatchGroup
+				colors={mockColors}
+				onColorPress={jest.fn()}
+				numColumns={7}
+			/>,
+		);
+		// biome-ignore lint/suspicious/noExplicitAny: testing internal FlatList props
+		const { FlatList } = require("react-native") as any;
+		const flatList = UNSAFE_getByType(FlatList);
+		expect(flatList.props.numColumns).toBe(7);
+		expect(flatList.props.columnWrapperStyle.gap).toBe(6);
+		expect(flatList.props.contentContainerStyle.paddingHorizontal).toBe(24);
+		expect(flatList.props.contentContainerStyle.gap).toBe(6);
+	});
+});
