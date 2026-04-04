@@ -5,12 +5,7 @@ import {
 	useNavigationState,
 	useRoute,
 } from "@react-navigation/native";
-import {
-	useCallback,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
 	AccessibilityInfo,
 	Alert,
@@ -21,6 +16,7 @@ import {
 	View,
 } from "react-native";
 import ReanimatedAnimated, {
+	runOnJS,
 	useAnimatedStyle,
 	useSharedValue,
 	withTiming,
@@ -36,8 +32,7 @@ import { WadaHeader } from "@/components/WadaHeader";
 import { WarmBackground } from "@/components/WarmBackground";
 import { getColor, getCombination } from "@/data/colorIndex";
 import { getCycleForGarment, useOutfitState } from "@/hooks/useOutfitState";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { hapticMedium, hapticRigid } from "@/lib/haptics";
+import { hapticLight, hapticMedium, hapticRigid } from "@/lib/haptics";
 import { shareOutfit } from "@/lib/share";
 import type { ColorsStackParamList } from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
@@ -67,7 +62,6 @@ export function OutfitVisualizer() {
 	);
 	const { combinationId } = route.params;
 	const combination = getCombination(combinationId);
-	const reducedMotion = useReducedMotion();
 
 	let backLabel = "";
 	if (prevRoute?.name === "FavoritesList") {
@@ -86,80 +80,103 @@ export function OutfitVisualizer() {
 	const shareViewRef = useRef<View>(null);
 
 	const [sharing, setSharing] = useState(false);
-	const [hasSwipedInSession, setHasSwipedInSession] = useState(false);
-	const [hintSeen, setHintSeen] = useState(true);
-	const dismissedRef = useRef(false);
+
+	// Coach mark state: 0 = hidden, 1 = step 1, 2 = step 2
+	const [coachStep, setCoachStep] = useState(0);
+	const reduceMotionRef = useRef(false);
+
+	// Card animation values
+	const cardOpacity = useSharedValue(0);
+	const cardTranslateY = useSharedValue(20);
+
+	const cardAnimStyle = useAnimatedStyle(() => ({
+		opacity: cardOpacity.value,
+		transform: [{ translateY: cardTranslateY.value }],
+	}));
 
 	const { slots, selectedSlotIndex, selectSlot, cycleVariant } = useOutfitState(
 		combination?.colors ?? [],
 	);
 
-	// Chevron animation
-	const chevronOpacity = useSharedValue(0);
-	const chevronStyle = useAnimatedStyle(() => ({
-		opacity: chevronOpacity.value,
-	}));
-
+	// Read reduce motion preference once on mount
 	useEffect(() => {
-		if (selectedSlotIndex !== null && !hasSwipedInSession) {
-			chevronOpacity.value = reducedMotion
-				? 0.6
-				: withTiming(0.6, { duration: 200 });
-		} else {
-			chevronOpacity.value = reducedMotion
-				? 0
-				: withTiming(0, { duration: 300 });
+		AccessibilityInfo.isReduceMotionEnabled().then((enabled) => {
+			reduceMotionRef.current = enabled;
+		});
+	}, []);
+
+	// Animate card in whenever a step becomes active
+	useEffect(() => {
+		if (coachStep > 0) {
+			if (reduceMotionRef.current) {
+				cardOpacity.value = 1;
+				cardTranslateY.value = 0;
+			} else {
+				cardOpacity.value = withTiming(1, { duration: 260 });
+				cardTranslateY.value = withTiming(0, { duration: 280 });
+			}
 		}
-	}, [selectedSlotIndex, hasSwipedInSession, reducedMotion, chevronOpacity]);
+	}, [coachStep, cardOpacity, cardTranslateY]);
 
-	// Tooltip animation
-	const tooltipOpacity = useSharedValue(1);
-	const tooltipAnimStyle = useAnimatedStyle(() => ({
-		opacity: tooltipOpacity.value,
-	}));
-
-	// Read hint flag on mount
+	// Read visualizer-introduced flag on mount
 	useEffect(() => {
 		(async () => {
 			try {
-				const value = await AsyncStorage.getItem("@outfinder/hintSeen");
+				const value = await AsyncStorage.getItem(
+					"@outfinder/visualizer-introduced",
+				);
 				if (value !== "true") {
-					setHintSeen(false);
+					setCoachStep(1);
 					AccessibilityInfo.announceForAccessibility(
-						"Tap a garment to swap its color. Swipe left or right to change garment style.",
+						"Tip: Tap any garment to change its color",
 					);
 				}
 			} catch {
-				// AsyncStorage read failed — show tooltip as fallback
-				setHintSeen(false);
+				setCoachStep(1);
 				AccessibilityInfo.announceForAccessibility(
-					"Tap a garment to swap its color. Swipe left or right to change garment style.",
+					"Tip: Tap any garment to change its color",
 				);
 			}
 		})();
 	}, []);
 
-	const dismissHint = useCallback(() => {
-		if (dismissedRef.current) return;
-		dismissedRef.current = true;
-		setHintSeen(true);
-		if (reducedMotion) {
-			tooltipOpacity.value = 0;
+	const handleCoachOk = useCallback(() => {
+		hapticLight();
+		if (coachStep === 1) {
+			const goToStep2 = () => {
+				cardTranslateY.value = 18;
+				setCoachStep(2);
+				AccessibilityInfo.announceForAccessibility(
+					"Tip: Use the arrows or swipe to change garments",
+				);
+			};
+			if (reduceMotionRef.current) {
+				goToStep2();
+			} else {
+				// Animate card out upward, then swap to step 2 and animate back in
+				cardOpacity.value = withTiming(0, { duration: 150 }, () => {
+					runOnJS(goToStep2)();
+				});
+				cardTranslateY.value = withTiming(-10, { duration: 150 });
+			}
 		} else {
-			tooltipOpacity.value = withTiming(0, { duration: 300 });
+			const dismiss = () => {
+				setCoachStep(0);
+				AsyncStorage.setItem("@outfinder/visualizer-introduced", "true").catch(
+					() => {},
+				);
+			};
+			if (reduceMotionRef.current) {
+				dismiss();
+			} else {
+				// Animate card out and dismiss overlay
+				cardOpacity.value = withTiming(0, { duration: 200 }, () => {
+					runOnJS(dismiss)();
+				});
+				cardTranslateY.value = withTiming(10, { duration: 200 });
+			}
 		}
-		AsyncStorage.setItem("@outfinder/hintSeen", "true").catch(() => {
-			// Best-effort persistence
-		});
-	}, [reducedMotion, tooltipOpacity]);
-
-	// Auto-dismiss tooltip after 8s
-	useEffect(() => {
-		if (!hintSeen) {
-			const timer = setTimeout(dismissHint, 8000);
-			return () => clearTimeout(timer);
-		}
-	}, [hintSeen, dismissHint]);
+	}, [coachStep, cardOpacity, cardTranslateY]);
 
 	const handleShare = useCallback(async () => {
 		if (sharing) return;
@@ -213,12 +230,33 @@ export function OutfitVisualizer() {
 			);
 			cycleVariant(index, direction);
 			AccessibilityInfo.announceForAccessibility(`Changed to ${newLabel}`);
-			if (!hasSwipedInSession) {
-				setHasSwipedInSession(true);
-			}
 		},
-		[slots, cycleVariant, hasSwipedInSession],
+		[slots, cycleVariant],
 	);
+
+	const handlePreviousGarment = useCallback(() => {
+		hapticLight();
+		const targetIndex = selectedSlotIndex ?? 0;
+		const newLabel = getNextGarmentLabel(
+			slots[targetIndex].garmentType,
+			-1,
+			slots.length,
+		);
+		cycleVariant(targetIndex, -1);
+		AccessibilityInfo.announceForAccessibility(`Changed to ${newLabel}`);
+	}, [selectedSlotIndex, slots, cycleVariant]);
+
+	const handleNextGarment = useCallback(() => {
+		hapticLight();
+		const targetIndex = selectedSlotIndex ?? 0;
+		const newLabel = getNextGarmentLabel(
+			slots[targetIndex].garmentType,
+			1,
+			slots.length,
+		);
+		cycleVariant(targetIndex, 1);
+		AccessibilityInfo.announceForAccessibility(`Changed to ${newLabel}`);
+	}, [selectedSlotIndex, slots, cycleVariant]);
 
 	if (!combination) {
 		return (
@@ -239,7 +277,7 @@ export function OutfitVisualizer() {
 			style={{ backgroundColor: wadaTokens.warmBg }}
 			accessibilityLabel="Outfit Visualizer screen"
 		>
-			{/* Back button — matches State 2 custom style */}
+			{/* Back button */}
 			<View className="px-4 pt-4 pb-1" style={{ paddingTop: 60 }}>
 				<Pressable
 					onPress={() => navigation.goBack()}
@@ -277,61 +315,43 @@ export function OutfitVisualizer() {
 							nameEn={combination.nameEn}
 							colorCount={combination.colors.length}
 						/>
-						<View style={{ position: "relative", overflow: "visible" }}>
+						<View className="relative">
 							<OutfitCard
 								slots={slots}
 								selectedSlotIndex={selectedSlotIndex}
 								onSlotTap={handleSlotTap}
 								onVariantCycle={handleVariantCycle}
 							/>
-							{selectedSlotIndex !== null && !sharing && (
-								<>
-									<ReanimatedAnimated.View
-										style={[
-											{
-												position: "absolute",
-												left: -28,
-												top: 0,
-												bottom: 0,
-												justifyContent: "center",
-											},
-											chevronStyle,
-										]}
-										accessibilityElementsHidden={true}
-									>
-										<Text
-											style={{
-												fontSize: 28,
-												color: wadaTokens.premiumAccent,
-											}}
-										>
-											{"‹"}
-										</Text>
-									</ReanimatedAnimated.View>
-									<ReanimatedAnimated.View
-										style={[
-											{
-												position: "absolute",
-												right: -28,
-												top: 0,
-												bottom: 0,
-												justifyContent: "center",
-											},
-											chevronStyle,
-										]}
-										accessibilityElementsHidden={true}
-									>
-										<Text
-											style={{
-												fontSize: 28,
-												color: wadaTokens.premiumAccent,
-											}}
-										>
-											{"›"}
-										</Text>
-									</ReanimatedAnimated.View>
-								</>
-							)}
+							<Pressable
+								onPress={handlePreviousGarment}
+								accessibilityRole="button"
+								accessibilityLabel="Previous garment"
+								testID="arrow-previous"
+								className="absolute min-w-[44px] min-h-[44px] justify-center items-center"
+								style={{ left: -28, top: "50%", marginTop: -16 }}
+							>
+								<Text
+									className="text-[28px]"
+									style={{ color: wadaTokens.textTertiary, opacity: 0.5 }}
+								>
+									{"‹"}
+								</Text>
+							</Pressable>
+							<Pressable
+								onPress={handleNextGarment}
+								accessibilityRole="button"
+								accessibilityLabel="Next garment"
+								testID="arrow-next"
+								className="absolute min-w-[44px] min-h-[44px] justify-center items-center"
+								style={{ right: -28, top: "50%", marginTop: -16 }}
+							>
+								<Text
+									className="text-[28px]"
+									style={{ color: wadaTokens.textTertiary, opacity: 0.5 }}
+								>
+									{"›"}
+								</Text>
+							</Pressable>
 						</View>
 						<View className="mt-4">
 							<MiniPaletteStrip
@@ -351,7 +371,7 @@ export function OutfitVisualizer() {
 					</View>
 				</View>
 			</ScrollView>
-			{/* Share button — in normal flow below capture area, never overlaps content */}
+			{/* Share button */}
 			<View className="items-center py-3">
 				<Pressable
 					onPress={handleShare}
@@ -369,56 +389,60 @@ export function OutfitVisualizer() {
 					</Text>
 				</Pressable>
 			</View>
-			{/* First-visit tooltip overlay — outside shareViewRef */}
-			{!hintSeen && (
-				<ReanimatedAnimated.View
-					style={[
-						{
-							position: "absolute",
-							top: 0,
-							left: 0,
-							right: 0,
-							bottom: 0,
-							zIndex: 10,
-						},
-						tooltipAnimStyle,
-					]}
+			{/* 2-step coach mark overlay — outside ScrollView, zIndex 999 */}
+			{coachStep > 0 && (
+				<View
+					className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center"
+					style={{ zIndex: 999, backgroundColor: "rgba(0,0,0,0.5)" }}
+					accessibilityRole="alert"
+					testID="coach-mark-overlay"
 				>
-					<Pressable
-						style={{
-							flex: 1,
-							backgroundColor: "rgba(0,0,0,0.5)",
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-						onPress={dismissHint}
-						accessibilityLabel="Tap a garment to swap its color. Swipe left or right to change garment style. Tap to dismiss."
-						accessibilityRole="button"
-					>
-						<View
-							style={{
-								backgroundColor: wadaTokens.textPrimary,
-								borderRadius: 12,
-								padding: 24,
+					<ReanimatedAnimated.View
+						style={[
+							{
+								borderRadius: 16,
+								paddingHorizontal: 28,
+								paddingVertical: 28,
 								marginHorizontal: 40,
 								maxWidth: 300,
+								alignItems: "center",
+								backgroundColor: wadaTokens.bgPaper,
+							},
+							cardAnimStyle,
+						]}
+					>
+						<Text
+							className="text-base text-center mb-5"
+							style={{
+								fontFamily: "NotoSerifJP_400Regular",
+								color: wadaTokens.textPrimary,
 							}}
+							testID="coach-mark-text"
+						>
+							{coachStep === 1
+								? "Tap any garment to change its color"
+								: "Use the arrows or swipe to change garments"}
+						</Text>
+						<Pressable
+							onPress={handleCoachOk}
+							accessibilityRole="button"
+							accessibilityLabel="Got it"
+							testID="coach-mark-ok"
+							className="rounded-lg px-8 py-3 min-w-[44px] min-h-[44px] justify-center items-center"
+							style={{ backgroundColor: wadaTokens.textPrimary }}
 						>
 							<Text
+								className="text-sm"
 								style={{
 									color: wadaTokens.bgPaper,
 									fontFamily: "Inter_500Medium",
-									fontSize: 15,
-									textAlign: "center",
-									lineHeight: 22,
 								}}
 							>
-								Tap a garment to swap its color{"\n\n"}Swipe left or right to
-								change garment style
+								OK
 							</Text>
-						</View>
-					</Pressable>
-				</ReanimatedAnimated.View>
+						</Pressable>
+					</ReanimatedAnimated.View>
+				</View>
 			)}
 		</View>
 	);

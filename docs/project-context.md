@@ -44,8 +44,8 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 - **Epic 8: DONE** — Home redesign v2.0 (8.1–8.5 all stories complete, merged to epic-1)
 - **Epic 9: DONE** — Favorites redesign (9.1 2-col grid + ComboCard compact, 9.2 Sort pills + empty state)
 - **Story 10.1: DONE** — Visualizer adjustments (nameEn in WadaHeader + dynamic nav title)
-- **Bugfix branch: `fix/premium-gate-and-home-polish`** — Premium gate count check, home layout, token naming, dead code cleanup, fade transitions
-- **Tests:** 518 across 37 suites (all passing)
+- **Epic 11: IN-PROGRESS** — Story 11.1 DONE: Onboarding v2 — old 4-step onboarding removed, 2-step coach mark overlay in Visualizer, permanent ‹ › navigation arrows
+- **Tests:** 493 across 35 suites (all passing)
 - **Code Reviews:** Adversarial review on every story since Epic 1. Per-screen code analysis on 2026-04-03
 - **Retrospectives:** Epic 1, 2, 3, 4 completed
 - **App Store:** v1.0.0 submitted 2026-03-26, v1.0.1 onboarding refresh, v1.0.2 (build 4) visualizer affordances

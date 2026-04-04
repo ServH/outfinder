@@ -1,15 +1,9 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
 	act,
-	fireEvent,
 	render,
 	screen,
 	waitFor,
 } from "@testing-library/react-native";
-
-jest.mock("@react-native-async-storage/async-storage", () =>
-	require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
-);
 
 // Mock modules before importing App
 jest.mock("@react-navigation/native", () => ({
@@ -52,126 +46,32 @@ jest.mock("react-native-safe-area-context", () => ({
 	useSafeAreaInsets: () => ({ top: 44, bottom: 34, left: 0, right: 0 }),
 }));
 
-jest.mock("@/lib/haptics", () => ({
-	hapticLight: jest.fn(),
-}));
-
-jest.mock("@/hooks/useReducedMotion", () => ({
-	useReducedMotion: () => false,
-}));
-
 import { App } from "./App";
 
 const SplashScreen = require("expo-splash-screen");
 
 describe("App", () => {
 	beforeEach(() => {
-		(AsyncStorage.getItem as jest.Mock).mockReset();
-		(AsyncStorage.setItem as jest.Mock).mockReset();
 		(SplashScreen.hideAsync as jest.Mock).mockClear();
 	});
 
-	it("renders Onboarding when AsyncStorage flag is missing", async () => {
-		(AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
-
-		render(<App />);
-
-		await waitFor(() => {
-			expect(screen.getByTestId("onboarding-screen")).toBeTruthy();
-		});
-
-		expect(screen.queryByTestId("tab-navigator")).toBeNull();
-	});
-
-	it("renders TabNavigator when AsyncStorage flag is true", async () => {
-		(AsyncStorage.getItem as jest.Mock).mockResolvedValue("true");
-
+	it("renders TabNavigator directly without onboarding", async () => {
 		render(<App />);
 
 		await waitFor(() => {
 			expect(screen.getByTestId("tab-navigator")).toBeTruthy();
 		});
-
-		expect(screen.queryByTestId("onboarding-screen")).toBeNull();
 	});
 
-	it("onComplete handler writes to AsyncStorage and shows TabNavigator", async () => {
-		(AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
-		(AsyncStorage.setItem as jest.Mock).mockResolvedValue(undefined);
-
+	it("calls SplashScreen.hideAsync when fonts are loaded", async () => {
 		render(<App />);
 
-		await waitFor(() => {
-			expect(screen.getByTestId("onboarding-screen")).toBeTruthy();
-		});
-
-		// Press the skip button to trigger onComplete
-		const skipButton = screen.getByTestId("onboarding-skip");
-		await act(async () => {
-			fireEvent.press(skipButton);
-		});
-
-		await waitFor(() => {
-			expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-				"@outfinder/onboarding_seen",
-				"true",
-			);
-		});
-
-		await waitFor(() => {
-			expect(screen.getByTestId("tab-navigator")).toBeTruthy();
-		});
-	});
-
-	it("shows onboarding when AsyncStorage read fails", async () => {
-		(AsyncStorage.getItem as jest.Mock).mockRejectedValue(
-			new Error("storage error"),
-		);
-
-		render(<App />);
-
-		await waitFor(() => {
-			expect(screen.getByTestId("onboarding-screen")).toBeTruthy();
-		});
-	});
-
-	it("navigates to app even when AsyncStorage write fails", async () => {
-		(AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
-		(AsyncStorage.setItem as jest.Mock).mockRejectedValue(
-			new Error("write error"),
-		);
-
-		render(<App />);
-
-		await waitFor(() => {
-			expect(screen.getByTestId("onboarding-screen")).toBeTruthy();
-		});
-
-		const skipButton = screen.getByTestId("onboarding-skip");
-		await act(async () => {
-			fireEvent.press(skipButton);
-		});
-
-		await waitFor(() => {
-			expect(screen.getByTestId("tab-navigator")).toBeTruthy();
-		});
-	});
-
-	it("calls SplashScreen.hideAsync after onboarding state resolves", async () => {
-		(AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
-
-		render(<App />);
-
-		await waitFor(() => {
-			expect(screen.getByTestId("onboarding-screen")).toBeTruthy();
-		});
+		await act(async () => {});
 
 		expect(SplashScreen.hideAsync).toHaveBeenCalled();
 	});
 
 	it("shows ErrorBoundary fallback when a child throws during render", async () => {
-		(AsyncStorage.getItem as jest.Mock).mockResolvedValue("true");
-
 		// Override TabNavigator mock to throw
 		const TabNavigatorMock =
 			require("@/navigation/TabNavigator") as typeof import("@/navigation/TabNavigator");

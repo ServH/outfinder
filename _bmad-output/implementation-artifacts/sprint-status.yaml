@@ -103,3 +103,10 @@ development_status:
   epic-10: in-progress
   10-1-visualizer-adjustments-nameen-heart-dynamic-title: done
   epic-10-retrospective: optional
+
+  epic-11: in-progress
+  11-1-onboarding-v2-coach-marks-permanent-arrows: done
+  11-2-localization-en-es: backlog
+  11-3a-ipad-layout-primary-screens: backlog
+  11-3b-ipad-layout-secondary-screens: backlog
+  epic-11-retrospective: optional
