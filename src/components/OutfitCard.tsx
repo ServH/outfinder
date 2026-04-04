@@ -22,6 +22,7 @@ export interface OutfitCardProps {
 	selectedSlotIndex: number | null;
 	onSlotTap: (index: number) => void;
 	onVariantCycle: (index: number, direction: 1 | -1) => void;
+	cardWidth?: number;
 }
 
 const CARD_WIDTH = 220;
@@ -36,6 +37,7 @@ interface CardSlotProps {
 	isSelected: boolean;
 	onTap: () => void;
 	onVariantCycle: (direction: 1 | -1) => void;
+	effectiveCardWidth: number;
 }
 
 function CardSlot({
@@ -44,6 +46,7 @@ function CardSlot({
 	isSelected,
 	onTap,
 	onVariantCycle,
+	effectiveCardWidth,
 }: CardSlotProps) {
 	const { t } = useTranslation();
 	const config = GARMENT_REGISTRY[slot.garmentType];
@@ -163,8 +166,8 @@ function CardSlot({
 								<TintedGarment
 									garmentType={slot.garmentType}
 									colorHex={slot.color.hex}
-									width={CARD_WIDTH}
-									height={config.heightHint}
+									width={effectiveCardWidth}
+									height={config.heightHint * (effectiveCardWidth / CARD_WIDTH)}
 								/>
 							</Animated.View>
 							<Animated.View
@@ -172,7 +175,7 @@ function CardSlot({
 								style={[
 									{
 										height: 4,
-										width: 132,
+										width: Math.round(132 * (effectiveCardWidth / CARD_WIDTH)),
 										alignSelf: "center",
 										borderRadius: 2,
 										backgroundColor: wadaTokens.premiumAccent,
@@ -194,8 +197,10 @@ export function OutfitCard({
 	selectedSlotIndex,
 	onSlotTap,
 	onVariantCycle,
+	cardWidth,
 }: OutfitCardProps) {
 	const { t } = useTranslation();
+	const effectiveCardWidth = cardWidth ?? CARD_WIDTH;
 	return (
 		<View
 			accessibilityLabel={t("outfitCard.cardLabel")}
@@ -219,6 +224,7 @@ export function OutfitCard({
 					isSelected={selectedSlotIndex === i}
 					onTap={() => onSlotTap(i)}
 					onVariantCycle={(dir) => onVariantCycle(i, dir)}
+					effectiveCardWidth={effectiveCardWidth}
 				/>
 			))}
 		</View>

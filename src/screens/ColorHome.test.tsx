@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
+import * as ReactNative from "react-native";
 import { getCombinations } from "@/data/colorIndex";
 import type { Color, Combination } from "@/data/types";
 import { hapticLight, hapticMedium } from "@/lib/haptics";
@@ -464,5 +465,63 @@ describe("ColorHome (premium user)", () => {
 
 		// toggleFavorite should be called directly (no paywall gate)
 		expect(mockToggleFavorite).toHaveBeenCalledWith("combo-1");
+	});
+});
+
+// --- iPad layout tests (AC: #2) ---
+
+describe("ColorHome iPad layout", () => {
+	afterEach(() => {
+		jest.restoreAllMocks();
+	});
+
+	it("renders Page 1 swatch grid on iPad (width 820) without crash", () => {
+		jest.spyOn(ReactNative, "useWindowDimensions").mockReturnValue({
+			width: 820,
+			height: 1180,
+			scale: 2,
+			fontScale: 1,
+		});
+
+		render(<ColorHome />);
+
+		// All BASICS swatches render on Page 1
+		expect(screen.getByTestId("fabric-swatch-white")).toBeTruthy();
+		expect(screen.getByTestId("fabric-swatch-black")).toBeTruthy();
+		expect(screen.getByTestId("fabric-swatch-blue")).toBeTruthy();
+		expect(screen.getByTestId("fabric-swatch-grey")).toBeTruthy();
+		expect(screen.getByTestId("fabric-swatch-brown")).toBeTruthy();
+		expect(screen.getByTestId("fabric-swatch-green")).toBeTruthy();
+	});
+
+	it("renders Page 2 ACCENTS on iPad (width 820) without crash", () => {
+		jest.spyOn(ReactNative, "useWindowDimensions").mockReturnValue({
+			width: 820,
+			height: 1180,
+			scale: 2,
+			fontScale: 1,
+		});
+
+		render(<ColorHome />);
+
+		// Page 2 swatches are in the DOM (scrollable grid)
+		expect(screen.getByTestId("fabric-swatch-red")).toBeTruthy();
+		expect(screen.getByTestId("fabric-swatch-pink")).toBeTruthy();
+		expect(screen.getByTestId("fabric-swatch-yellow")).toBeTruthy();
+	});
+
+	it("does not render page-dots or paginated pages on iPad (AC: #2)", () => {
+		// Spy on useIsIPad in device module — mocking useWindowDimensions alone
+		// doesn't propagate into device.ts imports (Babel creates local bindings).
+		jest.spyOn(require("@/lib/device"), "useIsIPad").mockReturnValue(true);
+
+		render(<ColorHome />);
+
+		// iPad uses a single vertical grid — pagination is absent
+		expect(screen.queryByTestId("page-dots")).toBeNull();
+		expect(screen.queryByTestId("page-basics")).toBeNull();
+		expect(screen.queryByTestId("page-accents")).toBeNull();
+		// Browse-all link is absent (only shown in iPhone paginated path)
+		expect(screen.queryByTestId("browse-all-link")).toBeNull();
 	});
 });

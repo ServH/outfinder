@@ -33,6 +33,7 @@ import { WadaHeader } from "@/components/WadaHeader";
 import { WarmBackground } from "@/components/WarmBackground";
 import { getColor, getCombination } from "@/data/colorIndex";
 import { getCycleForGarment, useOutfitState } from "@/hooks/useOutfitState";
+import { useIsIPad } from "@/lib/device";
 import { hapticLight, hapticMedium, hapticRigid } from "@/lib/haptics";
 import { shareOutfit } from "@/lib/share";
 import type { ColorsStackParamList } from "@/navigation/types";
@@ -57,6 +58,7 @@ function getNextGarmentLabel(
 export function OutfitVisualizer() {
 	const { t } = useTranslation();
 	const { width: screenW } = useWindowDimensions();
+	const isTablet = useIsIPad();
 	const route = useRoute<OutfitVisualizerRoute>();
 	const navigation = useNavigation();
 	const prevRoute = useNavigationState((state) =>
@@ -319,57 +321,79 @@ export function OutfitVisualizer() {
 				<View ref={shareViewRef} collapsable={false} className="flex-1">
 					<WarmBackground />
 					<View className="flex-1 items-center justify-center py-4">
-						<Aureola hex={slots[0].color.hex} width={screenW} height={500} />
-						<WadaHeader
-							nameJp={combination.nameJp}
-							nameEn={combination.nameEn}
-							colorCount={combination.colors.length}
+						<Aureola
+							hex={slots[0].color.hex}
+							width={screenW}
+							height={isTablet ? 600 : 500}
 						/>
-						<View className="relative">
-							<OutfitCard
-								slots={slots}
-								selectedSlotIndex={selectedSlotIndex}
-								onSlotTap={handleSlotTap}
-								onVariantCycle={handleVariantCycle}
+						<View
+							testID="outfit-content-container"
+							style={
+								isTablet
+									? { maxWidth: 520, alignSelf: "center", width: "100%" }
+									: undefined
+							}
+						>
+							<WadaHeader
+								nameJp={combination.nameJp}
+								nameEn={combination.nameEn}
+								colorCount={combination.colors.length}
 							/>
-							<Pressable
-								onPress={handlePreviousGarment}
-								accessibilityRole="button"
-								accessibilityLabel={t("visualizer.previousGarment")}
-								testID="arrow-previous"
-								className="absolute min-w-[44px] min-h-[44px] justify-center items-center"
-								style={{ left: -28, top: "50%", marginTop: -16 }}
-							>
-								<Text
-									className="text-[28px]"
-									style={{ color: wadaTokens.textTertiary, opacity: 0.5 }}
+							<View className="relative items-center">
+								<OutfitCard
+									slots={slots}
+									selectedSlotIndex={selectedSlotIndex}
+									onSlotTap={handleSlotTap}
+									onVariantCycle={handleVariantCycle}
+									cardWidth={isTablet ? 320 : 220}
+								/>
+								<Pressable
+									onPress={handlePreviousGarment}
+									accessibilityRole="button"
+									accessibilityLabel={t("visualizer.previousGarment")}
+									testID="arrow-previous"
+									className="absolute min-w-[44px] min-h-[44px] justify-center items-center"
+									style={{
+										left: isTablet ? -36 : -28,
+										top: "50%",
+										marginTop: -16,
+									}}
 								>
-									{"‹"}
-								</Text>
-							</Pressable>
-							<Pressable
-								onPress={handleNextGarment}
-								accessibilityRole="button"
-								accessibilityLabel={t("visualizer.nextGarment")}
-								testID="arrow-next"
-								className="absolute min-w-[44px] min-h-[44px] justify-center items-center"
-								style={{ right: -28, top: "50%", marginTop: -16 }}
-							>
-								<Text
-									className="text-[28px]"
-									style={{ color: wadaTokens.textTertiary, opacity: 0.5 }}
+									<Text
+										className="text-[28px]"
+										style={{ color: wadaTokens.textTertiary, opacity: 0.5 }}
+									>
+										{"‹"}
+									</Text>
+								</Pressable>
+								<Pressable
+									onPress={handleNextGarment}
+									accessibilityRole="button"
+									accessibilityLabel={t("visualizer.nextGarment")}
+									testID="arrow-next"
+									className="absolute min-w-[44px] min-h-[44px] justify-center items-center"
+									style={{
+										right: isTablet ? -36 : -28,
+										top: "50%",
+										marginTop: -16,
+									}}
 								>
-									{"›"}
-								</Text>
-							</Pressable>
-						</View>
-						<View className="mt-4">
-							<MiniPaletteStrip
-								colors={slots.map((s) => ({
-									hex: s.color.hex,
-									nameEn: s.color.nameEn,
-								}))}
-							/>
+									<Text
+										className="text-[28px]"
+										style={{ color: wadaTokens.textTertiary, opacity: 0.5 }}
+									>
+										{"›"}
+									</Text>
+								</Pressable>
+							</View>
+							<View className="mt-4 items-center">
+								<MiniPaletteStrip
+									colors={slots.map((s) => ({
+										hex: s.color.hex,
+										nameEn: s.color.nameEn,
+									}))}
+								/>
+							</View>
 						</View>
 						<Text
 							allowFontScaling
@@ -413,8 +437,8 @@ export function OutfitVisualizer() {
 								borderRadius: 16,
 								paddingHorizontal: 28,
 								paddingVertical: 28,
-								marginHorizontal: 40,
-								maxWidth: 300,
+								marginHorizontal: isTablet ? 80 : 40,
+								maxWidth: isTablet ? 480 : 300,
 								alignItems: "center",
 								backgroundColor: wadaTokens.bgPaper,
 							},

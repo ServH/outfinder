@@ -1,7 +1,13 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dimensions, FlatList, Pressable, Text, View } from "react-native";
+import {
+	FlatList,
+	Pressable,
+	Text,
+	useWindowDimensions,
+	View,
+} from "react-native";
 import { ComboCard } from "@/components/ComboCard";
 import { EmptyState } from "@/components/EmptyState";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
@@ -9,14 +15,13 @@ import { useFavorites } from "@/contexts/FavoritesContext";
 import { getCombination } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
+import { useFavoritesNumCols, useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
 import { wadaTokens } from "@/styles/theme";
 
 type FavoritesListProps = Record<string, never>;
 
 type SortMode = "recent" | "a-z" | "by-size";
-
-const cardWidth = (Dimensions.get("window").width - 32 - 12) / 2;
 
 const SORT_PILLS: { mode: SortMode; labelKey: string; a11yKey: string }[] = [
 	{
@@ -38,11 +43,19 @@ const SORT_PILLS: { mode: SortMode; labelKey: string; a11yKey: string }[] = [
 
 export function FavoritesList(_props: FavoritesListProps) {
 	const { t } = useTranslation();
+	const { width: screenWidth } = useWindowDimensions();
+	const isTablet = useIsIPad();
+	const numCols = useFavoritesNumCols();
 	const { favorites, toggleFavorite, isFavorite } = useFavorites();
 
 	const gate = usePremiumGate(favorites);
 
 	const [sortMode, setSortMode] = useState<SortMode>("recent");
+
+	const hPadding = isTablet ? 24 : 16;
+	const cardGap = isTablet ? 16 : 12;
+	const cardWidth =
+		(screenWidth - hPadding * 2 - cardGap * (numCols - 1)) / numCols;
 
 	useFocusEffect(
 		useCallback(() => {
@@ -82,7 +95,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 				</View>
 			);
 		},
-		[isFavorite, toggleFavorite],
+		[isFavorite, toggleFavorite, cardWidth],
 	);
 
 	const listHeaderComponent = useMemo(
@@ -127,7 +140,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 			<Text
 				style={{
 					fontFamily: "NotoSerifJP_500Medium",
-					fontSize: 28,
+					fontSize: isTablet ? 34 : 28,
 					color: wadaTokens.textPrimary,
 				}}
 			>
@@ -155,13 +168,20 @@ export function FavoritesList(_props: FavoritesListProps) {
 	return (
 		<View className="flex-1 bg-paper">
 			{header}
+			{/* testID for column-count assertions in tests */}
+			<View testID={`grid-${numCols}col`} style={{ height: 0 }} />
 			<FlatList
+				key={`grid-${numCols}`}
 				testID="favorites-list"
 				className="flex-1"
 				data={combinations}
-				numColumns={2}
-				columnWrapperStyle={{ gap: 12, paddingHorizontal: 16 }}
-				contentContainerStyle={{ gap: 12, paddingTop: 12, paddingBottom: 20 }}
+				numColumns={numCols}
+				columnWrapperStyle={{ gap: cardGap, paddingHorizontal: hPadding }}
+				contentContainerStyle={{
+					gap: cardGap,
+					paddingTop: 12,
+					paddingBottom: 20,
+				}}
 				keyExtractor={(item) => item.id}
 				renderItem={renderComboCard}
 				ListHeaderComponent={listHeaderComponent}

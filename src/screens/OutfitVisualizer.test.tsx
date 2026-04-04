@@ -1169,3 +1169,92 @@ describe("OutfitVisualizer", () => {
 		expect(screen.getByTestId("arrow-next")).toBeTruthy();
 	});
 });
+
+// --- iPad layout tests (AC: #3) ---
+
+describe("OutfitVisualizer iPad layout", () => {
+	beforeEach(() => {
+		// Spy on useIsIPad in device module so the isTablet branch activates.
+		// Mocking useWindowDimensions alone doesn't propagate into device.ts imports.
+		jest.spyOn(require("@/lib/device"), "useIsIPad").mockReturnValue(true);
+		mockGetItem.mockResolvedValue("true");
+	});
+
+	afterEach(() => {
+		jest.restoreAllMocks();
+	});
+
+	it("renders successfully on iPad", async () => {
+		mockGetCombination.mockReturnValue({
+			id: "combo-ipad",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		await waitFor(() =>
+			expect(screen.getByLabelText("Outfit card")).toBeTruthy(),
+		);
+	});
+
+	it("renders correctly with 4-color combination on iPad", async () => {
+		mockGetCombination.mockReturnValue({
+			id: "combo-ipad-4",
+			colors: [red, blue, green, yellow],
+			nameJp: "四色",
+			nameEn: "Four Colors",
+		});
+
+		render(<OutfitVisualizer />);
+
+		await waitFor(() =>
+			expect(screen.getByLabelText("Outfit card")).toBeTruthy(),
+		);
+	});
+
+	it("applies centered maxWidth container on iPad (AC: #3)", async () => {
+		mockGetCombination.mockReturnValue({
+			id: "combo-ipad",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		await waitFor(() =>
+			expect(screen.getByTestId("outfit-content-container")).toBeTruthy(),
+		);
+
+		const container = screen.getByTestId("outfit-content-container");
+		expect(container.props.style).toEqual(
+			expect.objectContaining({ maxWidth: 520, alignSelf: "center" }),
+		);
+	});
+
+	it("uses wider arrow offsets (-36) on iPad (AC: #3)", async () => {
+		mockGetCombination.mockReturnValue({
+			id: "combo-ipad",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		await waitFor(() =>
+			expect(screen.getByTestId("arrow-previous")).toBeTruthy(),
+		);
+
+		const arrowPrev = screen.getByTestId("arrow-previous");
+		const arrowNext = screen.getByTestId("arrow-next");
+		expect(arrowPrev.props.style).toEqual(
+			expect.objectContaining({ left: -36 }),
+		);
+		expect(arrowNext.props.style).toEqual(
+			expect.objectContaining({ right: -36 }),
+		);
+	});
+});
