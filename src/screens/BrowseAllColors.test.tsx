@@ -74,3 +74,21 @@ describe("BrowseAllColors", () => {
 		).toBeTruthy();
 	});
 });
+
+describe("BrowseAllColors iPad layout", () => {
+	beforeEach(() => {
+		jest.spyOn(require("@/lib/device"), "useIsIPad").mockReturnValue(true);
+	});
+
+	afterEach(() => {
+		jest.restoreAllMocks();
+	});
+
+	it("uses 7 columns on iPad", () => {
+		// biome-ignore lint/suspicious/noExplicitAny: testing internal FlatList props
+		const { FlatList } = require("react-native") as any;
+		const { UNSAFE_getByType } = render(<BrowseAllColors />);
+		const flatList = UNSAFE_getByType(FlatList);
+		expect(flatList.props.numColumns).toBe(7);
+	});
+});

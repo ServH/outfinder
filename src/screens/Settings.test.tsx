@@ -330,3 +330,26 @@ describe("Settings", () => {
 		});
 	});
 });
+
+describe("Settings iPad layout", () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockIsPremium = false;
+		mockCount = 3;
+		mockUseReducedMotion.mockReturnValue(false);
+		jest.spyOn(require("@/lib/device"), "useIsIPad").mockReturnValue(true);
+	});
+
+	afterEach(() => {
+		jest.restoreAllMocks();
+	});
+
+	it("wraps content in maxWidth container on iPad", () => {
+		renderSettings();
+		const container = screen.getByTestId("settings-content-container");
+		expect(container.props.style).toMatchObject({
+			maxWidth: 560,
+			alignSelf: "center",
+		});
+	});
+});
