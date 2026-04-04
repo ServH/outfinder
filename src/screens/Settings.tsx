@@ -1,5 +1,6 @@
 import Constants from "expo-constants";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
 	ActivityIndicator,
 	Linking,
@@ -23,6 +24,7 @@ type SettingsProps = Record<string, never>;
 type RestoreState = "idle" | "loading" | "success" | "error";
 
 export function Settings(_props: SettingsProps) {
+	const { t } = useTranslation();
 	const { isPremium, restore } = usePremium();
 	const { favorites, toggleFavorite, count } = useFavorites();
 	const gate = usePremiumGate(favorites);
@@ -50,7 +52,7 @@ export function Settings(_props: SettingsProps) {
 		try {
 			await restore();
 			setRestoreState("success");
-			setRestoreMessage("Restored!");
+			setRestoreMessage(t("settings.restored"));
 			restoreTimeout.current = setTimeout(() => {
 				setRestoreState("idle");
 				setRestoreMessage(null);
@@ -63,7 +65,7 @@ export function Settings(_props: SettingsProps) {
 				setRestoreMessage(null);
 			}, 5000);
 		}
-	}, [restore]);
+	}, [restore, t]);
 
 	const restoreButtonContent = () => {
 		switch (restoreState) {
@@ -81,23 +83,23 @@ export function Settings(_props: SettingsProps) {
 						allowFontScaling
 						className="font-sans text-[14px] text-premium-accent"
 					>
-						Restored!
+						{t("settings.restored")}
 					</Text>
 				);
 			default:
 				return (
-					<Text
-						allowFontScaling
-						className="font-sans text-[14px] text-primary"
-					>
-						Restore Purchases
+					<Text allowFontScaling className="font-sans text-[14px] text-primary">
+						{t("settings.restorePurchases")}
 					</Text>
 				);
 		}
 	};
 
 	return (
-		<View className="flex-1 bg-paper" accessibilityLabel="Settings screen">
+		<View
+			className="flex-1 bg-paper"
+			accessibilityLabel={t("settings.screenLabel")}
+		>
 			<View className="px-4 pt-4 pb-2" style={{ paddingTop: 60 }}>
 				<Text
 					style={{
@@ -106,7 +108,7 @@ export function Settings(_props: SettingsProps) {
 						color: wadaTokens.textPrimary,
 					}}
 				>
-					Settings
+					{t("settings.title")}
 				</Text>
 			</View>
 			<ScrollView
@@ -119,7 +121,7 @@ export function Settings(_props: SettingsProps) {
 						allowFontScaling
 						className="font-sans text-[16px] font-bold mb-3 text-primary"
 					>
-						Plans
+						{t("settings.plans")}
 					</Text>
 
 					<View className="bg-elevated rounded-xl overflow-hidden">
@@ -129,8 +131,11 @@ export function Settings(_props: SettingsProps) {
 							className="px-4 py-3"
 							accessibilityLabel={
 								isPremium
-									? "Premium Active"
-									: `Free Plan, ${count} of ${PREMIUM_CONFIG.FREE_FAVORITES_LIMIT} favorites used`
+									? t("settings.premiumActive")
+									: t("settings.freePlanLabel", {
+											count,
+											limit: PREMIUM_CONFIG.FREE_FAVORITES_LIMIT,
+										})
 							}
 						>
 							{isPremium ? (
@@ -139,7 +144,7 @@ export function Settings(_props: SettingsProps) {
 									allowFontScaling
 									className="font-sans text-[14px] font-medium text-premium-accent"
 								>
-									Premium Active ✓
+									{t("settings.premiumBadge")}
 								</Text>
 							) : (
 								<Text
@@ -147,7 +152,7 @@ export function Settings(_props: SettingsProps) {
 									allowFontScaling
 									className="font-sans text-[14px] text-secondary"
 								>
-									Free Plan · {count} favorites
+									{t("settings.freePlanBadge", { count })}
 								</Text>
 							)}
 						</View>
@@ -160,7 +165,7 @@ export function Settings(_props: SettingsProps) {
 							testID="settings-restore-button"
 							className="px-4 min-h-[44px] justify-center"
 							accessibilityRole="button"
-							accessibilityLabel="Restore purchases"
+							accessibilityLabel={t("settings.restorePurchases")}
 							disabled={restoreState === "loading"}
 							onPress={handleSettingsRestore}
 						>
@@ -194,14 +199,14 @@ export function Settings(_props: SettingsProps) {
 									testID="settings-upgrade-button"
 									className="px-4 min-h-[44px] justify-center"
 									accessibilityRole="button"
-									accessibilityLabel="Upgrade to Premium"
+									accessibilityLabel={t("settings.upgradeToPremium")}
 									onPress={gate.openPaywall}
 								>
 									<Text
 										allowFontScaling
 										className="font-sans text-[14px] font-medium text-premium-accent"
 									>
-										Upgrade to Premium
+										{t("settings.upgradeToPremium")}
 									</Text>
 								</Pressable>
 							</>
@@ -215,7 +220,7 @@ export function Settings(_props: SettingsProps) {
 						allowFontScaling
 						className="font-sans text-[16px] font-bold mb-3 text-primary"
 					>
-						About
+						{t("settings.about")}
 					</Text>
 
 					<View className="bg-elevated rounded-xl overflow-hidden">
@@ -223,13 +228,13 @@ export function Settings(_props: SettingsProps) {
 						<View
 							testID="settings-version-row"
 							className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
-							accessibilityLabel={`Version ${Constants.expoConfig?.version ?? "1.0.0"}`}
+							accessibilityLabel={`${t("settings.version")} ${Constants.expoConfig?.version ?? "1.0.0"}`}
 						>
 							<Text
 								allowFontScaling
 								className="font-sans text-[14px] text-primary"
 							>
-								Version
+								{t("settings.version")}
 							</Text>
 							<Text
 								allowFontScaling
@@ -247,7 +252,7 @@ export function Settings(_props: SettingsProps) {
 							testID="settings-privacy-row"
 							className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
 							accessibilityRole="link"
-							accessibilityLabel="Privacy Policy"
+							accessibilityLabel={t("settings.privacyPolicy")}
 							onPress={() => {
 								try {
 									Linking.openURL(PRIVACY_URL).catch((error: unknown) => {
@@ -266,7 +271,7 @@ export function Settings(_props: SettingsProps) {
 								allowFontScaling
 								className="font-sans text-[14px] text-primary"
 							>
-								Privacy Policy
+								{t("settings.privacyPolicy")}
 							</Text>
 							<Text
 								allowFontScaling
@@ -284,7 +289,7 @@ export function Settings(_props: SettingsProps) {
 							testID="settings-support-row"
 							className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
 							accessibilityRole="link"
-							accessibilityLabel="Support"
+							accessibilityLabel={t("settings.support")}
 							onPress={() => {
 								try {
 									Linking.openURL(SUPPORT_URL).catch((error: unknown) => {
@@ -303,7 +308,7 @@ export function Settings(_props: SettingsProps) {
 								allowFontScaling
 								className="font-sans text-[14px] text-primary"
 							>
-								Support
+								{t("settings.support")}
 							</Text>
 							<Text
 								allowFontScaling

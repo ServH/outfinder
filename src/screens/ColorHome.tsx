@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
 	Dimensions,
 	FlatList,
@@ -60,6 +61,7 @@ function ComboSeparator() {
 }
 
 export function ColorHome() {
+	const { t } = useTranslation();
 	const navigation = useNavigation<ColorHomeNav>();
 	const insets = useSafeAreaInsets();
 	const scrollRef = useRef<ScrollView>(null);
@@ -97,9 +99,7 @@ export function ColorHome() {
 		[selectedShade],
 	);
 
-	const familyLabel = selectedFamily
-		? selectedFamily.charAt(0).toUpperCase() + selectedFamily.slice(1)
-		: "";
+	const familyLabel = selectedFamily ? t(`fabric.${selectedFamily}`) : "";
 
 	function clearState2() {
 		setSelectedFamily(null);
@@ -230,7 +230,10 @@ export function ColorHome() {
 	currentPageRef.current = currentPage;
 	useEffect(() => {
 		if (selectedFamily === null) {
-			scrollRef.current?.scrollTo({ x: currentPageRef.current * PAGE_WIDTH, animated: false });
+			scrollRef.current?.scrollTo({
+				x: currentPageRef.current * PAGE_WIDTH,
+				animated: false,
+			});
 		}
 	}, [selectedFamily]);
 
@@ -271,7 +274,7 @@ export function ColorHome() {
 							marginTop: 6,
 						}}
 					>
-						What color are you wearing?
+						{t("home.subtitle")}
 					</Text>
 				</View>
 
@@ -331,7 +334,7 @@ export function ColorHome() {
 									<Pressable
 										onPress={handleBrowseAllPress}
 										accessibilityRole="button"
-										accessibilityLabel="Browse all 159 colors"
+										accessibilityLabel={t("home.browseAll")}
 										testID="browse-all-card"
 									>
 										{({ pressed }) => (
@@ -375,7 +378,7 @@ export function ColorHome() {
 														textAlign: "center",
 													}}
 												>
-													All 159{"\n"}colors
+													{t("home.allColors")}
 												</Text>
 											</View>
 										)}
@@ -421,7 +424,7 @@ export function ColorHome() {
 							className="items-center pb-2"
 							testID="browse-all-link"
 							accessibilityRole="link"
-							accessibilityLabel="Browse all 159 colors"
+							accessibilityLabel={t("home.browseAll")}
 						>
 							<Text
 								style={{
@@ -431,7 +434,7 @@ export function ColorHome() {
 									textDecorationLine: "underline",
 								}}
 							>
-								Browse all 159 colors
+								{t("home.browseAll")}
 							</Text>
 						</Pressable>
 					</RNAnimated.View>
@@ -461,7 +464,7 @@ export function ColorHome() {
 						<Pressable
 							onPress={handleBackPress}
 							accessibilityRole="button"
-							accessibilityLabel="Back to color families"
+							accessibilityLabel={t("home.backToFamilies")}
 							className="min-h-[48px] flex-1 flex-row items-center"
 							testID="state2-back-button"
 						>
@@ -487,7 +490,7 @@ export function ColorHome() {
 							}}
 							testID="combo-count"
 						>
-							{combos.length} {combos.length === 1 ? "combo" : "combos"}
+							{combos.length} {t("home.combo", { count: combos.length })}
 						</Text>
 					</View>
 
@@ -509,7 +512,7 @@ export function ColorHome() {
 									textAlign: "center",
 								}}
 							>
-								No combinations for this shade. Try another.
+								{t("home.noShades")}
 							</Text>
 						</View>
 					) : (

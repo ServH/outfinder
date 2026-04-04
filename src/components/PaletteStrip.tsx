@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { SymbolView } from "expo-symbols";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 import type { Combination } from "@/data/types";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -29,6 +30,7 @@ export function PaletteStrip({
 	onToggleFavorite,
 	onPremiumGate,
 }: PaletteStripProps) {
+	const { t } = useTranslation();
 	const navigation = useNavigation<CombinationsNav>();
 	const reducedMotion = useReducedMotion();
 	const colorNames = combination.colors.map((c) => c.nameEn).join(", ");
@@ -36,7 +38,9 @@ export function PaletteStrip({
 	return (
 		<View
 			testID={`palette-strip-${combination.id}`}
-			accessibilityLabel={`Combination: ${colorNames}`}
+			accessibilityLabel={t("paletteStrip.combinationLabel", {
+				colors: colorNames,
+			})}
 		>
 			<View className="overflow-hidden rounded-lg">
 				{onToggleFavorite && (
@@ -63,8 +67,10 @@ export function PaletteStrip({
 									accessibilityRole={isSelected ? undefined : "link"}
 									accessibilityLabel={
 										isSelected
-											? `Selected: ${color.nameEn}`
-											: `View combinations for ${color.nameEn}`
+											? t("paletteStrip.selected", { name: color.nameEn })
+											: t("paletteStrip.viewCombinations", {
+													name: color.nameEn,
+												})
 									}
 									onPress={() => {
 										hapticLight();
@@ -96,7 +102,7 @@ export function PaletteStrip({
 				<Pressable
 					testID={`visualize-outfit-${combination.id}`}
 					accessibilityRole="button"
-					accessibilityLabel="Visualize outfit"
+					accessibilityLabel={t("paletteStrip.visualize")}
 					className="absolute bottom-1 right-1 min-w-[44px] min-h-[44px] items-center justify-center"
 					hitSlop={4}
 					onPress={() => {

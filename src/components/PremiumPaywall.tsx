@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
 	ActivityIndicator,
 	Modal,
@@ -50,6 +51,7 @@ export function PremiumPaywall({
 	onRestore,
 	onDismiss,
 }: PremiumPaywallProps) {
+	const { t } = useTranslation();
 	const { height: screenHeight } = useWindowDimensions();
 	const sheetHeight = screenHeight * 0.7;
 	const reducedMotion = useReducedMotion();
@@ -158,7 +160,7 @@ export function PremiumPaywall({
 	const isSettingsEntry = !blockedCombination;
 	const showPalettePreview = favCount > 0 || !isSettingsEntry;
 
-	const badgeText = `${favCount} of 5 free favorites used`;
+	const badgeText = t("paywall.limitBadge", { count: favCount, limit: 5 });
 
 	if (!visible) {
 		return null;
@@ -178,7 +180,7 @@ export function PremiumPaywall({
 					testID="paywall-overlay"
 					className="absolute inset-0"
 					accessibilityRole="button"
-					accessibilityLabel="Dismiss paywall"
+					accessibilityLabel={t("paywall.dismiss")}
 					onPress={isLoading ? undefined : dismiss}
 				>
 					<Animated.View className="flex-1 bg-black" style={overlayStyle} />
@@ -225,19 +227,19 @@ export function PremiumPaywall({
 									<View
 										className="flex-row justify-between"
 										accessible
-										accessibilityLabel={`Your collection. ${favCount} combinations saved`}
+										accessibilityLabel={`${t("paywall.yourCollection")}. ${t("paywall.savedCount", { count: favCount })}`}
 									>
 										<Text
 											allowFontScaling
 											className="font-sans text-[11px] text-tertiary"
 										>
-											Your collection
+											{t("paywall.yourCollection")}
 										</Text>
 										<Text
 											allowFontScaling
 											className="font-sans text-[11px] text-favorite-red"
 										>
-											♥ {favCount} saved
+											{t("paywall.savedCount", { count: favCount })}
 										</Text>
 									</View>
 
@@ -270,7 +272,7 @@ export function PremiumPaywall({
 													{ height: 32, borderRadius: 5 },
 													blockedStripStyle,
 												]}
-												accessibilityLabel="Locked combination. Upgrade to save"
+												accessibilityLabel={t("paywall.lockedLabel")}
 											>
 												{blockedCombination.colors.map((color) => (
 													<View
@@ -311,7 +313,7 @@ export function PremiumPaywall({
 								className="font-serif-jp text-[20px] text-center mb-[10px] text-primary"
 								style={{ lineHeight: 28 }}
 							>
-								{"Don't stop\ncollecting"}
+								{t("paywall.headline")}
 							</Text>
 
 							{/* Body text */}
@@ -321,10 +323,10 @@ export function PremiumPaywall({
 								className="font-sans text-[13px] font-light text-center px-2 mb-6 text-secondary"
 								style={{ lineHeight: 21 }}
 							>
-								You've found {favCount}{" "}
-								{favCount === 1 ? "harmony" : "harmonies"} worth keeping. There
-								are {totalCombinations - favCount} more combinations waiting to
-								be discovered.
+								{t("paywall.body", {
+									count: favCount,
+									remaining: totalCombinations - favCount,
+								})}
 							</Text>
 
 							{/* Price + CTA row */}
@@ -333,7 +335,9 @@ export function PremiumPaywall({
 								<View
 									testID="price-tag"
 									className="items-center bg-elevated rounded-[10px] px-4 py-3 shrink-0"
-									accessibilityLabel={`${priceString}, one-time purchase`}
+									accessibilityLabel={t("paywall.priceLabel", {
+										price: priceString,
+									})}
 								>
 									<Text
 										allowFontScaling
@@ -345,7 +349,7 @@ export function PremiumPaywall({
 										allowFontScaling
 										className="font-sans text-[10px] text-tertiary mt-[1px]"
 									>
-										one time
+										{t("paywall.oneTime")}
 									</Text>
 								</View>
 
@@ -360,8 +364,8 @@ export function PremiumPaywall({
 									accessibilityRole="button"
 									accessibilityLabel={
 										purchaseState === "purchasing"
-											? "Purchasing, please wait"
-											: `Unlock unlimited favorites for ${priceString}`
+											? t("paywall.purchasing")
+											: t("paywall.unlockLabel", { price: priceString })
 									}
 									disabled={isLoading}
 									onPressIn={() => {
@@ -402,7 +406,7 @@ export function PremiumPaywall({
 													letterSpacing: 0.3,
 												}}
 											>
-												Unlock Unlimited
+												{t("paywall.unlockButton")}
 											</Text>
 										)}
 									</Animated.View>
@@ -437,8 +441,8 @@ export function PremiumPaywall({
 									accessibilityRole="button"
 									accessibilityLabel={
 										purchaseState === "restoring"
-											? "Restoring purchase, please wait"
-											: "Restore previous purchase"
+											? t("paywall.restoring")
+											: t("paywall.restoreButton")
 									}
 									disabled={isLoading}
 									onPress={onRestore}
@@ -454,7 +458,7 @@ export function PremiumPaywall({
 											allowFontScaling
 											className="font-sans text-[13px] text-tertiary"
 										>
-											Restore Purchase
+											{t("paywall.restoreButton")}
 										</Text>
 									)}
 								</Pressable>
@@ -462,7 +466,7 @@ export function PremiumPaywall({
 									testID="not-now"
 									className="min-h-[44px] justify-center"
 									accessibilityRole="button"
-									accessibilityLabel="Dismiss paywall"
+									accessibilityLabel={t("paywall.dismiss")}
 									disabled={isLoading}
 									onPress={dismiss}
 								>
@@ -471,7 +475,7 @@ export function PremiumPaywall({
 										className="font-sans text-[13px] text-tertiary"
 										style={{ opacity: isLoading ? 0.5 : 1 }}
 									>
-										Not now
+										{t("paywall.notNow")}
 									</Text>
 								</Pressable>
 							</View>

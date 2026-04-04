@@ -20,6 +20,7 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 | Storage | AsyncStorage (favorites persistence) |
 | IAP | RevenueCat (react-native-purchases) — PremiumContext + purchase/restore flow |
 | Secure Storage | expo-secure-store — premium status caching |
+| i18n | react-i18next + i18next — EN/ES localization, sync init via Intl.DateTimeFormat |
 | Linting | Biome 2.4.6 (tabs, double quotes) |
 | Testing | Jest ~29.7.0 + jest-expo + React Native Testing Library |
 | Fonts | Noto Serif JP (Regular/Medium) + Inter (Regular/Medium) via expo-font |
@@ -44,8 +45,8 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 - **Epic 8: DONE** — Home redesign v2.0 (8.1–8.5 all stories complete, merged to epic-1)
 - **Epic 9: DONE** — Favorites redesign (9.1 2-col grid + ComboCard compact, 9.2 Sort pills + empty state)
 - **Story 10.1: DONE** — Visualizer adjustments (nameEn in WadaHeader + dynamic nav title)
-- **Epic 11: IN-PROGRESS** — Story 11.1 DONE: Onboarding v2 — old 4-step onboarding removed, 2-step coach mark overlay in Visualizer, permanent ‹ › navigation arrows
-- **Tests:** 493 across 35 suites (all passing)
+- **Epic 11: IN-PROGRESS** — Story 11.1 DONE: Onboarding v2 — old 4-step onboarding removed, 2-step coach mark overlay in Visualizer, permanent ‹ › navigation arrows. Story 11.2 DONE: EN/ES localization (react-i18next, Intl.DateTimeFormat locale detection, 135 keys, `detectLanguage()` export, `iap.*` error namespace)
+- **Tests:** 510 across 36 suites (all passing)
 - **Code Reviews:** Adversarial review on every story since Epic 1. Per-screen code analysis on 2026-04-03
 - **Retrospectives:** Epic 1, 2, 3, 4 completed
 - **App Store:** v1.0.0 submitted 2026-03-26, v1.0.1 onboarding refresh, v1.0.2 (build 4) visualizer affordances
@@ -67,6 +68,7 @@ outfinder/
 │   ├── react-native-reanimated.js   # Manual Reanimated v4 Jest mock (built-in imports native modules)
 │   ├── react-native-gesture-handler.js # Gesture handler mock
 │   ├── react-native-view-shot.js    # View-shot captureRef mock (returns "file:///mock-path.png")
+│   ├── expo-localization.js         # Mock for expo-localization (returns en locale by default)
 │   └── @shopify/
 │       └── react-native-skia.js     # Manual Skia Jest mock (Canvas, Image, Fill, etc.)
 ├── src/
@@ -106,8 +108,16 @@ outfinder/
 │   │   └── colorIndex.ts            # Pre-computed Map indexes — O(1) lookups: getColor, getCombination, getCombinations, getColorsByGroup, getAllColors, getAllCombinations
 │   ├── hooks/
 │   │   ├── useOutfitState.ts        # Outfit state hook — slots, selectedSlotIndex, selectSlot (tap-swap), toggleVariant
-│   │   ├── usePremiumGate.ts        # Gate hook — checks premium status, triggers paywall if needed
+│   │   ├── usePremiumGate.ts        # Gate hook — paywall trigger, IAP error messages via i18n.t()
 │   │   └── useReducedMotion.ts      # AccessibilityInfo.isReduceMotionEnabled() + listener
+│   ├── i18n/
+│   │   ├── index.ts                 # Sync i18n init (initAsync: false), detectLanguage() via Intl.DateTimeFormat, exports i18n instance
+│   │   ├── types.ts                 # TranslationKey flat type + bidirectional AssertSameKeys (en↔es parity at build time)
+│   │   ├── locales/
+│   │   │   ├── en.json              # English translation file (~140 keys, 22 namespaces)
+│   │   │   └── es.json              # Spanish translation file (same structure, parity enforced by types.ts)
+│   │   └── __tests__/
+│   │       └── i18n.test.ts         # Key parity, locale detection (es/es-MX/es-ES/en/fr/ja/Intl-throws), plurals, Wada name handling
 │   ├── lib/
 │   │   ├── color.ts                 # isLightColor(hex) — luminance-based light color detection for contrast-aware UI
 │   │   ├── haptics.ts               # hapticLight(), hapticMedium(), hapticRigid() — all with try/catch + .catch()
@@ -121,9 +131,9 @@ outfinder/
 │   ├── screens/
 │   │   ├── ColorHome.tsx            # Grid of 159 colors with tab filtering by swatch family
 │   │   ├── Combinations.tsx         # ColorHeader + CombinationList for selected color
-│   │   ├── OutfitVisualizer.tsx     # Outfit visualization with Skia tinting, editorial card, Wada identity, share button, branding, haptics, VoiceOver
+│   │   ├── OutfitVisualizer.tsx     # Outfit visualization with Skia tinting, editorial card, coach marks, permanent arrows, share, haptics, VoiceOver
 │   │   ├── FavoritesList.tsx        # Saved combinations list, CombinationList reuse, EmptyState when empty
-│   │   ├── Onboarding.tsx            # 4-step onboarding flow with real mini-previews, Wada styling
+│   │   ├── BrowseAllColors.tsx      # Full color catalog grid accessible from Home "All 159 colors" link
 │   │   └── Settings.tsx             # Settings screen — version info, privacy links, restore purchases, contact
 │   ├── styles/
 │   │   └── theme.ts                 # 16 Wada design token constants (camelCase) for programmatic access
@@ -134,7 +144,8 @@ outfinder/
 ├── metro.config.js                  # NativeWind + SVG transformer
 ├── babel.config.js                  # NativeWind jsxImportSource + Reanimated plugin
 ├── biome.json                       # Tabs, double quotes, CSS tailwind overrides
-├── jest.config.js                   # jest-expo preset
+├── jest.config.js                   # jest-expo preset, setupFiles: [jest.setup.js]
+├── jest.setup.js                    # Global i18n init before all tests
 └── .github/workflows/ci.yml        # lint + tsc + test on PRs to main
 ```
 
@@ -239,6 +250,22 @@ Use `push()` to allow stacking multiple instances (cross-navigation). `navigate(
 - Use `includeHiddenElements: true` when querying inside `accessibilityElementsHidden` wrappers
 - Double-tap prevention patterns: test with `sharing` state guards
 
+### i18n — react-i18next (Story 11.2)
+```typescript
+import { useTranslation } from "react-i18next";
+const { t } = useTranslation();
+// Static string:  t("home.subtitle")
+// Interpolated:   t("comboCard.combinationLabel", { name, colors })
+// Plural:         t("home.combo", { count })  → "combo" / "combos"
+```
+- `src/i18n/index.ts` initializes synchronously at import — `import "./src/i18n"` MUST be first line in App.tsx
+- Outside React components: `import { i18n } from "@/i18n"` → `i18n.t("key")`
+- Wada names (`nameJp`, `nameEn`) are NEVER passed through `t()` — brand identity, always raw
+- "Outfinder" brand name NOT in translation files
+- `detectLanguage()` exported from index.ts — uses `Intl.DateTimeFormat().resolvedOptions().locale`, NOT expo-localization
+- Type safety: `TranslationKey` type in `types.ts` + `AssertSameKeys` catches missing keys at build time
+- Global Jest mock: `__mocks__/expo-localization.js` (legacy compat) + `jest.setup.js` inits i18n before all tests
+
 ### Git Branching
 - Epic branches: `epic-N`
 - Story branches: `story-X.Y-description` off epic branch (flat naming, NOT `epic-N/story-X.Y`)
@@ -254,69 +281,21 @@ Use `push()` to allow stacking multiple instances (cross-navigation). `navigate(
 | 4 | `handleScroll` in ColorHome uses `useNativeDriver: false` for dot/link interpolations | LOW | Epic 8 — JS thread scroll tracking, fine for 2 pages |
 | 5 | No StoreKit Configuration file for simulator IAP testing | MEDIUM | Since Epic 5 — purchases only testable on real device with sandbox |
 
-## Bugfix Branch: `fix/premium-gate-and-home-polish` (2026-04-03)
+## Bugfix Branch: `fix/premium-gate-and-home-polish` (merged 2026-04-03)
 
-Per-screen code review with targeted fixes:
-
-### Premium Gate (Critical Bug)
-- **Root cause:** `onPremiumGate` passed to ALL unfavorited items for free users — missing `favorites.size >= FREE_FAVORITES_LIMIT` check in Combinations, ColorHome, FavoritesList
-- **Badge text:** PremiumPaywall hardcoded "5 of 5" from heart tap — now dynamic `${favCount} of 5`
-- **Paywall repeat:** Removed `paywallDismissedThisSession` guard — paywall always shows on explicit heart taps (user-initiated action deserves purchase option)
-
-### Home Layout
-- **PEEK_WIDTH removed:** `PAGE_WIDTH = SCREEN_WIDTH - 28` was causing Page 2 cards to bleed through — now `PAGE_WIDTH = Dimensions.get("window").width`
-- **pagingEnabled:** Replaced `snapToInterval` with native iOS `pagingEnabled` for proper page clipping
-- **Symmetric padding:** Both pages use `paddingHorizontal: pagePadding` (was asymmetric)
-- **Scroll restore:** Returns to correct page after State 2 back (was always resetting to Page 1)
-- **Subtitle serif:** "What color are you wearing?" now `NotoSerifJP_400Regular` 18px (was Inter 16px)
-
-### Tailwind Token Naming (Systemic Fix)
-- **Problem:** Color keys like `"text-primary"`, `"bg-elevated"` generated utilities `text-text-primary`, `bg-bg-elevated` — double prefix. `bg-paper` class never worked (key was `"bg-paper"`, utility would be `bg-bg-paper`)
-- **Fix:** Renamed keys to `primary`, `secondary`, `tertiary`, `surface`, `elevated`, `paper` — now `text-primary`, `bg-elevated`, `bg-paper` resolve correctly
-- **Impact:** 23 files, all className usages updated
-
-### Navigation & Transitions
-- **Fade on all tabs:** `animation: "fade"` in TabNavigator screenOptions
-- **Fade on all stacks:** ColorsStack, FavoritesStack, SettingsStack `screenOptions={{ animation: "fade" }}`
-- **Header auto-scale:** `adjustsFontSizeToFit` + `numberOfLines={1}` + `minimumFontScale={0.7}` on all back buttons (Combinations, ColorHome State 2, BrowseAllColors, OutfitVisualizer)
-
-### Dead Code Cleanup
-- Removed toast JSX + `Animated` imports from Combinations and FavoritesList (dead after paywall guard removal)
-- Removed `isLightColor` import + `needsBorder` from Combinations
-- Removed premium gate from FavoritesList `renderComboCard` (items always favorited — gate never triggers)
-- Merged duplicate `handleSkip`/`handleCta` in Onboarding → `handleComplete`
-- Extracted shared header in FavoritesList (was duplicated in empty/non-empty branches)
-
-### Minor Polish
-- FabricSwatch shadow: 2px offset, 8% opacity, 6px blur
-- ComboCard shadow increased: offset 1→3, opacity 0.08→0.12, blur 4→8
-- SwatchGroupTabs vertical alignment fix (`paddingTop: 0` when ListHeaderComponent present)
-- Settings hardcoded "5" → `PREMIUM_CONFIG.FREE_FAVORITES_LIMIT`
-- OutfitVisualizer tooltip colors → wadaTokens
-- BrowseAllColors: removed redundant `justify-between`, added `accessibilityLabel`
-- Combinations back button a11y: "Back to ColorName" → "Go back"
-- ColorHome link `pointerEvents` driven by `scrollX` listener (instant during swipe)
+Key fixes applied via per-screen adversarial review (see git history for details):
+- **Premium gate:** `onPremiumGate` gating now checks `favorites.size >= FREE_FAVORITES_LIMIT`; badge dynamic; `paywallDismissedThisSession` guard removed
+- **Home layout:** `pagingEnabled` replaces `snapToInterval`; symmetric padding; scroll-restore; subtitle → NotoSerifJP 18px
+- **Tailwind tokens:** Renamed keys without utility prefixes (`primary` not `"text-primary"`) — fixes `text-primary`, `bg-elevated`, `bg-paper` across 23 files
+- **Navigation:** Fade animation on all tabs + stacks; `adjustsFontSizeToFit` on all back buttons
+- **Dead code:** Toast JSX removed from Combinations + FavoritesList; premium gate removed from FavoritesList render
 
 ## Implemented: v2.0 Redesign (All DONE)
 
-### Home Redesign — Epic 8 (DONE, Stories 8.1–8.5)
-- Wardrobe-first fabric swatches, 2-page paged scroll (6 basics + 5 accents + "All 159 colors" dashed card)
-- State 2 crossfade: shade picker + combo feed
-- Spec: `designs/home-redesign-spec.md`
-
-### Favorites Redesign — Epic 9 (DONE, Stories 9.1–9.2)
-- 2-column compact grid, sort pills (Recent, A-Z, By size), shared ComboCard
-- Simplified stack: FavoritesList → OutfitVisualizer
-- Spec: `designs/favorites-redesign-spec.md`
-
-### Visualizer Adjustments — Story 10.1 (DONE)
-- nameEn in WadaHeader, dynamic nav title
-- Spec: `designs/visualizer-adjustments-spec.md`
-
-### Design Exploration Archive
-- Full design exploration (30+ concepts) in `designs/pencil-new.pen`
-- Concepts A-F → G/H/I → H1-H3 → v3 flow → v4.1 (validated)
-- Deferred features: "Do these match?" (future epic), Wada's Journal (premium content)
+- **Epic 8** — Home v2: wardrobe-first fabric swatches, 2-page paged scroll, shade picker + combo feed (`designs/home-redesign-spec.md`)
+- **Epic 9** — Favorites v2: 2-col compact grid, sort pills, shared ComboCard (`designs/favorites-redesign-spec.md`)
+- **Story 10.1** — Visualizer: nameEn in WadaHeader, dynamic nav title (`designs/visualizer-adjustments-spec.md`)
+- **Design archive:** `designs/pencil-new.pen` — 30+ concepts → v4.1 validated. Deferred: "Do these match?", Wada's Journal
 
 ## Key Learnings from Retrospectives
 

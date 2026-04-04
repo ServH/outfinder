@@ -6,6 +6,7 @@ import {
 	useRoute,
 } from "@react-navigation/native";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
 	AccessibilityInfo,
 	Alert,
@@ -54,6 +55,7 @@ function getNextGarmentLabel(
 }
 
 export function OutfitVisualizer() {
+	const { t } = useTranslation();
 	const { width: screenW } = useWindowDimensions();
 	const route = useRoute<OutfitVisualizerRoute>();
 	const navigation = useNavigation();
@@ -65,16 +67,16 @@ export function OutfitVisualizer() {
 
 	let backLabel = "";
 	if (prevRoute?.name === "FavoritesList") {
-		backLabel = "Favorites";
+		backLabel = t("favorites.title");
 	} else if (prevRoute?.name === "Combinations") {
 		const params = prevRoute.params as { colorId: string } | undefined;
 		if (params?.colorId) {
 			backLabel = getColor(params.colorId)?.nameEn ?? "";
 		}
 	} else if (prevRoute?.name === "ColorHome") {
-		backLabel = "Colors";
+		backLabel = t("tabs.colors");
 	} else if (prevRoute?.name === "BrowseAllColors") {
-		backLabel = "All Colors";
+		backLabel = t("browseAll.backButton");
 	}
 
 	const shareViewRef = useRef<View>(null);
@@ -128,17 +130,17 @@ export function OutfitVisualizer() {
 				if (value !== "true") {
 					setCoachStep(1);
 					AccessibilityInfo.announceForAccessibility(
-						"Tip: Tap any garment to change its color",
+						t("visualizer.coachStep1Announce"),
 					);
 				}
 			} catch {
 				setCoachStep(1);
 				AccessibilityInfo.announceForAccessibility(
-					"Tip: Tap any garment to change its color",
+					t("visualizer.coachStep1Announce"),
 				);
 			}
 		})();
-	}, []);
+	}, [t]);
 
 	const handleCoachOk = useCallback(() => {
 		hapticLight();
@@ -147,7 +149,7 @@ export function OutfitVisualizer() {
 				cardTranslateY.value = 18;
 				setCoachStep(2);
 				AccessibilityInfo.announceForAccessibility(
-					"Tip: Use the arrows or swipe to change garments",
+					t("visualizer.coachStep2Announce"),
 				);
 			};
 			if (reduceMotionRef.current) {
@@ -176,7 +178,7 @@ export function OutfitVisualizer() {
 				cardTranslateY.value = withTiming(10, { duration: 200 });
 			}
 		}
-	}, [coachStep, cardOpacity, cardTranslateY]);
+	}, [coachStep, cardOpacity, cardTranslateY, t]);
 
 	const handleShare = useCallback(async () => {
 		if (sharing) return;
@@ -185,12 +187,9 @@ export function OutfitVisualizer() {
 		const success = await shareOutfit(shareViewRef);
 		setSharing(false);
 		if (!success) {
-			Alert.alert(
-				"Unable to share",
-				"Something went wrong generating the image. Please try again.",
-			);
+			Alert.alert(t("visualizer.shareError"), t("visualizer.shareErrorBody"));
 		}
-	}, [sharing]);
+	}, [sharing, t]);
 
 	const handleSlotTap = useCallback(
 		(index: number) => {
@@ -201,7 +200,7 @@ export function OutfitVisualizer() {
 				hapticMedium();
 				selectSlot(index);
 				AccessibilityInfo.announceForAccessibility(
-					`Selected ${tappedLabel} for swap`,
+					t("visualizer.selectedForSwap", { label: tappedLabel }),
 				);
 			} else if (selectedSlotIndex === index) {
 				selectSlot(index);
@@ -213,11 +212,16 @@ export function OutfitVisualizer() {
 				const newColorB = selectedSlot.color.nameEn;
 				selectSlot(index);
 				AccessibilityInfo.announceForAccessibility(
-					`${selectedLabel} is now ${newColorA}, ${tappedLabel} is now ${newColorB}`,
+					t("visualizer.swapResult", {
+						selectedLabel,
+						newColorA,
+						newColorB,
+						tappedLabel,
+					}),
 				);
 			}
 		},
-		[slots, selectedSlotIndex, selectSlot],
+		[slots, selectedSlotIndex, selectSlot, t],
 	);
 
 	const handleVariantCycle = useCallback(
@@ -229,9 +233,11 @@ export function OutfitVisualizer() {
 				slots.length,
 			);
 			cycleVariant(index, direction);
-			AccessibilityInfo.announceForAccessibility(`Changed to ${newLabel}`);
+			AccessibilityInfo.announceForAccessibility(
+				t("visualizer.changedTo", { label: newLabel }),
+			);
 		},
-		[slots, cycleVariant],
+		[slots, cycleVariant, t],
 	);
 
 	const handlePreviousGarment = useCallback(() => {
@@ -243,8 +249,10 @@ export function OutfitVisualizer() {
 			slots.length,
 		);
 		cycleVariant(targetIndex, -1);
-		AccessibilityInfo.announceForAccessibility(`Changed to ${newLabel}`);
-	}, [selectedSlotIndex, slots, cycleVariant]);
+		AccessibilityInfo.announceForAccessibility(
+			t("visualizer.changedTo", { label: newLabel }),
+		);
+	}, [selectedSlotIndex, slots, cycleVariant, t]);
 
 	const handleNextGarment = useCallback(() => {
 		hapticLight();
@@ -255,17 +263,19 @@ export function OutfitVisualizer() {
 			slots.length,
 		);
 		cycleVariant(targetIndex, 1);
-		AccessibilityInfo.announceForAccessibility(`Changed to ${newLabel}`);
-	}, [selectedSlotIndex, slots, cycleVariant]);
+		AccessibilityInfo.announceForAccessibility(
+			t("visualizer.changedTo", { label: newLabel }),
+		);
+	}, [selectedSlotIndex, slots, cycleVariant, t]);
 
 	if (!combination) {
 		return (
 			<View
 				className="flex-1 items-center justify-center bg-paper"
-				accessibilityLabel="Outfit Visualizer screen"
+				accessibilityLabel={t("visualizer.screenLabel")}
 			>
 				<Text className="font-sans text-base text-secondary">
-					Combination not found
+					{t("visualizer.notFound")}
 				</Text>
 			</View>
 		);
@@ -275,14 +285,14 @@ export function OutfitVisualizer() {
 		<View
 			className="flex-1"
 			style={{ backgroundColor: wadaTokens.warmBg }}
-			accessibilityLabel="Outfit Visualizer screen"
+			accessibilityLabel={t("visualizer.screenLabel")}
 		>
 			{/* Back button */}
 			<View className="px-4 pt-4 pb-1" style={{ paddingTop: 60 }}>
 				<Pressable
 					onPress={() => navigation.goBack()}
 					accessibilityRole="button"
-					accessibilityLabel="Go back"
+					accessibilityLabel={t("visualizer.goBack")}
 					className="min-h-[48px] flex-row items-center"
 					testID="visualizer-back-button"
 				>
@@ -325,7 +335,7 @@ export function OutfitVisualizer() {
 							<Pressable
 								onPress={handlePreviousGarment}
 								accessibilityRole="button"
-								accessibilityLabel="Previous garment"
+								accessibilityLabel={t("visualizer.previousGarment")}
 								testID="arrow-previous"
 								className="absolute min-w-[44px] min-h-[44px] justify-center items-center"
 								style={{ left: -28, top: "50%", marginTop: -16 }}
@@ -340,7 +350,7 @@ export function OutfitVisualizer() {
 							<Pressable
 								onPress={handleNextGarment}
 								accessibilityRole="button"
-								accessibilityLabel="Next garment"
+								accessibilityLabel={t("visualizer.nextGarment")}
 								testID="arrow-next"
 								className="absolute min-w-[44px] min-h-[44px] justify-center items-center"
 								style={{ right: -28, top: "50%", marginTop: -16 }}
@@ -376,7 +386,7 @@ export function OutfitVisualizer() {
 				<Pressable
 					onPress={handleShare}
 					disabled={sharing}
-					accessibilityLabel="Share outfit image"
+					accessibilityLabel={t("visualizer.shareLabel")}
 					accessibilityRole="button"
 					className="min-h-[48px] items-center justify-center rounded-full bg-surface px-6 py-3"
 					style={{ opacity: sharing ? 0.5 : 1 }}
@@ -385,7 +395,7 @@ export function OutfitVisualizer() {
 						allowFontScaling
 						className="font-sans text-sm font-medium text-primary"
 					>
-						Share Outfit
+						{t("visualizer.shareButton")}
 					</Text>
 				</Pressable>
 			</View>
@@ -420,13 +430,13 @@ export function OutfitVisualizer() {
 							testID="coach-mark-text"
 						>
 							{coachStep === 1
-								? "Tap any garment to change its color"
-								: "Use the arrows or swipe to change garments"}
+								? t("visualizer.coachStep1")
+								: t("visualizer.coachStep2")}
 						</Text>
 						<Pressable
 							onPress={handleCoachOk}
 							accessibilityRole="button"
-							accessibilityLabel="Got it"
+							accessibilityLabel={t("visualizer.gotIt")}
 							testID="coach-mark-ok"
 							className="rounded-lg px-8 py-3 min-w-[44px] min-h-[44px] justify-center items-center"
 							style={{ backgroundColor: wadaTokens.textPrimary }}
@@ -438,7 +448,7 @@ export function OutfitVisualizer() {
 									fontFamily: "Inter_500Medium",
 								}}
 							>
-								OK
+								{t("visualizer.gotIt")}
 							</Text>
 						</Pressable>
 					</ReanimatedAnimated.View>

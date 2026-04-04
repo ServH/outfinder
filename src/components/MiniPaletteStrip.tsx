@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Text, useWindowDimensions, View } from "react-native";
 import { wadaTokens } from "@/styles/theme";
 
@@ -6,13 +7,14 @@ export interface MiniPaletteStripProps {
 }
 
 export function MiniPaletteStrip({ colors }: MiniPaletteStripProps) {
+	const { t } = useTranslation();
 	const { width: screenW } = useWindowDimensions();
 	return (
 		<View className="items-center gap-[6px]">
 			<View
 				className="flex-row overflow-hidden rounded-[6px] h-[18px]"
 				style={{ width: screenW * 0.6 }}
-				accessibilityLabel="Outfit color palette"
+				accessibilityLabel={t("miniPalette.label")}
 			>
 				{colors.map((c) => (
 					<View

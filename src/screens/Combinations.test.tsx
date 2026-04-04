@@ -145,5 +145,4 @@ describe("Combinations", () => {
 		const yoursLabels = screen.queryAllByTestId("yours-label");
 		expect(yoursLabels.length).toBeGreaterThanOrEqual(1);
 	});
-
 });

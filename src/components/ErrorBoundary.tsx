@@ -1,6 +1,7 @@
 import { Component, type ReactNode } from "react";
 import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { i18n } from "@/i18n";
 
 export interface ErrorBoundaryProps {
 	children: ReactNode;
@@ -35,7 +36,7 @@ export class ErrorBoundary extends Component<
 				<SafeAreaView className="flex-1 bg-paper">
 					<View
 						className="flex-1 items-center justify-center px-6"
-						accessibilityLabel="Application error screen"
+						accessibilityLabel={i18n.t("error.screenLabel")}
 						accessibilityRole="alert"
 					>
 						<Text
@@ -49,20 +50,20 @@ export class ErrorBoundary extends Component<
 							allowFontScaling
 							className="font-sans text-[14px] text-secondary mt-3"
 						>
-							Something went wrong
+							{i18n.t("error.message")}
 						</Text>
 						<Pressable
 							testID="error-boundary-restart"
 							className="min-h-[48px] rounded-full bg-primary px-8 mt-6 items-center justify-center"
 							accessibilityRole="button"
-							accessibilityLabel="Restart"
+							accessibilityLabel={i18n.t("error.restart")}
 							onPress={() => this.setState({ hasError: false })}
 						>
 							<Text
 								allowFontScaling
 								className="font-sans text-[14px] text-paper font-medium"
 							>
-								Restart
+								{i18n.t("error.restart")}
 							</Text>
 						</Pressable>
 					</View>

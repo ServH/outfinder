@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Pressable } from "react-native";
 import Animated, {
 	useAnimatedStyle,
@@ -14,6 +15,7 @@ export interface ColorSwatchProps {
 }
 
 export function ColorSwatch({ color, onPress }: ColorSwatchProps) {
+	const { t } = useTranslation();
 	const scale = useSharedValue(1);
 	const reducedMotion = useReducedMotion();
 
@@ -39,7 +41,10 @@ export function ColorSwatch({ color, onPress }: ColorSwatchProps) {
 		<Pressable
 			testID={`color-swatch-${color.id}`}
 			accessibilityRole="button"
-			accessibilityLabel={`${color.nameEn}, ${color.combinationCount} combinations`}
+			accessibilityLabel={t("colorSwatch.label", {
+				name: color.nameEn,
+				count: color.combinationCount,
+			})}
 			onPress={() => onPress(color)}
 			onPressIn={handlePressIn}
 			onPressOut={handlePressOut}

@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, Pressable, Text, View } from "react-native";
 import { ComboCard } from "@/components/ComboCard";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
@@ -21,6 +22,7 @@ function ComboSeparator() {
 }
 
 export function Combinations({ route, navigation }: CombinationsProps) {
+	const { t } = useTranslation();
 	const { colorId } = route.params;
 	const color = getColor(colorId);
 	const combinations = getCombinations(colorId).sort(
@@ -70,12 +72,12 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 				testID="color-header"
 				className="flex-row items-center justify-between px-4 pt-4 pb-2"
 				style={{ paddingTop: 60 }}
-				accessibilityLabel={`${color.nameEn}, ${comboCount} ${comboCount === 1 ? "combination" : "combinations"}`}
+				accessibilityLabel={`${color.nameEn}, ${comboCount} ${t("combinations.combination", { count: comboCount })}`}
 			>
 				<Pressable
 					onPress={() => navigation.goBack()}
 					accessibilityRole="button"
-					accessibilityLabel="Go back"
+					accessibilityLabel={t("combinations.goBack")}
 					className="min-h-[48px] flex-1 flex-row items-center"
 					testID="combinations-back-button"
 				>
@@ -101,7 +103,7 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 					}}
 					testID="combo-count"
 				>
-					{comboCount} {comboCount === 1 ? "combo" : "combos"}
+					{comboCount} {t("combinations.combo", { count: comboCount })}
 				</Text>
 			</View>
 
@@ -130,7 +132,6 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 				onRestore={gate.handleRestore}
 				onDismiss={gate.handleDismiss}
 			/>
-
 		</View>
 	);
 }

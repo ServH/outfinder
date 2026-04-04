@@ -1,0 +1,177 @@
+{
+	"tabs": {
+		"colors": "Colors",
+		"favorites": "Favorites",
+		"settings": "Settings",
+		"colorsTab": "Colors tab",
+		"favoritesTab": "Favorites tab",
+		"settingsTab": "Settings tab"
+	},
+	"home": {
+		"title": "Outfinder",
+		"subtitle": "What color are you wearing?",
+		"browseAll": "Browse all 159 colors",
+		"allColors": "All 159\ncolors",
+		"backToFamilies": "Back to color families",
+		"noShades": "No combinations for this shade. Try another.",
+		"combo_one": "combo",
+		"combo_other": "combos"
+	},
+	"combinations": {
+		"goBack": "Go back",
+		"combo_one": "combo",
+		"combo_other": "combos",
+		"combination_one": "combination",
+		"combination_other": "combinations"
+	},
+	"visualizer": {
+		"goBack": "Go back",
+		"notFound": "Combination not found",
+		"screenLabel": "Outfit Visualizer screen",
+		"coachStep1": "Tap any garment to change its color",
+		"coachStep1Announce": "Tip: Tap any garment to change its color",
+		"coachStep2": "Use the arrows or swipe to change garments",
+		"coachStep2Announce": "Tip: Use the arrows or swipe to change garments",
+		"gotIt": "Got it",
+		"previousGarment": "Previous garment",
+		"nextGarment": "Next garment",
+		"shareLabel": "Share outfit image",
+		"shareButton": "Share Outfit",
+		"selectedForSwap": "Selected {{label}} for swap",
+		"swapResult": "{{selectedLabel}} is now {{newColorA}}, {{tappedLabel}} is now {{newColorB}}",
+		"changedTo": "Changed to {{label}}",
+		"shareError": "Unable to share",
+		"shareErrorBody": "Something went wrong generating the image. Please try again."
+	},
+	"favorites": {
+		"title": "Favorites",
+		"screenLabel": "Favorites List screen",
+		"sortRecent": "Recent",
+		"sortAZ": "A-Z",
+		"sortSize": "By size",
+		"sortRecentLabel": "Sort by recent",
+		"sortAZLabel": "Sort alphabetically",
+		"sortSizeLabel": "Sort by size",
+		"emptyTitle": "No favorites yet",
+		"emptySubtitle": "Pick a color, explore combinations, and tap \u2661 to save the ones you love"
+	},
+	"settings": {
+		"title": "Settings",
+		"screenLabel": "Settings screen",
+		"plans": "Plans",
+		"premiumActive": "Premium Active",
+		"premiumBadge": "Premium Active \u2713",
+		"freePlanLabel": "Free Plan, {{count}} of {{limit}} favorites used",
+		"freePlanBadge": "Free Plan \u00b7 {{count}} favorites",
+		"restorePurchases": "Restore Purchases",
+		"restored": "Restored!",
+		"upgradeToPremium": "Upgrade to Premium",
+		"about": "About",
+		"version": "Version",
+		"privacyPolicy": "Privacy Policy",
+		"support": "Support"
+	},
+	"paywall": {
+		"dismiss": "Dismiss paywall",
+		"yourCollection": "Your collection",
+		"savedCount": "\u2665 {{count}} saved",
+		"limitBadge": "{{count}} of {{limit}} free favorites used",
+		"lockedLabel": "Locked combination. Upgrade to save",
+		"headline": "Don't stop\ncollecting",
+		"body_one": "You've found {{count}} harmony worth keeping. There are {{remaining}} more combinations waiting to be discovered.",
+		"body_other": "You've found {{count}} harmonies worth keeping. There are {{remaining}} more combinations waiting to be discovered.",
+		"priceLabel": "{{price}}, one-time purchase",
+		"oneTime": "one time",
+		"purchasing": "Purchasing, please wait",
+		"unlockLabel": "Unlock unlimited favorites for {{price}}",
+		"unlockButton": "Unlock Unlimited",
+		"restoreButton": "Restore Purchase",
+		"restoring": "Restoring purchase, please wait",
+		"notNow": "Not now"
+	},
+	"comboCard": {
+		"combinationLabel": "{{name}} combination: {{colors}}",
+		"openHint": "Opens outfit visualizer",
+		"yours": "yours",
+		"seeOutfit": "See outfit"
+	},
+	"favoriteButton": {
+		"removeNamed": "Remove {{name}} from favorites",
+		"remove": "Remove from favorites",
+		"saveNamed": "Save {{name}} to favorites",
+		"save": "Save to favorites"
+	},
+	"error": {
+		"screenLabel": "Application error screen",
+		"message": "Something went wrong",
+		"restart": "Restart"
+	},
+	"swatchGroups": {
+		"all": "All",
+		"paleLight": "Pale & Light",
+		"redBrown": "Red & Brown",
+		"blueLavender": "Blue & Lavender",
+		"darkDeep": "Dark & Deep",
+		"vividBold": "Vivid & Bold",
+		"greenOlive": "Green & Olive"
+	},
+	"fabric": {
+		"white": "White",
+		"black": "Black",
+		"blue": "Blue",
+		"grey": "Grey",
+		"brown": "Brown",
+		"green": "Green",
+		"red": "Red",
+		"pink": "Pink",
+		"yellow": "Yellow",
+		"purple": "Purple",
+		"orange": "Orange",
+		"tapHint": "{{label}}, tap to see combinations"
+	},
+	"colorHeader": {
+		"combination_one": "combination",
+		"combination_other": "combinations"
+	},
+	"colorSwatch": {
+		"label": "{{name}}, {{count}} combinations"
+	},
+	"outfitCard": {
+		"tapToSwap": "{{garment}}, colored {{color}}, tap to select for swap",
+		"nextVariant": "Next variant",
+		"previousVariant": "Previous variant",
+		"cardLabel": "Outfit card"
+	},
+	"miniPalette": {
+		"label": "Outfit color palette"
+	},
+	"paletteStrip": {
+		"combinationLabel": "Combination: {{colors}}",
+		"selected": "Selected: {{name}}",
+		"viewCombinations": "View combinations for {{name}}",
+		"visualize": "Visualize outfit"
+	},
+	"shadePicker": {
+		"selected": "{{name}}, selected",
+		"tapToFilter": "{{name}}, tap to filter"
+	},
+	"wadaHeader": {
+		"labelFull": "{{nameJp}}, {{nameEn}}, {{count}} color Wada combination",
+		"labelJpOnly": "{{nameJp}}, {{count}} color Wada combination"
+	},
+	"browseAll": {
+		"screenLabel": "Browse All Colors screen",
+		"backLabel": "Back to Colors",
+		"backButton": "Colors"
+	},
+	"common": {
+		"goBack": "Go back"
+	},
+	"iap": {
+		"networkError": "Check your internet connection and try again.",
+		"storeUnavailable": "The App Store is temporarily unavailable. Try again later.",
+		"purchasesDisabled": "In-app purchases are disabled on this device.",
+		"genericError": "Something went wrong. Please try again.",
+		"noPreviousPurchase": "No previous purchase found for this Apple ID."
+	}
+}

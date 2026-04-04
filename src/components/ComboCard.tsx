@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { SymbolView } from "expo-symbols";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 import type { Combination } from "@/data/types";
 import { isLightColor } from "@/lib/color";
@@ -30,6 +31,7 @@ export function ComboCard({
 	onToggleFavorite,
 	onPremiumGate,
 }: ComboCardProps) {
+	const { t } = useTranslation();
 	const navigation = useNavigation<ComboCardNav>();
 	const isFull = variant === "full";
 	const stripHeight = isFull ? 60 : 52;
@@ -51,8 +53,11 @@ export function ComboCard({
 		<Pressable
 			testID={`combo-card-${combination.id}`}
 			accessibilityRole="button"
-			accessibilityLabel={`${combination.nameEn} combination: ${colorNames}`}
-			accessibilityHint="Opens outfit visualizer"
+			accessibilityLabel={t("comboCard.combinationLabel", {
+				name: combination.nameEn,
+				colors: colorNames,
+			})}
+			accessibilityHint={t("comboCard.openHint")}
 			onPress={handleCardPress}
 		>
 			<View
@@ -90,7 +95,7 @@ export function ComboCard({
 											}}
 											testID="yours-label"
 										>
-											yours
+											{t("comboCard.yours")}
 										</Text>
 									</View>
 								)}
@@ -153,7 +158,7 @@ export function ComboCard({
 											marginLeft: 4,
 										}}
 									>
-										See outfit
+										{t("comboCard.seeOutfit")}
 									</Text>
 								</View>
 							</View>

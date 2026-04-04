@@ -1,0 +1,177 @@
+{
+	"tabs": {
+		"colors": "Colores",
+		"favorites": "Favoritos",
+		"settings": "Ajustes",
+		"colorsTab": "Pesta\u00f1a Colores",
+		"favoritesTab": "Pesta\u00f1a Favoritos",
+		"settingsTab": "Pesta\u00f1a Ajustes"
+	},
+	"home": {
+		"title": "Outfinder",
+		"subtitle": "\u00bfDe qu\u00e9 color es tu ropa hoy?",
+		"browseAll": "Ver catálogo",
+		"allColors": "Ver\ncatálogo",
+		"backToFamilies": "Volver a las familias",
+		"noShades": "Sin combinaciones para este tono. Prueba otro.",
+		"combo_one": "combo",
+		"combo_other": "combos"
+	},
+	"combinations": {
+		"goBack": "Volver",
+		"combo_one": "combo",
+		"combo_other": "combos",
+		"combination_one": "combinaci\u00f3n",
+		"combination_other": "combinaciones"
+	},
+	"visualizer": {
+		"goBack": "Volver",
+		"notFound": "Combinaci\u00f3n no encontrada",
+		"screenLabel": "Pantalla del Visualizador",
+		"coachStep1": "Toca cualquier prenda para cambiar su color",
+		"coachStep1Announce": "Consejo: Toca cualquier prenda para cambiar su color",
+		"coachStep2": "Usa las flechas o desliza para cambiar las prendas",
+		"coachStep2Announce": "Consejo: Usa las flechas o desliza para cambiar las prendas",
+		"gotIt": "Entendido",
+		"previousGarment": "Prenda anterior",
+		"nextGarment": "Prenda siguiente",
+		"shareLabel": "Compartir imagen del outfit",
+		"shareButton": "Compartir Outfit",
+		"selectedForSwap": "{{label}} seleccionada para intercambio",
+		"swapResult": "{{selectedLabel}} ahora es {{newColorA}}, {{tappedLabel}} ahora es {{newColorB}}",
+		"changedTo": "Cambiado a {{label}}",
+		"shareError": "No se puede compartir",
+		"shareErrorBody": "Algo sali\u00f3 mal al generar la imagen. Int\u00e9ntalo de nuevo."
+	},
+	"favorites": {
+		"title": "Favoritos",
+		"screenLabel": "Pantalla de Favoritos",
+		"sortRecent": "Reciente",
+		"sortAZ": "A-Z",
+		"sortSize": "Por tama\u00f1o",
+		"sortRecentLabel": "Ordenar por reciente",
+		"sortAZLabel": "Ordenar alfab\u00e9ticamente",
+		"sortSizeLabel": "Ordenar por tama\u00f1o",
+		"emptyTitle": "Sin favoritos a\u00fan",
+		"emptySubtitle": "Elige un color, explora combinaciones y toca \u2661 para guardar las que te gusten"
+	},
+	"settings": {
+		"title": "Ajustes",
+		"screenLabel": "Pantalla de Ajustes",
+		"plans": "Planes",
+		"premiumActive": "Premium Activo",
+		"premiumBadge": "Premium Activo \u2713",
+		"freePlanLabel": "Plan Gratuito, {{count}} de {{limit}} favoritos usados",
+		"freePlanBadge": "Plan Gratuito \u00b7 {{count}} favoritos",
+		"restorePurchases": "Restaurar Compras",
+		"restored": "\u00a1Restaurado!",
+		"upgradeToPremium": "Actualizar a Premium",
+		"about": "Acerca de",
+		"version": "Versi\u00f3n",
+		"privacyPolicy": "Pol\u00edtica de Privacidad",
+		"support": "Soporte"
+	},
+	"paywall": {
+		"dismiss": "Cerrar paywall",
+		"yourCollection": "Tu colecci\u00f3n",
+		"savedCount": "\u2665 {{count}} guardados",
+		"limitBadge": "{{count}} de {{limit}} favoritos gratuitos usados",
+		"lockedLabel": "Combinaci\u00f3n bloqueada. Actualiza para guardar",
+		"headline": "No pares\nde coleccionar",
+		"body_one": "Encontraste {{count}} armon\u00eda que vale la pena guardar. Hay {{remaining}} combinaciones m\u00e1s esperando ser descubiertas.",
+		"body_other": "Encontraste {{count}} armon\u00edas que vale la pena guardar. Hay {{remaining}} combinaciones m\u00e1s esperando ser descubiertas.",
+		"priceLabel": "{{price}}, compra \u00fanica",
+		"oneTime": "una vez",
+		"purchasing": "Comprando, por favor espera",
+		"unlockLabel": "Desbloquea favoritos ilimitados por {{price}}",
+		"unlockButton": "Desbloquear Todo",
+		"restoreButton": "Restaurar Compra",
+		"restoring": "Restaurando compra, por favor espera",
+		"notNow": "Ahora no"
+	},
+	"comboCard": {
+		"combinationLabel": "Combinaci\u00f3n {{name}}: {{colors}}",
+		"openHint": "Abre el visualizador de outfits",
+		"yours": "tu tono",
+		"seeOutfit": "Ver outfit"
+	},
+	"favoriteButton": {
+		"removeNamed": "Quitar {{name}} de favoritos",
+		"remove": "Quitar de favoritos",
+		"saveNamed": "Guardar {{name}} en favoritos",
+		"save": "Guardar en favoritos"
+	},
+	"error": {
+		"screenLabel": "Pantalla de error de la aplicaci\u00f3n",
+		"message": "Algo sali\u00f3 mal",
+		"restart": "Reiniciar"
+	},
+	"swatchGroups": {
+		"all": "Todos",
+		"paleLight": "P\u00e1lidos y Claros",
+		"redBrown": "Rojos y Marrones",
+		"blueLavender": "Azules y Lavanda",
+		"darkDeep": "Oscuros y Profundos",
+		"vividBold": "V\u00edvidos y Atrevidos",
+		"greenOlive": "Verdes y Olivas"
+	},
+	"fabric": {
+		"white": "Blanco",
+		"black": "Negro",
+		"blue": "Azul",
+		"grey": "Gris",
+		"brown": "Marr\u00f3n",
+		"green": "Verde",
+		"red": "Rojo",
+		"pink": "Rosa",
+		"yellow": "Amarillo",
+		"purple": "Morado",
+		"orange": "Naranja",
+		"tapHint": "{{label}}, toca para ver combinaciones"
+	},
+	"colorHeader": {
+		"combination_one": "combinaci\u00f3n",
+		"combination_other": "combinaciones"
+	},
+	"colorSwatch": {
+		"label": "{{name}}, {{count}} combinaciones"
+	},
+	"outfitCard": {
+		"tapToSwap": "{{garment}}, de color {{color}}, toca para seleccionar para intercambio",
+		"nextVariant": "Siguiente variante",
+		"previousVariant": "Variante anterior",
+		"cardLabel": "Tarjeta de outfit"
+	},
+	"miniPalette": {
+		"label": "Paleta de colores del outfit"
+	},
+	"paletteStrip": {
+		"combinationLabel": "Combinaci\u00f3n: {{colors}}",
+		"selected": "Seleccionado: {{name}}",
+		"viewCombinations": "Ver combinaciones para {{name}}",
+		"visualize": "Visualizar outfit"
+	},
+	"shadePicker": {
+		"selected": "{{name}}, seleccionado",
+		"tapToFilter": "{{name}}, toca para filtrar"
+	},
+	"wadaHeader": {
+		"labelFull": "{{nameJp}}, {{nameEn}}, combinaci\u00f3n Wada de {{count}} colores",
+		"labelJpOnly": "{{nameJp}}, combinaci\u00f3n Wada de {{count}} colores"
+	},
+	"browseAll": {
+		"screenLabel": "Pantalla de Todos los Colores",
+		"backLabel": "Volver a Colores",
+		"backButton": "Colores"
+	},
+	"common": {
+		"goBack": "Volver"
+	},
+	"iap": {
+		"networkError": "Comprueba tu conexión a internet e inténtalo de nuevo.",
+		"storeUnavailable": "La App Store no está disponible temporalmente. Inténtalo más tarde.",
+		"purchasesDisabled": "Las compras integradas están desactivadas en este dispositivo.",
+		"genericError": "Algo salió mal. Por favor inténtalo de nuevo.",
+		"noPreviousPurchase": "No se encontró ninguna compra anterior para este Apple ID."
+	}
+}

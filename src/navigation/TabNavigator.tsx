@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SymbolView } from "expo-symbols";
+import { useTranslation } from "react-i18next";
 
 import { wadaTokens } from "@/styles/theme";
 
@@ -11,6 +12,7 @@ import type { TabParamList } from "./types";
 const Tab = createBottomTabNavigator<TabParamList>();
 
 export function TabNavigator() {
+	const { t } = useTranslation();
 	return (
 		<Tab.Navigator
 			screenOptions={{
@@ -28,33 +30,33 @@ export function TabNavigator() {
 				name="ColorsTab"
 				component={ColorsStack}
 				options={{
-					tabBarLabel: "Colors",
+					tabBarLabel: t("tabs.colors"),
 					tabBarIcon: ({ color, size }) => (
 						<SymbolView name="paintpalette" tintColor={color} size={size} />
 					),
-					tabBarAccessibilityLabel: "Colors tab",
+					tabBarAccessibilityLabel: t("tabs.colorsTab"),
 				}}
 			/>
 			<Tab.Screen
 				name="FavoritesTab"
 				component={FavoritesStack}
 				options={{
-					tabBarLabel: "Favorites",
+					tabBarLabel: t("tabs.favorites"),
 					tabBarIcon: ({ color, size }) => (
 						<SymbolView name="heart" tintColor={color} size={size} />
 					),
-					tabBarAccessibilityLabel: "Favorites tab",
+					tabBarAccessibilityLabel: t("tabs.favoritesTab"),
 				}}
 			/>
 			<Tab.Screen
 				name="SettingsTab"
 				component={SettingsStack}
 				options={{
-					tabBarLabel: "Settings",
+					tabBarLabel: t("tabs.settings"),
 					tabBarIcon: ({ color, size }) => (
 						<SymbolView name="gearshape" tintColor={color} size={size} />
 					),
-					tabBarAccessibilityLabel: "Settings tab",
+					tabBarAccessibilityLabel: t("tabs.settingsTab"),
 				}}
 			/>
 		</Tab.Navigator>

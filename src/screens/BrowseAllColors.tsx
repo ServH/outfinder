@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 import { SwatchGroup } from "@/components/SwatchGroup";
 import { SwatchGroupTabs } from "@/components/SwatchGroupTabs";
@@ -16,6 +17,7 @@ type BrowseAllColorsNav = NativeStackNavigationProp<
 >;
 
 export function BrowseAllColors() {
+	const { t } = useTranslation();
 	const [activeGroup, setActiveGroup] = useState("all");
 	const navigation = useNavigation<BrowseAllColorsNav>();
 
@@ -30,7 +32,10 @@ export function BrowseAllColors() {
 	}
 
 	return (
-		<View className="flex-1 bg-paper" accessibilityLabel="Browse All Colors screen">
+		<View
+			className="flex-1 bg-paper"
+			accessibilityLabel={t("browseAll.screenLabel")}
+		>
 			<View
 				className="flex-row items-center px-4 pt-4 pb-2"
 				style={{ paddingTop: 60 }}
@@ -38,7 +43,7 @@ export function BrowseAllColors() {
 				<Pressable
 					onPress={() => navigation.goBack()}
 					accessibilityRole="button"
-					accessibilityLabel="Back to Colors"
+					accessibilityLabel={t("browseAll.backLabel")}
 					className="min-h-[48px] flex-1 flex-row items-center"
 					testID="browse-back-button"
 				>
@@ -52,7 +57,7 @@ export function BrowseAllColors() {
 							color: wadaTokens.textPrimary,
 						}}
 					>
-						← Colors
+						← {t("browseAll.backButton")}
 					</Text>
 				</Pressable>
 			</View>

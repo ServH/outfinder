@@ -1,3 +1,4 @@
+import "./src/i18n"; // Must be FIRST import — initializes i18n synchronously before components render
 import "./src/global.css";
 
 import { Inter_400Regular, Inter_500Medium } from "@expo-google-fonts/inter";

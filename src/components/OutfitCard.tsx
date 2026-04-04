@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -44,8 +45,12 @@ function CardSlot({
 	onTap,
 	onVariantCycle,
 }: CardSlotProps) {
+	const { t } = useTranslation();
 	const config = GARMENT_REGISTRY[slot.garmentType];
-	const label = `${config.label}, colored ${slot.color.nameEn}, tap to select for swap`;
+	const label = t("outfitCard.tapToSwap", {
+		garment: config.label,
+		color: slot.color.nameEn,
+	});
 	const reducedMotion = useReducedMotion();
 
 	const underlineOpacity = useSharedValue(0);
@@ -134,8 +139,8 @@ function CardSlot({
 					accessibilityLabel={label}
 					accessibilityState={{ selected: isSelected }}
 					accessibilityActions={[
-						{ name: "increment", label: "Next variant" },
-						{ name: "decrement", label: "Previous variant" },
+						{ name: "increment", label: t("outfitCard.nextVariant") },
+						{ name: "decrement", label: t("outfitCard.previousVariant") },
 					]}
 					onAccessibilityAction={(event) => {
 						if (event.nativeEvent.actionName === "increment") {
@@ -190,9 +195,10 @@ export function OutfitCard({
 	onSlotTap,
 	onVariantCycle,
 }: OutfitCardProps) {
+	const { t } = useTranslation();
 	return (
 		<View
-			accessibilityLabel="Outfit card"
+			accessibilityLabel={t("outfitCard.cardLabel")}
 			style={{
 				backgroundColor: wadaTokens.bgPaper,
 				borderRadius: 16,
