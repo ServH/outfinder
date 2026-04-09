@@ -69,7 +69,8 @@
 		"about": "About",
 		"version": "Version",
 		"privacyPolicy": "Privacy Policy",
-		"support": "Support"
+		"support": "Support",
+		"rateApp": "Share Your Feedback"
 	},
 	"paywall": {
 		"dismiss": "Dismiss paywall",
