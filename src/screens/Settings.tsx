@@ -15,6 +15,7 @@ import { useFavorites } from "@/contexts/FavoritesContext";
 import { usePremium } from "@/contexts/PremiumContext";
 import { getRestoreErrorMessage, usePremiumGate } from "@/hooks/usePremiumGate";
 import { useIsIPad } from "@/lib/device";
+import { openAppStoreReview } from "@/lib/storeReview";
 import { wadaTokens } from "@/styles/theme";
 
 const PRIVACY_URL = "https://servh.github.io/outfinder-legal/";
@@ -322,6 +323,31 @@ export function Settings(_props: SettingsProps) {
 									className="font-sans text-[14px] text-primary"
 								>
 									{t("settings.support")}
+								</Text>
+								<Text
+									allowFontScaling
+									className="font-sans text-[14px] text-tertiary"
+								>
+									›
+								</Text>
+							</Pressable>
+
+							{/* Divider */}
+							<View className="h-[1px] bg-divider mx-4" />
+
+							{/* Rate App row */}
+							<Pressable
+								testID="settings-rate-app-row"
+								className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+								accessibilityRole="link"
+								accessibilityLabel={t("settings.rateApp")}
+								onPress={openAppStoreReview}
+							>
+								<Text
+									allowFontScaling
+									className="font-sans text-[14px] text-primary"
+								>
+									{t("settings.rateApp")}
 								</Text>
 								<Text
 									allowFontScaling

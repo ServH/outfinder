@@ -1,10 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { RouteProp } from "@react-navigation/native";
-import {
-	useNavigation,
-	useNavigationState,
-	useRoute,
-} from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -33,6 +29,7 @@ import { WadaHeader } from "@/components/WadaHeader";
 import { WarmBackground } from "@/components/WarmBackground";
 import { getColor, getCombination } from "@/data/colorIndex";
 import { getCycleForGarment, useOutfitState } from "@/hooks/useOutfitState";
+import { useStoreReviewPrompt } from "@/hooks/useStoreReviewPrompt";
 import { useIsIPad } from "@/lib/device";
 import { hapticLight, hapticMedium, hapticRigid } from "@/lib/haptics";
 import { shareOutfit } from "@/lib/share";
@@ -61,9 +58,11 @@ export function OutfitVisualizer() {
 	const isTablet = useIsIPad();
 	const route = useRoute<OutfitVisualizerRoute>();
 	const navigation = useNavigation();
-	const prevRoute = useNavigationState((state) =>
-		state.index > 0 ? state.routes[state.index - 1] : undefined,
-	);
+	const stackState = navigation.getState();
+	const prevRoute =
+		stackState && stackState.index > 0
+			? stackState.routes[stackState.index - 1]
+			: undefined;
 	const { combinationId } = route.params;
 	const combination = getCombination(combinationId);
 
@@ -269,6 +268,9 @@ export function OutfitVisualizer() {
 			t("visualizer.changedTo", { label: newLabel }),
 		);
 	}, [selectedSlotIndex, slots, cycleVariant, t]);
+
+	// Trigger in-app review sheet on 2nd Visualizer visit (must be before early return)
+	useStoreReviewPrompt();
 
 	if (!combination) {
 		return (
