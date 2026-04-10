@@ -15,7 +15,9 @@ export function TabNavigator() {
 	const { t } = useTranslation();
 	return (
 		<Tab.Navigator
+			detachInactiveScreens={false}
 			screenOptions={{
+				lazy: false,
 				headerShown: false,
 				animation: "fade",
 				tabBarStyle: {

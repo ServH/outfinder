@@ -1,3 +1,4 @@
+import { getLocales } from "expo-localization";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
@@ -10,8 +11,9 @@ const DEBUG_LANGUAGE: "es" | "en" | null = null;
 export function detectLanguage(): string {
 	if (DEBUG_LANGUAGE) return DEBUG_LANGUAGE;
 	try {
-		const locale = Intl.DateTimeFormat().resolvedOptions().locale;
-		return locale.startsWith("es") ? "es" : "en";
+		const locales = getLocales();
+		const languageCode = locales[0]?.languageCode ?? "en";
+		return languageCode === "es" ? "es" : "en";
 	} catch {
 		return "en";
 	}
