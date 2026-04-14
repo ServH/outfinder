@@ -174,5 +174,16 @@
 		"purchasesDisabled": "Las compras integradas están desactivadas en este dispositivo.",
 		"genericError": "Algo salió mal. Por favor inténtalo de nuevo.",
 		"noPreviousPurchase": "No se encontró ninguna compra anterior para este Apple ID."
+	},
+	"colorCapture": {
+		"cameraButtonLabel": "Abrir cámara para identificar el color de la prenda",
+		"captureButtonLabel": "Tomar foto",
+		"overlayHint": "Busca luz natural · Centra la prenda",
+		"permissionDenied": "Se necesita acceso a la cámara para identificar colores de prendas.",
+		"wbSliderLabel": "Temperatura del balance de blancos",
+		"analyzing0": "Buscando tu combinación Wada...",
+		"analyzing1": "Calibrando los tonos de color...",
+		"analyzing2": "Consultando la paleta de 1933...",
+		"analyzing3": "Buscando tu armonía..."
 	}
 }

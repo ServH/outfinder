@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { SymbolView } from "expo-symbols";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -151,6 +152,11 @@ export function ColorHome() {
 	function handleBrowseAllPress() {
 		hapticLight();
 		navigation.push("BrowseAllColors");
+	}
+
+	function handleCameraPress() {
+		hapticLight();
+		navigation.push("CaptureScreen");
 	}
 
 	const handleScroll = RNAnimated.event(
@@ -615,6 +621,35 @@ export function ColorHome() {
 					)}
 				</Animated.View>
 			)}
+
+			{/* Camera entry point button */}
+			<Pressable
+				onPress={handleCameraPress}
+				accessibilityRole="button"
+				accessibilityLabel={t("colorCapture.cameraButtonLabel")}
+				className="absolute items-center justify-center rounded-full bg-elevated"
+				style={{
+					bottom: 96,
+					right: 20,
+					width: 48,
+					height: 48,
+					shadowColor: "#000",
+					shadowOpacity: 0.12,
+					shadowRadius: 8,
+					shadowOffset: { width: 0, height: 2 },
+					elevation: 3,
+				}}
+				testID="camera-button"
+			>
+				{({ pressed }) => (
+					<View
+						className="flex-1 items-center justify-center rounded-full"
+						style={{ opacity: pressed ? 0.7 : 1 }}
+					>
+						<SymbolView name="camera" size={24} tintColor="#1c1c1e" />
+					</View>
+				)}
+			</Pressable>
 
 			{/* Premium paywall modal */}
 			<PremiumPaywall

@@ -1,6 +1,7 @@
 export type ColorsStackParamList = {
 	ColorHome: undefined;
 	BrowseAllColors: undefined;
+	CaptureScreen: undefined;
 	Combinations: { colorId: string };
 	OutfitVisualizer: { combinationId: string };
 };

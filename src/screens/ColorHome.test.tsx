@@ -385,6 +385,29 @@ describe("ColorHome", () => {
 		).toBeTruthy();
 		expect(screen.queryByTestId("combo-feed")).toBeNull();
 	});
+
+	// === Camera button tests ===
+
+	it("renders camera button on State 1", () => {
+		render(<ColorHome />);
+		expect(screen.getByTestId("camera-button")).toBeTruthy();
+	});
+
+	it("camera button has correct accessibilityRole and label", () => {
+		render(<ColorHome />);
+		const btn = screen.getByTestId("camera-button");
+		expect(btn.props.accessibilityRole).toBe("button");
+		expect(btn.props.accessibilityLabel).toBe(
+			"Open camera to identify garment color",
+		);
+	});
+
+	it("tapping camera button fires hapticLight and navigates to CaptureScreen", () => {
+		render(<ColorHome />);
+		fireEvent.press(screen.getByTestId("camera-button"));
+		expect(hapticLight).toHaveBeenCalled();
+		expect(mockPush).toHaveBeenCalledWith("CaptureScreen");
+	});
 });
 
 // === Reduced motion tests ===

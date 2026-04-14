@@ -174,5 +174,16 @@
 		"purchasesDisabled": "In-app purchases are disabled on this device.",
 		"genericError": "Something went wrong. Please try again.",
 		"noPreviousPurchase": "No previous purchase found for this Apple ID."
+	},
+	"colorCapture": {
+		"cameraButtonLabel": "Open camera to identify garment color",
+		"captureButtonLabel": "Take photo",
+		"overlayHint": "Find natural light · Center the garment",
+		"permissionDenied": "Camera access is required to identify garment colors.",
+		"wbSliderLabel": "White balance temperature",
+		"analyzing0": "Finding your Wada combination...",
+		"analyzing1": "Calibrating colour tones...",
+		"analyzing2": "Consulting the 1933 palette...",
+		"analyzing3": "Searching for your harmony..."
 	}
 }

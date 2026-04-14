@@ -1,0 +1,19 @@
+# Deferred Work
+
+## Deferred from: code review of 12-1-color-math-foundation (2026-04-14)
+
+- D1: `WADA_COLORS_WITH_LAB` module-load risk if `getAllColors()` throws — pre-existing architectural pattern across the app; consider lazy initialization or error boundary in a future hardening story
+- D2: `WadaMatch.color` carries hidden `lab` field at runtime (WadaColorWithLab structural type leak) — no functional impact in current stories; consider stripping the field in a future type-hygiene pass
+- D3: `rgbToLinear` / `linearRgbToXyz` accept out-of-range values via direct API call — negligible risk if P1 (hexToRgb guard) is applied; revisit if these functions are ever called outside the hexToLab pipeline
+- D4: "neon green out-of-coverage" test in `colorMatch.test.ts` is a fragile dataset assertion — correct today but would break if palette ever gains a neon green entry; refactor to use mock match list instead of real data
+
+## Deferred from: code review of 12-2-camera-entry-point-capture-screen (2026-04-14)
+
+- D5: `CaptureScreen` — WB temperature state not wired to `CameraView`; `expo-camera` 55 doesn't support native WB control on device; `wbTemperature` is a session-local value intended for Story 12.3 analysis pipeline
+- D6: `CaptureScreen` — `console.log("[CaptureScreen] photo URI:", photo.uri)` lacks `__DEV__` guard; explicit placeholder per AC #6 spec; replaced by Story 12.3 AnalysisOverlay wiring
+- D7: `CaptureScreen` — silent null ref on `cameraRef.current?.takePictureAsync`; optional chaining masks null; placeholder behavior until Story 12.3 replaces entire takePicture flow
+- D8: `CaptureScreen` — no AppState/useFocusEffect handler to pause camera when app goes to background; camera lifecycle managed by RN unmount; UX polish candidate
+- D9: `CaptureScreen.test.tsx` — tests hardcode English translation strings; established project pattern; stable i18n keys
+- D10: `CaptureScreen` — permission-loading state shows blank black screen with no spinner or text; near-instantaneous in practice; UX polish candidate
+- D11: `ColorsStack.tsx` — `animation: "fade"` default stack option may visually conflict with `fullScreenModal`; fullScreenModal overrides animation on iOS natively; no functional impact confirmed
+- D12: `CaptureScreen` — no explicit camera teardown on `goBack()`; expo-camera CameraView tears down automatically on unmount; React Navigation ensures unmount

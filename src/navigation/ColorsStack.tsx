@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { BrowseAllColors } from "@/screens/BrowseAllColors";
+import { CaptureScreen } from "@/screens/CaptureScreen";
 import { ColorHome } from "@/screens/ColorHome";
 import { Combinations } from "@/screens/Combinations";
 import { OutfitVisualizer } from "@/screens/OutfitVisualizer";
@@ -22,6 +23,11 @@ export function ColorsStack() {
 				name="BrowseAllColors"
 				component={BrowseAllColors}
 				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="CaptureScreen"
+				component={CaptureScreen}
+				options={{ headerShown: false, presentation: "fullScreenModal" }}
 			/>
 			<Stack.Screen
 				name="Combinations"
