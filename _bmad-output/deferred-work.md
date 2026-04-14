@@ -17,3 +17,9 @@
 - D10: `CaptureScreen` — permission-loading state shows blank black screen with no spinner or text; near-instantaneous in practice; UX polish candidate
 - D11: `ColorsStack.tsx` — `animation: "fade"` default stack option may visually conflict with `fullScreenModal`; fullScreenModal overrides animation on iOS natively; no functional impact confirmed
 - D12: `CaptureScreen` — no explicit camera teardown on `goBack()`; expo-camera CameraView tears down automatically on unmount; React Navigation ensures unmount
+
+## Deferred from: code review of 12-3-native-wb-module-analysis-pipeline (2026-04-14)
+
+- D13: `WhiteBalanceModule.swift` — temp JPEG files written to `FileManager.default.temporaryDirectory` are never explicitly deleted; iOS GC handles periodically; one photo per session makes disk impact negligible
+- D14: `modules/white-balance/src/index.ts` — `requireNativeModule("WhiteBalance")` called at module load time; will crash if native module not linked; guarded by prebuild requirement in story task 1.5
+- D15: `AnalysisOverlay.tsx` — `msgIndex` not reset to 0 when `visible` goes false; overlay resumes from last message index on re-show; spec does not require starting from message 0

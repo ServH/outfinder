@@ -1,5 +1,11 @@
-import { fireEvent, render, screen } from "@testing-library/react-native";
-import { hapticLight } from "@/lib/haptics";
+import {
+	act,
+	fireEvent,
+	render,
+	screen,
+	waitFor,
+} from "@testing-library/react-native";
+import { hapticLight, hapticMedium } from "@/lib/haptics";
 import { CaptureScreen } from "./CaptureScreen";
 
 // Mock expo-camera
@@ -8,14 +14,27 @@ let mockPermission: {
 	canAskAgain: boolean;
 } | null = { granted: true, canAskAgain: true };
 const mockRequestPermission = jest.fn().mockResolvedValue({ granted: true });
+const mockTakePictureAsync = jest
+	.fn()
+	.mockResolvedValue({ uri: "file:///mock-photo.jpg" });
 
-jest.mock("expo-camera", () => ({
-	CameraView: ({ testID }: { testID?: string }) => {
-		const { View } = require("react-native");
-		return <View testID={testID ?? "camera-view"} />;
-	},
-	useCameraPermissions: () => [mockPermission, mockRequestPermission],
-}));
+jest.mock("expo-camera", () => {
+	const React = require("react");
+	const { View } = require("react-native");
+	const CameraView = React.forwardRef(
+		({ testID }: { testID?: string }, ref: React.Ref<unknown>) => {
+			React.useImperativeHandle(ref, () => ({
+				takePictureAsync: mockTakePictureAsync,
+			}));
+			return <View testID={testID ?? "camera-view"} />;
+		},
+	);
+	CameraView.displayName = "CameraView";
+	return {
+		CameraView,
+		useCameraPermissions: () => [mockPermission, mockRequestPermission],
+	};
+});
 
 // Mock @react-native-community/slider
 jest.mock("@react-native-community/slider", () => {
@@ -39,21 +58,57 @@ jest.mock("expo-symbols", () => ({
 
 // Mock navigation
 const mockGoBack = jest.fn();
+const mockPush = jest.fn();
 jest.mock("@react-navigation/native", () => ({
-	useNavigation: () => ({ goBack: mockGoBack }),
+	useNavigation: () => ({ goBack: mockGoBack, push: mockPush }),
 }));
 
 // Mock haptics
 jest.mock("@/lib/haptics", () => ({
 	hapticLight: jest.fn(),
+	hapticMedium: jest.fn(),
+}));
+
+// Mock white-balance native module
+jest.mock("../../modules/white-balance", () => ({
+	applyWhiteBalance: jest
+		.fn()
+		.mockImplementation((uri: string) => Promise.resolve(uri)),
+}));
+
+// Mock react-native-image-colors
+jest.mock("react-native-image-colors", () => ({
+	getColors: jest.fn().mockResolvedValue({
+		platform: "ios",
+		primary: "#5A3E2B",
+		secondary: "#A07050",
+		background: "#F0E8D8",
+		detail: "#C09070",
+	}),
+}));
+
+// Track AnalysisOverlay visible prop history across renders
+const mockOverlayVisibleCalls = jest.fn<void, [boolean]>();
+
+// Mock AnalysisOverlay (Skia dependency)
+jest.mock("@/components/AnalysisOverlay", () => ({
+	AnalysisOverlay: ({ visible }: { visible: boolean }) => {
+		mockOverlayVisibleCalls(visible);
+		const { View } = require("react-native");
+		return visible ? <View testID="analysis-overlay-mock" /> : null;
+	},
 }));
 
 describe("CaptureScreen — permission granted", () => {
 	beforeEach(() => {
 		mockPermission = { granted: true, canAskAgain: true };
 		mockGoBack.mockClear();
+		mockPush.mockClear();
 		mockRequestPermission.mockClear();
 		(hapticLight as jest.Mock).mockClear();
+		(hapticMedium as jest.Mock).mockClear();
+		mockTakePictureAsync.mockClear();
+		mockOverlayVisibleCalls.mockClear();
 	});
 
 	it("renders camera view when permission is granted", () => {
@@ -64,7 +119,6 @@ describe("CaptureScreen — permission granted", () => {
 
 	it("renders overlay hint text (AC #4)", () => {
 		render(<CaptureScreen />);
-		// accessibilityElementsHidden requires includeHiddenElements: true
 		expect(
 			screen.getByTestId("overlay-hint", { includeHiddenElements: true }),
 		).toBeTruthy();
@@ -96,14 +150,8 @@ describe("CaptureScreen — permission granted", () => {
 
 	it("tapping sun icon toggles WB slider (AC #5)", () => {
 		render(<CaptureScreen />);
-
-		// Slider hidden initially
 		expect(screen.queryByTestId("wb-slider-container")).toBeNull();
-
-		// Tap sun icon
 		fireEvent.press(screen.getByTestId("wb-toggle-button"));
-
-		// Slider visible
 		expect(screen.getByTestId("wb-slider-container")).toBeTruthy();
 		expect(screen.getByTestId("wb-slider")).toBeTruthy();
 	});
@@ -119,7 +167,6 @@ describe("CaptureScreen — permission granted", () => {
 		render(<CaptureScreen />);
 		fireEvent.press(screen.getByTestId("wb-toggle-button"));
 		expect(screen.getByTestId("wb-slider-container")).toBeTruthy();
-
 		fireEvent.press(screen.getByTestId("wb-toggle-button"));
 		expect(screen.queryByTestId("wb-slider-container")).toBeNull();
 	});
@@ -130,10 +177,10 @@ describe("CaptureScreen — permission granted", () => {
 		expect(btn.props.accessibilityLabel).toBe("White balance temperature");
 	});
 
-	it("tapping capture button fires hapticLight (AC #6)", () => {
+	it("tapping capture button fires hapticMedium (AC #5 — Story 12.3)", () => {
 		render(<CaptureScreen />);
 		fireEvent.press(screen.getByTestId("capture-button"));
-		expect(hapticLight as jest.Mock).toHaveBeenCalledTimes(1);
+		expect(hapticMedium as jest.Mock).toHaveBeenCalledTimes(1);
 	});
 
 	it("slider value change updates temperature label (AC #5)", () => {
@@ -141,6 +188,57 @@ describe("CaptureScreen — permission granted", () => {
 		fireEvent.press(screen.getByTestId("wb-toggle-button"));
 		fireEvent(screen.getByTestId("wb-slider"), "valueChange", 3000);
 		expect(screen.getByText("3000K")).toBeTruthy();
+	});
+
+	it("AnalysisOverlay receives visible=true during capture pipeline (AC #3)", async () => {
+		render(<CaptureScreen />);
+		mockOverlayVisibleCalls.mockClear();
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("capture-button"));
+		});
+
+		// After full pipeline completion, verify overlay was true at some point
+		await waitFor(() => {
+			const trueCalls = mockOverlayVisibleCalls.mock.calls.filter(
+				([v]) => v === true,
+			);
+			expect(trueCalls.length).toBeGreaterThan(0);
+		});
+	});
+
+	it("pipeline succeeds: no error shown to user (AC #3, #5)", async () => {
+		render(<CaptureScreen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("capture-button"));
+		});
+
+		// After successful pipeline: overlay dismissed, no error regardless of match type
+		await waitFor(() => {
+			expect(screen.queryByTestId("analysis-overlay-mock")).toBeNull();
+			expect(screen.queryByTestId("analysis-error-container")).toBeNull();
+		});
+	});
+
+	it("shows analysis error text when applyWhiteBalance throws (AC #6)", async () => {
+		const { applyWhiteBalance } = require("../../modules/white-balance");
+		(applyWhiteBalance as jest.Mock).mockRejectedValueOnce(
+			new Error("WB module error"),
+		);
+
+		render(<CaptureScreen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("capture-button"));
+		});
+
+		await waitFor(() => {
+			expect(screen.getByTestId("analysis-error-container")).toBeTruthy();
+			expect(
+				screen.getByText("Could not analyse the photo. Please try again."),
+			).toBeTruthy();
+		});
 	});
 });
 

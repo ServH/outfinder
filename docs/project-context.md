@@ -48,8 +48,8 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 - **Epic 9: DONE** — Favorites redesign (9.1 2-col grid + ComboCard compact, 9.2 Sort pills + empty state)
 - **Story 10.1: DONE** — Visualizer adjustments (nameEn in WadaHeader + dynamic nav title)
 - **Epic 11: DONE** — Story 11.1: Onboarding v2 (coach marks + permanent arrows). Story 11.2: EN/ES localization (react-i18next, 135 keys). Story 11.3a: iPad primary screens (ColorHome, Favorites, OutfitVisualizer). Story 11.3b: iPad secondary screens (Combinations, Settings, BrowseAllColors, SwatchGroup numColumns).
-- **Epic 12: IN-PROGRESS** — Color Capture feature. Story 12.1 DONE: color math foundation (colorTypes, colorConversion, colorMatch — LAB, CIEDE2000). Story 12.2 DONE: camera entry point + CaptureScreen (expo-camera, permission flow, WB slider, haptics). Story 12.3 READY: native WB module + analysis pipeline. Story 12.4 READY: result sheets + navigation.
-- **Tests:** 528 passing across 40 suites (60 pre-existing failures in i18n + OutfitVisualizer suites — unrelated to Epic 12)
+- **Epic 12: IN-PROGRESS** — Color Capture feature. Story 12.1 DONE: color math foundation (colorTypes, colorConversion, colorMatch — LAB, CIEDE2000). Story 12.2 DONE: camera entry point + CaptureScreen (expo-camera, permission flow, WB slider, haptics). Story 12.3 DONE: native WB Swift module (`modules/white-balance/`) + AnalysisOverlay component + full analysis pipeline wired in CaptureScreen (WB correction → getColors → hexToLab → matchWadaColor → classifyMatch → navigate). Story 12.4 READY: result sheets + navigation.
+- **Tests:** 539 passing across 41 suites (60 pre-existing failures in i18n + OutfitVisualizer suites — unrelated to Epic 12)
 - **Code Reviews:** Adversarial review on every story since Epic 1. Per-screen code analysis on 2026-04-03
 - **Retrospectives:** Epic 1, 2, 3, 4 completed
 - **App Store:** v1.0.0 submitted 2026-03-26 → v1.2.0 (build 4) current on epic-1
@@ -67,6 +67,13 @@ Epic 3 was postponed after Epic 2 because the Visualizer was visually flat for s
 outfinder/
 ├── App.tsx                          # Entry point — font loading, FavoritesProvider, NavigationContainer, TabNavigator
 ├── index.js                         # Registers App.tsx with Expo
+├── modules/
+│   └── white-balance/               # Local Expo native module (Swift/iOS only)
+│       ├── ios/WhiteBalanceModule.swift  # CITemperatureAndTint filter + CIAreaAverage border sampling → CCT estimation
+│       ├── src/index.ts             # JS bridge: requireNativeModule("WhiteBalance") → applyWhiteBalance(uri, temp)
+│       ├── expo-module.config.json  # Autolinking config (platforms: ios, modules: ["WhiteBalanceModule"])
+│       ├── package.json             # name: "white-balance", main: src/index.ts
+│       └── white-balance.podspec   # CocoaPods spec — depends on ExpoModulesCore
 ├── __mocks__/
 │   ├── react-native-reanimated.js   # Manual Reanimated v4 Jest mock (built-in imports native modules)
 │   ├── react-native-gesture-handler.js # Gesture handler mock
@@ -75,7 +82,10 @@ outfinder/
 │   └── @shopify/
 │       └── react-native-skia.js     # Manual Skia Jest mock (Canvas, Image, Fill, etc.)
 ├── src/
+│   ├── types/
+│   │   └── expo-modules-core.d.ts  # Ambient declaration for expo-modules-core (pnpm hoisting workaround)
 │   ├── components/
+│   │   ├── AnalysisOverlay.tsx      # Full-screen overlay during photo analysis: 4 Wada messages, 200ms fade cycle, reduce-motion guard
 │   │   ├── ColorSwatch.tsx          # 62x62px Pressable, Reanimated spring scale (1.05x), pale border detection
 │   │   ├── SwatchGroupTabs.tsx      # Horizontal ScrollView, 7 tabs (All + 6 families), hapticLight on tap
 │   │   ├── SwatchGroup.tsx          # FlatList with optional numColumns (default 5, 7 on iPad), gap/padding scale with numColumns
@@ -123,22 +133,22 @@ outfinder/
 │   │       └── i18n.test.ts         # Key parity, locale detection (es/es-MX/es-ES/en/fr/ja/Intl-throws), plurals, Wada name handling
 │   ├── lib/
 │   │   ├── color.ts                 # isLightColor(hex) — luminance-based light color detection for contrast-aware UI
-│   │   ├── colorTypes.ts            # WadaColor, RGBColor, LABColor, WadaColorWithLab, WadaMatch types (Epic 12)
+│   │   ├── colorTypes.ts            # WadaColor, RGBColor, LABColor, WadaColorWithLab, WadaMatch, MatchResult types (Epic 12)
 │   │   ├── colorConversion.ts       # hexToRgb, hexToLab, rgbToLinear, linearRgbToXyz, xyzToLab (Epic 12)
-│   │   ├── colorMatch.ts            # findClosestWadaColor(hex) — CIEDE2000 nearest-neighbor over 159 Wada colors (Epic 12)
+│   │   ├── colorMatch.ts            # matchWadaColor(lab) + classifyMatch(matches) → MatchResult ("direct"|"confirm"|"out-of-coverage") (Epic 12)
 │   │   ├── device.ts                # useIsIPad() hook (768pt breakpoint), isIPad() static, useFavoritesNumCols() (1024pt breakpoint)
 │   │   ├── haptics.ts               # hapticLight(), hapticMedium(), hapticRigid() — all with try/catch + .catch()
 │   │   ├── share.ts                 # captureShareImage(viewRef) + shareOutfit(viewRef) — view-shot capture + expo-sharing
 │   │   └── storeReview.ts           # requestStoreReview() — expo-store-review wrapper with try/catch
 │   ├── navigation/
-│   │   ├── types.ts                 # ColorsStackParamList (+ CaptureScreen), FavoritesStackParamList, SettingsStackParamList, TabParamList
+│   │   ├── types.ts                 # ColorsStackParamList (+ CaptureScreen; Combinations + OutfitVisualizer have capturedHex? hook), FavoritesStackParamList, SettingsStackParamList, TabParamList
 │   │   ├── TabNavigator.tsx         # 3 tabs: Colors (paintpalette), Favorites (heart), Settings (gearshape)
 │   │   ├── ColorsStack.tsx          # ColorHome → CaptureScreen (fullScreenModal) → Combinations → OutfitVisualizer
 │   │   ├── FavoritesStack.tsx       # FavoritesList with large title header
 │   │   └── SettingsStack.tsx        # Placeholder stack
 │   ├── screens/
 │   │   ├── ColorHome.tsx            # Grid of 159 colors with tab filtering + camera entry button (bottom-right FAB)
-│   │   ├── CaptureScreen.tsx        # Full-screen camera viewfinder — expo-camera, permission flow, WB slider, capture button (Epic 12.2)
+│   │   ├── CaptureScreen.tsx        # Full-screen camera viewfinder — expo-camera, WB slider, full analysis pipeline: applyWhiteBalance → getColors → hexToLab → matchWadaColor → classifyMatch → navigate (Epic 12.2–12.3)
 │   │   ├── Combinations.tsx         # ColorHeader + CombinationList for selected color
 │   │   ├── OutfitVisualizer.tsx     # Outfit visualization with Skia tinting, editorial card, coach marks, permanent arrows, share, haptics, VoiceOver
 │   │   ├── FavoritesList.tsx        # Saved combinations list, CombinationList reuse, EmptyState when empty
@@ -289,7 +299,7 @@ const { t } = useTranslation();
 | 3 | `usePremiumGate` still exports toast-related state (`toastVisible`, `toastOpacity`, `showToast`) but toast is never triggered after removing `paywallDismissedThisSession` guard | LOW | Bugfix 2026-04-03 — dead code in hook, screens already cleaned |
 | 4 | `handleScroll` in ColorHome uses `useNativeDriver: false` for dot/link interpolations | LOW | Epic 8 — JS thread scroll tracking, fine for 2 pages |
 | 5 | No StoreKit Configuration file for simulator IAP testing | MEDIUM | Since Epic 5 — purchases only testable on real device with sandbox |
-| 6 | `CaptureScreen` WB slider is UI-only — `wbTemperature` state not passed to camera; expo-camera 55 doesn't support native WB control; value reserved for Story 12.3 analysis pipeline | LOW | Epic 12.2 — by design |
+| 6 | `CaptureScreen` WB slider sends temperature to native WB module but expo-camera 55 doesn't support real-time WB control; visible slider value is used only by `applyWhiteBalance` post-capture | LOW | Epic 12.2–12.3 — by design |
 | 7 | Pre-existing test failures in `i18n.test.ts` (60) and `OutfitVisualizer.test.tsx` — unrelated to Epic 12, not regressions | MEDIUM | Pre-Epic 12 |
 
 ## Bugfix Branch: `fix/premium-gate-and-home-polish` (merged 2026-04-03)

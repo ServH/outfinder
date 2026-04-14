@@ -184,6 +184,7 @@
 		"analyzing0": "Buscando tu combinación Wada...",
 		"analyzing1": "Calibrando los tonos de color...",
 		"analyzing2": "Consultando la paleta de 1933...",
-		"analyzing3": "Buscando tu armonía..."
+		"analyzing3": "Buscando tu armonía...",
+		"analysisError": "No se pudo analizar la foto. Por favor, inténtalo de nuevo."
 	}
 }

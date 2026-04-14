@@ -6,8 +6,14 @@ import { SymbolView } from "expo-symbols";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { hapticLight } from "@/lib/haptics";
+import { getColors } from "react-native-image-colors";
+import { AnalysisOverlay } from "@/components/AnalysisOverlay";
+import { hexToLab } from "@/lib/colorConversion";
+import { classifyMatch, matchWadaColor } from "@/lib/colorMatch";
+import type { MatchResult } from "@/lib/colorTypes";
+import { hapticLight, hapticMedium } from "@/lib/haptics";
 import type { ColorsStackParamList } from "@/navigation/types";
+import { applyWhiteBalance } from "../../modules/white-balance";
 
 type CaptureScreenNav = NativeStackNavigationProp<
 	ColorsStackParamList,
@@ -21,13 +27,16 @@ export function CaptureScreen() {
 	const [permission, requestPermission] = useCameraPermissions();
 	const [wbVisible, setWbVisible] = useState(false);
 	const [wbTemperature, setWbTemperature] = useState(5500);
+	const [analysisVisible, setAnalysisVisible] = useState(false);
+	const [matchState, setMatchState] = useState<MatchResult | null>(null);
+	const [capturedHex, setCapturedHex] = useState<string | null>(null);
+	const [analysisError, setAnalysisError] = useState<string | null>(null);
 	const isCapturing = useRef(false);
 	const hasRequestedPermission = useRef(false);
 
 	// All hooks called before any early returns (Rules of Hooks)
 
 	// Request permission once on mount if not yet granted (AC #3)
-	// One-shot ref guard prevents re-firing if requestPermission is unstable across renders
 	useEffect(() => {
 		if (
 			permission &&
@@ -39,6 +48,10 @@ export function CaptureScreen() {
 			requestPermission();
 		}
 	}, [permission, requestPermission]);
+
+	// Suppress unused variable warning — matchState triggers ColorMatchSheet in Story 12.4
+	void matchState;
+	void capturedHex;
 
 	function handleBack() {
 		navigation.goBack();
@@ -52,17 +65,44 @@ export function CaptureScreen() {
 	async function takePicture() {
 		if (isCapturing.current) return;
 		isCapturing.current = true;
-		hapticLight();
 		try {
-			const photo = await cameraRef.current?.takePictureAsync({ quality: 0.8 });
-			if (photo) {
-				// Story 12.3 will wire AnalysisOverlay here
-				if (__DEV__) {
-					console.log("[CaptureScreen] photo URI:", photo.uri);
-				}
+			hapticMedium();
+			const photo = await cameraRef.current!.takePictureAsync({ quality: 0.8 });
+			setAnalysisVisible(true);
+			setAnalysisError(null);
+
+			// Determine WB mode: 5500K default → auto (0), user-adjusted → explicit value
+			const wbMode = wbTemperature === 5500 ? 0 : wbTemperature;
+			const correctedUri = await applyWhiteBalance(photo.uri, wbMode);
+
+			const colors = await getColors(correctedUri, { fallback: "#888888" });
+			// react-native-image-colors returns a platform-discriminated union — cast once
+			// biome-ignore lint/suspicious/noExplicitAny: platform discriminated union without common typed interface
+			const c = colors as any;
+			const dominantHex: string =
+				c.platform === "ios"
+					? (c.primary as string)
+					: ((c.dominant ?? "#888888") as string);
+
+			const capturedLab = hexToLab(dominantHex);
+			const matches = matchWadaColor(capturedLab);
+			const result = classifyMatch(matches);
+
+			setAnalysisVisible(false);
+
+			if (result.type === "direct") {
+				navigation.push("Combinations", {
+					colorId: result.match.color.id,
+					capturedHex: dominantHex,
+				});
+			} else {
+				setCapturedHex(dominantHex);
+				setMatchState(result);
 			}
-		} catch (e) {
-			console.warn("[CaptureScreen] takePictureAsync error:", e);
+		} catch (err) {
+			console.error("[CaptureScreen] analysis failed:", err);
+			setAnalysisVisible(false);
+			setAnalysisError(t("colorCapture.analysisError"));
 		} finally {
 			isCapturing.current = false;
 		}
@@ -113,7 +153,7 @@ export function CaptureScreen() {
 		);
 	}
 
-	// Camera active state (AC #2, #4, #5, #6, #7)
+	// Camera active state
 	return (
 		<View className="flex-1 bg-black" testID="capture-screen">
 			{/* Full-screen camera preview */}
@@ -124,7 +164,7 @@ export function CaptureScreen() {
 				testID="camera-view"
 			/>
 
-			{/* Back button (AC #7) */}
+			{/* Back button */}
 			<Pressable
 				onPress={handleBack}
 				accessibilityRole="button"
@@ -143,7 +183,7 @@ export function CaptureScreen() {
 				)}
 			</Pressable>
 
-			{/* White balance toggle (AC #5) */}
+			{/* White balance toggle */}
 			<Pressable
 				onPress={handleToggleWb}
 				accessibilityRole="button"
@@ -162,7 +202,7 @@ export function CaptureScreen() {
 				)}
 			</Pressable>
 
-			{/* WB slider (AC #5) */}
+			{/* WB slider */}
 			{wbVisible && (
 				<View
 					className="absolute left-0 right-0"
@@ -197,7 +237,7 @@ export function CaptureScreen() {
 				</View>
 			)}
 
-			{/* Overlay hint pill (AC #4) */}
+			{/* Overlay hint pill */}
 			<View
 				className="absolute self-center"
 				style={{ bottom: 96 }}
@@ -224,7 +264,28 @@ export function CaptureScreen() {
 				</View>
 			</View>
 
-			{/* Capture button (AC #6) */}
+			{/* Inline error message (AC #6) */}
+			{analysisError !== null && (
+				<View
+					className="absolute self-center"
+					style={{ bottom: 160 }}
+					testID="analysis-error-container"
+				>
+					<Text
+						style={{
+							fontFamily: "Inter_400Regular",
+							fontSize: 14,
+							color: "white",
+							textAlign: "center",
+						}}
+						testID="analysis-error-text"
+					>
+						{analysisError}
+					</Text>
+				</View>
+			)}
+
+			{/* Capture button */}
 			<Pressable
 				onPress={takePicture}
 				accessibilityRole="button"
@@ -246,6 +307,9 @@ export function CaptureScreen() {
 					/>
 				)}
 			</Pressable>
+
+			{/* Analysis overlay (AC #3, #4) */}
+			<AnalysisOverlay visible={analysisVisible} />
 		</View>
 	);
 }

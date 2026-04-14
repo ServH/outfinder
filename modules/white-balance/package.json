@@ -1,0 +1,10 @@
+{
+  "name": "white-balance",
+  "version": "1.0.0",
+  "description": "Local Expo module for white balance correction (Outfinder)",
+  "main": "src/index.ts",
+  "source": "src/index.ts",
+  "peerDependencies": {
+    "expo": "*"
+  }
+}
