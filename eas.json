@@ -18,5 +18,10 @@
       "distribution": "store",
       "autoIncrement": true
     }
+  },
+  "submit": {
+    "production": {
+      "ios": {}
+    }
   }
 }
