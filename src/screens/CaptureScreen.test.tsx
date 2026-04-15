@@ -8,6 +8,19 @@ import {
 import { hapticLight, hapticMedium } from "@/lib/haptics";
 import { CaptureScreen } from "./CaptureScreen";
 
+// Mock react-native-safe-area-context (used by ColorMatchSheet/OutOfCoverageSheet)
+jest.mock("react-native-safe-area-context", () => ({
+	useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 34, left: 0 }),
+}));
+
+// Mock ColorMatchSheet and OutOfCoverageSheet to avoid safe-area and Modal rendering complexity
+jest.mock("@/components/ColorMatchSheet", () => ({
+	ColorMatchSheet: () => null,
+}));
+jest.mock("@/components/OutOfCoverageSheet", () => ({
+	OutOfCoverageSheet: () => null,
+}));
+
 // Mock expo-camera
 let mockPermission: {
 	granted: boolean;
@@ -58,9 +71,12 @@ jest.mock("expo-symbols", () => ({
 
 // Mock navigation
 const mockGoBack = jest.fn();
-const mockPush = jest.fn();
+const mockDispatch = jest.fn();
 jest.mock("@react-navigation/native", () => ({
-	useNavigation: () => ({ goBack: mockGoBack, push: mockPush }),
+	useNavigation: () => ({ goBack: mockGoBack, dispatch: mockDispatch }),
+	CommonActions: {
+		reset: jest.fn((config) => ({ type: "RESET", payload: config })),
+	},
 }));
 
 // Mock haptics
@@ -103,7 +119,7 @@ describe("CaptureScreen — permission granted", () => {
 	beforeEach(() => {
 		mockPermission = { granted: true, canAskAgain: true };
 		mockGoBack.mockClear();
-		mockPush.mockClear();
+		mockDispatch.mockClear();
 		mockRequestPermission.mockClear();
 		(hapticLight as jest.Mock).mockClear();
 		(hapticMedium as jest.Mock).mockClear();

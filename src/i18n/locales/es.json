@@ -1,11 +1,14 @@
 {
 	"tabs": {
 		"colors": "Colores",
+		"favs": "Favs",
 		"favorites": "Favoritos",
 		"settings": "Ajustes",
-		"colorsTab": "Pesta\u00f1a Colores",
-		"favoritesTab": "Pesta\u00f1a Favoritos",
-		"settingsTab": "Pesta\u00f1a Ajustes"
+		"camera": "Cámara",
+		"colorsTab": "Pestaña de colores",
+		"favoritesTab": "Pestaña de favoritos",
+		"settingsTab": "Pestaña Ajustes",
+		"cameraTab": "Abrir escáner de cámara"
 	},
 	"home": {
 		"title": "Outfinder",
@@ -166,7 +169,8 @@
 		"backButton": "Colores"
 	},
 	"common": {
-		"goBack": "Volver"
+		"goBack": "Volver",
+		"dismiss": "Cerrar"
 	},
 	"iap": {
 		"networkError": "Comprueba tu conexión a internet e inténtalo de nuevo.",
@@ -185,6 +189,12 @@
 		"analyzing1": "Calibrando los tonos de color...",
 		"analyzing2": "Consultando la paleta de 1933...",
 		"analyzing3": "Buscando tu armonía...",
-		"analysisError": "No se pudo analizar la foto. Por favor, inténtalo de nuevo."
+		"analysisError": "No se pudo analizar la foto. Por favor, inténtalo de nuevo.",
+		"matchSheetTitle": "¿Cuál se parece más a tu prenda?",
+		"matchExcellent": "Match exacto",
+		"matchGood": "Buen match",
+		"outOfCoverageMessage": "Este color es demasiado vibrante para la paleta de Wada — sus combinaciones se basan en pigmentos naturales del Japón de los años 30. El tono más cercano que encontramos:",
+		"outOfCoverageAction": "Ver combinaciones de {{name}}",
+		"tryAgain": "Intentar de nuevo"
 	}
 }

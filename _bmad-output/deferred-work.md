@@ -18,6 +18,11 @@
 - D11: `ColorsStack.tsx` — `animation: "fade"` default stack option may visually conflict with `fullScreenModal`; fullScreenModal overrides animation on iOS natively; no functional impact confirmed
 - D12: `CaptureScreen` — no explicit camera teardown on `goBack()`; expo-camera CameraView tears down automatically on unmount; React Navigation ensures unmount
 
+## Deferred from: code review of 12-4-result-sheets-navigation (2026-04-14)
+
+- D16: `isLightColor` does not normalise hex strings shorter than 6 digits (e.g. `#RGB`, `#RRGGBBAA`) — pre-existing in `src/lib/color.ts`; both sheets call it on Wada dataset hex values which are well-formed, but utility is fragile if called with other inputs
+- D17: `top3` in `confirm` matchState may contain 1–2 items if Wada dataset is very sparse — `ColorMatchSheet` renders gracefully, but title "Which is closest?" implies 3 choices; revisit if dataset ever shrinks or a test dataset with <3 colors is used
+
 ## Deferred from: code review of 12-3-native-wb-module-analysis-pipeline (2026-04-14)
 
 - D13: `WhiteBalanceModule.swift` — temp JPEG files written to `FileManager.default.temporaryDirectory` are never explicitly deleted; iOS GC handles periodically; one photo per session makes disk impact negligible

@@ -1,4 +1,5 @@
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { SymbolView } from "expo-symbols";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -43,8 +44,15 @@ const SORT_PILLS: { mode: SortMode; labelKey: string; a11yKey: string }[] = [
 
 export function FavoritesList(_props: FavoritesListProps) {
 	const { t } = useTranslation();
+	const navigation = useNavigation();
 	const { width: screenWidth } = useWindowDimensions();
 	const isTablet = useIsIPad();
+
+	function handleSettingsPress() {
+		hapticLight();
+		// biome-ignore lint/suspicious/noExplicitAny: cross-navigator navigation to SettingsTab
+		(navigation as any).navigate("SettingsTab");
+	}
 	const numCols = useFavoritesNumCols();
 	const { favorites, toggleFavorite, isFavorite } = useFavorites();
 
@@ -136,7 +144,10 @@ export function FavoritesList(_props: FavoritesListProps) {
 	);
 
 	const header = (
-		<View className="px-4 pt-4 pb-2" style={{ paddingTop: 60 }}>
+		<View
+			className="px-4 pb-2 flex-row items-start justify-between"
+			style={{ paddingTop: 60 }}
+		>
 			<Text
 				style={{
 					fontFamily: "NotoSerifJP_500Medium",
@@ -146,6 +157,24 @@ export function FavoritesList(_props: FavoritesListProps) {
 			>
 				{t("favorites.title")}
 			</Text>
+			<Pressable
+				onPress={handleSettingsPress}
+				accessibilityRole="button"
+				accessibilityLabel={t("tabs.settings")}
+				style={{
+					width: 44,
+					height: 44,
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+				testID="settings-gear-button"
+			>
+				<SymbolView
+					name="gearshape"
+					size={22}
+					tintColor={wadaTokens.wadaMuted}
+				/>
+			</Pressable>
 		</View>
 	);
 

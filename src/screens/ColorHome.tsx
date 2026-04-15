@@ -32,6 +32,7 @@ import { usePremiumGate } from "@/hooks/usePremiumGate";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
+import { FAB_PROTRUSION } from "@/navigation/CustomTabBar";
 import type { ColorsStackParamList } from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
 
@@ -154,9 +155,10 @@ export function ColorHome() {
 		navigation.push("BrowseAllColors");
 	}
 
-	function handleCameraPress() {
+	function handleSettingsPress() {
 		hapticLight();
-		navigation.push("CaptureScreen");
+		// biome-ignore lint/suspicious/noExplicitAny: cross-navigator navigation to SettingsTab
+		(navigation as any).navigate("SettingsTab");
 	}
 
 	const handleScroll = RNAnimated.event(
@@ -268,26 +270,46 @@ export function ColorHome() {
 				testID="state-1"
 			>
 				{/* Custom header */}
-				<View className="px-4 pt-4 pb-2">
-					<Text
+				<View className="px-4 pt-4 pb-2 flex-row items-start justify-between">
+					<View>
+						<Text
+							style={{
+								fontFamily: "NotoSerifJP_500Medium",
+								fontSize: 28,
+								color: wadaTokens.textPrimary,
+							}}
+						>
+							Outfinder
+						</Text>
+						<Text
+							style={{
+								fontFamily: "NotoSerifJP_400Regular",
+								fontSize: 18,
+								color: wadaTokens.textSecondary,
+								marginTop: 6,
+							}}
+						>
+							{t("home.subtitle")}
+						</Text>
+					</View>
+					<Pressable
+						onPress={handleSettingsPress}
+						accessibilityRole="button"
+						accessibilityLabel={t("tabs.settings")}
 						style={{
-							fontFamily: "NotoSerifJP_500Medium",
-							fontSize: 28,
-							color: wadaTokens.textPrimary,
+							width: 44,
+							height: 44,
+							alignItems: "center",
+							justifyContent: "center",
 						}}
+						testID="settings-gear-button"
 					>
-						Outfinder
-					</Text>
-					<Text
-						style={{
-							fontFamily: "NotoSerifJP_400Regular",
-							fontSize: 18,
-							color: wadaTokens.textSecondary,
-							marginTop: 6,
-						}}
-					>
-						{t("home.subtitle")}
-					</Text>
+						<SymbolView
+							name="gearshape"
+							size={22}
+							tintColor={wadaTokens.wadaMuted}
+						/>
+					</Pressable>
 				</View>
 
 				{/* Grid area — single non-paginated grid on iPad, paginated scroll on iPhone */}
@@ -369,7 +391,13 @@ export function ColorHome() {
 					</ScrollView>
 				) : (
 					/* iPhone: paginated horizontal scroll (unchanged) */
-					<View style={{ flex: 1, justifyContent: "center", paddingBottom: 8 }}>
+					<View
+						style={{
+							flex: 1,
+							justifyContent: "center",
+							paddingBottom: 8 + FAB_PROTRUSION,
+						}}
+					>
 						{/* Paginated swatch grid */}
 						<ScrollView
 							ref={scrollRef}
@@ -621,35 +649,6 @@ export function ColorHome() {
 					)}
 				</Animated.View>
 			)}
-
-			{/* Camera entry point button */}
-			<Pressable
-				onPress={handleCameraPress}
-				accessibilityRole="button"
-				accessibilityLabel={t("colorCapture.cameraButtonLabel")}
-				className="absolute items-center justify-center rounded-full bg-elevated"
-				style={{
-					bottom: 96,
-					right: 20,
-					width: 48,
-					height: 48,
-					shadowColor: "#000",
-					shadowOpacity: 0.12,
-					shadowRadius: 8,
-					shadowOffset: { width: 0, height: 2 },
-					elevation: 3,
-				}}
-				testID="camera-button"
-			>
-				{({ pressed }) => (
-					<View
-						className="flex-1 items-center justify-center rounded-full"
-						style={{ opacity: pressed ? 0.7 : 1 }}
-					>
-						<SymbolView name="camera" size={24} tintColor="#1c1c1e" />
-					</View>
-				)}
-			</Pressable>
 
 			{/* Premium paywall modal */}
 			<PremiumPaywall

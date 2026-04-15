@@ -16,7 +16,7 @@ export type SettingsStackParamList = {
 };
 
 export type TabParamList = {
-	ColorsTab: undefined;
+	ColorsTab: { screen: keyof ColorsStackParamList } | undefined;
 	FavoritesTab: undefined;
 	SettingsTab: undefined;
 };

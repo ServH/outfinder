@@ -1,5 +1,5 @@
 import Slider from "@react-native-community/slider";
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { SymbolView } from "expo-symbols";
@@ -8,6 +8,8 @@ import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { getColors } from "react-native-image-colors";
 import { AnalysisOverlay } from "@/components/AnalysisOverlay";
+import { ColorMatchSheet } from "@/components/ColorMatchSheet";
+import { OutOfCoverageSheet } from "@/components/OutOfCoverageSheet";
 import { hexToLab } from "@/lib/colorConversion";
 import { classifyMatch, matchWadaColor } from "@/lib/colorMatch";
 import type { MatchResult } from "@/lib/colorTypes";
@@ -49,9 +51,32 @@ export function CaptureScreen() {
 		}
 	}, [permission, requestPermission]);
 
-	// Suppress unused variable warning — matchState triggers ColorMatchSheet in Story 12.4
-	void matchState;
-	void capturedHex;
+	function handleSelect(colorId: string) {
+		setMatchState(null);
+		navigation.dispatch(
+			CommonActions.reset({
+				index: 1,
+				routes: [
+					{ name: "ColorHome" },
+					{
+						name: "Combinations",
+						params: { colorId, capturedHex: capturedHex ?? "" },
+					},
+				],
+			}),
+		);
+	}
+
+	function handleTryAgain() {
+		setMatchState(null);
+		setAnalysisVisible(false);
+		setAnalysisError(null);
+		setCapturedHex(null);
+	}
+
+	function handleDismiss() {
+		handleTryAgain();
+	}
 
 	function handleBack() {
 		navigation.goBack();
@@ -91,10 +116,21 @@ export function CaptureScreen() {
 			setAnalysisVisible(false);
 
 			if (result.type === "direct") {
-				navigation.push("Combinations", {
-					colorId: result.match.color.id,
-					capturedHex: dominantHex,
-				});
+				navigation.dispatch(
+					CommonActions.reset({
+						index: 1,
+						routes: [
+							{ name: "ColorHome" },
+							{
+								name: "Combinations",
+								params: {
+									colorId: result.match.color.id,
+									capturedHex: dominantHex,
+								},
+							},
+						],
+					}),
+				);
 			} else {
 				setCapturedHex(dominantHex);
 				setMatchState(result);
@@ -310,6 +346,27 @@ export function CaptureScreen() {
 
 			{/* Analysis overlay (AC #3, #4) */}
 			<AnalysisOverlay visible={analysisVisible} />
+
+			{/* Result sheets (Story 12.4) — always mounted so Modal exit animation plays */}
+			<ColorMatchSheet
+				visible={matchState?.type === "confirm"}
+				matches={matchState?.type === "confirm" ? matchState.top3 : []}
+				capturedHex={capturedHex ?? ""}
+				onSelect={handleSelect}
+				onDismiss={handleDismiss}
+			/>
+			<OutOfCoverageSheet
+				visible={matchState?.type === "out-of-coverage"}
+				bestMatch={
+					matchState?.type === "out-of-coverage"
+						? matchState.bestMatch
+						: undefined
+				}
+				capturedHex={capturedHex ?? ""}
+				onSelect={handleSelect}
+				onTryAgain={handleTryAgain}
+				onDismiss={handleDismiss}
+			/>
 		</View>
 	);
 }
