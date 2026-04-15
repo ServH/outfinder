@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, View } from "react-native";
+import { AccessibilityInfo, StyleSheet, View } from "react-native";
 import Animated, {
+	cancelAnimation,
 	runOnJS,
 	useAnimatedStyle,
 	useSharedValue,
@@ -20,18 +21,36 @@ export function AnalysisOverlay({ visible }: AnalysisOverlayProps) {
 	const [msgIndex, setMsgIndex] = useState(0);
 	const opacity = useSharedValue(1);
 
-	const messages = [
-		t("colorCapture.analyzing0"),
-		t("colorCapture.analyzing1"),
-		t("colorCapture.analyzing2"),
-		t("colorCapture.analyzing3"),
-	];
+	const messages = useMemo(
+		() => [
+			t("colorCapture.analyzing0"),
+			t("colorCapture.analyzing1"),
+			t("colorCapture.analyzing2"),
+			t("colorCapture.analyzing3"),
+		],
+		[t],
+	);
 
 	const animatedStyle = useAnimatedStyle(() => ({
 		opacity: opacity.value,
 	}));
 
 	const msgCount = messages.length;
+
+	// Detect rising edge of `visible` via a ref so the reset/announce only fires
+	// on actual false→true transitions (not on every re-render where `messages`
+	// identity changes — i18n's `t` is not always referentially stable).
+	const wasVisible = useRef(false);
+	useEffect(() => {
+		if (visible && !wasVisible.current) {
+			setMsgIndex(0);
+			opacity.value = 1;
+			// Announce only the first message — the rotating copy is decorative,
+			// we don't want to spam VoiceOver every 600ms.
+			AccessibilityInfo.announceForAccessibility(messages[0]);
+		}
+		wasVisible.current = visible;
+	}, [visible, messages, opacity]);
 
 	useEffect(() => {
 		if (!visible) return;
@@ -47,10 +66,17 @@ export function AnalysisOverlay({ visible }: AnalysisOverlayProps) {
 			}
 		}, 600);
 
-		return () => clearInterval(interval);
+		return () => {
+			clearInterval(interval);
+			cancelAnimation(opacity);
+		};
 	}, [visible, reducedMotion, msgCount, opacity]);
 
 	if (!visible) return null;
+
+	// Defensive clamp: msgCount could change at runtime if i18n keys are
+	// added/removed and the interval hasn't ticked yet.
+	const safeMessage = messages[msgIndex % msgCount];
 
 	return (
 		<View style={StyleSheet.absoluteFill} testID="analysis-overlay">
@@ -61,15 +87,14 @@ export function AnalysisOverlay({ visible }: AnalysisOverlayProps) {
 
 			{/* Centered message */}
 			<View
-				style={styles.center}
-				accessibilityLiveRegion="polite"
+				className="flex-1 items-center justify-center px-8"
 				testID="analysis-message-container"
 			>
 				<Animated.Text
 					style={[styles.message, animatedStyle]}
 					testID="analysis-message"
 				>
-					{messages[msgIndex]}
+					{safeMessage}
 				</Animated.Text>
 			</View>
 		</View>
@@ -77,12 +102,6 @@ export function AnalysisOverlay({ visible }: AnalysisOverlayProps) {
 }
 
 const styles = StyleSheet.create({
-	center: {
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
-		paddingHorizontal: 32,
-	},
 	message: {
 		fontFamily: "NotoSerifJP_400Regular",
 		fontStyle: "italic",

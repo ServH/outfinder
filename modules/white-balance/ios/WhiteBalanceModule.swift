@@ -11,25 +11,67 @@ public class WhiteBalanceModule: Module {
         }
     }
 
+    // MARK: - Shared CIContext
+    // Constructing a CIContext compiles a Metal pipeline and is expensive — Apple
+    // recommends reusing a single instance across renders. Pin to sRGB so border
+    // sampling and JPEG encoding share one consistent color management path.
+    private static let sharedContext: CIContext = {
+        if let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) {
+            return CIContext(options: [.workingColorSpace: colorSpace])
+        }
+        return CIContext()
+    }()
+
+    // Cap working resolution to bound peak memory on full-resolution captures
+    // (iPhone 15 Pro emits ~8064×6048 JPEGs). Dominant-colour extraction does
+    // not need the original detail, and the corrected JPEG is consumed by
+    // `react-native-image-colors`, never shown to the user. 2048px on the long
+    // edge keeps GPU buffers comfortably under 100MB even on 3GB devices.
+    private static let maxProcessingDimension: CGFloat = 2048
+
+    // Center-crop the WB-corrected image before dominant-colour extraction so
+    // the analysis region matches the on-screen framing rectangle and ignores
+    // background / skin / shadows. MUST equal `ANALYSIS_FRAME_FRACTION` in
+    // src/screens/CaptureScreen.tsx — the user sees brackets at this fraction
+    // of the shorter screen edge and expects the pixels inside them to be
+    // what drives the match.
+    private static let analysisFraction: CGFloat = 0.65
+
     // MARK: - Core Processing
 
     private static func process(imageUri: String, temperature: Double) throws -> String {
-        // Strip "file://" prefix for FileManager access
-        let filePath = imageUri.hasPrefix("file://")
-            ? String(imageUri.dropFirst(7))
-            : imageUri
+        // Resolve URI to a filesystem path. Prefer URL parsing so percent-encoded
+        // paths (`file:///var/.../My%20Photo.jpg`) work; fall back to raw path.
+        let sourceURL: URL = {
+            if let parsed = URL(string: imageUri), parsed.isFileURL {
+                return parsed
+            }
+            let stripped = imageUri.hasPrefix("file://")
+                ? String(imageUri.dropFirst(7)).removingPercentEncoding ?? String(imageUri.dropFirst(7))
+                : imageUri
+            return URL(fileURLWithPath: stripped)
+        }()
 
-        guard let ciImage = CIImage(contentsOf: URL(fileURLWithPath: filePath)) else {
+        guard let loadedImage = CIImage(contentsOf: sourceURL) else {
             throw NSError(domain: "WhiteBalance", code: 1,
                           userInfo: [NSLocalizedDescriptionKey: "Failed to load image at \(imageUri)"])
         }
 
-        // Determine scene illuminant temperature
+        // Downsample if needed before any further processing — guards against
+        // OOM on 48MP captures and accelerates the whole pipeline. Aspect ratio
+        // is preserved.
+        let ciImage = downsampleIfNeeded(loadedImage)
+
+        // Determine scene illuminant temperature.
+        // Negative `temperature` (sentinel WB_AUTO_MODE in JS) requests auto-estimation
+        // from border-pixel sampling. Any non-negative value is treated as manual Kelvin
+        // and clamped to the same [2700, 7000] range that auto-mode produces, so the
+        // two paths share one well-defined output domain.
         let sceneTemp: Double
-        if temperature == 0.0 {
-            sceneTemp = estimateBorderTemperature(from: ciImage)
+        if temperature < 0.0 {
+            sceneTemp = try estimateBorderTemperature(from: ciImage)
         } else {
-            sceneTemp = temperature
+            sceneTemp = max(2700, min(7000, temperature))
         }
 
         // Apply CITemperatureAndTint: inputNeutral = scene illuminant, inputTargetNeutral = daylight 6500K
@@ -46,26 +88,86 @@ public class WhiteBalanceModule: Module {
                           userInfo: [NSLocalizedDescriptionKey: "Filter produced no output"])
         }
 
-        // Render corrected image to JPEG in temp directory
-        let context = CIContext(options: [.useSoftwareRenderer: false])
+        // Center-crop to the analysis region so the JPEG handed to JS contains
+        // only the pixels inside the on-screen framing rectangle. This is the
+        // single biggest quality lever — without it, the dominant-colour
+        // extractor averages in background, skin, and shadows.
+        let croppedOutput = centerCrop(outputImage, fraction: analysisFraction)
+
+        // Render corrected image to JPEG using a single deterministic temp slot.
+        // Each capture overwrites the previous file, so the temp directory grows
+        // by at most one JPEG instead of accumulating UUID-named entries that
+        // iOS only reaps on storage pressure.
         let outputURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent(UUID().uuidString)
-            .appendingPathExtension("jpg")
+            .appendingPathComponent("wb-corrected.jpg")
+        try? FileManager.default.removeItem(at: outputURL)
 
         guard let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) else {
             throw NSError(domain: "WhiteBalance", code: 4,
                           userInfo: [NSLocalizedDescriptionKey: "Could not create sRGB color space"])
         }
-        try context.writeJPEGRepresentation(of: outputImage, to: outputURL,
-                                            colorSpace: colorSpace, options: [:])
+        do {
+            try sharedContext.writeJPEGRepresentation(of: croppedOutput, to: outputURL,
+                                                       colorSpace: colorSpace, options: [:])
+        } catch {
+            throw NSError(domain: "WhiteBalance", code: 6,
+                          userInfo: [NSLocalizedDescriptionKey: "Failed to write corrected JPEG: \(error.localizedDescription)"])
+        }
 
         return outputURL.absoluteString
+    }
+
+    // MARK: - Downsampling
+
+    /// Returns a CIImage scaled so the longest edge ≤ `maxProcessingDimension`.
+    /// If the source is already small enough, returns it unchanged.
+    private static func downsampleIfNeeded(_ image: CIImage) -> CIImage {
+        let extent = image.extent
+        // Reject infinite extents (generator CIImages) and non-positive sizes.
+        guard !extent.isInfinite,
+              extent.width.isFinite, extent.height.isFinite,
+              extent.width > 0, extent.height > 0 else {
+            return image
+        }
+        let longest = max(extent.width, extent.height)
+        guard longest > maxProcessingDimension else { return image }
+        let scale = maxProcessingDimension / longest
+        return image.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
+    }
+
+    // MARK: - Center Crop
+
+    /// Crops to a centred square whose side is `fraction * min(width, height)`.
+    /// Clamps to the source extent (never exceeds the image bounds) and
+    /// translates the result to origin (0,0) so JPEG encoding produces a tight
+    /// file without offset padding.
+    private static func centerCrop(_ image: CIImage, fraction: CGFloat) -> CIImage {
+        let extent = image.extent
+        guard !extent.isInfinite,
+              extent.width.isFinite, extent.height.isFinite,
+              extent.width > 0, extent.height > 0 else {
+            return image
+        }
+        let short = min(extent.width, extent.height)
+        let side = short * fraction
+        let rect = CGRect(
+            x: extent.midX - side / 2,
+            y: extent.midY - side / 2,
+            width: side,
+            height: side
+        ).intersection(extent)
+        guard !rect.isEmpty else { return image }
+        return image
+            .cropped(to: rect)
+            .transformed(by: CGAffineTransform(translationX: -rect.origin.x,
+                                               y: -rect.origin.y))
     }
 
     // MARK: - Border Temperature Estimation
 
     /// Samples the 4 border strips (10% margin), averages RGB, estimates CCT.
-    private static func estimateBorderTemperature(from ciImage: CIImage) -> Double {
+    /// Throws if no strip yields a usable sample (zero-extent image, all strips clamped out).
+    private static func estimateBorderTemperature(from ciImage: CIImage) throws -> Double {
         let extent = ciImage.extent
         let w = extent.width
         let h = extent.height
@@ -78,28 +180,48 @@ public class WhiteBalanceModule: Module {
             CGRect(x: 0,            y: h * (1 - margin), width: w, height: h * margin), // bottom
         ]
 
-        var totalR: Double = 0
-        var totalG: Double = 0
-        var totalB: Double = 0
-        var count = 0
-
-        let context = CIContext(options: nil)
-
+        var samples: [RGBSample] = []
         for rect in strips {
-            guard let avgColor = averageColor(of: ciImage, in: rect, context: context) else { continue }
-            totalR += avgColor.r
-            totalG += avgColor.g
-            totalB += avgColor.b
-            count += 1
+            if let avg = averageColor(of: ciImage, in: rect, context: sharedContext) {
+                samples.append(avg)
+            }
         }
 
-        guard count > 0 else { return 5500 }
+        guard !samples.isEmpty else {
+            throw NSError(domain: "WhiteBalance", code: 5,
+                          userInfo: [NSLocalizedDescriptionKey: "Could not sample border pixels for auto white-balance estimation"])
+        }
 
-        let r = totalR / Double(count)
-        let g = totalG / Double(count)
-        let b = totalB / Double(count)
+        // If all 4 border strips look nearly identical, the scene is likely a
+        // monochrome / solid-colour subject. Auto-WB has no real signal to work
+        // from, and "correcting" the perceived cast would actually shift the
+        // subject's true colour toward neutral. Returning 6500 makes the filter
+        // a no-op (input == target), preserving the original.
+        if isLowVariance(samples) {
+            return 6500
+        }
+
+        let count = Double(samples.count)
+        let r = samples.reduce(0.0) { $0 + $1.r } / count
+        let g = samples.reduce(0.0) { $0 + $1.g } / count
+        let b = samples.reduce(0.0) { $0 + $1.b } / count
 
         return estimateCCT(r: r, g: g, b: b)
+    }
+
+    /// True when all border strips share nearly the same RGB (max per-channel
+    /// range below 0.05 in [0,1] ≈ 13/255). Indicates a monochrome scene where
+    /// auto white-balance would mis-correct.
+    private static func isLowVariance(_ samples: [RGBSample]) -> Bool {
+        guard samples.count >= 2 else { return true }
+        let rs = samples.map { $0.r }
+        let gs = samples.map { $0.g }
+        let bs = samples.map { $0.b }
+        let rRange = (rs.max() ?? 0) - (rs.min() ?? 0)
+        let gRange = (gs.max() ?? 0) - (gs.min() ?? 0)
+        let bRange = (bs.max() ?? 0) - (bs.min() ?? 0)
+        let threshold: Double = 0.05
+        return rRange < threshold && gRange < threshold && bRange < threshold
     }
 
     private struct RGBSample {
@@ -138,9 +260,19 @@ public class WhiteBalanceModule: Module {
         let xRatio = r / safeG
         let yRatio = b / safeG
 
-        // Simplified polynomial approximation (McCamy-inspired)
-        // Coefficients tuned for daylight locus: maps bluish scene → high K, yellowish → low K
+        // Simplified polynomial approximation (McCamy-inspired).
+        // Coefficients tuned for daylight locus: maps bluish scene → high K,
+        // yellowish → low K.
         let n = xRatio - yRatio * 0.5
+
+        // n very close to zero would blow up `1/n`; both extremes (n slightly
+        // positive → 7000K, n negative → 7000K) currently push the result to
+        // the warm-output ceiling. That's wrong for a near-neutral scene —
+        // default to neutral daylight instead.
+        if abs(n) < 0.01 {
+            return 5500
+        }
+
         let t = n > 0
             ? 2700 + (1.0 / n) * 1800
             : 7000

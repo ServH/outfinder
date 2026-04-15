@@ -1,7 +1,7 @@
 import { SymbolView } from "expo-symbols";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal, Pressable, Text, View } from "react-native";
+import { AccessibilityInfo, Modal, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { isLightColor } from "@/lib/color";
 import type { WadaMatch } from "@/lib/colorTypes";
@@ -25,6 +25,20 @@ export function ColorMatchSheet({
 	const { t } = useTranslation();
 	const insets = useSafeAreaInsets();
 	const selectGuard = useRef(false);
+	const wasVisible = useRef(false);
+
+	// Reset double-tap guard whenever the sheet closes so the next opening
+	// accepts taps again. Also announce sheet open to VoiceOver on rising edge.
+	useEffect(() => {
+		if (!visible) {
+			selectGuard.current = false;
+		} else if (!wasVisible.current) {
+			AccessibilityInfo.announceForAccessibility(
+				t("colorCapture.matchSheetTitle"),
+			);
+		}
+		wasVisible.current = visible;
+	}, [visible, t]);
 
 	function handleSelect(colorId: string) {
 		if (selectGuard.current) return;

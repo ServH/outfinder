@@ -109,4 +109,46 @@ describe("classifyMatch", () => {
 		const result = classifyMatch(matches);
 		expect(result.type).toBe("direct");
 	});
+
+	// Boundary tests — spec says `< 2.0` direct, `2.0–15.0` confirm, `> 15.0`
+	// out-of-coverage. Lock in the exact-equality behaviour at both edges.
+	describe("boundary thresholds", () => {
+		const color = getAllColors()[0];
+
+		it("deltaE === DIRECT_THRESHOLD (2.0) → confirm (not direct)", () => {
+			const matches: WadaMatch[] = [
+				{ color, deltaE: DIRECT_THRESHOLD },
+				{ color, deltaE: 2.5 },
+				{ color, deltaE: 3.0 },
+			];
+			expect(classifyMatch(matches).type).toBe("confirm");
+		});
+
+		it("deltaE just below DIRECT_THRESHOLD (1.9999) → direct", () => {
+			const matches: WadaMatch[] = [
+				{ color, deltaE: DIRECT_THRESHOLD - 0.0001 },
+				{ color, deltaE: 2.5 },
+				{ color, deltaE: 3.0 },
+			];
+			expect(classifyMatch(matches).type).toBe("direct");
+		});
+
+		it("deltaE === COVERAGE_THRESHOLD (15.0) → confirm (not out-of-coverage)", () => {
+			const matches: WadaMatch[] = [
+				{ color, deltaE: COVERAGE_THRESHOLD },
+				{ color, deltaE: 16 },
+				{ color, deltaE: 17 },
+			];
+			expect(classifyMatch(matches).type).toBe("confirm");
+		});
+
+		it("deltaE just above COVERAGE_THRESHOLD (15.0001) → out-of-coverage", () => {
+			const matches: WadaMatch[] = [
+				{ color, deltaE: COVERAGE_THRESHOLD + 0.0001 },
+				{ color, deltaE: 16 },
+				{ color, deltaE: 17 },
+			];
+			expect(classifyMatch(matches).type).toBe("out-of-coverage");
+		});
+	});
 });

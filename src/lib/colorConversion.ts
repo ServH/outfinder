@@ -1,5 +1,39 @@
 import type { LabColor } from "./colorTypes";
 
+/**
+ * Coerces flexible hex inputs from external sources (image color extractors,
+ * user input) to canonical 6-digit uppercase `#RRGGBB`. Returns null if the
+ * input is empty, malformed, or contains non-hex characters.
+ *
+ * Accepts: `#RRGGBB`, `RRGGBB`, `#RGB`, `RGB`, `#RRGGBBAA` (alpha stripped),
+ * `RRGGBBAA`. Mixed case is normalised to uppercase.
+ *
+ * Use this at any boundary between untrusted hex sources and the strict
+ * internal pipeline (`hexToRgb`, `hexToLab`).
+ */
+export function normalizeHex(input: string | null | undefined): string | null {
+	if (!input || typeof input !== "string") return null;
+	const cleaned = input.startsWith("#") ? input.slice(1) : input;
+
+	// 6-digit (most common case from RAW image extraction)
+	if (/^[0-9A-Fa-f]{6}$/.test(cleaned)) return `#${cleaned.toUpperCase()}`;
+
+	// 3-digit CSS shorthand — expand each nibble
+	if (/^[0-9A-Fa-f]{3}$/.test(cleaned)) {
+		const r = cleaned[0];
+		const g = cleaned[1];
+		const b = cleaned[2];
+		return `#${r}${r}${g}${g}${b}${b}`.toUpperCase();
+	}
+
+	// 8-digit RGBA — strip alpha channel
+	if (/^[0-9A-Fa-f]{8}$/.test(cleaned)) {
+		return `#${cleaned.slice(0, 6).toUpperCase()}`;
+	}
+
+	return null;
+}
+
 export function hexToRgb(hex: string): { r: number; g: number; b: number } {
 	const cleaned = hex.startsWith("#") ? hex.slice(1) : hex;
 	if (cleaned.length !== 6 || !/^[0-9A-Fa-f]{6}$/.test(cleaned)) {

@@ -1,30 +1,128 @@
 import Slider from "@react-native-community/slider";
-import { CommonActions, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { SymbolView } from "expo-symbols";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+	Linking,
+	Pressable,
+	StyleSheet,
+	Text,
+	useWindowDimensions,
+	View,
+} from "react-native";
 import { getColors } from "react-native-image-colors";
+import type { ImageColorsResult } from "react-native-image-colors/build/types";
 import { AnalysisOverlay } from "@/components/AnalysisOverlay";
 import { ColorMatchSheet } from "@/components/ColorMatchSheet";
 import { OutOfCoverageSheet } from "@/components/OutOfCoverageSheet";
-import { hexToLab } from "@/lib/colorConversion";
+import { hexToLab, normalizeHex } from "@/lib/colorConversion";
 import { classifyMatch, matchWadaColor } from "@/lib/colorMatch";
 import type { MatchResult } from "@/lib/colorTypes";
 import { hapticLight, hapticMedium } from "@/lib/haptics";
 import type { ColorsStackParamList } from "@/navigation/types";
-import { applyWhiteBalance } from "../../modules/white-balance";
+import { applyWhiteBalance, WB_AUTO_MODE } from "../../modules/white-balance";
 
 type CaptureScreenNav = NativeStackNavigationProp<
 	ColorsStackParamList,
 	"CaptureScreen"
 >;
 
+// Magenta sentinel for `getColors` fallback. Wada's 159 colors do not include
+// a pure magenta, so receiving this value back unambiguously means extraction
+// failed — distinguishable from any legitimate dominant colour the camera
+// might capture (including grays that would collide with the library default).
+const EXTRACTION_FAILED_HEX = "#FF00FF";
+
+// Square frame the user sees and targets. MUST match the Swift-side center
+// crop fraction in WhiteBalanceModule.swift — both are set to 65% of the
+// shorter edge so the on-screen framing rectangle corresponds exactly to the
+// region the analysis pipeline samples.
+const ANALYSIS_FRAME_FRACTION = 0.65;
+
+/** Corner brackets showing the user exactly what region the pipeline will
+ *  analyse. Non-interactive (pointerEvents="none") so camera taps pass through.
+ */
+function AnalysisFrame({ size }: { size: number }) {
+	const bracket = 24;
+	const thick = 3;
+	const color = "rgba(255,255,255,0.9)";
+	return (
+		<View
+			pointerEvents="none"
+			accessibilityElementsHidden
+			importantForAccessibility="no-hide-descendants"
+			style={{
+				position: "absolute",
+				top: 0,
+				left: 0,
+				right: 0,
+				bottom: 0,
+				alignItems: "center",
+				justifyContent: "center",
+			}}
+		>
+			<View style={{ width: size, height: size }}>
+				<View
+					style={{
+						position: "absolute",
+						top: 0,
+						left: 0,
+						width: bracket,
+						height: bracket,
+						borderTopWidth: thick,
+						borderLeftWidth: thick,
+						borderColor: color,
+					}}
+				/>
+				<View
+					style={{
+						position: "absolute",
+						top: 0,
+						right: 0,
+						width: bracket,
+						height: bracket,
+						borderTopWidth: thick,
+						borderRightWidth: thick,
+						borderColor: color,
+					}}
+				/>
+				<View
+					style={{
+						position: "absolute",
+						bottom: 0,
+						left: 0,
+						width: bracket,
+						height: bracket,
+						borderBottomWidth: thick,
+						borderLeftWidth: thick,
+						borderColor: color,
+					}}
+				/>
+				<View
+					style={{
+						position: "absolute",
+						bottom: 0,
+						right: 0,
+						width: bracket,
+						height: bracket,
+						borderBottomWidth: thick,
+						borderRightWidth: thick,
+						borderColor: color,
+					}}
+				/>
+			</View>
+		</View>
+	);
+}
+
 export function CaptureScreen() {
 	const { t } = useTranslation();
 	const navigation = useNavigation<CaptureScreenNav>();
+	const { width: winW, height: winH } = useWindowDimensions();
+	const frameSize = Math.min(winW, winH) * ANALYSIS_FRAME_FRACTION;
 	const cameraRef = useRef<CameraView>(null);
 	const [permission, requestPermission] = useCameraPermissions();
 	const [wbVisible, setWbVisible] = useState(false);
@@ -35,36 +133,46 @@ export function CaptureScreen() {
 	const [analysisError, setAnalysisError] = useState<string | null>(null);
 	const isCapturing = useRef(false);
 	const hasRequestedPermission = useRef(false);
+	// Tracks whether the user has manually moved the WB slider this session.
+	// Until then, the capture pipeline runs in auto mode regardless of the
+	// slider's displayed value — so the default 5500K display does not collide
+	// with a deliberate manual 5500K choice.
+	const userAdjustedWb = useRef(false);
+	// Flipped to false on unmount so the async pipeline below can short-circuit
+	// before touching state or navigation on a screen the user already left.
+	const isMounted = useRef(true);
+
+	useEffect(() => {
+		return () => {
+			isMounted.current = false;
+		};
+	}, []);
 
 	// All hooks called before any early returns (Rules of Hooks)
 
-	// Request permission once on mount if not yet granted (AC #3)
+	// Request permission once when status is undetermined (AC #3). Gating on the
+	// status enum is more reliable than `!granted && canAskAgain` — those flags
+	// can briefly desync during the OS dialog. The ref guard prevents re-fire if
+	// `requestPermission` identity is unstable across renders. Resets on
+	// rejection so the user can retry from the denied view.
 	useEffect(() => {
 		if (
-			permission &&
-			!permission.granted &&
-			permission.canAskAgain &&
+			permission?.status === "undetermined" &&
 			!hasRequestedPermission.current
 		) {
 			hasRequestedPermission.current = true;
-			requestPermission();
+			requestPermission().catch(() => {
+				hasRequestedPermission.current = false;
+			});
 		}
 	}, [permission, requestPermission]);
 
 	function handleSelect(colorId: string) {
 		setMatchState(null);
-		navigation.dispatch(
-			CommonActions.reset({
-				index: 1,
-				routes: [
-					{ name: "ColorHome" },
-					{
-						name: "Combinations",
-						params: { colorId, capturedHex: capturedHex ?? "" },
-					},
-				],
-			}),
-		);
+		navigation.replace("Combinations", {
+			colorId,
+			capturedHex: capturedHex ?? undefined,
+		});
 	}
 
 	function handleTryAgain() {
@@ -82,6 +190,12 @@ export function CaptureScreen() {
 		navigation.goBack();
 	}
 
+	function handleOpenSettings() {
+		Linking.openSettings().catch(() => {
+			// If Settings cannot be opened, the user can still tap back.
+		});
+	}
+
 	function handleToggleWb() {
 		hapticLight();
 		setWbVisible((v) => !v);
@@ -92,22 +206,53 @@ export function CaptureScreen() {
 		isCapturing.current = true;
 		try {
 			hapticMedium();
-			const photo = await cameraRef.current!.takePictureAsync({ quality: 0.8 });
+			// CameraView ref may be null during teardown / permission flips. Surface a
+			// dedicated error rather than crashing inside the optional-chain.
+			if (!cameraRef.current) {
+				setAnalysisError(t("colorCapture.cameraNotReady"));
+				return;
+			}
+			// Show overlay synchronously so the screen is visually locked while we
+			// wait for `takePictureAsync` (200–800ms). Without this, the user sees
+			// idle UI and can toggle WB / tap back during the silent gap.
 			setAnalysisVisible(true);
 			setAnalysisError(null);
+			const photo = await cameraRef.current.takePictureAsync({ quality: 0.8 });
+			if (!isMounted.current) return;
+			// iOS can resolve `takePictureAsync` to `undefined` when the shutter is
+			// aborted (backgrounding, session torn down). Treat as not-ready, not
+			// as a generic "analysis failed" — the user can simply try again.
+			if (!photo) {
+				setAnalysisVisible(false);
+				setAnalysisError(t("colorCapture.cameraNotReady"));
+				return;
+			}
 
-			// Determine WB mode: 5500K default → auto (0), user-adjusted → explicit value
-			const wbMode = wbTemperature === 5500 ? 0 : wbTemperature;
+			// Auto-WB unless the user has explicitly moved the slider this session.
+			const wbMode = userAdjustedWb.current ? wbTemperature : WB_AUTO_MODE;
 			const correctedUri = await applyWhiteBalance(photo.uri, wbMode);
+			if (!isMounted.current) return;
 
-			const colors = await getColors(correctedUri, { fallback: "#888888" });
-			// react-native-image-colors returns a platform-discriminated union — cast once
-			// biome-ignore lint/suspicious/noExplicitAny: platform discriminated union without common typed interface
-			const c = colors as any;
-			const dominantHex: string =
-				c.platform === "ios"
-					? (c.primary as string)
-					: ((c.dominant ?? "#888888") as string);
+			const colors: ImageColorsResult = await getColors(correctedUri, {
+				fallback: EXTRACTION_FAILED_HEX,
+			});
+			if (!isMounted.current) return;
+
+			// `background` is the dominant pixel colour of the image on iOS (Apple
+			// Music-style naming where `primary` = best *foreground text* colour
+			// over the background). For clothing extraction we want the dominant
+			// image pixels, not the contrasting text colour.
+			const rawDominant =
+				colors.platform === "ios" ? colors.background : colors.dominant;
+
+			// Normalise for short-form / alpha hex variants the library may emit
+			// across platforms or future versions, then verify extraction succeeded.
+			const dominantHex = normalizeHex(rawDominant);
+			if (!dominantHex || dominantHex === EXTRACTION_FAILED_HEX) {
+				setAnalysisVisible(false);
+				setAnalysisError(t("colorCapture.analysisError"));
+				return;
+			}
 
 			const capturedLab = hexToLab(dominantHex);
 			const matches = matchWadaColor(capturedLab);
@@ -116,27 +261,17 @@ export function CaptureScreen() {
 			setAnalysisVisible(false);
 
 			if (result.type === "direct") {
-				navigation.dispatch(
-					CommonActions.reset({
-						index: 1,
-						routes: [
-							{ name: "ColorHome" },
-							{
-								name: "Combinations",
-								params: {
-									colorId: result.match.color.id,
-									capturedHex: dominantHex,
-								},
-							},
-						],
-					}),
-				);
+				navigation.replace("Combinations", {
+					colorId: result.match.color.id,
+					capturedHex: dominantHex,
+				});
 			} else {
 				setCapturedHex(dominantHex);
 				setMatchState(result);
 			}
 		} catch (err) {
-			console.error("[CaptureScreen] analysis failed:", err);
+			if (__DEV__) console.error("[CaptureScreen] analysis failed:", err);
+			if (!isMounted.current) return;
 			setAnalysisVisible(false);
 			setAnalysisError(t("colorCapture.analysisError"));
 		} finally {
@@ -168,6 +303,26 @@ export function CaptureScreen() {
 				>
 					{t("colorCapture.permissionDenied")}
 				</Text>
+				{permission.canAskAgain ? null : (
+					<Pressable
+						onPress={handleOpenSettings}
+						accessibilityRole="button"
+						accessibilityLabel={t("colorCapture.openSettings")}
+						className="mt-4 min-h-[44px] justify-center"
+						testID="permission-settings-button"
+					>
+						<Text
+							style={{
+								fontFamily: "Inter_400Regular",
+								fontSize: 16,
+								color: "white",
+								textDecorationLine: "underline",
+							}}
+						>
+							{t("colorCapture.openSettings")}
+						</Text>
+					</Pressable>
+				)}
 				<Pressable
 					onPress={handleBack}
 					accessibilityRole="button"
@@ -199,6 +354,10 @@ export function CaptureScreen() {
 				style={StyleSheet.absoluteFill}
 				testID="camera-view"
 			/>
+
+			{/* Analysis framing guide — user centres garment inside these brackets.
+			    Matched to the Swift-side center crop (65% of shorter edge). */}
+			<AnalysisFrame size={frameSize} />
 
 			{/* Back button */}
 			<Pressable
@@ -250,7 +409,10 @@ export function CaptureScreen() {
 						maximumValue={7000}
 						step={100}
 						value={wbTemperature}
-						onValueChange={setWbTemperature}
+						onValueChange={(v) => {
+							userAdjustedWb.current = true;
+							setWbTemperature(v);
+						}}
 						minimumTrackTintColor="white"
 						maximumTrackTintColor="rgba(255,255,255,0.4)"
 						thumbTintColor="white"
@@ -265,10 +427,11 @@ export function CaptureScreen() {
 							color: "white",
 							textAlign: "center",
 							marginTop: 4,
+							opacity: 0.85,
 						}}
 						testID="wb-temperature-label"
 					>
-						{wbTemperature}K
+						{t("colorCapture.wbTempLabel", { temp: wbTemperature })}
 					</Text>
 				</View>
 			)}

@@ -25,7 +25,8 @@ jest.mock("@/components/OutOfCoverageSheet", () => ({
 let mockPermission: {
 	granted: boolean;
 	canAskAgain: boolean;
-} | null = { granted: true, canAskAgain: true };
+	status: "undetermined" | "granted" | "denied";
+} | null = { granted: true, canAskAgain: true, status: "granted" };
 const mockRequestPermission = jest.fn().mockResolvedValue({ granted: true });
 const mockTakePictureAsync = jest
 	.fn()
@@ -71,12 +72,9 @@ jest.mock("expo-symbols", () => ({
 
 // Mock navigation
 const mockGoBack = jest.fn();
-const mockDispatch = jest.fn();
+const mockReplace = jest.fn();
 jest.mock("@react-navigation/native", () => ({
-	useNavigation: () => ({ goBack: mockGoBack, dispatch: mockDispatch }),
-	CommonActions: {
-		reset: jest.fn((config) => ({ type: "RESET", payload: config })),
-	},
+	useNavigation: () => ({ goBack: mockGoBack, replace: mockReplace }),
 }));
 
 // Mock haptics
@@ -117,9 +115,9 @@ jest.mock("@/components/AnalysisOverlay", () => ({
 
 describe("CaptureScreen — permission granted", () => {
 	beforeEach(() => {
-		mockPermission = { granted: true, canAskAgain: true };
+		mockPermission = { granted: true, canAskAgain: true, status: "granted" };
 		mockGoBack.mockClear();
-		mockDispatch.mockClear();
+		mockReplace.mockClear();
 		mockRequestPermission.mockClear();
 		(hapticLight as jest.Mock).mockClear();
 		(hapticMedium as jest.Mock).mockClear();
@@ -176,7 +174,7 @@ describe("CaptureScreen — permission granted", () => {
 		render(<CaptureScreen />);
 		fireEvent.press(screen.getByTestId("wb-toggle-button"));
 		expect(screen.getByTestId("wb-temperature-label")).toBeTruthy();
-		expect(screen.getByText("5500K")).toBeTruthy();
+		expect(screen.getByText("Scene light · 5500K")).toBeTruthy();
 	});
 
 	it("tapping sun icon again hides WB slider (AC #5)", () => {
@@ -203,7 +201,7 @@ describe("CaptureScreen — permission granted", () => {
 		render(<CaptureScreen />);
 		fireEvent.press(screen.getByTestId("wb-toggle-button"));
 		fireEvent(screen.getByTestId("wb-slider"), "valueChange", 3000);
-		expect(screen.getByText("3000K")).toBeTruthy();
+		expect(screen.getByText("Scene light · 3000K")).toBeTruthy();
 	});
 
 	it("AnalysisOverlay receives visible=true during capture pipeline (AC #3)", async () => {
@@ -260,7 +258,11 @@ describe("CaptureScreen — permission granted", () => {
 
 describe("CaptureScreen — permission denied, canAskAgain: true", () => {
 	beforeEach(() => {
-		mockPermission = { granted: false, canAskAgain: true };
+		mockPermission = {
+			granted: false,
+			canAskAgain: true,
+			status: "undetermined",
+		};
 		mockGoBack.mockClear();
 		mockRequestPermission.mockClear();
 	});
@@ -278,7 +280,11 @@ describe("CaptureScreen — permission denied, canAskAgain: true", () => {
 
 describe("CaptureScreen — permission denied", () => {
 	beforeEach(() => {
-		mockPermission = { granted: false, canAskAgain: false };
+		mockPermission = {
+			granted: false,
+			canAskAgain: false,
+			status: "denied",
+		};
 		mockGoBack.mockClear();
 		mockRequestPermission.mockClear();
 	});

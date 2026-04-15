@@ -94,7 +94,7 @@ interface WadaColorWithLab extends Color {
 	lab: LabColor;
 }
 
-export const WADA_COLORS_WITH_LAB: Readonly<WadaColorWithLab[]> =
+export const WADA_COLORS_WITH_LAB: ReadonlyArray<WadaColorWithLab> =
 	getAllColors().map((c) => ({ ...c, lab: hexToLab(c.hex) }));
 
 export function matchWadaColor(capturedLab: LabColor): WadaMatch[] {

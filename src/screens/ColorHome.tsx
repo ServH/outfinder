@@ -1,4 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
+import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import {
+	type CompositeNavigationProp,
+	useNavigation,
+} from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { SymbolView } from "expo-symbols";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -33,12 +37,12 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
 import { FAB_PROTRUSION } from "@/navigation/CustomTabBar";
-import type { ColorsStackParamList } from "@/navigation/types";
+import type { ColorsStackParamList, TabParamList } from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
 
-type ColorHomeNav = NativeStackNavigationProp<
-	ColorsStackParamList,
-	"ColorHome"
+type ColorHomeNav = CompositeNavigationProp<
+	NativeStackNavigationProp<ColorsStackParamList, "ColorHome">,
+	BottomTabNavigationProp<TabParamList>
 >;
 
 const BASICS: WardrobeCategory[] = [
@@ -157,8 +161,7 @@ export function ColorHome() {
 
 	function handleSettingsPress() {
 		hapticLight();
-		// biome-ignore lint/suspicious/noExplicitAny: cross-navigator navigation to SettingsTab
-		(navigation as any).navigate("SettingsTab");
+		navigation.navigate("SettingsTab");
 	}
 
 	const handleScroll = RNAnimated.event(

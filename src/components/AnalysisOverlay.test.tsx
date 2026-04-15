@@ -1,6 +1,8 @@
 import { act, render, screen } from "@testing-library/react-native";
-import { StyleSheet } from "react-native";
+import { AccessibilityInfo, StyleSheet } from "react-native";
 import { AnalysisOverlay } from "./AnalysisOverlay";
+
+const announceSpy = jest.spyOn(AccessibilityInfo, "announceForAccessibility");
 
 // Mock WarmBackground (Skia — already handled by __mocks__/@shopify/react-native-skia.js)
 jest.mock("./WarmBackground", () => ({
@@ -43,10 +45,17 @@ describe("AnalysisOverlay — visible, reduce motion OFF", () => {
 		expect(screen.getByText("Finding your Wada combination...")).toBeTruthy();
 	});
 
-	it("has accessibilityLiveRegion='polite' on message container", () => {
+	it("announces first message once on visible rising edge (a11y)", () => {
+		announceSpy.mockClear();
 		render(<AnalysisOverlay visible={true} />);
-		const container = screen.getByTestId("analysis-message-container");
-		expect(container.props.accessibilityLiveRegion).toBe("polite");
+		expect(announceSpy).toHaveBeenCalledWith(
+			"Finding your Wada combination...",
+		);
+		// Should NOT spam VoiceOver every interval tick — only the first message.
+		act(() => {
+			jest.advanceTimersByTime(1200);
+		});
+		expect(announceSpy).toHaveBeenCalledTimes(1);
 	});
 
 	it("cycles to next message after 600ms", () => {
@@ -92,10 +101,12 @@ describe("AnalysisOverlay — visible, reduce motion ON", () => {
 		expect(screen.getByText("Calibrating colour tones...")).toBeTruthy();
 	});
 
-	it("still has accessibilityLiveRegion='polite' with reduced motion", () => {
+	it("still announces first message on visible rising edge with reduced motion", () => {
+		announceSpy.mockClear();
 		render(<AnalysisOverlay visible={true} />);
-		const container = screen.getByTestId("analysis-message-container");
-		expect(container.props.accessibilityLiveRegion).toBe("polite");
+		expect(announceSpy).toHaveBeenCalledWith(
+			"Finding your Wada combination...",
+		);
 	});
 
 	it("opacity stays at 1 throughout reduced-motion cycle (AC #4)", () => {

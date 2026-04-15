@@ -27,7 +27,7 @@ export function ColorsStack() {
 			<Stack.Screen
 				name="CaptureScreen"
 				component={CaptureScreen}
-				options={{ headerShown: false, presentation: "fullScreenModal" }}
+				options={{ headerShown: false }}
 			/>
 			<Stack.Screen
 				name="Combinations"

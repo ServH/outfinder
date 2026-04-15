@@ -41,6 +41,8 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 			: undefined;
 	const isWarmScreen =
 		isColorsActive && activeColorsScreen === "OutfitVisualizer";
+	const isCaptureScreen =
+		isColorsActive && activeColorsScreen === "CaptureScreen";
 
 	// Crossfade the tab bar background in sync with the stack's fade animation
 	// (React Navigation's default fade = ~250ms). Without this the bg snaps
@@ -89,6 +91,12 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 		navigation.navigate("ColorsTab", { screen: "CaptureScreen" });
 	}
 
+	// Hide tab bar entirely while CaptureScreen is focused (camera is full-screen).
+	// All hooks above must execute first to satisfy Rules of Hooks.
+	if (isCaptureScreen) {
+		return null;
+	}
+
 	// ─── iPad: flat 3-item tab bar ───────────────────────────────────────────
 	if (isTablet) {
 		return (
@@ -128,9 +136,9 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 				<Pressable
 					onPress={handleCameraPress}
 					accessibilityRole="button"
-					accessibilityLabel={t("tabs.cameraTab")}
+					accessibilityLabel={t("colorCapture.cameraButtonLabel")}
 					style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-					testID="camera-fab"
+					testID="camera-fab-ipad"
 				>
 					<SymbolView
 						name="camera.fill"
@@ -306,7 +314,7 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 				<Pressable
 					onPress={handleCameraPress}
 					accessibilityRole="button"
-					accessibilityLabel={t("tabs.cameraTab")}
+					accessibilityLabel={t("colorCapture.cameraButtonLabel")}
 					style={{
 						width: FAB_SIZE,
 						height: FAB_SIZE,
@@ -320,7 +328,7 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 						shadowRadius: 6,
 						shadowOffset: { width: 0, height: 3 },
 					}}
-					testID="camera-fab"
+					testID="camera-fab-phone"
 				>
 					{({ pressed }) => (
 						<View
