@@ -1,4 +1,11 @@
-import { useFocusEffect } from "@react-navigation/native";
+import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import {
+	type CompositeNavigationProp,
+	useFocusEffect,
+	useNavigation,
+} from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { SymbolView } from "expo-symbols";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -17,7 +24,13 @@ import type { Combination } from "@/data/types";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
 import { useFavoritesNumCols, useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
+import type { FavoritesStackParamList, TabParamList } from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
+
+type FavoritesListNav = CompositeNavigationProp<
+	NativeStackNavigationProp<FavoritesStackParamList, "FavoritesList">,
+	BottomTabNavigationProp<TabParamList>
+>;
 
 type FavoritesListProps = Record<string, never>;
 
@@ -43,8 +56,14 @@ const SORT_PILLS: { mode: SortMode; labelKey: string; a11yKey: string }[] = [
 
 export function FavoritesList(_props: FavoritesListProps) {
 	const { t } = useTranslation();
+	const navigation = useNavigation<FavoritesListNav>();
 	const { width: screenWidth } = useWindowDimensions();
 	const isTablet = useIsIPad();
+
+	function handleSettingsPress() {
+		hapticLight();
+		navigation.navigate("SettingsTab");
+	}
 	const numCols = useFavoritesNumCols();
 	const { favorites, toggleFavorite, isFavorite } = useFavorites();
 
@@ -136,7 +155,10 @@ export function FavoritesList(_props: FavoritesListProps) {
 	);
 
 	const header = (
-		<View className="px-4 pt-4 pb-2" style={{ paddingTop: 60 }}>
+		<View
+			className="px-4 pb-2 flex-row items-start justify-between"
+			style={{ paddingTop: 60 }}
+		>
 			<Text
 				style={{
 					fontFamily: "NotoSerifJP_500Medium",
@@ -146,6 +168,24 @@ export function FavoritesList(_props: FavoritesListProps) {
 			>
 				{t("favorites.title")}
 			</Text>
+			<Pressable
+				onPress={handleSettingsPress}
+				accessibilityRole="button"
+				accessibilityLabel={t("tabs.settings")}
+				style={{
+					width: 44,
+					height: 44,
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+				testID="settings-gear-button"
+			>
+				<SymbolView
+					name="gearshape"
+					size={22}
+					tintColor={wadaTokens.wadaMuted}
+				/>
+			</Pressable>
 		</View>
 	);
 

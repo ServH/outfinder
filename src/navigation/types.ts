@@ -1,13 +1,14 @@
 export type ColorsStackParamList = {
 	ColorHome: undefined;
 	BrowseAllColors: undefined;
-	Combinations: { colorId: string };
-	OutfitVisualizer: { combinationId: string };
+	CaptureScreen: undefined;
+	Combinations: { colorId: string; capturedHex?: string };
+	OutfitVisualizer: { combinationId: string; capturedHex?: string };
 };
 
 export type FavoritesStackParamList = {
 	FavoritesList: undefined;
-	OutfitVisualizer: { combinationId: string };
+	OutfitVisualizer: { combinationId: string; capturedHex?: string };
 };
 
 export type SettingsStackParamList = {
@@ -15,7 +16,7 @@ export type SettingsStackParamList = {
 };
 
 export type TabParamList = {
-	ColorsTab: undefined;
+	ColorsTab: { screen: keyof ColorsStackParamList } | undefined;
 	FavoritesTab: undefined;
 	SettingsTab: undefined;
 };

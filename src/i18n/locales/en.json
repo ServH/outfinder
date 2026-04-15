@@ -1,11 +1,14 @@
 {
 	"tabs": {
 		"colors": "Colors",
+		"favs": "Favs",
 		"favorites": "Favorites",
 		"settings": "Settings",
+		"camera": "Camera",
 		"colorsTab": "Colors tab",
 		"favoritesTab": "Favorites tab",
-		"settingsTab": "Settings tab"
+		"settingsTab": "Settings tab",
+		"cameraTab": "Open camera scanner"
 	},
 	"home": {
 		"title": "Outfinder",
@@ -166,7 +169,8 @@
 		"backButton": "Colors"
 	},
 	"common": {
-		"goBack": "Go back"
+		"goBack": "Go back",
+		"dismiss": "Dismiss"
 	},
 	"iap": {
 		"networkError": "Check your internet connection and try again.",
@@ -174,5 +178,26 @@
 		"purchasesDisabled": "In-app purchases are disabled on this device.",
 		"genericError": "Something went wrong. Please try again.",
 		"noPreviousPurchase": "No previous purchase found for this Apple ID."
+	},
+	"colorCapture": {
+		"cameraButtonLabel": "Open camera to identify garment color",
+		"captureButtonLabel": "Take photo",
+		"overlayHint": "Find natural light · Center the garment",
+		"permissionDenied": "Camera access is required to identify garment colors.",
+		"wbSliderLabel": "White balance temperature",
+		"wbTempLabel": "Scene light · {{temp}}K",
+		"analyzing0": "Finding your Wada combination...",
+		"analyzing1": "Calibrating colour tones...",
+		"analyzing2": "Consulting the 1933 palette...",
+		"analyzing3": "Searching for your harmony...",
+		"analysisError": "Could not analyse the photo. Please try again.",
+		"cameraNotReady": "Camera is not ready yet. Please try again in a moment.",
+		"openSettings": "Open Settings",
+		"matchSheetTitle": "Which is closest to your garment?",
+		"matchExcellent": "Excellent match",
+		"matchGood": "Good match",
+		"outOfCoverageMessage": "This colour is too vibrant for Wada's palette — his combinations are based on natural pigments from 1930s Japan. The closest tone we found:",
+		"outOfCoverageAction": "See {{name}}'s combinations",
+		"tryAgain": "Try again"
 	}
 }

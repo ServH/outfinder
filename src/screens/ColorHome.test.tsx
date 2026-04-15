@@ -12,8 +12,9 @@ jest.mock("react-native-safe-area-context", () => ({
 }));
 
 const mockPush = jest.fn();
+const mockNavigate = jest.fn();
 jest.mock("@react-navigation/native", () => ({
-	useNavigation: () => ({ push: mockPush }),
+	useNavigation: () => ({ push: mockPush, navigate: mockNavigate }),
 }));
 
 jest.mock("expo-symbols", () => ({
@@ -174,6 +175,7 @@ jest.mock("@/data/colorIndex", () => ({
 describe("ColorHome", () => {
 	beforeEach(() => {
 		mockPush.mockClear();
+		mockNavigate.mockClear();
 		mockToggleFavorite.mockClear();
 		mockHandlePremiumGate.mockClear();
 		(hapticLight as jest.Mock).mockClear();
@@ -384,6 +386,27 @@ describe("ColorHome", () => {
 			screen.getByText("No combinations for this shade. Try another."),
 		).toBeTruthy();
 		expect(screen.queryByTestId("combo-feed")).toBeNull();
+	});
+
+	// === Settings gear button tests (camera FAB moved to CustomTabBar) ===
+
+	it("renders settings gear button in header", () => {
+		render(<ColorHome />);
+		expect(screen.getByTestId("settings-gear-button")).toBeTruthy();
+	});
+
+	it("settings gear button has correct accessibilityRole and label", () => {
+		render(<ColorHome />);
+		const btn = screen.getByTestId("settings-gear-button");
+		expect(btn.props.accessibilityRole).toBe("button");
+		expect(btn.props.accessibilityLabel).toBe("Settings");
+	});
+
+	it("tapping settings gear fires hapticLight and navigates to SettingsTab", () => {
+		render(<ColorHome />);
+		fireEvent.press(screen.getByTestId("settings-gear-button"));
+		expect(hapticLight).toHaveBeenCalled();
+		expect(mockNavigate).toHaveBeenCalledWith("SettingsTab");
 	});
 });
 

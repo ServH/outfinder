@@ -12,7 +12,8 @@
       "buildNumber": "4",
       "supportsTablet": true,
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "Outfinder uses your camera to identify garment colors and find Wada combinations."
       }
     },
     "plugins": [
@@ -33,7 +34,8 @@
           }
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-camera"
     ],
     "experiments": {
       "reactCompiler": true
@@ -43,6 +45,12 @@
         "projectId": "4c5d0a44-4f09-4d97-8169-e85343dd3d18"
       }
     },
-    "owner": "servh"
+    "owner": "servh",
+    "android": {
+      "permissions": [
+        "android.permission.CAMERA"
+      ],
+      "package": "com.alejandrocamps.outfinder"
+    }
   }
 }

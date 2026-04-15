@@ -33,6 +33,7 @@ import { useStoreReviewPrompt } from "@/hooks/useStoreReviewPrompt";
 import { useIsIPad } from "@/lib/device";
 import { hapticLight, hapticMedium, hapticRigid } from "@/lib/haptics";
 import { shareOutfit } from "@/lib/share";
+import { FAB_PROTRUSION } from "@/navigation/CustomTabBar";
 import type { ColorsStackParamList } from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
 
@@ -407,8 +408,11 @@ export function OutfitVisualizer() {
 					</View>
 				</View>
 			</ScrollView>
-			{/* Share button */}
-			<View className="items-center py-3">
+			{/* Share button — paddingBottom clears the protruding camera FAB */}
+			<View
+				className="items-center py-3"
+				style={{ paddingBottom: 12 + FAB_PROTRUSION }}
+			>
 				<Pressable
 					onPress={handleShare}
 					disabled={sharing}

@@ -1,0 +1,7 @@
+{
+  "platforms": ["ios"],
+  "ios": {
+    "modules": ["WhiteBalanceModule"],
+    "podspecPath": "white-balance.podspec"
+  }
+}

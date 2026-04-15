@@ -1,11 +1,14 @@
 {
 	"tabs": {
 		"colors": "Colores",
+		"favs": "Favs",
 		"favorites": "Favoritos",
 		"settings": "Ajustes",
-		"colorsTab": "Pesta\u00f1a Colores",
-		"favoritesTab": "Pesta\u00f1a Favoritos",
-		"settingsTab": "Pesta\u00f1a Ajustes"
+		"camera": "Cámara",
+		"colorsTab": "Pestaña de colores",
+		"favoritesTab": "Pestaña de favoritos",
+		"settingsTab": "Pestaña Ajustes",
+		"cameraTab": "Abrir escáner de cámara"
 	},
 	"home": {
 		"title": "Outfinder",
@@ -166,7 +169,8 @@
 		"backButton": "Colores"
 	},
 	"common": {
-		"goBack": "Volver"
+		"goBack": "Volver",
+		"dismiss": "Cerrar"
 	},
 	"iap": {
 		"networkError": "Comprueba tu conexión a internet e inténtalo de nuevo.",
@@ -174,5 +178,26 @@
 		"purchasesDisabled": "Las compras integradas están desactivadas en este dispositivo.",
 		"genericError": "Algo salió mal. Por favor inténtalo de nuevo.",
 		"noPreviousPurchase": "No se encontró ninguna compra anterior para este Apple ID."
+	},
+	"colorCapture": {
+		"cameraButtonLabel": "Abrir cámara para identificar el color de la prenda",
+		"captureButtonLabel": "Tomar foto",
+		"overlayHint": "Busca luz natural · Centra la prenda",
+		"permissionDenied": "Se necesita acceso a la cámara para identificar colores de prendas.",
+		"wbSliderLabel": "Temperatura del balance de blancos",
+		"wbTempLabel": "Luz de escena · {{temp}}K",
+		"analyzing0": "Buscando tu combinación Wada...",
+		"analyzing1": "Calibrando los tonos de color...",
+		"analyzing2": "Consultando la paleta de 1933...",
+		"analyzing3": "Buscando tu armonía...",
+		"analysisError": "No se pudo analizar la foto. Por favor, inténtalo de nuevo.",
+		"cameraNotReady": "La cámara aún no está lista. Inténtalo de nuevo en un momento.",
+		"openSettings": "Abrir Ajustes",
+		"matchSheetTitle": "¿Cuál se parece más a tu prenda?",
+		"matchExcellent": "Match exacto",
+		"matchGood": "Buen match",
+		"outOfCoverageMessage": "Este color es demasiado vibrante para la paleta de Wada — sus combinaciones se basan en pigmentos naturales del Japón de los años 30. El tono más cercano que encontramos:",
+		"outOfCoverageAction": "Ver combinaciones de {{name}}",
+		"tryAgain": "Intentar de nuevo"
 	}
 }

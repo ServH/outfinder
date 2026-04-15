@@ -1,5 +1,10 @@
-import { useNavigation } from "@react-navigation/native";
+import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import {
+	type CompositeNavigationProp,
+	useNavigation,
+} from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { SymbolView } from "expo-symbols";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -31,12 +36,13 @@ import { usePremiumGate } from "@/hooks/usePremiumGate";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
-import type { ColorsStackParamList } from "@/navigation/types";
+import { FAB_PROTRUSION } from "@/navigation/CustomTabBar";
+import type { ColorsStackParamList, TabParamList } from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
 
-type ColorHomeNav = NativeStackNavigationProp<
-	ColorsStackParamList,
-	"ColorHome"
+type ColorHomeNav = CompositeNavigationProp<
+	NativeStackNavigationProp<ColorsStackParamList, "ColorHome">,
+	BottomTabNavigationProp<TabParamList>
 >;
 
 const BASICS: WardrobeCategory[] = [
@@ -153,6 +159,11 @@ export function ColorHome() {
 		navigation.push("BrowseAllColors");
 	}
 
+	function handleSettingsPress() {
+		hapticLight();
+		navigation.navigate("SettingsTab");
+	}
+
 	const handleScroll = RNAnimated.event(
 		[{ nativeEvent: { contentOffset: { x: scrollX } } }],
 		{ useNativeDriver: false },
@@ -262,26 +273,46 @@ export function ColorHome() {
 				testID="state-1"
 			>
 				{/* Custom header */}
-				<View className="px-4 pt-4 pb-2">
-					<Text
+				<View className="px-4 pt-4 pb-2 flex-row items-start justify-between">
+					<View>
+						<Text
+							style={{
+								fontFamily: "NotoSerifJP_500Medium",
+								fontSize: 28,
+								color: wadaTokens.textPrimary,
+							}}
+						>
+							Outfinder
+						</Text>
+						<Text
+							style={{
+								fontFamily: "NotoSerifJP_400Regular",
+								fontSize: 18,
+								color: wadaTokens.textSecondary,
+								marginTop: 6,
+							}}
+						>
+							{t("home.subtitle")}
+						</Text>
+					</View>
+					<Pressable
+						onPress={handleSettingsPress}
+						accessibilityRole="button"
+						accessibilityLabel={t("tabs.settings")}
 						style={{
-							fontFamily: "NotoSerifJP_500Medium",
-							fontSize: 28,
-							color: wadaTokens.textPrimary,
+							width: 44,
+							height: 44,
+							alignItems: "center",
+							justifyContent: "center",
 						}}
+						testID="settings-gear-button"
 					>
-						Outfinder
-					</Text>
-					<Text
-						style={{
-							fontFamily: "NotoSerifJP_400Regular",
-							fontSize: 18,
-							color: wadaTokens.textSecondary,
-							marginTop: 6,
-						}}
-					>
-						{t("home.subtitle")}
-					</Text>
+						<SymbolView
+							name="gearshape"
+							size={22}
+							tintColor={wadaTokens.wadaMuted}
+						/>
+					</Pressable>
 				</View>
 
 				{/* Grid area — single non-paginated grid on iPad, paginated scroll on iPhone */}
@@ -363,7 +394,13 @@ export function ColorHome() {
 					</ScrollView>
 				) : (
 					/* iPhone: paginated horizontal scroll (unchanged) */
-					<View style={{ flex: 1, justifyContent: "center", paddingBottom: 8 }}>
+					<View
+						style={{
+							flex: 1,
+							justifyContent: "center",
+							paddingBottom: 8 + FAB_PROTRUSION,
+						}}
+					>
 						{/* Paginated swatch grid */}
 						<ScrollView
 							ref={scrollRef}
