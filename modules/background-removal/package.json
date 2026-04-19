@@ -1,0 +1,10 @@
+{
+  "name": "background-removal",
+  "version": "1.0.0",
+  "description": "Local Expo module for background removal via Vision (Outfinder)",
+  "main": "src/index.ts",
+  "source": "src/index.ts",
+  "peerDependencies": {
+    "expo": "*"
+  }
+}

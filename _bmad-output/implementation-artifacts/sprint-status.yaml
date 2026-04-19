@@ -34,6 +34,12 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-12
+last_updated: 2026-04-19
+# 2026-04-19 — Story 13.1 moved ready-for-dev → review → done (code review passed)
+# 2026-04-19 — Story 13.2 moved backlog → ready-for-dev (create-story)
+# 2026-04-19 — Story 13.2 moved ready-for-dev → in-progress (dev-story)
+# 2026-04-19 — Story 13.2 moved in-progress → review (dev-story complete)
+# 2026-04-19 — Story 13.2 moved review → done (code review passed, 1 HIGH patch applied: NSError→Exception bridge fix)
 project: Outfinder
 project_key: NOKEY
 tracking_system: file-system
@@ -111,9 +117,21 @@ development_status:
   11-3b-ipad-layout-secondary-screens: done
   epic-11-retrospective: optional
 
-  epic-12: in-progress
+  epic-12: done
   12-1-color-math-foundation: done
   12-2-camera-entry-point-capture-screen: done
   12-3-native-wb-module-analysis-pipeline: done
   12-4-result-sheets-navigation: done
   epic-12-retrospective: optional
+
+  # Epic 13 — Armario Virtual (v1.4.0 target, branch: epic-13)
+  epic-13: in-progress
+  13-1-wardrobe-data-model-repository-zustand-store: done
+  13-2-background-removal-native-module: done
+  13-3a-capture-background-removal-ui-flow: backlog
+  13-3b-wardrobe-persistence-lifecycle: backlog
+  13-4a-zero-state-ficha-wada-shared-components: backlog
+  13-4b-armario-picker-assignment-mechanics: backlog
+  13-5-s4-tu-look-skia-composition-share: backlog
+  13-6-s5-sugerencia-armonia-favorites-badges: backlog
+  epic-13-retrospective: optional

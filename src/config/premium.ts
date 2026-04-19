@@ -3,4 +3,5 @@ export const PREMIUM_CONFIG = {
 	ENTITLEMENT_ID: "outfinder_premium",
 	PRODUCT_ID: "outfinder_premium_lifetime",
 	FREE_FAVORITES_LIMIT: 5,
+	FREE_WARDROBE_LIMIT: 10,
 } as const;
