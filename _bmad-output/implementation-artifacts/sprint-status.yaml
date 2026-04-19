@@ -39,6 +39,7 @@ last_updated: 2026-04-19
 # 2026-04-19 — Story 13.2 moved backlog → ready-for-dev (create-story)
 # 2026-04-19 — Story 13.2 moved ready-for-dev → in-progress (dev-story)
 # 2026-04-19 — Story 13.2 moved in-progress → review (dev-story complete)
+# 2026-04-19 — Story 13.2 moved review → done (code review passed, 1 HIGH patch applied: NSError→Exception bridge fix)
 project: Outfinder
 project_key: NOKEY
 tracking_system: file-system
@@ -126,7 +127,7 @@ development_status:
   # Epic 13 — Armario Virtual (v1.4.0 target, branch: epic-13)
   epic-13: in-progress
   13-1-wardrobe-data-model-repository-zustand-store: done
-  13-2-background-removal-native-module: review
+  13-2-background-removal-native-module: done
   13-3a-capture-background-removal-ui-flow: backlog
   13-3b-wardrobe-persistence-lifecycle: backlog
   13-4a-zero-state-ficha-wada-shared-components: backlog

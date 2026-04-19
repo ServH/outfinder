@@ -171,19 +171,13 @@ public class BackgroundRemovalModule: Module {
 
     // MARK: - Error Helper
 
-    /// Builds an NSError that carries the typed `kind` in `userInfo["code"]`.
-    /// The expo-modules bridge surfaces both `NSLocalizedDescriptionKey`
-    /// (as `error.message`) and `userInfo["code"]` (as `error.code`) on the
-    /// JS side — the wrapper in `src/index.ts` reads `error.code` to build
-    /// the `BackgroundRemovalError` discriminated union.
-    private static func error(kind: String, message: String) -> NSError {
-        return NSError(
-            domain: "BackgroundRemoval",
-            code: 0,
-            userInfo: [
-                NSLocalizedDescriptionKey: message,
-                "code": kind,
-            ]
-        )
+    /// Builds an expo-modules-core `Exception` carrying `kind` as its `code`.
+    /// `AsyncFunctionDefinition` catches `Exception` and routes it through
+    /// `FunctionCallException`, which propagates `cause.code` — so the JS side
+    /// sees `error.code = kind` ("noSubject" / "visionFailed" / "ioFailed").
+    /// Using plain `NSError` would fall into `UnexpectedException`, which
+    /// discards `userInfo` and always produces `code = "ERR_UNEXPECTED"`.
+    private static func error(kind: String, message: String) -> Exception {
+        return Exception(name: kind, description: message, code: kind)
     }
 }

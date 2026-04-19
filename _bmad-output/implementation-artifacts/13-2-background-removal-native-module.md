@@ -1,6 +1,6 @@
 # Story 13.2: BackgroundRemovalModule — Local Expo Native Module
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -365,6 +365,14 @@ Native rebuild (`npx expo prebuild --clean && npx expo run:ios --device`) comple
 
 - `src/screens/dev/BackgroundRemovalSmokeScreen.tsx` — 10-photo smoke-test harness; deleted.
 - `App.tsx` — reverted to pre-story state (`<TabNavigator />` restored; no-op `git diff App.tsx`).
+
+### Review Findings
+
+- [x] [Review][Patch] NSError bridge discards `userInfo["code"]` — all error kinds reach JS as `"ERR_UNEXPECTED"`, making noSubject/ioFailed/visionFailed indistinguishable [modules/background-removal/ios/BackgroundRemovalModule.swift — `error()` helper at bottom] — FIXED: changed return type to `Exception(name: kind, description: message, code: kind)`
+- [x] [Review][Defer] Double CIImage pre-validation load (guard CIImage != nil) decodes full image then discards it; Vision re-opens via URL — minor memory overhead [BackgroundRemovalModule.swift ~line 52] — deferred, spec-required ioFailed detection pattern; smoke test passed
+- [x] [Review][Defer] Temp cutout PNGs accumulate if consumer throws before Story 13.3a cleanup — story 13.3a responsibility by design [modules/background-removal/src/index.ts] — deferred, documented design decision
+- [x] [Review][Defer] Near-zero-extent CVPixelBuffer (Vision crops to tiny bounding box) produces a valid but empty PNG without error [BackgroundRemovalModule.swift ~line 97] — deferred, Vision model behavior; noSubject guard covers the main case
+- [x] [Review][Defer] `observation.allInstances` may include only a background instance (index 0) on some OS builds → transparent PNG with no error thrown [BackgroundRemovalModule.swift ~line 84] — deferred, Vision API subtlety beyond story scope
 
 ### Change Log
 

@@ -4,6 +4,13 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 13-2-background-removal-native-module (2026-04-19)
+
+- **W1-13.2** — Double CIImage pre-validation load in `BackgroundRemovalModule.process`: `guard CIImage(contentsOf:) != nil` decodes the full image just to validate readability, then discards it; Vision re-opens via URL. Spec-required (AC #3 ioFailed pattern mirrors WhiteBalance). Revisit in Story 13.5 when profiling the full composition pipeline.
+- **W2-13.2** — Temp `cutout-*.png` files in `FileManager.default.temporaryDirectory` accumulate if Story 13.3a flow throws before cleanup. By-design: 13.3a owns cleanup on Repetir/paywall. Consider a startup sweep in Story 13.3b wardrobe persistence lifecycle.
+- **W3-13.2** — Near-zero-extent CVPixelBuffer after `croppedToInstancesExtent: true` produces a valid but visually empty PNG (no error thrown). Add a minimum-dimensions guard (e.g. ≥10px) when full Armario flow is assembled in 13.4a.
+- **W4-13.2** — `observation.allInstances` may include only background instance (index 0) on some OS builds → transparent PNG. Vision API subtlety; revisit if users report blank cutouts post-13.3a.
+
 ## Deferred from: code review of 13-1-wardrobe-data-model-repository-zustand-store (2026-04-19)
 
 - **W1-13.1** — Type guards (`isWardrobeItem`) aceptan strings vacíos para `localImagePath`, `thumbnailPath`, e `id`. La validación de paths (mínimo length, `file://` prefix) pertenece a Story 13.3b cuando se escriben los paths reales — no al type guard de hydration.
