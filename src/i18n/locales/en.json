@@ -179,6 +179,28 @@
 		"genericError": "Something went wrong. Please try again.",
 		"noPreviousPurchase": "No previous purchase found for this Apple ID."
 	},
+	"armario": {
+		"capture": {
+			"guidanceHint": "Place the garment on a plain background, good light",
+			"captureButtonLabel": "Take photo of garment",
+			"chooseLibraryButtonLabel": "Choose from library",
+			"permissionDenied": "Camera access is required to add garments to your Wardrobe.",
+			"libraryPermissionDenied": "Photo library access is required to pick a garment photo.",
+			"openSettings": "Open Settings",
+			"removingBackground": "Removing background…",
+			"errorNoSubject": "We couldn't find the garment. Try a plain background with better light.",
+			"errorVisionFailed": "Background removal failed. Please try again.",
+			"errorIoFailed": "Couldn't read or save the photo. Please try again.",
+			"errorDismiss": "Dismiss",
+			"goBack": "Go back"
+		},
+		"preview": {
+			"cutoutReady": "Background removed. Check the cutout.",
+			"retakeButton": "Retake",
+			"useButton": "Use this photo",
+			"imageLabel": "Garment cutout preview"
+		}
+	},
 	"colorCapture": {
 		"cameraButtonLabel": "Open camera to identify garment color",
 		"captureButtonLabel": "Take photo",

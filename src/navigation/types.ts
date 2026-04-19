@@ -20,3 +20,18 @@ export type TabParamList = {
 	FavoritesTab: undefined;
 	SettingsTab: undefined;
 };
+
+export type ArmarioStackParamList = {
+	ArmarioCapture: { onCutoutSaved?: (id: string) => void } | undefined;
+	ArmarioPreview: { cutoutUri: string; sourceUri: string };
+};
+
+export type RootStackParamList = {
+	Main: undefined;
+	ArmarioRoot:
+		| {
+				screen?: keyof ArmarioStackParamList;
+				params?: ArmarioStackParamList[keyof ArmarioStackParamList];
+		  }
+		| undefined;
+};

@@ -7,6 +7,27 @@ import { Settings } from "./Settings";
 jest.mock("@/lib/haptics");
 jest.mock("@/hooks/useReducedMotion");
 jest.mock("react-native-reanimated");
+jest.mock("@/stores/wardrobeStore", () => ({
+	useWardrobeStore: Object.assign(
+		() => ({ items: [], assignments: [], hydrated: true }),
+		{
+			getState: () => ({
+				items: [],
+				assignments: [],
+				hydrated: true,
+				setItems: jest.fn(),
+				setAssignments: jest.fn(),
+			}),
+			setState: jest.fn(),
+		},
+	),
+	hydrateWardrobeStore: jest.fn().mockResolvedValue(undefined),
+}));
+jest.mock("@react-navigation/native", () => ({
+	useNavigation: () => ({
+		getParent: () => ({ navigate: jest.fn() }),
+	}),
+}));
 jest.mock("react-native-gesture-handler", () => {
 	const { View } = require("react-native");
 	return {
