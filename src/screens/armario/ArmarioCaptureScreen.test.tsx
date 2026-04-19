@@ -177,7 +177,8 @@ describe("ArmarioCaptureScreen", () => {
 	});
 
 	it("4. library branch routes through removeBackground → push (and cancel is a no-op)", async () => {
-		mockRequestMediaLibraryPermissionsAsync.mockResolvedValue({
+		// Cancel sub-case: permission granted, picker returns canceled.
+		mockRequestMediaLibraryPermissionsAsync.mockResolvedValueOnce({
 			granted: true,
 			canAskAgain: true,
 		});
@@ -196,6 +197,10 @@ describe("ArmarioCaptureScreen", () => {
 		expect(mockPush).not.toHaveBeenCalled();
 
 		// Grant + pick path: removeBackground → navigation.push.
+		mockRequestMediaLibraryPermissionsAsync.mockResolvedValueOnce({
+			granted: true,
+			canAskAgain: true,
+		});
 		mockLaunchImageLibraryAsync.mockResolvedValueOnce({
 			canceled: false,
 			assets: [{ uri: "ph://library-photo.heic" }],
@@ -312,17 +317,18 @@ describe("ArmarioCaptureScreen", () => {
 		const Screen = loadScreen();
 		const { unmount } = render(<Screen />);
 
-		await act(async () => {
-			fireEvent.press(screen.getByTestId("armario-capture-button"));
-		});
-		await flushMicrotasks();
-
+		// Install spies BEFORE firing the action so early warnings are captured.
 		const consoleError = jest
 			.spyOn(console, "error")
 			.mockImplementation(() => {});
 		const consoleWarn = jest
 			.spyOn(console, "warn")
 			.mockImplementation(() => {});
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-capture-button"));
+		});
+		await flushMicrotasks();
 
 		unmount();
 		await act(async () => {

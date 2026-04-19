@@ -144,13 +144,15 @@ describe("ArmarioPreviewScreen", () => {
 
 	it("1. Retake tap → File.delete called → navigation.goBack (delete failure still nav-safe)", async () => {
 		// First: happy delete
-		render(<ArmarioPreviewScreen />);
+		const { unmount: unmountFirst } = render(<ArmarioPreviewScreen />);
 		fireEvent.press(screen.getByTestId("armario-preview-retake-button"));
 		expect(hapticLight).toHaveBeenCalledTimes(1);
 		expect(mockFileDelete).toHaveBeenCalledTimes(1);
 		expect(mockGoBack).toHaveBeenCalledTimes(1);
+		unmountFirst();
 
 		// Reset + simulate delete throwing — the nav must still fire.
+		// unmountFirst() above already isolated the first render tree; no cleanup() needed.
 		mockGoBack.mockClear();
 		mockFileDelete.mockReset();
 		(hapticLight as jest.Mock).mockClear();

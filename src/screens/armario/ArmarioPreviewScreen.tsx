@@ -107,6 +107,7 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 	}, [cutoutUri, sourceUri, isPremium, navigation, submitting]);
 
 	const handlePaywallDismiss = useCallback(() => {
+		if (!isMounted.current) return;
 		setPaywallVisible(false);
 		gate.handleDismiss();
 		// Tmp cleanup on paywall dismiss — if the user then taps Repetir, the

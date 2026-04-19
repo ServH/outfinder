@@ -10,7 +10,6 @@ import {
 	Linking,
 	Platform,
 	Pressable,
-	StyleSheet,
 	Text,
 	View,
 } from "react-native";
@@ -33,10 +32,19 @@ type ErrorSource =
 
 type ArmarioCaptureScreenProps = Record<string, never>;
 
+const BACKGROUND_REMOVAL_ERROR_KINDS = new Set<BackgroundRemovalErrorKind>([
+	"noSubject",
+	"visionFailed",
+	"ioFailed",
+]);
+
 function isBackgroundRemovalError(e: unknown): e is BackgroundRemovalError {
 	if (!e || typeof e !== "object") return false;
 	const kind = (e as { kind?: unknown }).kind;
-	return typeof kind === "string";
+	return (
+		typeof kind === "string" &&
+		BACKGROUND_REMOVAL_ERROR_KINDS.has(kind as BackgroundRemovalErrorKind)
+	);
 }
 
 function supportsVisionSegmentation(): boolean {
@@ -161,7 +169,7 @@ export function ArmarioCaptureScreen(_props: ArmarioCaptureScreenProps) {
 	}
 
 	async function pickFromLibrary() {
-		if (processing) return;
+		if (isCapturing.current || processing) return;
 		try {
 			const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
 			if (!isMounted.current) return;
@@ -354,7 +362,7 @@ export function ArmarioCaptureScreen(_props: ArmarioCaptureScreenProps) {
 			<CameraView
 				ref={cameraRef}
 				facing="back"
-				style={StyleSheet.absoluteFill}
+				style={{ position: "absolute", top: 0, left: 0, bottom: 0, right: 0 }}
 				testID="armario-camera-view"
 			/>
 
@@ -367,6 +375,7 @@ export function ArmarioCaptureScreen(_props: ArmarioCaptureScreenProps) {
 				style={{ top: 56, left: 20, width: 48, height: 48 }}
 				testID="armario-back-button"
 				disabled={disableControls}
+				accessibilityState={{ disabled: disableControls }}
 			>
 				{({ pressed }) => (
 					<View
@@ -417,6 +426,7 @@ export function ArmarioCaptureScreen(_props: ArmarioCaptureScreenProps) {
 				}}
 				testID="armario-library-button"
 				disabled={disableControls}
+				accessibilityState={{ disabled: disableControls }}
 			>
 				{({ pressed }) => (
 					<Text
@@ -441,6 +451,7 @@ export function ArmarioCaptureScreen(_props: ArmarioCaptureScreenProps) {
 				style={{ bottom: 28, width: 56, height: 56 }}
 				testID="armario-capture-button"
 				disabled={disableControls}
+				accessibilityState={{ disabled: disableControls }}
 			>
 				{({ pressed }) => (
 					<View

@@ -1,3 +1,5 @@
+import type { NavigatorScreenParams } from "@react-navigation/native";
+
 export type ColorsStackParamList = {
 	ColorHome: undefined;
 	BrowseAllColors: undefined;
@@ -28,10 +30,5 @@ export type ArmarioStackParamList = {
 
 export type RootStackParamList = {
 	Main: undefined;
-	ArmarioRoot:
-		| {
-				screen?: keyof ArmarioStackParamList;
-				params?: ArmarioStackParamList[keyof ArmarioStackParamList];
-		  }
-		| undefined;
+	ArmarioRoot: NavigatorScreenParams<ArmarioStackParamList> | undefined;
 };

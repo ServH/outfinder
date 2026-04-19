@@ -37,6 +37,9 @@ export function Settings(_props: SettingsProps) {
 	const { favorites, toggleFavorite, count } = useFavorites();
 	const gate = usePremiumGate(favorites);
 	const isTablet = useIsIPad();
+	// Reactive read for the dev-menu wardrobe item count badge.
+	// useWardrobeStore.getState() inside JSX is a stale snapshot — hook selector keeps it live.
+	const wardrobeDevItemCount = useWardrobeStore((s) => s.items.length);
 
 	const [restoreState, setRestoreState] = useState<RestoreState>("idle");
 	const [restoreMessage, setRestoreMessage] = useState<string | null>(null);
@@ -299,7 +302,7 @@ export function Settings(_props: SettingsProps) {
 										allowFontScaling
 										className="font-sans text-[12px] text-tertiary"
 									>
-										{useWardrobeStore.getState().items.length} /{" "}
+										{wardrobeDevItemCount} /{" "}
 										{PREMIUM_CONFIG.FREE_WARDROBE_LIMIT}
 									</Text>
 								</Pressable>

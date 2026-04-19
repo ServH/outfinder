@@ -12,5 +12,7 @@ export class WardrobePersistenceError extends Error {
 		message?: string,
 	) {
 		super(message ?? kind);
+		// Required for correct `instanceof` checks after TypeScript/Babel transpilation.
+		Object.setPrototypeOf(this, WardrobePersistenceError.prototype);
 	}
 }

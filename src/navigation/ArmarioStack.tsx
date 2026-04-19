@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { ArmarioCaptureScreen } from "@/screens/armario/ArmarioCaptureScreen";
 import { ArmarioPreviewScreen } from "@/screens/armario/ArmarioPreviewScreen";
 import type { ArmarioStackParamList } from "./types";
@@ -7,8 +7,14 @@ import type { ArmarioStackParamList } from "./types";
 const Stack = createNativeStackNavigator<ArmarioStackParamList>();
 
 export function ArmarioStack() {
+	const isReducedMotion = useReducedMotion();
 	return (
-		<Stack.Navigator screenOptions={{ headerShown: false, animation: "fade" }}>
+		<Stack.Navigator
+			screenOptions={{
+				headerShown: false,
+				animation: isReducedMotion ? "none" : "fade",
+			}}
+		>
 			<Stack.Screen
 				name="ArmarioCapture"
 				component={ArmarioCaptureScreen}
