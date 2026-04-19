@@ -4,6 +4,13 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 13-1-wardrobe-data-model-repository-zustand-store (2026-04-19)
+
+- **W1-13.1** — Type guards (`isWardrobeItem`) aceptan strings vacíos para `localImagePath`, `thumbnailPath`, e `id`. La validación de paths (mínimo length, `file://` prefix) pertenece a Story 13.3b cuando se escriben los paths reales — no al type guard de hydration.
+- **W2-13.1** — `assign()` no valida que `wardrobeItemId` exista en la lista de items. Diseño intencional: el contrato "skip orphans" lo gestiona Story 13.4b al resolver assignments. Cambiar esto requeriría aclarar qué significa "borrar" un item frente a sus assignments.
+
+---
+
 ## Deferred from: Epic 12 code review (2026-04-15)
 
 Scope: Stories 12.1 + 12.2 + 12.3 + 12.4 (Color Capture feature). Full review in `_bmad-output/implementation-artifacts/epic-12-code-review.md`.
