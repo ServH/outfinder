@@ -20,6 +20,9 @@ export function isLightColor(hex: string): boolean {
  */
 export function hexToRgba(hex: string, alpha: number): string {
 	const clampedAlpha = Math.max(0, Math.min(1, alpha));
+	if (!hex || typeof hex !== "string") {
+		return `rgba(0, 0, 0, ${clampedAlpha})`;
+	}
 	const stripped = hex.startsWith("#") ? hex.slice(1) : hex;
 	let normalized = stripped;
 	if (stripped.length === 3) {

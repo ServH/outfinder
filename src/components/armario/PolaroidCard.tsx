@@ -102,18 +102,33 @@ export function PolaroidCard({
 		</View>
 	);
 
+	const outerStyle = {
+		width: "100%" as const,
+		alignItems: "center" as const,
+		transform: [{ rotate: `${rotation}deg` }],
+	};
+
+	if (!onPress) {
+		return (
+			<View
+				testID={testID}
+				accessible={!!accessibilityLabel}
+				accessibilityLabel={accessibilityLabel}
+				accessibilityRole="none"
+				style={outerStyle}
+			>
+				{content}
+			</View>
+		);
+	}
+
 	return (
 		<Pressable
 			testID={testID}
-			accessibilityRole={onPress ? "button" : undefined}
+			accessibilityRole="button"
 			accessibilityLabel={accessibilityLabel}
 			onPress={onPress}
-			disabled={!onPress}
-			style={{
-				width: "100%",
-				alignItems: "center",
-				transform: [{ rotate: `${rotation}deg` }],
-			}}
+			style={outerStyle}
 		>
 			{content}
 		</Pressable>

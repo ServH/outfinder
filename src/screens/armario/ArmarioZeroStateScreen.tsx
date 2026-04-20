@@ -48,6 +48,13 @@ export function ArmarioZeroStateScreen(_props: ArmarioZeroStateScreenProps) {
 	const reducedMotion = useReducedMotion();
 	const isNavigating = useRef(false);
 
+	// Reset navigation guard on unmount so future re-mounts start clean.
+	useEffect(() => {
+		return () => {
+			isNavigating.current = false;
+		};
+	}, []);
+
 	const combination = useMemo(
 		() => getCombination(combinationId),
 		[combinationId],
@@ -98,8 +105,8 @@ export function ArmarioZeroStateScreen(_props: ArmarioZeroStateScreenProps) {
 				testID="s0-back-button"
 				onPress={handleBack}
 				accessibilityRole="button"
-				accessibilityLabel={t("armario.capture.goBack")}
-				accessibilityHint={combination.nameEn}
+				accessibilityLabel={combination.nameEn}
+				accessibilityHint={t("common.goBack")}
 				className="absolute items-center justify-center"
 				style={{ top: 56, left: 20, width: 48, height: 48, zIndex: 10 }}
 			>

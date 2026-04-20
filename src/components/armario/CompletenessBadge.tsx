@@ -19,7 +19,7 @@ export const COMPLETENESS_COLORS: Record<Variant, { bg: string; fg: string }> =
 
 function resolveVariant(assigned: number, total: number): Variant {
 	if (total <= 0 || assigned <= 0) return "none";
-	if (assigned >= total) return "complete";
+	if (assigned === total) return "complete";
 	return "partial";
 }
 
@@ -39,10 +39,7 @@ export function CompletenessBadge({
 				? t("armario.badge.complete", { assigned, total })
 				: t("armario.badge.partial", { assigned, total });
 
-	const a11y =
-		variant === "none"
-			? t("armario.badge.none")
-			: t("armario.badge.a11y", { assigned, total });
+	const a11y = t("armario.badge.a11y", { assigned, total });
 
 	return (
 		<View

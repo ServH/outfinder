@@ -1,6 +1,6 @@
 # Story 13.4a: Zero State + Ficha Wada + Shared Components
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -468,8 +468,26 @@ claude-opus-4-7 (1M context) — dev-story execution 2026-04-20
 **Sprint status**
 - `_bmad-output/implementation-artifacts/sprint-status.yaml` — 13-4a: ready-for-dev → in-progress → review
 
+### Review Findings
+
+- [x] [Review][Patch] P1 — `isNavigating.current` never reset in S0 after `navigation.replace` — button permanently blocked on re-render [`src/screens/armario/ArmarioZeroStateScreen.tsx` handleStart()] — FIXED
+- [x] [Review][Patch] P2 — S2 missing `useEffect goBack` guard for undefined `combination` — blank screen trap [`src/screens/armario/ArmarioFichaWadaScreen.tsx` lines ~83-85] — FIXED
+- [x] [Review][Patch] P3 — Double-tap race in `FavoritesList.handleComboPress` (async without `isNavigating` guard) → double push [`src/screens/FavoritesList.tsx` handleComboPress] — FIXED
+- [x] [Review][Patch] P4 — S2 doesn't read `hydrated` from store — slots may show empty during hydration window [`src/screens/armario/ArmarioFichaWadaScreen.tsx` hooks section] — FIXED
+- [x] [Review][Patch] P5 — `CompletenessBadge` "none" variant uses `armario.badge.none` as a11y label instead of `armario.badge.a11y` (AC9) [`src/components/armario/CompletenessBadge.tsx` lines 60-63] — FIXED
+- [x] [Review][Patch] P6 — S0 back chevron: `nameEn` in `accessibilityHint` instead of `accessibilityLabel` as AC1 requires [`src/screens/armario/ArmarioZeroStateScreen.tsx` back button] — FIXED
+- [x] [Review][Patch] P7 — `hexToRgba(undefined, ...)` crashes via `.startsWith` if `color.hex` is undefined — no defensive guard [`src/lib/color.ts` + `src/components/armario/PolaroidCard.tsx`] — FIXED
+- [x] [Review][Patch] P8 — `assigned > total` → `CompletenessBadge` shows ✓ "complete" incorrectly (guard uses `>=` not `===`) [`src/components/armario/CompletenessBadge.tsx` resolveVariant()] — FIXED
+- [x] [Review][Patch] P9 — `PolaroidCard` without `onPress` renders `<Pressable disabled>` instead of `<View>` — VoiceOver announces as dimmed button [`src/components/armario/PolaroidCard.tsx`] — FIXED
+- [x] [Review][Patch] P10 — Missing test: "0 assignments + `s0_seen` IS set → routes to S2" (4th routing branch of AC6) [`src/screens/FavoritesList.test.tsx`] — FIXED
+- [x] [Review][Patch] P11 — S0/S2 back button uses `armario.capture.goBack` instead of `common.goBack` (spec deviates from AC3/AC1 key) [`ArmarioZeroStateScreen.tsx`, `ArmarioFichaWadaScreen.tsx`] — FIXED
+- [x] [Review][Defer] D1 — `reducedMotion` branch dead code (`opacity: 1 : 1`) — intentional forward-looking scaffolding per Dev Notes; Story 13.5 will animate [`src/screens/armario/ArmarioZeroStateScreen.tsx`] — deferred, pre-existing
+- [x] [Review][Defer] D2 — `NaN` rotation in `PolaroidCard.transform` — S0 uses `computeRotations()` as guard; future consumers' responsibility [`src/components/armario/PolaroidCard.tsx`] — deferred, pre-existing
+- [x] [Review][Defer] D3 — Slot grid empty tile `height: "100%"` may collapse on SE width — documented in Dev Notes §Known risks, cosmetic [`src/screens/armario/ArmarioFichaWadaScreen.tsx`] — deferred, pre-existing
+
 ## Change Log
 
 | Date | Change |
 |------|--------|
 | 2026-04-20 | Story 13.4a implemented: S0 Zero State + S2 Ficha Wada + 4 shared Armario components + Favorites combo-tap intercept + centralized iOS-17 gate helper (`src/lib/platform.ts`) + `combinationId: number → string` migration. +40 net new tests, `tsc --noEmit` + `pnpm lint` clean, zero new regressions vs Story 13.3b baseline. |
+| 2026-04-20 | Code review: 11 patches applied, 3 deferred, 3 dismissed. +1 test (s0_seen→S2 branch). 684 passing / 60 pre-existing. Status → done. |

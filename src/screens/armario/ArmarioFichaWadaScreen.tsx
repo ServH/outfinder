@@ -4,7 +4,7 @@ import type {
 	NativeStackScreenProps,
 } from "@react-navigation/native-stack";
 import { SymbolView } from "expo-symbols";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { CompletenessBadge } from "@/components/armario/CompletenessBadge";
@@ -70,6 +70,7 @@ export function ArmarioFichaWadaScreen({
 	);
 	const allAssignments = useWardrobeStore((s) => s.assignments);
 	const items = useWardrobeStore((s) => s.items);
+	const hydrated = useWardrobeStore((s) => s.hydrated);
 
 	const assignments = useMemo(
 		() => allAssignments.filter((a) => a.combinationId === combinationId),
@@ -80,7 +81,15 @@ export function ArmarioFichaWadaScreen({
 	const totalColors = combination?.colors.length ?? 0;
 	const isComplete = assignedCount === totalColors && totalColors > 0;
 
-	if (!combination || combination.colors.length === 0) {
+	const missingOrEmpty = !combination || combination.colors.length === 0;
+
+	useEffect(() => {
+		if (missingOrEmpty) {
+			navigation.goBack();
+		}
+	}, [missingOrEmpty, navigation]);
+
+	if (missingOrEmpty) {
 		return null;
 	}
 
@@ -129,7 +138,7 @@ export function ArmarioFichaWadaScreen({
 					testID="s2-back-button"
 					onPress={handleBack}
 					accessibilityRole="button"
-					accessibilityLabel={t("armario.capture.goBack")}
+					accessibilityLabel={t("common.goBack")}
 					className="items-center justify-center"
 					style={{ width: 48, height: 48, marginLeft: -12 }}
 				>
@@ -287,10 +296,10 @@ export function ArmarioFichaWadaScreen({
 			<Pressable
 				testID="s2-view-look-cta"
 				onPress={handleViewLook}
-				disabled={assignedCount === 0}
+				disabled={!hydrated || assignedCount === 0}
 				accessibilityRole="button"
 				accessibilityLabel={t("armario.s2.viewLookCta")}
-				accessibilityState={{ disabled: assignedCount === 0 }}
+				accessibilityState={{ disabled: !hydrated || assignedCount === 0 }}
 				className="absolute self-center items-center justify-center"
 				style={{
 					bottom: 28,
@@ -300,7 +309,7 @@ export function ArmarioFichaWadaScreen({
 					paddingVertical: 14,
 					borderRadius: 28,
 					backgroundColor: wadaTokens.textPrimary,
-					opacity: assignedCount === 0 ? 0.5 : 1,
+					opacity: !hydrated || assignedCount === 0 ? 0.5 : 1,
 				}}
 			>
 				{({ pressed }) => (

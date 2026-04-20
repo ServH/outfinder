@@ -7,7 +7,7 @@ import {
 } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { SymbolView } from "expo-symbols";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	FlatList,
@@ -72,6 +72,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 	const supportsArmario = useIsIOS17OrNewer();
 	const hydrated = useWardrobeStore((s) => s.hydrated);
 	const assignments = useWardrobeStore((s) => s.assignments);
+	const isNavigating = useRef(false);
 
 	const gate = usePremiumGate(favorites);
 
@@ -85,6 +86,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 	useFocusEffect(
 		useCallback(() => {
 			setSortMode("recent");
+			isNavigating.current = false;
 		}, []),
 	);
 
@@ -107,6 +109,8 @@ export function FavoritesList(_props: FavoritesListProps) {
 
 	const handleComboPress = useCallback(
 		async (combinationId: string) => {
+			if (isNavigating.current) return;
+			isNavigating.current = true;
 			if (!supportsArmario || !hydrated) {
 				navigation.push("OutfitVisualizer", { combinationId });
 				return;

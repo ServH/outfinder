@@ -536,6 +536,30 @@ describe("FavoritesList", () => {
 		});
 	});
 
+	it("iOS 17+ hydrated + 0 assignments + s0 already seen → taps route to ArmarioFichaWada", async () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockAssignments = [];
+		mockFavorites = new Set(["p001"]);
+		const AsyncStorage = require("@react-native-async-storage/async-storage");
+		await AsyncStorage.setItem(`@wardrobe:s0_seen_for_${realCombo1.id}`, "1");
+		render(<FavoritesList />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId(`combo-card-${realCombo1.id}`));
+		});
+		await waitFor(() => {
+			expect(mockPush).toHaveBeenCalledWith("ArmarioFichaWada", {
+				combinationId: realCombo1.id,
+			});
+		});
+		expect(mockPush).not.toHaveBeenCalledWith(
+			"ArmarioZeroState",
+			expect.anything(),
+		);
+		await AsyncStorage.removeItem(`@wardrobe:s0_seen_for_${realCombo1.id}`);
+	});
+
 	it("iOS < 17 OR not hydrated → taps still route to OutfitVisualizer (NFR9 parity)", async () => {
 		mockIsIOS17OrNewer.mockReturnValue(false);
 		mockHydrated = true;
