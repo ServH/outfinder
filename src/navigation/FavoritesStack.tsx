@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ArmarioFichaWadaScreen } from "@/screens/armario/ArmarioFichaWadaScreen";
 import { ArmarioPickerScreen } from "@/screens/armario/ArmarioPickerScreen";
+import { ArmarioTuLookScreen } from "@/screens/armario/ArmarioTuLookScreen";
 import { ArmarioZeroStateScreen } from "@/screens/armario/ArmarioZeroStateScreen";
 import { FavoritesList } from "@/screens/FavoritesList";
 import { OutfitVisualizer } from "@/screens/OutfitVisualizer";
@@ -46,6 +47,12 @@ export function FavoritesStack() {
 					presentation: "transparentModal",
 					animation: "fade",
 				}}
+			/>
+			{/* S4 Tu Look — full-screen destination after completing a combo (13.5) */}
+			<Stack.Screen
+				name="ArmarioTuLook"
+				component={ArmarioTuLookScreen}
+				options={{ headerShown: false, animation: "fade" }}
 			/>
 		</Stack.Navigator>
 	);

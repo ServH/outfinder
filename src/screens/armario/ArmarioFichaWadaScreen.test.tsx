@@ -205,7 +205,34 @@ describe("ArmarioFichaWadaScreen", () => {
 		expect(cta.props.accessibilityState).toEqual({ disabled: true });
 	});
 
-	it("view-look CTA fires onViewLook stub when 3/3 complete", async () => {
+	it("view-look CTA pushes ArmarioTuLook when 3/3 complete (no onViewLook prop)", async () => {
+		mockItems = [
+			{
+				id: "uuid-1",
+				localImagePath: "file:///a.png",
+				thumbnailPath: "file:///a.t.png",
+				createdAt: 1,
+			},
+		];
+		mockAssignments = [0, 1, 2].map((i) => ({
+			combinationId: "combo-3",
+			colorIndex: i,
+			wardrobeItemId: "uuid-1",
+			assignedAt: 1,
+		}));
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-view-look-cta"));
+		});
+		expect(hapticLight).toHaveBeenCalled();
+		expect(mockPush).toHaveBeenCalledWith("ArmarioTuLook", {
+			combinationId: "combo-3",
+		});
+	});
+
+	it("view-look CTA still defers to onViewLook prop when provided (test seam)", async () => {
 		mockItems = [
 			{
 				id: "uuid-1",
@@ -227,11 +254,11 @@ describe("ArmarioFichaWadaScreen", () => {
 		await act(async () => {
 			fireEvent.press(screen.getByTestId("s2-view-look-cta"));
 		});
-		expect(hapticLight).toHaveBeenCalled();
 		expect(onViewLook).toHaveBeenCalledWith({ combinationId: "combo-3" });
+		expect(mockPush).not.toHaveBeenCalled();
 	});
 
-	it("view-look CTA fires onViewLook stub when partial (2/3)", async () => {
+	it("view-look CTA fires onViewLook stub when partial (2/3) — S5 stub path unchanged until 13.6", async () => {
 		mockItems = [
 			{
 				id: "uuid-1",

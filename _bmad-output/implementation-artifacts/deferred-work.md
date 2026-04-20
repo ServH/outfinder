@@ -4,6 +4,20 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 13-5-s4-tu-look-skia-composition-share (2026-04-20)
+
+- **D-13.5-1** — Stale `/share/look-*.jpg` accumulate on process crash — no sweep-on-mount. `exportLookImage.ts:219`. Risk is low (files excluded from iCloud backup; always deleted in `finally`). Implement a startup sweep if user reports storage growth.
+- **D-13.5-2** — `drawSignatureInBand` — `font.getSize() ≤ 0` produces NaN coords (Skia silently renders nothing). `drawPolaroidStack.ts:118`. Theoretical; fonts loaded with explicit positive sizes. Add guard if font loading is ever made dynamic.
+- **D-13.5-3** — `drawPolaroidStack.test.ts` "cascade spacing" test hardcodes `drawRRect` call indices `[1, 4, 7]`. `drawPolaroidStack.test.ts:91`. Documented brittleness; refactor if an extra drawRRect is ever added before the white card.
+- **D-13.5-4** — `canvasSize = {w:0, h:0}` when share tapped before `onLayout` fires — export correct (hardcoded 1080×1920), preview blank briefly. `ArmarioTuLookScreen.tsx:166`. Visual flicker only; not worth the complexity of an explicit size guard.
+- **D-13.5-5** — Defensive `goBack` races Zustand mid-share — `isSharing=true` on unmounted screen. `ArmarioTuLookScreen.tsx:158`. Theoretical; `finally` cleanup still runs; no practical scenario where wardrobe assignments change while user is actively sharing.
+- **D-13.5-6** — `combinationId` undefined from route params not explicitly guarded. `ArmarioTuLookScreen.tsx:61`. Handled by existing guard chain (`combination === undefined → goBack`). Explicit guard is belt-and-braces.
+- **D-13.5-7** — AC #4(h) `NSURLIsExcludedFromBackupKey` not set on `/share/`. `exportLookImage.ts:166`. Documented accepted debt in Completion Notes; expo-file-system SDK 55 does not expose this attribute; files deleted in `finally` so backup window is ~0.
+- **D-13.5-8** — AC #10(t) partial-stub test uses `onViewLook` prop injection, not actual `defaultViewLook` path. `ArmarioFichaWadaScreen.test.tsx:261`. Behavioral regression covered; Story 13.6 replaces partial path entirely.
+- **D-13.5-9** — `garmentImages` length diverges from `garmentDescriptors` between effect runs (consequence of P3 root cause; partial mitigation). Fixed by D-13.5 P3 reset; this entry tracks the strict-mode double-invoke variant specifically.
+
+---
+
 ## Deferred from: code review of 13-4b-armario-picker-assignment-mechanics (2026-04-20)
 
 - **D-13.4b-D** — `ArmarioCaptureScreen.test.tsx`: `mockRouteParams` declarado `const undefined` — el forwarding de `onCutoutSaved` Capture→Preview no está ejercitado en test. Spec dijo "no new tests" para este archivo; gap de cobertura aceptado.

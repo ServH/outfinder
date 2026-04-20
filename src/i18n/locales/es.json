@@ -227,6 +227,14 @@
 			"quitarConfirmBody": "¿Quitar la prenda de {{color}}?",
 			"quitarConfirmYes": "Quitar"
 		},
+		"s4": {
+			"screenLabel": "Tu look",
+			"headerPrefix": "Paleta Wada \u00b7",
+			"shareCta": "Compartir look",
+			"exploreCta": "Explorar m\u00e1s paletas",
+			"shareError": "No se pudo crear la imagen para compartir. Int\u00e9ntalo de nuevo.",
+			"canvasA11y": "Look: {{combo}}, {{count}} prendas asignadas. Usa el bot\u00f3n Compartir para compartir tu look."
+		},
 		"s3": {
 			"screenLabel": "Selector de armario",
 			"pickerTitle": "Elige para {{color}}",

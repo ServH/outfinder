@@ -33,19 +33,14 @@ export interface ArmarioFichaWadaScreenProps {
 	onViewLook?: (args: { combinationId: string }) => void;
 }
 
-const defaultViewLook = (
-	isComplete: boolean,
-): NonNullable<ArmarioFichaWadaScreenProps["onViewLook"]> => {
-	return () => {
+const defaultViewLook: NonNullable<ArmarioFichaWadaScreenProps["onViewLook"]> =
+	() => {
 		if (__DEV__) {
 			console.warn(
-				isComplete
-					? "[ArmarioFichaWadaScreen] S4 Tu Look — not implemented until Story 13.5"
-					: "[ArmarioFichaWadaScreen] S5 Sugerencia Armonía — not implemented until Story 13.6",
+				"[ArmarioFichaWadaScreen] S5 Sugerencia Armonía — not implemented until Story 13.6",
 			);
 		}
 	};
-};
 
 export function ArmarioFichaWadaScreen({
 	onViewLook,
@@ -118,7 +113,19 @@ export function ArmarioFichaWadaScreen({
 	function handleViewLook() {
 		if (assignedCount === 0) return;
 		hapticLight();
-		const handler = onViewLook ?? defaultViewLook(isComplete);
+		if (isComplete) {
+			// Story 13.5: complete-branch pushes into S4 on FavoritesStack. The
+			// `onViewLook` prop remains the injection seam for tests and future
+			// partial-branch rewiring (Story 13.6). When the host passes
+			// `onViewLook`, it wins — otherwise we push directly.
+			if (onViewLook) {
+				onViewLook({ combinationId });
+				return;
+			}
+			navigation.push("ArmarioTuLook", { combinationId });
+			return;
+		}
+		const handler = onViewLook ?? defaultViewLook;
 		handler({ combinationId });
 	}
 

@@ -5,5 +5,6 @@ module.exports = {
 	moduleNameMapper: {
 		"^@/assets/(.*)": "<rootDir>/assets/$1",
 		"\\.css$": "<rootDir>/__mocks__/styleMock.js",
+		"\\.ttf$": "<rootDir>/__mocks__/styleMock.js",
 	},
 };

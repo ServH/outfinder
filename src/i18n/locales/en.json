@@ -227,6 +227,14 @@
 			"quitarConfirmBody": "Remove the garment from {{color}}?",
 			"quitarConfirmYes": "Remove"
 		},
+		"s4": {
+			"screenLabel": "Your look",
+			"headerPrefix": "Wada Palette \u00b7",
+			"shareCta": "Share your look",
+			"exploreCta": "Explore more palettes",
+			"shareError": "Could not create share image. Please try again.",
+			"canvasA11y": "Outfit: {{combo}}, {{count}} garments assigned. Use the Share button to share your look."
+		},
 		"s3": {
 			"screenLabel": "Armario picker",
 			"pickerTitle": "Choose for {{color}}",

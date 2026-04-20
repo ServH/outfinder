@@ -35,6 +35,10 @@
 
 generated: 2026-03-12
 last_updated: 2026-04-20
+# 2026-04-20 — Story 13.5 moved review → done (code review: 9 patches applied — 3 HIGH + 2 MEDIUM + 4 LOW; 9 deferred; 3 dismissed)
+# 2026-04-20 — Story 13.5 moved in-progress → review (dev-story complete — +19 net tests, tsc/lint clean, 0 new regressions; on-device QA deferred to merge gate)
+# 2026-04-20 — Story 13.5 moved ready-for-dev → in-progress (dev-story)
+# 2026-04-20 — Story 13.5 moved backlog → ready-for-dev (create-story: S4 Tu Look — Skia composition + 1080×1920 JPEG export + share)
 # 2026-04-20 — Story 13.4b moved review → done (code review: 3 patches applied — isClosing guard, getParent fallback, accessibilityViewIsModal on root; 8 deferred)
 # 2026-04-20 — Story 13.4b moved in-progress → review (dev-story complete — +33 net tests, tsc/lint clean, 0 new regressions)
 # 2026-04-20 — Story 13.4b moved ready-for-dev → in-progress (dev-story)
@@ -149,6 +153,6 @@ development_status:
   13-3b-wardrobe-persistence-lifecycle: done
   13-4a-zero-state-ficha-wada-shared-components: done
   13-4b-armario-picker-assignment-mechanics: done
-  13-5-s4-tu-look-skia-composition-share: backlog
+  13-5-s4-tu-look-skia-composition-share: done
   13-6-s5-sugerencia-armonia-favorites-badges: backlog
   epic-13-retrospective: optional
