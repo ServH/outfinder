@@ -63,7 +63,7 @@ export function removeItem(id: string): void {
 
 /** Returns all assignments for a given combination, in insertion order. */
 export function getAssignmentsForCombination(
-	combinationId: number,
+	combinationId: string,
 ): CombinationAssignment[] {
 	return useWardrobeStore
 		.getState()
@@ -76,7 +76,7 @@ export function getAssignmentsForCombination(
  * wardrobe item is NOT deleted (items are shared across combos — FR6).
  */
 export function assign(
-	combinationId: number,
+	combinationId: string,
 	colorIndex: number,
 	wardrobeItemId: string,
 ): void {
@@ -95,7 +95,7 @@ export function assign(
 }
 
 /** Removes the assignment for a given `(combinationId, colorIndex)` slot. */
-export function unassign(combinationId: number, colorIndex: number): void {
+export function unassign(combinationId: string, colorIndex: number): void {
 	warnIfNotHydrated("unassign");
 	const { assignments, setAssignments } = useWardrobeStore.getState();
 	setAssignments(
@@ -107,7 +107,7 @@ export function unassign(combinationId: number, colorIndex: number): void {
 }
 
 /** Number of slots currently assigned for a combination. */
-export function getAssignmentCount(combinationId: number): number {
+export function getAssignmentCount(combinationId: string): number {
 	return useWardrobeStore
 		.getState()
 		.assignments.filter((a) => a.combinationId === combinationId).length;
@@ -115,7 +115,7 @@ export function getAssignmentCount(combinationId: number): number {
 
 /** True when every color slot in the combination has a wardrobe assignment. */
 export function isCombinationComplete(
-	combinationId: number,
+	combinationId: string,
 	totalColors: number,
 ): boolean {
 	if (totalColors <= 0) return false;
@@ -128,7 +128,7 @@ export function isCombinationComplete(
  * for other combinations and for re-assignment if the user re-favorites.
  */
 export function cascadeDeleteAssignmentsForCombination(
-	combinationId: number,
+	combinationId: string,
 ): void {
 	warnIfNotHydrated("cascadeDeleteAssignmentsForCombination");
 	const { assignments, setAssignments } = useWardrobeStore.getState();

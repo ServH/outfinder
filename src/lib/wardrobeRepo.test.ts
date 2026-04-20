@@ -98,10 +98,10 @@ describe("assign / unassign", () => {
 		const itemB = seedItem("item-b");
 		useWardrobeStore.setState({ items: [itemA, itemB] });
 
-		assign(42, 0, "item-a");
-		assign(42, 0, "item-b");
+		assign("combo-42", 0, "item-a");
+		assign("combo-42", 0, "item-b");
 
-		const rows = getAssignmentsForCombination(42);
+		const rows = getAssignmentsForCombination("combo-42");
 		expect(rows).toHaveLength(1);
 		expect(rows[0]?.wardrobeItemId).toBe("item-b");
 
@@ -113,13 +113,13 @@ describe("assign / unassign", () => {
 		const itemA = seedItem("item-a");
 		useWardrobeStore.setState({ items: [itemA] });
 
-		assign(1, 0, "item-a");
-		assign(2, 1, "item-a");
-		assign(3, 2, "item-a");
+		assign("combo-1", 0, "item-a");
+		assign("combo-2", 1, "item-a");
+		assign("combo-3", 2, "item-a");
 
-		expect(getAssignmentCount(1)).toBe(1);
-		expect(getAssignmentCount(2)).toBe(1);
-		expect(getAssignmentCount(3)).toBe(1);
+		expect(getAssignmentCount("combo-1")).toBe(1);
+		expect(getAssignmentCount("combo-2")).toBe(1);
+		expect(getAssignmentCount("combo-3")).toBe(1);
 		expect(getItems()).toHaveLength(1);
 	});
 
@@ -127,13 +127,13 @@ describe("assign / unassign", () => {
 		const itemA = seedItem("item-a");
 		useWardrobeStore.setState({ items: [itemA] });
 
-		assign(7, 0, "item-a");
-		assign(7, 1, "item-a");
-		expect(getAssignmentCount(7)).toBe(2);
+		assign("combo-7", 0, "item-a");
+		assign("combo-7", 1, "item-a");
+		expect(getAssignmentCount("combo-7")).toBe(2);
 
-		unassign(7, 0);
+		unassign("combo-7", 0);
 
-		const rows = getAssignmentsForCombination(7);
+		const rows = getAssignmentsForCombination("combo-7");
 		expect(rows).toHaveLength(1);
 		expect(rows[0]?.colorIndex).toBe(1);
 	});
@@ -142,16 +142,16 @@ describe("assign / unassign", () => {
 		const itemA = seedItem("item-a");
 		useWardrobeStore.setState({ items: [itemA] });
 
-		assign(9, 0, "item-a");
-		assign(9, 1, "item-a");
-		expect(isCombinationComplete(9, 3)).toBe(false);
+		assign("combo-9", 0, "item-a");
+		assign("combo-9", 1, "item-a");
+		expect(isCombinationComplete("combo-9", 3)).toBe(false);
 
-		assign(9, 2, "item-a");
-		expect(isCombinationComplete(9, 3)).toBe(true);
+		assign("combo-9", 2, "item-a");
+		expect(isCombinationComplete("combo-9", 3)).toBe(true);
 	});
 
 	it("isCombinationComplete returns false when totalColors is 0", () => {
-		expect(isCombinationComplete(99, 0)).toBe(false);
+		expect(isCombinationComplete("combo-99", 0)).toBe(false);
 	});
 });
 
@@ -161,14 +161,14 @@ describe("cascadeDeleteAssignmentsForCombination", () => {
 		const itemB = seedItem("item-b");
 		useWardrobeStore.setState({ items: [itemA, itemB] });
 
-		assign(100, 0, "item-a");
-		assign(100, 1, "item-b");
-		assign(200, 0, "item-a");
+		assign("combo-100", 0, "item-a");
+		assign("combo-100", 1, "item-b");
+		assign("combo-200", 0, "item-a");
 
-		cascadeDeleteAssignmentsForCombination(100);
+		cascadeDeleteAssignmentsForCombination("combo-100");
 
-		expect(getAssignmentsForCombination(100)).toHaveLength(0);
-		expect(getAssignmentsForCombination(200)).toHaveLength(1);
+		expect(getAssignmentsForCombination("combo-100")).toHaveLength(0);
+		expect(getAssignmentsForCombination("combo-200")).toHaveLength(1);
 		expect(getItems()).toHaveLength(2);
 	});
 });
@@ -182,11 +182,11 @@ describe("removeItem", () => {
 		const itemA = seedItem("item-a");
 		useWardrobeStore.setState({ items: [itemA] });
 
-		assign(50, 0, "item-a");
+		assign("combo-50", 0, "item-a");
 		removeItem("item-a");
 
 		expect(getItems()).toHaveLength(0);
-		const rows = getAssignmentsForCombination(50);
+		const rows = getAssignmentsForCombination("combo-50");
 		expect(rows).toHaveLength(1);
 		expect(rows[0]?.wardrobeItemId).toBe("item-a");
 	});

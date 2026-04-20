@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import {
 	type CompositeNavigationProp,
@@ -6,7 +7,7 @@ import {
 } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { SymbolView } from "expo-symbols";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	FlatList,
@@ -24,7 +25,9 @@ import type { Combination } from "@/data/types";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
 import { useFavoritesNumCols, useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
+import { useIsIOS17OrNewer } from "@/lib/platform";
 import type { FavoritesStackParamList, TabParamList } from "@/navigation/types";
+import { useWardrobeStore } from "@/stores/wardrobeStore";
 import { wadaTokens } from "@/styles/theme";
 
 type FavoritesListNav = CompositeNavigationProp<
@@ -66,6 +69,10 @@ export function FavoritesList(_props: FavoritesListProps) {
 	}
 	const numCols = useFavoritesNumCols();
 	const { favorites, toggleFavorite, isFavorite } = useFavorites();
+	const supportsArmario = useIsIOS17OrNewer();
+	const hydrated = useWardrobeStore((s) => s.hydrated);
+	const assignments = useWardrobeStore((s) => s.assignments);
+	const isNavigating = useRef(false);
 
 	const gate = usePremiumGate(favorites);
 
@@ -79,6 +86,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 	useFocusEffect(
 		useCallback(() => {
 			setSortMode("recent");
+			isNavigating.current = false;
 		}, []),
 	);
 
@@ -99,6 +107,39 @@ export function FavoritesList(_props: FavoritesListProps) {
 		return result;
 	}, [favorites, sortMode]);
 
+	const handleComboPress = useCallback(
+		async (combinationId: string) => {
+			if (isNavigating.current) return;
+			isNavigating.current = true;
+			if (!supportsArmario || !hydrated) {
+				navigation.push("OutfitVisualizer", { combinationId });
+				return;
+			}
+			const assignedCount = assignments.filter(
+				(a) => a.combinationId === combinationId,
+			).length;
+			try {
+				const seen = await AsyncStorage.getItem(
+					`@wardrobe:s0_seen_for_${combinationId}`,
+				);
+				if (assignedCount === 0 && seen === null) {
+					navigation.push("ArmarioZeroState", { combinationId });
+				} else {
+					navigation.push("ArmarioFichaWada", { combinationId });
+				}
+			} catch (err) {
+				if (__DEV__) {
+					console.warn(
+						"[FavoritesList] s0_seen read failed, defaulting to S2",
+						err,
+					);
+				}
+				navigation.push("ArmarioFichaWada", { combinationId });
+			}
+		},
+		[navigation, assignments, supportsArmario, hydrated],
+	);
+
 	const renderComboCard = useCallback(
 		({ item }: { item: Combination }) => {
 			const currentlyFav = isFavorite(item.id);
@@ -110,11 +151,12 @@ export function FavoritesList(_props: FavoritesListProps) {
 						showYoursLabel={false}
 						isFavorite={currentlyFav}
 						onToggleFavorite={() => toggleFavorite(item.id)}
+						onPress={handleComboPress}
 					/>
 				</View>
 			);
 		},
-		[isFavorite, toggleFavorite, cardWidth],
+		[isFavorite, toggleFavorite, cardWidth, handleComboPress],
 	);
 
 	const listHeaderComponent = useMemo(

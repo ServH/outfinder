@@ -35,6 +35,10 @@
 
 generated: 2026-03-12
 last_updated: 2026-04-20
+# 2026-04-20 — Story 13.4a moved review → done (code review: 11 patches applied, 3 deferred, 3 dismissed)
+# 2026-04-20 — Story 13.4a moved backlog → ready-for-dev (create-story)
+# 2026-04-20 — Story 13.4a moved ready-for-dev → in-progress (dev-story)
+# 2026-04-20 — Story 13.4a moved in-progress → review (dev-story complete — +40 net tests, tsc/lint clean, 0 new regressions)
 # 2026-04-19 — Story 13.1 moved ready-for-dev → review → done (code review passed)
 # 2026-04-19 — Story 13.2 moved backlog → ready-for-dev (create-story)
 # 2026-04-19 — Story 13.2 moved ready-for-dev → in-progress (dev-story)
@@ -139,7 +143,7 @@ development_status:
   13-2-background-removal-native-module: done
   13-3a-capture-background-removal-ui-flow: done
   13-3b-wardrobe-persistence-lifecycle: done
-  13-4a-zero-state-ficha-wada-shared-components: backlog
+  13-4a-zero-state-ficha-wada-shared-components: done
   13-4b-armario-picker-assignment-mechanics: backlog
   13-5-s4-tu-look-skia-composition-share: backlog
   13-6-s5-sugerencia-armonia-favorites-badges: backlog

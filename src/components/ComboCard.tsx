@@ -17,6 +17,13 @@ export interface ComboCardProps {
 	isFavorite: boolean;
 	onToggleFavorite: () => void;
 	onPremiumGate?: () => void;
+	/**
+	 * Optional tap-press override. When provided, pre-empts the default
+	 * `navigation.push("OutfitVisualizer", ...)` routing — e.g. the Favorites
+	 * tab passes this to divert the tap into the Armario S0/S2 flow. Haptic
+	 * is still fired by `ComboCard`, so overrides must not re-fire it.
+	 */
+	onPress?: (combinationId: string) => void;
 }
 
 type ComboCardNav = {
@@ -31,6 +38,7 @@ export function ComboCard({
 	isFavorite,
 	onToggleFavorite,
 	onPremiumGate,
+	onPress,
 }: ComboCardProps) {
 	const { t } = useTranslation();
 	const isTablet = useIsIPad();
@@ -46,6 +54,10 @@ export function ComboCard({
 
 	function handleCardPress() {
 		hapticMedium();
+		if (onPress) {
+			onPress(combination.id);
+			return;
+		}
 		navigation.push("OutfitVisualizer", {
 			combinationId: combination.id,
 		});

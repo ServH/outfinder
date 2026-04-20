@@ -11,6 +11,8 @@ export type ColorsStackParamList = {
 export type FavoritesStackParamList = {
 	FavoritesList: undefined;
 	OutfitVisualizer: { combinationId: string; capturedHex?: string };
+	ArmarioZeroState: { combinationId: string };
+	ArmarioFichaWada: { combinationId: string };
 };
 
 export type SettingsStackParamList = {

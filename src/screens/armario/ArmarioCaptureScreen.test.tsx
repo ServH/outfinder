@@ -5,8 +5,13 @@ import {
 	screen,
 	waitFor,
 } from "@testing-library/react-native";
-import { Platform } from "react-native";
 import { hapticLight, hapticMedium } from "@/lib/haptics";
+
+const mockIsIOS17OrNewer = jest.fn(() => true);
+jest.mock("@/lib/platform", () => ({
+	isIOS17OrNewer: () => mockIsIOS17OrNewer(),
+	useIsIOS17OrNewer: () => mockIsIOS17OrNewer(),
+}));
 
 // ---- Mocks -----------------------------------------------------------------
 
@@ -94,16 +99,6 @@ async function flushMicrotasks() {
 
 // ---- Tests -----------------------------------------------------------------
 
-function setPlatformVersion(value: string | number) {
-	// Plain assignment on Platform.Version is a no-op under react-native's
-	// jest setup (getter-only on some versions). defineProperty works.
-	Object.defineProperty(Platform, "Version", {
-		value,
-		configurable: true,
-		writable: true,
-	});
-}
-
 describe("ArmarioCaptureScreen", () => {
 	beforeEach(() => {
 		mockPermission = { granted: true, canAskAgain: true, status: "granted" };
@@ -116,7 +111,7 @@ describe("ArmarioCaptureScreen", () => {
 		mockRemoveBackground.mockReset();
 		(hapticLight as jest.Mock).mockClear();
 		(hapticMedium as jest.Mock).mockClear();
-		setPlatformVersion("17.0");
+		mockIsIOS17OrNewer.mockReturnValue(true);
 	});
 
 	it("1. calls requestPermission exactly once when permission status is undetermined", () => {
@@ -299,7 +294,7 @@ describe("ArmarioCaptureScreen", () => {
 	});
 
 	it("7. iOS < 17 defensive gate — mount effect pops back and never mounts the capture-screen root", () => {
-		setPlatformVersion("16.4");
+		mockIsIOS17OrNewer.mockReturnValue(false);
 		const Screen = loadScreen();
 		render(<Screen />);
 		expect(mockGoBack).toHaveBeenCalledTimes(1);
