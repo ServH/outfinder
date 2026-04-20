@@ -11,11 +11,48 @@ jest.mock("@react-navigation/native", () => ({
 		children,
 }));
 
+// Root stack renders only the initial "Main" screen — TabNavigator — in tests.
+jest.mock("@react-navigation/native-stack", () => {
+	const React = require("react");
+	const { View } = require("react-native");
+	// biome-ignore lint/suspicious/noExplicitAny: test mock, props are ignored
+	const Screen = (_props: any) => null;
+	// biome-ignore lint/suspicious/noExplicitAny: test mock, children typed loosely
+	const Navigator = ({ children }: { children: any }) => {
+		const kids = React.Children.toArray(children);
+		const initial = kids[0];
+		if (!initial?.props?.component) {
+			return <View testID="root-navigator-empty" />;
+		}
+		const Comp = initial.props.component;
+		return <Comp />;
+	};
+	return {
+		createNativeStackNavigator: () => ({ Navigator, Screen }),
+	};
+});
+
 jest.mock("@/navigation/TabNavigator", () => ({
 	TabNavigator: () => {
 		const { View } = require("react-native");
 		return <View testID="tab-navigator" />;
 	},
+}));
+
+jest.mock("@/navigation/ArmarioStack", () => ({
+	ArmarioStack: () => null,
+}));
+
+jest.mock("@/lib/armario/wardrobeFiles", () => ({
+	runOrphanSweep: jest.fn().mockResolvedValue(undefined),
+}));
+
+jest.mock("@/stores/wardrobeStore", () => ({
+	hydrateWardrobeStore: jest.fn().mockResolvedValue(undefined),
+	useWardrobeStore: Object.assign(() => ({ items: [], assignments: [] }), {
+		getState: jest.fn().mockReturnValue({ items: [], assignments: [] }),
+		setState: jest.fn(),
+	}),
 }));
 
 jest.mock("@/contexts/FavoritesContext", () => ({

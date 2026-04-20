@@ -1,3 +1,5 @@
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Constants from "expo-constants";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,6 +18,8 @@ import { usePremium } from "@/contexts/PremiumContext";
 import { getRestoreErrorMessage, usePremiumGate } from "@/hooks/usePremiumGate";
 import { useIsIPad } from "@/lib/device";
 import { openAppStoreReview } from "@/lib/storeReview";
+import type { RootStackParamList } from "@/navigation/types";
+import { useWardrobeStore } from "@/stores/wardrobeStore";
 import { wadaTokens } from "@/styles/theme";
 
 const PRIVACY_URL = "https://servh.github.io/outfinder-legal/";
@@ -27,10 +31,15 @@ type RestoreState = "idle" | "loading" | "success" | "error";
 
 export function Settings(_props: SettingsProps) {
 	const { t } = useTranslation();
+	const navigation =
+		useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 	const { isPremium, restore } = usePremium();
 	const { favorites, toggleFavorite, count } = useFavorites();
 	const gate = usePremiumGate(favorites);
 	const isTablet = useIsIPad();
+	// Reactive read for the dev-menu wardrobe item count badge.
+	// useWardrobeStore.getState() inside JSX is a stale snapshot — hook selector keeps it live.
+	const wardrobeDevItemCount = useWardrobeStore((s) => s.items.length);
 
 	const [restoreState, setRestoreState] = useState<RestoreState>("idle");
 	const [restoreMessage, setRestoreMessage] = useState<string | null>(null);
@@ -227,6 +236,79 @@ export function Settings(_props: SettingsProps) {
 							)}
 						</View>
 					</View>
+
+					{/* __DEV__ menu — Armario Virtual smoke entry + limit override (Story 13.3a) */}
+					{__DEV__ && (
+						<View testID="dev-menu-section" className="mt-8">
+							<Text
+								allowFontScaling
+								className="font-sans text-[16px] font-bold mb-3 text-primary"
+							>
+								DEV
+							</Text>
+							<View className="bg-elevated rounded-xl overflow-hidden">
+								<Pressable
+									testID="dev-armario-capture-row"
+									className="px-4 py-3 min-h-[44px] justify-center"
+									accessibilityRole="button"
+									accessibilityLabel="Open Armario Virtual capture (dev)"
+									onPress={() => {
+										navigation
+											.getParent<
+												NativeStackNavigationProp<RootStackParamList>
+											>()
+											?.navigate("ArmarioRoot", { screen: "ArmarioCapture" });
+									}}
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[14px] text-primary"
+									>
+										Armario Virtual (dev)
+									</Text>
+								</Pressable>
+
+								<View className="h-[1px] bg-divider mx-4" />
+
+								<Pressable
+									testID="dev-wardrobe-limit-override-row"
+									className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+									accessibilityRole="button"
+									accessibilityLabel="Toggle wardrobe @limit override"
+									onPress={() => {
+										const { items, setItems } = useWardrobeStore.getState();
+										if (items.length === 0) {
+											const now = Date.now();
+											setItems(
+												Array.from({ length: 10 }, (_, i) => ({
+													id: `__dev-stub-${i}__`,
+													localImagePath: "file:///dev-stub.png",
+													thumbnailPath: "file:///dev-stub-thumb.png",
+													createdAt: now - i * 1000,
+												})),
+											);
+										} else {
+											setItems([]);
+										}
+									}}
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[14px] text-primary"
+									>
+										Wardrobe @limit override
+									</Text>
+									<Text
+										allowFontScaling
+										className="font-sans text-[12px] text-tertiary"
+									>
+										{wardrobeDevItemCount} /{" "}
+										{PREMIUM_CONFIG.FREE_WARDROBE_LIMIT}
+									</Text>
+								</Pressable>
+							</View>
+						</View>
+					)}
 
 					{/* About section */}
 					<View testID="about-section" className="mt-8">

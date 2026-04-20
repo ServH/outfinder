@@ -34,12 +34,21 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-12
-last_updated: 2026-04-19
+last_updated: 2026-04-20
 # 2026-04-19 — Story 13.1 moved ready-for-dev → review → done (code review passed)
 # 2026-04-19 — Story 13.2 moved backlog → ready-for-dev (create-story)
 # 2026-04-19 — Story 13.2 moved ready-for-dev → in-progress (dev-story)
 # 2026-04-19 — Story 13.2 moved in-progress → review (dev-story complete)
 # 2026-04-19 — Story 13.2 moved review → done (code review passed, 1 HIGH patch applied: NSError→Exception bridge fix)
+# 2026-04-19 — Story 13.3a moved backlog → ready-for-dev (create-story)
+# 2026-04-19 — Story 13.3a moved ready-for-dev → in-progress (dev-story)
+# 2026-04-19 — Story 13.3a moved in-progress → review (dev-story complete)
+# 2026-04-19 — Story 13.3a moved review → in-progress (code review: 13 patches, 8 deferred)
+# 2026-04-19 — Story 13.3a moved in-progress → done (all 13 patches applied + verified)
+# 2026-04-20 — Story 13.3b moved backlog → ready-for-dev (create-story)
+# 2026-04-20 — Story 13.3b moved ready-for-dev → in-progress (dev-story)
+# 2026-04-20 — Story 13.3b moved in-progress → review (dev-story complete — +29 net tests, on-device smoke deferred)
+# 2026-04-20 — Story 13.3b moved review → done (code review: 5 patches applied, 1 deferred to Story 13.1 debt)
 project: Outfinder
 project_key: NOKEY
 tracking_system: file-system
@@ -128,8 +137,8 @@ development_status:
   epic-13: in-progress
   13-1-wardrobe-data-model-repository-zustand-store: done
   13-2-background-removal-native-module: done
-  13-3a-capture-background-removal-ui-flow: backlog
-  13-3b-wardrobe-persistence-lifecycle: backlog
+  13-3a-capture-background-removal-ui-flow: done
+  13-3b-wardrobe-persistence-lifecycle: done
   13-4a-zero-state-ficha-wada-shared-components: backlog
   13-4b-armario-picker-assignment-mechanics: backlog
   13-5-s4-tu-look-skia-composition-share: backlog

@@ -4,6 +4,23 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 13-3b-wardrobe-persistence-lifecycle (2026-04-20)
+
+- **D1-13.3b** — `hydrateWardrobeStore` not guarded against concurrent invocations (`src/stores/wardrobeStore.ts`). Module import, App.tsx IIFE, AppState listener, and `saveCutoutAsWardrobeItem` all call `hydrateWardrobeStore()` without dedup guard. Could cause concurrent AsyncStorage reads + state overwrites. Pre-existing Story 13.1 debt — fix in a future hydration hardening story.
+
+---
+
+## Deferred from: code review of 13-3a-capture-background-removal-ui-flow (2026-04-19)
+
+- **W1-13.3a** — `File.delete()` SDK 55 class-based API sync/async unclear: if `delete()` returns `Promise<void>`, `try/catch` in `deleteCutoutTmp` silently swallows rejections; verify SDK 55 types before 13.3b lands. [`src/screens/armario/ArmarioPreviewScreen.tsx`]
+- **W2-13.3a** — `handlePaywallDismiss` unconditionally deletes cutout: if user upgrades mid-paywall and 13.3b's real save runs, `cutoutUri` will already be deleted. Documented as acceptable in Completion Notes. 13.3b owns the real fix with atomic move pattern.
+- **W3-13.3a** — Stub happy-path leaves tmp file orphaned: on successful `saveCutoutAsWardrobeItem` the tmp PNG is never deleted. Explicitly documented in spec as acceptable for 13.3a. 13.3b adds cleanup inside the real atomic save path.
+- **W4-13.3a** — `NSPhotoLibraryUsageDescription` duplicated in `ios.infoPlist` AND `expo-image-picker` plugin `photosPermission`. Intentional per spec as a backup; risk is both strings diverging in future. Clean up the redundant `infoPlist` entry after confirming the plugin writes it correctly post-prebuild.
+- **W5-13.3a** — Test #1 permission re-render isolation gap: validates ref guard on same-state re-render but not on `undetermined → granted` state transition. Test currently passes and the guard is validated. Full variant coverage deferred.
+- **W6-13.3a** — `handleRetake` synchronous double-goBack risk: native swipe-back + Retake tap in same frame could issue two `navigation.goBack()` calls. React Navigation handles duplicate pops gracefully. Pre-existing RN pattern.
+- **W7-13.3a** — Missing `testID` on `ActivityIndicator` inside processing overlay. Tests assert the parent overlay container (`armario-processing-overlay`) but not the spinner directly.
+- **W8-13.3a** — `AccessibilityInfo.announceForAccessibility` `useEffect` depends on `[t]` — theoretical re-fire if i18next re-creates `t` during a language switch mid-session. Extremely unlikely in practice.
+
 ## Deferred from: code review of 13-2-background-removal-native-module (2026-04-19)
 
 - **W1-13.2** — Double CIImage pre-validation load in `BackgroundRemovalModule.process`: `guard CIImage(contentsOf:) != nil` decodes the full image just to validate readability, then discards it; Vision re-opens via URL. Spec-required (AC #3 ioFailed pattern mirrors WhiteBalance). Revisit in Story 13.5 when profiling the full composition pipeline.

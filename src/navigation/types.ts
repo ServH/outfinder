@@ -1,3 +1,5 @@
+import type { NavigatorScreenParams } from "@react-navigation/native";
+
 export type ColorsStackParamList = {
 	ColorHome: undefined;
 	BrowseAllColors: undefined;
@@ -19,4 +21,14 @@ export type TabParamList = {
 	ColorsTab: { screen: keyof ColorsStackParamList } | undefined;
 	FavoritesTab: undefined;
 	SettingsTab: undefined;
+};
+
+export type ArmarioStackParamList = {
+	ArmarioCapture: { onCutoutSaved?: (id: string) => void } | undefined;
+	ArmarioPreview: { cutoutUri: string; sourceUri: string };
+};
+
+export type RootStackParamList = {
+	Main: undefined;
+	ArmarioRoot: NavigatorScreenParams<ArmarioStackParamList> | undefined;
 };

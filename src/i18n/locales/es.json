@@ -179,6 +179,32 @@
 		"genericError": "Algo salió mal. Por favor inténtalo de nuevo.",
 		"noPreviousPurchase": "No se encontró ninguna compra anterior para este Apple ID."
 	},
+	"armario": {
+		"capture": {
+			"guidanceHint": "Pon la prenda sobre fondo liso, buena luz",
+			"captureButtonLabel": "Tomar foto de la prenda",
+			"chooseLibraryButtonLabel": "Elegir de la Biblioteca",
+			"permissionDenied": "Se necesita acceso a la cámara para añadir prendas a tu Armario.",
+			"libraryPermissionDenied": "Se necesita acceso a la biblioteca de fotos para elegir una imagen de la prenda.",
+			"openSettings": "Abrir Ajustes",
+			"removingBackground": "Quitando el fondo…",
+			"errorNoSubject": "No pudimos encontrar la prenda. Prueba con fondo liso y buena luz.",
+			"errorVisionFailed": "No se pudo quitar el fondo. Inténtalo de nuevo.",
+			"errorIoFailed": "No se pudo leer o guardar la foto. Inténtalo de nuevo.",
+			"errorDismiss": "Cerrar",
+			"goBack": "Volver"
+		},
+		"preview": {
+			"cutoutReady": "Fondo eliminado. Revisa el recorte.",
+			"retakeButton": "Repetir",
+			"useButton": "Usar esta foto",
+			"imageLabel": "Vista previa del recorte de la prenda",
+			"errorDiskFull": "No hay espacio en el dispositivo",
+			"errorEncode": "No pudimos procesar la foto. Inténtalo de nuevo.",
+			"errorSaveFailed": "No pudimos guardar la prenda. Inténtalo de nuevo.",
+			"errorDismiss": "Descartar"
+		}
+	},
 	"colorCapture": {
 		"cameraButtonLabel": "Abrir cámara para identificar el color de la prenda",
 		"captureButtonLabel": "Tomar foto",
