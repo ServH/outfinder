@@ -1,4 +1,10 @@
-import { act, fireEvent, render, screen } from "@testing-library/react-native";
+import {
+	act,
+	fireEvent,
+	render,
+	screen,
+	waitFor,
+} from "@testing-library/react-native";
 import * as ReactNative from "react-native";
 import { getCombination } from "@/data/colorIndex";
 import { hapticLight, hapticMedium } from "@/lib/haptics";
@@ -6,6 +12,42 @@ import { FavoritesList } from "./FavoritesList";
 
 const mockPush = jest.fn();
 let mockFocusEffectCallback: (() => void) | null = null;
+
+jest.mock("@react-native-async-storage/async-storage", () =>
+	require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
+);
+
+// ---- Interceptable mocks ---------------------------------------------------
+// These default to "legacy iOS < 17" so existing tests (which assume direct
+// OutfitVisualizer routing) still pass without touching them. The 3 Story
+// 13.4a intercept tests override as needed.
+const mockIsIOS17OrNewer = jest.fn(() => false);
+jest.mock("@/lib/platform", () => ({
+	isIOS17OrNewer: () => mockIsIOS17OrNewer(),
+	useIsIOS17OrNewer: () => mockIsIOS17OrNewer(),
+}));
+
+let mockHydrated = false;
+let mockAssignments: Array<{
+	combinationId: string;
+	colorIndex: number;
+	wardrobeItemId: string;
+	assignedAt: number;
+}> = [];
+jest.mock("@/stores/wardrobeStore", () => ({
+	useWardrobeStore: (
+		selector: (s: {
+			hydrated: boolean;
+			assignments: typeof mockAssignments;
+			items: never[];
+		}) => unknown,
+	) =>
+		selector({
+			hydrated: mockHydrated,
+			assignments: mockAssignments,
+			items: [],
+		}),
+}));
 
 jest.mock("@react-navigation/native", () => ({
 	useNavigation: () => ({
@@ -95,6 +137,9 @@ describe("FavoritesList", () => {
 		mockHandlePremiumGate.mockClear();
 		mockToastVisible = false;
 		mockFocusEffectCallback = null;
+		mockIsIOS17OrNewer.mockReturnValue(false);
+		mockHydrated = false;
+		mockAssignments = [];
 		(hapticLight as jest.Mock).mockClear();
 	});
 
@@ -442,6 +487,78 @@ describe("FavoritesList", () => {
 		expect(
 			screen.getByTestId("sort-pill-recent").props.accessibilityState,
 		).toEqual({ selected: false });
+	});
+
+	// --- Story 13.4a: Armario intercept (AC #6) ---
+
+	it("iOS 17+ hydrated + 0 assignments + s0 not seen → taps route to ArmarioZeroState", async () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockAssignments = [];
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId(`combo-card-${realCombo1.id}`));
+		});
+		await waitFor(() => {
+			expect(mockPush).toHaveBeenCalledWith("ArmarioZeroState", {
+				combinationId: realCombo1.id,
+			});
+		});
+		expect(mockPush).not.toHaveBeenCalledWith(
+			"OutfitVisualizer",
+			expect.anything(),
+		);
+	});
+
+	it("iOS 17+ hydrated + existing assignment → taps route to ArmarioFichaWada", async () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockAssignments = [
+			{
+				combinationId: realCombo1.id,
+				colorIndex: 0,
+				wardrobeItemId: "uuid-1",
+				assignedAt: 1_700_000_000_000,
+			},
+		];
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId(`combo-card-${realCombo1.id}`));
+		});
+		await waitFor(() => {
+			expect(mockPush).toHaveBeenCalledWith("ArmarioFichaWada", {
+				combinationId: realCombo1.id,
+			});
+		});
+	});
+
+	it("iOS < 17 OR not hydrated → taps still route to OutfitVisualizer (NFR9 parity)", async () => {
+		mockIsIOS17OrNewer.mockReturnValue(false);
+		mockHydrated = true;
+		mockAssignments = [];
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId(`combo-card-${realCombo1.id}`));
+		});
+		await waitFor(() => {
+			expect(mockPush).toHaveBeenCalledWith("OutfitVisualizer", {
+				combinationId: realCombo1.id,
+			});
+		});
+		expect(mockPush).not.toHaveBeenCalledWith(
+			"ArmarioZeroState",
+			expect.anything(),
+		);
+		expect(mockPush).not.toHaveBeenCalledWith(
+			"ArmarioFichaWada",
+			expect.anything(),
+		);
 	});
 });
 

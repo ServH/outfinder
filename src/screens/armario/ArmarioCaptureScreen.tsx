@@ -8,12 +8,12 @@ import { useTranslation } from "react-i18next";
 import {
 	ActivityIndicator,
 	Linking,
-	Platform,
 	Pressable,
 	Text,
 	View,
 } from "react-native";
 import { hapticLight, hapticMedium } from "@/lib/haptics";
+import { useIsIOS17OrNewer } from "@/lib/platform";
 import type { ArmarioStackParamList } from "@/navigation/types";
 import {
 	type BackgroundRemovalError,
@@ -47,13 +47,6 @@ function isBackgroundRemovalError(e: unknown): e is BackgroundRemovalError {
 	);
 }
 
-function supportsVisionSegmentation(): boolean {
-	if (Platform.OS !== "ios") return false;
-	const raw = Platform.Version;
-	const major = typeof raw === "string" ? parseInt(raw, 10) : (raw as number);
-	return Number.isFinite(major) && major >= 17;
-}
-
 export function ArmarioCaptureScreen(_props: ArmarioCaptureScreenProps) {
 	const { t } = useTranslation();
 	const navigation = useNavigation<ArmarioCaptureNav>();
@@ -76,7 +69,7 @@ export function ArmarioCaptureScreen(_props: ArmarioCaptureScreenProps) {
 	// Primary gating for iOS 17+ happens upstream in Story 13.4a's entry points.
 	// This effect is a secondary safety net: if a caller bypasses the gate, the
 	// screen pops immediately so the user never sees a half-rendered flow.
-	const supportsVision = supportsVisionSegmentation();
+	const supportsVision = useIsIOS17OrNewer();
 	useEffect(() => {
 		if (!supportsVision) {
 			navigation.goBack();

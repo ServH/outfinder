@@ -16,7 +16,7 @@ export interface WardrobeItem {
  * `assign` twice on the same slot overwrites the previous row.
  */
 export interface CombinationAssignment {
-	combinationId: number;
+	combinationId: string;
 	colorIndex: number;
 	wardrobeItemId: string;
 	assignedAt: number;

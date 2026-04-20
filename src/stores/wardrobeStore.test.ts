@@ -17,7 +17,7 @@ const validItem = {
 };
 
 const validAssignment = {
-	combinationId: 17,
+	combinationId: "combo-17",
 	colorIndex: 0,
 	wardrobeItemId: "uuid-1",
 	assignedAt: 1_700_000_000_000,
@@ -72,7 +72,7 @@ describe("hydrateWardrobeStore", () => {
 		await AsyncStorage.setItem(ITEMS_KEY, JSON.stringify([validItem]));
 		await AsyncStorage.setItem(
 			ASSIGNMENTS_KEY,
-			JSON.stringify([{ combinationId: "not-a-number" }]),
+			JSON.stringify([{ combinationId: 42 }]),
 		);
 
 		await hydrateWardrobeStore();

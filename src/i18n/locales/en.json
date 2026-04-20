@@ -203,6 +203,30 @@
 			"errorEncode": "Couldn't process the photo. Please try again.",
 			"errorSaveFailed": "Couldn't save the garment. Please try again.",
 			"errorDismiss": "Dismiss"
+		},
+		"s0": {
+			"screenLabel": "Zero state screen",
+			"heroTitle": "Dress this palette with your clothes",
+			"subtitle": "Assign a real garment to each color. Once all three are ready, we'll compose your look.",
+			"primaryCta": "Start assigning garments",
+			"secondaryCta": "Not now",
+			"polaroidA11y": "Placeholder for {{color}}. Double-tap to start assigning."
+		},
+		"s2": {
+			"screenLabel": "Wada fiche screen",
+			"instruction": "Assign your garments to each color of the palette",
+			"wardrobeLabel": "YOUR WARDROBE",
+			"linkAssign": "Assign →",
+			"linkChange": "Change →",
+			"viewLookCta": "See your look",
+			"slotA11yUnassigned": "{{color}}, unassigned. Double-tap to assign.",
+			"slotA11yAssigned": "{{color}}, assigned. Double-tap to change."
+		},
+		"badge": {
+			"complete": "{{assigned}}/{{total}}",
+			"partial": "{{assigned}}/{{total}}",
+			"none": "No garments yet",
+			"a11y": "{{assigned}} of {{total}} assigned"
 		}
 	},
 	"colorCapture": {

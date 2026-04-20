@@ -30,7 +30,7 @@ function isCombinationAssignment(
 	if (typeof value !== "object" || value === null) return false;
 	const v = value as Record<string, unknown>;
 	return (
-		typeof v.combinationId === "number" &&
+		typeof v.combinationId === "string" &&
 		typeof v.colorIndex === "number" &&
 		typeof v.wardrobeItemId === "string" &&
 		typeof v.assignedAt === "number"

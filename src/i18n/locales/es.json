@@ -203,6 +203,30 @@
 			"errorEncode": "No pudimos procesar la foto. Inténtalo de nuevo.",
 			"errorSaveFailed": "No pudimos guardar la prenda. Inténtalo de nuevo.",
 			"errorDismiss": "Descartar"
+		},
+		"s0": {
+			"screenLabel": "Pantalla de inicio",
+			"heroTitle": "Viste esta paleta con tu ropa",
+			"subtitle": "Asigna una prenda real a cada color. Cuando los tres estén listos, generamos tu look al instante.",
+			"primaryCta": "Empezar a asignar prendas",
+			"secondaryCta": "Ahora no",
+			"polaroidA11y": "Hueco para {{color}}. Doble-tap para empezar a asignar."
+		},
+		"s2": {
+			"screenLabel": "Pantalla Ficha Wada",
+			"instruction": "Asigna tus prendas a cada color de la paleta",
+			"wardrobeLabel": "TU ARMARIO",
+			"linkAssign": "Asignar →",
+			"linkChange": "Cambiar →",
+			"viewLookCta": "Ver tu look",
+			"slotA11yUnassigned": "{{color}}, sin asignar. Doble-tap para asignar.",
+			"slotA11yAssigned": "{{color}}, asignada. Doble-tap para cambiar."
+		},
+		"badge": {
+			"complete": "{{assigned}}/{{total}}",
+			"partial": "{{assigned}}/{{total}}",
+			"none": "Sin prendas",
+			"a11y": "{{assigned}} de {{total}} asignadas"
 		}
 	},
 	"colorCapture": {
