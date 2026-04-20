@@ -43,6 +43,18 @@ jest.mock("@/navigation/ArmarioStack", () => ({
 	ArmarioStack: () => null,
 }));
 
+jest.mock("@/lib/armario/wardrobeFiles", () => ({
+	runOrphanSweep: jest.fn().mockResolvedValue(undefined),
+}));
+
+jest.mock("@/stores/wardrobeStore", () => ({
+	hydrateWardrobeStore: jest.fn().mockResolvedValue(undefined),
+	useWardrobeStore: Object.assign(() => ({ items: [], assignments: [] }), {
+		getState: jest.fn().mockReturnValue({ items: [], assignments: [] }),
+		setState: jest.fn(),
+	}),
+}));
+
 jest.mock("@/contexts/FavoritesContext", () => ({
 	FavoritesProvider: ({ children }: { children: React.ReactNode }) => children,
 }));

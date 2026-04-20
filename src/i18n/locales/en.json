@@ -198,7 +198,11 @@
 			"cutoutReady": "Background removed. Check the cutout.",
 			"retakeButton": "Retake",
 			"useButton": "Use this photo",
-			"imageLabel": "Garment cutout preview"
+			"imageLabel": "Garment cutout preview",
+			"errorDiskFull": "Your device is out of space",
+			"errorEncode": "Couldn't process the photo. Please try again.",
+			"errorSaveFailed": "Couldn't save the garment. Please try again.",
+			"errorDismiss": "Dismiss"
 		}
 	},
 	"colorCapture": {

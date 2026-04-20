@@ -11,17 +11,48 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { AppState } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { PremiumProvider } from "@/contexts/PremiumContext";
+import { runOrphanSweep } from "@/lib/armario/wardrobeFiles";
 import { ArmarioStack } from "@/navigation/ArmarioStack";
 import { TabNavigator } from "@/navigation/TabNavigator";
 import type { RootStackParamList } from "@/navigation/types";
+import { hydrateWardrobeStore, useWardrobeStore } from "@/stores/wardrobeStore";
 
 SplashScreen.preventAutoHideAsync();
+
+// Orphan sweep — runs at module load (covers fresh installs) and on every
+// AppState=active transition. Lives at module scope (not a React effect) so
+// its lifetime is tied to the process, not any component's mount window.
+// `hydrateWardrobeStore` is idempotent; the await below only blocks if a
+// prior hydration is still in flight.
+void (async () => {
+	try {
+		await hydrateWardrobeStore();
+		await runOrphanSweep({ items: useWardrobeStore.getState().items });
+	} catch (error) {
+		if (__DEV__) {
+			console.warn("[App] initial orphan sweep failed:", error);
+		}
+	}
+})();
+
+AppState.addEventListener("change", async (next) => {
+	if (next !== "active") return;
+	try {
+		await hydrateWardrobeStore();
+		await runOrphanSweep({ items: useWardrobeStore.getState().items });
+	} catch (error) {
+		if (__DEV__) {
+			console.warn("[App] AppState orphan sweep failed:", error);
+		}
+	}
+});
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 

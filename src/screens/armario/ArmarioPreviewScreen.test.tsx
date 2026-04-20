@@ -267,4 +267,80 @@ describe("ArmarioPreviewScreen", () => {
 			"Background removed. Check the cutout.",
 		);
 	});
+
+	it("6. Usar diskFull path: save rejects with kind=diskFull → errorDiskFull sheet + Dismiss re-enables CTAs", async () => {
+		saveMock.mockRejectedValueOnce(
+			new WardrobePersistenceError("diskFull", "not enough space"),
+		);
+		render(<ArmarioPreviewScreen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
+		});
+		await flushMicrotasks();
+
+		await waitFor(() => {
+			expect(screen.getByTestId("armario-preview-error-sheet")).toBeTruthy();
+		});
+		expect(screen.getByText("Your device is out of space")).toBeTruthy();
+
+		// Dismiss closes the sheet — CTAs remain enabled, tmp is NOT deleted on
+		// error dismissal (Repetir still owns cutout cleanup).
+		mockFileDelete.mockReset();
+		await act(async () => {
+			fireEvent.press(
+				screen.getByTestId("armario-preview-error-dismiss-button"),
+			);
+		});
+		await waitFor(() => {
+			expect(screen.queryByTestId("armario-preview-error-sheet")).toBeNull();
+		});
+		expect(mockFileDelete).not.toHaveBeenCalled();
+
+		const useBtn = screen.getByTestId("armario-preview-use-button");
+		const retakeBtn = screen.getByTestId("armario-preview-retake-button");
+		expect(useBtn.props.accessibilityState).toEqual({ disabled: false });
+		expect(retakeBtn.props.accessibilityState).toEqual({ disabled: false });
+	});
+
+	it("7. Usar encode path: save rejects with kind=encode → errorEncode sheet", async () => {
+		saveMock.mockRejectedValueOnce(
+			new WardrobePersistenceError("encode", "libjpeg boom"),
+		);
+		render(<ArmarioPreviewScreen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
+		});
+		await flushMicrotasks();
+
+		await waitFor(() => {
+			expect(screen.getByTestId("armario-preview-error-sheet")).toBeTruthy();
+		});
+		expect(
+			screen.getByText("Couldn't process the photo. Please try again."),
+		).toBeTruthy();
+	});
+
+	it.each([
+		["move"],
+		["repoAdd"],
+	] as const)("8. Usar %s path: save rejects → errorSaveFailed sheet", async (kind) => {
+		saveMock.mockRejectedValueOnce(
+			new WardrobePersistenceError(kind, "synthetic failure"),
+		);
+		render(<ArmarioPreviewScreen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
+		});
+		await flushMicrotasks();
+
+		await waitFor(() => {
+			expect(screen.getByTestId("armario-preview-error-sheet")).toBeTruthy();
+		});
+		expect(
+			screen.getByText("Couldn't save the garment. Please try again."),
+		).toBeTruthy();
+	});
 });

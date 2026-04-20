@@ -1,14 +1,22 @@
 /**
- * Persistence errors raised by `saveCutoutAsWardrobeItem`. Story 13.3a only
- * defines `"paywall"`; Story 13.3b will widen the `kind` union with
- * `"encode" | "move" | "repoAdd" | "diskFull"`. Widening (not narrowing) keeps
- * this story's catch blocks type-safe when 13.3b lands.
+ * Persistence errors raised by `saveCutoutAsWardrobeItem`. Widened from the
+ * Story 13.3a `"paywall"`-only shape so the capture flow can distinguish
+ * paywall (free-tier limit), encode failures (WebP re-encode threw),
+ * file-move failures (permission / IO), disk-full conditions, and
+ * repo-commit failures.
  */
+export type WardrobePersistenceErrorKind =
+	| "paywall"
+	| "encode"
+	| "move"
+	| "repoAdd"
+	| "diskFull";
+
 export class WardrobePersistenceError extends Error {
 	override name = "WardrobePersistenceError";
 
 	constructor(
-		public kind: "paywall",
+		public kind: WardrobePersistenceErrorKind,
 		message?: string,
 	) {
 		super(message ?? kind);

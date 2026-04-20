@@ -198,7 +198,11 @@
 			"cutoutReady": "Fondo eliminado. Revisa el recorte.",
 			"retakeButton": "Repetir",
 			"useButton": "Usar esta foto",
-			"imageLabel": "Vista previa del recorte de la prenda"
+			"imageLabel": "Vista previa del recorte de la prenda",
+			"errorDiskFull": "No hay espacio en el dispositivo",
+			"errorEncode": "No pudimos procesar la foto. Inténtalo de nuevo.",
+			"errorSaveFailed": "No pudimos guardar la prenda. Inténtalo de nuevo.",
+			"errorDismiss": "Descartar"
 		}
 	},
 	"colorCapture": {

@@ -21,7 +21,10 @@ jest.mock("@/stores/wardrobeStore", () => {
 			setState: jest.fn(),
 		},
 	);
-	return { useWardrobeStore, hydrateWardrobeStore: jest.fn().mockResolvedValue(undefined) };
+	return {
+		useWardrobeStore,
+		hydrateWardrobeStore: jest.fn().mockResolvedValue(undefined),
+	};
 });
 jest.mock("@react-navigation/native", () => ({
 	useNavigation: () => ({

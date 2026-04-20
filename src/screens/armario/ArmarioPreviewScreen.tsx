@@ -57,6 +57,7 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 
 	const [submitting, setSubmitting] = useState(false);
 	const [paywallVisible, setPaywallVisible] = useState(false);
+	const [errorCopy, setErrorCopy] = useState<string | null>(null);
 	const isMounted = useRef(true);
 
 	useEffect(() => {
@@ -96,15 +97,34 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 		} catch (e) {
 			if (!isMounted.current) return;
 			setSubmitting(false);
-			if (e instanceof WardrobePersistenceError && e.kind === "paywall") {
-				setPaywallVisible(true);
-				return;
+			if (e instanceof WardrobePersistenceError) {
+				if (e.kind === "paywall") {
+					setPaywallVisible(true);
+					return;
+				}
+				if (e.kind === "diskFull") {
+					setErrorCopy(t("armario.preview.errorDiskFull"));
+					return;
+				}
+				if (e.kind === "encode") {
+					setErrorCopy(t("armario.preview.errorEncode"));
+					return;
+				}
+				if (e.kind === "move" || e.kind === "repoAdd") {
+					setErrorCopy(t("armario.preview.errorSaveFailed"));
+					return;
+				}
 			}
 			if (__DEV__) {
 				console.warn("[ArmarioPreviewScreen] save failed:", e);
 			}
 		}
-	}, [cutoutUri, sourceUri, isPremium, navigation, submitting]);
+	}, [cutoutUri, sourceUri, isPremium, navigation, submitting, t]);
+
+	const handleErrorDismiss = useCallback(() => {
+		if (!isMounted.current) return;
+		setErrorCopy(null);
+	}, []);
 
 	const handlePaywallDismiss = useCallback(() => {
 		if (!isMounted.current) return;
@@ -227,6 +247,52 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 					)}
 				</Pressable>
 			</View>
+
+			{errorCopy !== null && (
+				<View
+					testID="armario-preview-error-sheet"
+					accessibilityRole="alert"
+					accessibilityLiveRegion="assertive"
+					className="absolute left-4 right-4 rounded-[14px]"
+					style={{
+						bottom: 200,
+						backgroundColor: "rgba(0,0,0,0.82)",
+						paddingHorizontal: 16,
+						paddingVertical: 16,
+					}}
+				>
+					<Text
+						style={{
+							fontFamily: "Inter_400Regular",
+							fontSize: 14,
+							color: "white",
+							textAlign: "center",
+							lineHeight: 20,
+						}}
+					>
+						{errorCopy}
+					</Text>
+					<View className="flex-row justify-center mt-3">
+						<Pressable
+							testID="armario-preview-error-dismiss-button"
+							onPress={handleErrorDismiss}
+							accessibilityRole="button"
+							accessibilityLabel={t("armario.preview.errorDismiss")}
+							className="min-h-[44px] min-w-[44px] items-center justify-center px-4"
+						>
+							<Text
+								style={{
+									fontFamily: "Inter_500Medium",
+									fontSize: 14,
+									color: "white",
+								}}
+							>
+								{t("armario.preview.errorDismiss")}
+							</Text>
+						</Pressable>
+					</View>
+				</View>
+			)}
 
 			<PremiumPaywall
 				visible={paywallVisible}
