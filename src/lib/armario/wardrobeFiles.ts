@@ -180,7 +180,7 @@ function sweepDirectory(
 		const basename = basenameWithoutExtension(entry.uri);
 		if (refSet.has(basename)) continue;
 		const mtime = entry.modificationTime;
-		if (mtime === null) continue; // conservative — don't delete unknown-age files
+		if (mtime === null || mtime === undefined) continue; // conservative — don't delete unknown-age files
 		if (now - mtime <= ORPHAN_GRACE_MS) continue;
 		try {
 			entry.delete();

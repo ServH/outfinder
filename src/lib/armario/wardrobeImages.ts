@@ -14,6 +14,8 @@ const MASTER_COMPRESS = 0.9;
 const THUMB_COMPRESS = 0.75;
 const THUMB_WIDTH = 300;
 const THUMB_HEIGHT = 360;
+const DISK_FULL_REGEX =
+	/not enough space|insufficient storage|permission|not permitted/i;
 
 function ensureTmpDirectory(): Directory {
 	const dir = new Directory(Paths.cache, TMP_SUBDIR);
@@ -39,6 +41,9 @@ async function encodeAndPark(
 		return destination.uri;
 	} catch (e) {
 		const message = e instanceof Error ? e.message : String(e);
+		if (DISK_FULL_REGEX.test(message)) {
+			throw new WardrobePersistenceError("diskFull", message);
+		}
 		throw new WardrobePersistenceError("encode", message);
 	}
 }

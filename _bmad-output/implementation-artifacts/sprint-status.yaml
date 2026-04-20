@@ -48,6 +48,7 @@ last_updated: 2026-04-20
 # 2026-04-20 — Story 13.3b moved backlog → ready-for-dev (create-story)
 # 2026-04-20 — Story 13.3b moved ready-for-dev → in-progress (dev-story)
 # 2026-04-20 — Story 13.3b moved in-progress → review (dev-story complete — +29 net tests, on-device smoke deferred)
+# 2026-04-20 — Story 13.3b moved review → done (code review: 5 patches applied, 1 deferred to Story 13.1 debt)
 project: Outfinder
 project_key: NOKEY
 tracking_system: file-system
@@ -137,7 +138,7 @@ development_status:
   13-1-wardrobe-data-model-repository-zustand-store: done
   13-2-background-removal-native-module: done
   13-3a-capture-background-removal-ui-flow: done
-  13-3b-wardrobe-persistence-lifecycle: review
+  13-3b-wardrobe-persistence-lifecycle: done
   13-4a-zero-state-ficha-wada-shared-components: backlog
   13-4b-armario-picker-assignment-mechanics: backlog
   13-5-s4-tu-look-skia-composition-share: backlog

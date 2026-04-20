@@ -4,6 +4,12 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 13-3b-wardrobe-persistence-lifecycle (2026-04-20)
+
+- **D1-13.3b** — `hydrateWardrobeStore` not guarded against concurrent invocations (`src/stores/wardrobeStore.ts`). Module import, App.tsx IIFE, AppState listener, and `saveCutoutAsWardrobeItem` all call `hydrateWardrobeStore()` without dedup guard. Could cause concurrent AsyncStorage reads + state overwrites. Pre-existing Story 13.1 debt — fix in a future hydration hardening story.
+
+---
+
 ## Deferred from: code review of 13-3a-capture-background-removal-ui-flow (2026-04-19)
 
 - **W1-13.3a** — `File.delete()` SDK 55 class-based API sync/async unclear: if `delete()` returns `Promise<void>`, `try/catch` in `deleteCutoutTmp` silently swallows rejections; verify SDK 55 types before 13.3b lands. [`src/screens/armario/ArmarioPreviewScreen.tsx`]

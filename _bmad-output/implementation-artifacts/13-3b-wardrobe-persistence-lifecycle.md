@@ -1,6 +1,6 @@
 # Story 13.3b: Wardrobe Persistence & Lifecycle
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -545,9 +545,26 @@ The existing `dev-wardrobe-limit-override-row` (Story 13.3a) is unchanged and st
 - `ios/` diff — must be regenerated via `npx expo prebuild --clean`
 - `assets/dev/sample-garment.png` + Settings.tsx seed-100 dev row — optional, pending asset choice + on-device QA window
 
+### Review Findings
+
+> Code review 2026-04-20 — 3 layers (Blind Hunter + Edge Case Hunter + Acceptance Auditor). 5 patch, 1 defer, 13 dismissed.
+
+**Patch findings (must fix before merge):**
+
+- [x] [Review][Patch] P1: `encodeAndPark` masks disk-full as `kind="encode"` — wrong user message shown [`src/lib/armario/wardrobeImages.ts` catch block in `encodeAndPark`]. If `ensureTmpDirectory()` or `source.move(destination)` throws with a "not enough space" message, it's wrapped as `kind="encode"` → Preview shows "Couldn't process the photo" instead of "Your device is out of space". Fix: apply `DISK_FULL_REGEX` inside the catch to distinguish disk-full vs encode failure.
+- [x] [Review][Patch] P2: Unknown `WardrobePersistenceError` kinds silently fail in production [`src/screens/armario/ArmarioPreviewScreen.tsx` handleUse catch block]. If a future story adds a new `kind`, the `instanceof WardrobePersistenceError` block is entered but no branch matches → `submitting` resets to false silently with zero user feedback. Fix: add a trailing `else { setErrorCopy(t("armario.preview.errorSaveFailed")); }` after the last `if` branch.
+- [x] [Review][Patch] P3: `sweepDirectory` uses `=== null` guard on `modificationTime` — may delete files if SDK returns `undefined` [`src/lib/armario/wardrobeFiles.ts` `sweepDirectory`]. `undefined === null` is false → `now - undefined = NaN` → `NaN <= ORPHAN_GRACE_MS` is false → file passes the grace check and gets deleted. Fix: `mtime == null` (loose equality) to catch both null and undefined.
+- [x] [Review][Patch] P4: `handleUse` calls `setSubmitting(false)` before `navigation.goBack()` on success path [`src/screens/armario/ArmarioPreviewScreen.tsx` handleUse]. Brief render cycle where the button is re-enabled before navigation, allowing a double-tap race. Fix: remove `setSubmitting(false)` from the success path — the component unmounts anyway.
+- [x] [Review][Patch] P5: `InteractionManager.runAfterInteractions` missing — orphan sweep runs on JS main thread, blocking UI during directory enumeration [`App.tsx` module-load IIFE + AppState listener]. AC#4 explicitly requires `InteractionManager.runAfterInteractions(() => runOrphanSweep(...))`. `sweepDirectory` calls `dir.list()` synchronously, which can block the main thread during startup. Fix: wrap `runOrphanSweep` calls in `InteractionManager.runAfterInteractions(...)` in App.tsx.
+
+**Defer findings:**
+
+- [x] [Review][Defer] D1: `hydrateWardrobeStore` not guarded against concurrent invocations [`src/stores/wardrobeStore.ts`] — deferred, pre-existing issue from Story 13.1. Store hydration is called at module import, in App.tsx IIFE, in AppState listener, and in saveCutoutAsWardrobeItem. No in-flight dedup guard. Could cause concurrent AsyncStorage reads and state overwrites. Out of scope for 13.3b — track as Story 13.1 debt.
+
 ### Change Log
 
 | Date | Change | By |
 | --- | --- | --- |
 | 2026-04-20 | Story 13.3b — real persistence pipeline (encode → move → commit → rollback) + orphan sweep (AppState + 24h throttle + 60s grace) + Preview error sheet (diskFull / encode / move|repoAdd) + i18n EN+ES. +29 net tests (643 passing). tsc + lint clean. On-device smoke (Tasks 4.7, 4.8, native rebuild) deferred to user. | claude-opus-4-7 |
+| 2026-04-20 | Code review — 5 patches identified (P1–P5), 1 deferred (D1 hydrateWardrobeStore concurrency — Story 13.1 debt), 13 dismissed. | claude-sonnet-4-6 |
 

@@ -34,7 +34,10 @@ SplashScreen.preventAutoHideAsync();
 void (async () => {
 	try {
 		await hydrateWardrobeStore();
-		await runOrphanSweep({ items: useWardrobeStore.getState().items });
+		const items = useWardrobeStore.getState().items;
+		requestIdleCallback(() => {
+			void runOrphanSweep({ items });
+		});
 	} catch (error) {
 		if (__DEV__) {
 			console.warn("[App] initial orphan sweep failed:", error);
@@ -46,7 +49,10 @@ AppState.addEventListener("change", async (next) => {
 	if (next !== "active") return;
 	try {
 		await hydrateWardrobeStore();
-		await runOrphanSweep({ items: useWardrobeStore.getState().items });
+		const items = useWardrobeStore.getState().items;
+		requestIdleCallback(() => {
+			void runOrphanSweep({ items });
+		});
 	} catch (error) {
 		if (__DEV__) {
 			console.warn("[App] AppState orphan sweep failed:", error);

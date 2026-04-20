@@ -138,7 +138,7 @@ describe("wardrobeImages", () => {
 			expect(uri).toMatch(/-thumb\.webp$/);
 		});
 
-		it("rejects with kind=encode when the subsequent park-move throws (covers disk-full-at-tmp)", async () => {
+		it("rejects with kind=diskFull when the subsequent park-move throws a disk-full message", async () => {
 			manipulateAsync.mockResolvedValueOnce({
 				uri: "file:///cache/ExponentImageManipulator-thumb.webp",
 				width: 300,
@@ -153,7 +153,7 @@ describe("wardrobeImages", () => {
 				"uuid-1",
 			).catch((e) => e);
 			expect(caught).toBeInstanceOf(WardrobePersistenceError);
-			expect(caught.kind).toBe("encode");
+			expect(caught.kind).toBe("diskFull");
 			expect(caught.message).toBe("not enough space on device");
 		});
 	});

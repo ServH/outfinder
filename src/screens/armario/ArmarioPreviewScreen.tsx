@@ -92,7 +92,6 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 			});
 			if (!isMounted.current) return;
 			hapticRigid();
-			setSubmitting(false);
 			navigation.goBack();
 		} catch (e) {
 			if (!isMounted.current) return;
@@ -114,6 +113,9 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 					setErrorCopy(t("armario.preview.errorSaveFailed"));
 					return;
 				}
+				// Catch-all for future WardrobePersistenceError kinds not yet handled.
+				setErrorCopy(t("armario.preview.errorSaveFailed"));
+				return;
 			}
 			if (__DEV__) {
 				console.warn("[ArmarioPreviewScreen] save failed:", e);
