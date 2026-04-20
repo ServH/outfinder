@@ -54,11 +54,29 @@ export function addItem(
  * are intentionally left dangling — the repo does NOT cascade forward (UI
  * surfaces should re-resolve and skip orphans). This keeps the API minimal
  * and matches the cleanup pattern used by Story 13.4b.
+ *
+ * For the "delete and free assigned slots" flow, call
+ * `cascadeDeleteAssignmentsForItem(id)` FIRST, then `removeItem(id)`.
  */
 export function removeItem(id: string): void {
 	warnIfNotHydrated("removeItem");
 	const { items, setItems } = useWardrobeStore.getState();
 	setItems(items.filter((item) => item.id !== id));
+}
+
+/**
+ * Removes every assignment row referencing `wardrobeItemId` across every
+ * combination. Paired with `removeItem` to implement "delete from wardrobe"
+ * — call this BEFORE `removeItem` so every consumer (S2 Ficha Wada, S3
+ * Picker, Favorites badges) sees the slots free in a single Zustand update
+ * window. The `WardrobeItem` itself is NOT touched here.
+ */
+export function cascadeDeleteAssignmentsForItem(wardrobeItemId: string): void {
+	warnIfNotHydrated("cascadeDeleteAssignmentsForItem");
+	const { assignments, setAssignments } = useWardrobeStore.getState();
+	setAssignments(
+		assignments.filter((a) => a.wardrobeItemId !== wardrobeItemId),
+	);
 }
 
 /** Returns all assignments for a given combination, in insertion order. */

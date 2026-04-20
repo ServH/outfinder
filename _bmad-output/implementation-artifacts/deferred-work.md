@@ -4,6 +4,19 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 13-4b-armario-picker-assignment-mechanics (2026-04-20)
+
+- **D-13.4b-D** — `ArmarioCaptureScreen.test.tsx`: `mockRouteParams` declarado `const undefined` — el forwarding de `onCutoutSaved` Capture→Preview no está ejercitado en test. Spec dijo "no new tests" para este archivo; gap de cobertura aceptado.
+- **D-13.4b-E** — `UnfavoriteCascadeProvider.handleConfirm`: si `onConfirm()` lanza, assignments ya borrados pero favorito intacto (sin mecanismo de rollback de cascade). Gap teórico estrecho, recuperable re-unfavoritando.
+- **D-13.4b-F** — ES `armario.unfavoriteCascade.body_one`: `"la {{count}} prenda"` → `"la 1 prenda"` forzado. Omitir el numeral en `_one` form en UX polish post-épica.
+- **D-13.4b-G** — `onCutoutSaved` función en route param: si OS recrea el modal desde params serializados, función queda `undefined` y asignación se silencia. Documentado en Dev Notes §Callback-via-params; contingencia: Zustand `pendingPreselect` slice.
+- **D-13.4b-H** — `handleDeleteConfirm` no comprueba `isClosing.current`: delete puede ejecutar durante mid-dismiss; `setPendingDelete(null)` en componente mid-unmount (RN swallows). Baja probabilidad.
+- **D-13.4b-I** — TOCTOU: count del delete dialog puede diferir del count real al confirmar (otra pantalla puede haber quitado la asignación entre render y confirm). Cosmético — cascade opera sobre live store.
+- **D-13.4b-J** — `tileSize` usa `screenWidth` en lugar de `sheetWidth`: idénticos en iPhone (sheet full-width). Podría divergir si se añaden insets al sheet en Epic 14 iPad.
+- **D-13.4b-K** — `ArmarioFichaWadaScreen.test.tsx`: ningún test aserta `testID="s2-quitar-confirm-sheet"` directamente (tests acceden a hijos del Modal). testID presente en prod code, gap menor de cobertura.
+
+---
+
 ## Deferred from: code review of 13-3b-wardrobe-persistence-lifecycle (2026-04-20)
 
 - **D1-13.3b** — `hydrateWardrobeStore` not guarded against concurrent invocations (`src/stores/wardrobeStore.ts`). Module import, App.tsx IIFE, AppState listener, and `saveCutoutAsWardrobeItem` all call `hydrateWardrobeStore()` without dedup guard. Could cause concurrent AsyncStorage reads + state overwrites. Pre-existing Story 13.1 debt — fix in a future hydration hardening story.

@@ -1,0 +1,480 @@
+import { act, fireEvent, render, screen } from "@testing-library/react-native";
+import { deleteItemFiles } from "@/lib/armario/wardrobeFiles";
+import { hapticLight, hapticMedium } from "@/lib/haptics";
+import {
+	assign,
+	cascadeDeleteAssignmentsForItem,
+	removeItem,
+	unassign,
+} from "@/lib/wardrobeRepo";
+
+jest.mock("react-native-safe-area-context", () => ({
+	useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
+}));
+
+jest.mock("expo-symbols", () => ({
+	SymbolView: ({ name }: { name: string }) => {
+		const { View } = require("react-native");
+		return <View testID={`symbol-${name}`} />;
+	},
+}));
+
+const mockGoBack = jest.fn();
+const mockNavigate = jest.fn();
+let mockRouteParams: { combinationId: string; colorIndex: number } = {
+	combinationId: "combo-3",
+	colorIndex: 0,
+};
+jest.mock("@react-navigation/native", () => ({
+	useNavigation: () => ({
+		goBack: mockGoBack,
+		navigate: mockNavigate,
+		push: jest.fn(),
+	}),
+	useRoute: () => ({ params: mockRouteParams }),
+}));
+
+jest.mock("@/lib/haptics", () => ({
+	hapticLight: jest.fn(),
+	hapticMedium: jest.fn(),
+}));
+
+jest.mock("@/lib/wardrobeRepo", () => ({
+	assign: jest.fn(),
+	unassign: jest.fn(),
+	removeItem: jest.fn(),
+	cascadeDeleteAssignmentsForItem: jest.fn(),
+}));
+
+jest.mock("@/lib/armario/wardrobeFiles", () => ({
+	deleteItemFiles: jest.fn(),
+}));
+
+jest.mock("@/hooks/useReducedMotion", () => ({
+	useReducedMotion: () => true, // commit-immediate path — skip animation
+}));
+
+const threeColorCombo = {
+	id: "combo-3",
+	nameJp: "三色",
+	nameEn: "Coral Triad",
+	colors: [
+		{ id: "c1", hex: "#FF8080", nameEn: "Coral Pink", nameJp: "珊瑚" },
+		{ id: "c2", hex: "#80D0FF", nameEn: "Sky Blue", nameJp: "空色" },
+		{ id: "c3", hex: "#A8E4A0", nameEn: "Leaf Green", nameJp: "若葉" },
+	],
+};
+let mockCombination: typeof threeColorCombo | undefined = threeColorCombo;
+jest.mock("@/data/colorIndex", () => ({
+	getCombination: (_id: string) => mockCombination,
+}));
+
+let mockAssignments: Array<{
+	combinationId: string;
+	colorIndex: number;
+	wardrobeItemId: string;
+	assignedAt: number;
+}> = [];
+let mockItems: Array<{
+	id: string;
+	localImagePath: string;
+	thumbnailPath: string;
+	createdAt: number;
+}> = [];
+jest.mock("@/stores/wardrobeStore", () => ({
+	useWardrobeStore: (
+		selector: (s: {
+			hydrated: boolean;
+			assignments: typeof mockAssignments;
+			items: typeof mockItems;
+		}) => unknown,
+	) =>
+		selector({
+			hydrated: true,
+			assignments: mockAssignments,
+			items: mockItems,
+		}),
+}));
+
+function loadScreen() {
+	const { ArmarioPickerScreen } = require("./ArmarioPickerScreen") as {
+		ArmarioPickerScreen: React.ComponentType<Record<string, never>>;
+	};
+	return ArmarioPickerScreen;
+}
+
+function sampleItem(id: string) {
+	return {
+		id,
+		localImagePath: `file:///items/${id}.png`,
+		thumbnailPath: `file:///items/${id}.thumb.png`,
+		createdAt: 1,
+	};
+}
+
+describe("ArmarioPickerScreen", () => {
+	beforeEach(() => {
+		mockGoBack.mockClear();
+		mockNavigate.mockClear();
+		(hapticLight as jest.Mock).mockClear();
+		(hapticMedium as jest.Mock).mockClear();
+		(assign as jest.Mock).mockClear();
+		(unassign as jest.Mock).mockClear();
+		(removeItem as jest.Mock).mockClear();
+		(cascadeDeleteAssignmentsForItem as jest.Mock).mockClear();
+		(deleteItemFiles as jest.Mock).mockClear();
+		mockCombination = threeColorCombo;
+		mockRouteParams = { combinationId: "combo-3", colorIndex: 0 };
+		mockAssignments = [];
+		mockItems = [];
+	});
+
+	it("renders header, picker title and empty state when wardrobe is empty", () => {
+		const Screen = loadScreen();
+		render(<Screen />);
+		expect(screen.getByTestId("s3-armario-picker-screen")).toBeTruthy();
+		expect(screen.getByTestId("s3-sheet")).toBeTruthy();
+		expect(screen.getByTestId("s3-picker-title").props.children).toBe(
+			"Choose for Coral Pink",
+		);
+		expect(screen.getByTestId("s3-empty-state")).toBeTruthy();
+	});
+
+	it("no longer renders tab row (#6 — tabs deduplicated)", () => {
+		const Screen = loadScreen();
+		render(<Screen />);
+		expect(screen.queryByTestId("s3-tab-wardrobe")).toBeNull();
+		expect(screen.queryByTestId("s3-tab-new-photo")).toBeNull();
+	});
+
+	it("renders 3-column grid for non-empty wardrobe", () => {
+		mockItems = [
+			sampleItem("u1"),
+			sampleItem("u2"),
+			sampleItem("u3"),
+			sampleItem("u4"),
+		];
+		const Screen = loadScreen();
+		render(<Screen />);
+		expect(screen.getByTestId("s3-wardrobe-grid")).toBeTruthy();
+		expect(screen.getByTestId("s3-item-u1")).toBeTruthy();
+		expect(screen.getByTestId("s3-item-u2")).toBeTruthy();
+		expect(screen.getByTestId("s3-item-u3")).toBeTruthy();
+		expect(screen.getByTestId("s3-item-u4")).toBeTruthy();
+	});
+
+	it("tap on tile commits assignment AND dismisses in a single gesture (#1)", async () => {
+		mockItems = [sampleItem("u1")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-item-u1"));
+		});
+
+		expect(assign).toHaveBeenCalledWith("combo-3", 0, "u1");
+		expect(unassign).not.toHaveBeenCalled();
+		expect(hapticLight).toHaveBeenCalled();
+		// reduce-motion mocked true → dismiss is synchronous
+		expect(mockGoBack).toHaveBeenCalledTimes(1);
+	});
+
+	it("move semantics: tapping an item assigned elsewhere unassigns old slot BEFORE new assign", async () => {
+		mockItems = [sampleItem("u1")];
+		mockAssignments = [
+			{
+				combinationId: "combo-3",
+				colorIndex: 1,
+				wardrobeItemId: "u1",
+				assignedAt: 1,
+			},
+		];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-item-u1"));
+		});
+
+		expect(unassign).toHaveBeenCalledWith("combo-3", 1);
+		expect(assign).toHaveBeenCalledWith("combo-3", 0, "u1");
+		const unassignOrder = (unassign as jest.Mock).mock.invocationCallOrder[0];
+		const assignOrder = (assign as jest.Mock).mock.invocationCallOrder[0];
+		expect(unassignOrder).toBeLessThan(assignOrder);
+		expect(mockGoBack).toHaveBeenCalledTimes(1);
+	});
+
+	it("scrim tap dismisses without assigning (pure cancel)", async () => {
+		mockItems = [sampleItem("u1")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(
+				screen.getByTestId("s3-scrim", { includeHiddenElements: true }),
+			);
+		});
+
+		expect(assign).not.toHaveBeenCalled();
+		expect(unassign).not.toHaveBeenCalled();
+		expect(mockGoBack).toHaveBeenCalledTimes(1);
+	});
+
+	it("footer + Nueva foto navigates to ArmarioRoot with onCutoutSaved callback", async () => {
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-footer-new-photo"));
+		});
+		expect(mockNavigate).toHaveBeenCalledWith(
+			"ArmarioRoot",
+			expect.objectContaining({
+				screen: "ArmarioCapture",
+				params: expect.objectContaining({
+					onCutoutSaved: expect.any(Function),
+				}),
+			}),
+		);
+	});
+
+	it("onCutoutSaved commits the new item AND dismisses (single-action flow for capture path)", async () => {
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-footer-new-photo"));
+		});
+
+		const lastCall =
+			mockNavigate.mock.calls[mockNavigate.mock.calls.length - 1];
+		const params = (
+			lastCall as unknown as [
+				string,
+				{ params: { onCutoutSaved: (id: string) => void } },
+			]
+		)[1].params;
+
+		await act(async () => {
+			params.onCutoutSaved("newly-captured-id");
+		});
+
+		expect(assign).toHaveBeenCalledWith("combo-3", 0, "newly-captured-id");
+		expect(mockGoBack).toHaveBeenCalledTimes(1);
+	});
+
+	it("assigned-elsewhere tile renders reduced opacity + overlay label + a11y hint", () => {
+		mockItems = [sampleItem("u1")];
+		mockAssignments = [
+			{
+				combinationId: "combo-3",
+				colorIndex: 1,
+				wardrobeItemId: "u1",
+				assignedAt: 1,
+			},
+		];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		const tile = screen.getByTestId("s3-item-u1");
+		expect(tile.props.style.opacity).toBe(0.5);
+		expect(screen.getByTestId("s3-item-u1-assigned-elsewhere")).toBeTruthy();
+		expect(tile.props.accessibilityLabel).toContain(
+			"already assigned to another color",
+		);
+	});
+
+	it("scrim exposes dismiss a11y label for VoiceOver", () => {
+		const Screen = loadScreen();
+		render(<Screen />);
+		const scrim = screen.getByTestId("s3-scrim", {
+			includeHiddenElements: true,
+		});
+		expect(scrim.props.accessibilityLabel).toBe("Dismiss picker");
+	});
+
+	it("root view sets accessibilityViewIsModal so VoiceOver does not leak to S2", () => {
+		const Screen = loadScreen();
+		render(<Screen />);
+		// accessibilityViewIsModal must be on the root so VoiceOver can still
+		// reach the scrim (a child of the root) while blocking access to S2.
+		const root = screen.getByTestId("s3-armario-picker-screen");
+		expect(root.props.accessibilityViewIsModal).toBe(true);
+	});
+
+	it("non-conflict tile uses default item a11y label", () => {
+		mockItems = [sampleItem("u1")];
+		const Screen = loadScreen();
+		render(<Screen />);
+		const tile = screen.getByTestId("s3-item-u1");
+		expect(tile.props.accessibilityLabel).toBe(
+			"Garment. Double-tap to assign to Coral Pink. Long-press to delete.",
+		);
+	});
+
+	it("empty-state announces copy via accessibilityLiveRegion", () => {
+		const Screen = loadScreen();
+		render(<Screen />);
+		const empty = screen.getByTestId("s3-empty-state");
+		expect(empty.props.accessibilityLiveRegion).toBe("polite");
+		expect(empty.props.accessibilityLabel).toContain("Your wardrobe is empty");
+	});
+
+	it("renders drag handle inside the sheet", () => {
+		const Screen = loadScreen();
+		render(<Screen />);
+		expect(
+			screen.getByTestId("s3-drag-handle", { includeHiddenElements: true }),
+		).toBeTruthy();
+	});
+
+	// --- Story 13.4b UX pass 2: long-press delete ---
+	// Modal's sheet surface uses `accessibilityViewIsModal` for VoiceOver
+	// focus isolation — so its testIDs are hidden from the default query
+	// root. Each lookup inside the confirm sheet passes
+	// `{ includeHiddenElements: true }`.
+
+	it("long-press on a tile opens delete confirmation sheet with hapticMedium", async () => {
+		mockItems = [sampleItem("u1")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		expect(
+			screen.queryByTestId("s3-delete-confirm-title", {
+				includeHiddenElements: true,
+			}),
+		).toBeNull();
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+
+		expect(hapticMedium).toHaveBeenCalled();
+		expect(
+			screen.getByTestId("s3-delete-confirm-title", {
+				includeHiddenElements: true,
+			}),
+		).toBeTruthy();
+	});
+
+	it("delete confirm body uses no-assignments copy when item is unassigned", async () => {
+		mockItems = [sampleItem("u1")];
+		mockAssignments = [];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+
+		expect(
+			screen.getByTestId("s3-delete-confirm-body", {
+				includeHiddenElements: true,
+			}).props.children,
+		).toBe("The photo will be removed from your Wardrobe.");
+	});
+
+	it("delete confirm body includes assignment count when item is assigned", async () => {
+		mockItems = [sampleItem("u1")];
+		mockAssignments = [
+			{
+				combinationId: "combo-3",
+				colorIndex: 1,
+				wardrobeItemId: "u1",
+				assignedAt: 1,
+			},
+			{
+				combinationId: "combo-99",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 2,
+			},
+		];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+
+		const body = screen.getByTestId("s3-delete-confirm-body", {
+			includeHiddenElements: true,
+		}).props.children;
+		expect(body).toContain("2 palettes");
+	});
+
+	it("confirm fires cascade-then-removeItem-then-deleteFiles in order, then closes the sheet", async () => {
+		const item = sampleItem("u1");
+		mockItems = [item];
+		mockAssignments = [
+			{
+				combinationId: "combo-3",
+				colorIndex: 1,
+				wardrobeItemId: "u1",
+				assignedAt: 1,
+			},
+		];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		await act(async () => {
+			fireEvent.press(
+				screen.getByTestId("s3-delete-confirm-yes", {
+					includeHiddenElements: true,
+				}),
+			);
+		});
+
+		expect(cascadeDeleteAssignmentsForItem).toHaveBeenCalledWith("u1");
+		expect(removeItem).toHaveBeenCalledWith("u1");
+		expect(deleteItemFiles).toHaveBeenCalledWith({
+			localImagePath: item.localImagePath,
+			thumbnailPath: item.thumbnailPath,
+		});
+
+		const cascadeOrder = (cascadeDeleteAssignmentsForItem as jest.Mock).mock
+			.invocationCallOrder[0];
+		const removeOrder = (removeItem as jest.Mock).mock.invocationCallOrder[0];
+		const filesOrder = (deleteItemFiles as jest.Mock).mock
+			.invocationCallOrder[0];
+		expect(cascadeOrder).toBeLessThan(removeOrder);
+		expect(removeOrder).toBeLessThan(filesOrder);
+
+		expect(
+			screen.queryByTestId("s3-delete-confirm-title", {
+				includeHiddenElements: true,
+			}),
+		).toBeNull();
+		// Picker stays open — user can assign another item.
+		expect(mockGoBack).not.toHaveBeenCalled();
+	});
+
+	it("cancel dismisses sheet without any repo or file-system calls", async () => {
+		mockItems = [sampleItem("u1")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		await act(async () => {
+			fireEvent.press(
+				screen.getByTestId("s3-delete-confirm-cancel", {
+					includeHiddenElements: true,
+				}),
+			);
+		});
+
+		expect(cascadeDeleteAssignmentsForItem).not.toHaveBeenCalled();
+		expect(removeItem).not.toHaveBeenCalled();
+		expect(deleteItemFiles).not.toHaveBeenCalled();
+		expect(
+			screen.queryByTestId("s3-delete-confirm-title", {
+				includeHiddenElements: true,
+			}),
+		).toBeNull();
+	});
+});

@@ -70,8 +70,11 @@ jest.mock("../../../modules/background-removal", () => ({
 
 const mockGoBack = jest.fn();
 const mockPush = jest.fn();
+const mockRouteParams: { onCutoutSaved?: (id: string) => void } | undefined =
+	undefined;
 jest.mock("@react-navigation/native", () => ({
 	useNavigation: () => ({ goBack: mockGoBack, push: mockPush }),
+	useRoute: () => ({ params: mockRouteParams }),
 }));
 
 jest.mock("@/lib/haptics", () => ({

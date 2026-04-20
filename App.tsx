@@ -18,6 +18,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { PremiumProvider } from "@/contexts/PremiumContext";
+import { UnfavoriteCascadeProvider } from "@/lib/armario/confirmUnfavoriteWithCascade";
 import { runOrphanSweep } from "@/lib/armario/wardrobeFiles";
 import { ArmarioStack } from "@/navigation/ArmarioStack";
 import { TabNavigator } from "@/navigation/TabNavigator";
@@ -97,9 +98,12 @@ export function App() {
 				<ErrorBoundary>
 					<FavoritesProvider>
 						<PremiumProvider>
-							<NavigationContainer>
-								<RootNavigator />
-							</NavigationContainer>
+							{/* UnfavoriteCascadeProvider wraps FavoritesProvider's consumers so FavoriteButton can surface the cascade confirmation sheet */}
+							<UnfavoriteCascadeProvider>
+								<NavigationContainer>
+									<RootNavigator />
+								</NavigationContainer>
+							</UnfavoriteCascadeProvider>
 						</PremiumProvider>
 					</FavoritesProvider>
 				</ErrorBoundary>

@@ -13,6 +13,7 @@ export type FavoritesStackParamList = {
 	OutfitVisualizer: { combinationId: string; capturedHex?: string };
 	ArmarioZeroState: { combinationId: string };
 	ArmarioFichaWada: { combinationId: string };
+	ArmarioPicker: { combinationId: string; colorIndex: number };
 };
 
 export type SettingsStackParamList = {
@@ -27,7 +28,11 @@ export type TabParamList = {
 
 export type ArmarioStackParamList = {
 	ArmarioCapture: { onCutoutSaved?: (id: string) => void } | undefined;
-	ArmarioPreview: { cutoutUri: string; sourceUri: string };
+	ArmarioPreview: {
+		cutoutUri: string;
+		sourceUri: string;
+		onCutoutSaved?: (id: string) => void;
+	};
 };
 
 export type RootStackParamList = {

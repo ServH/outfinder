@@ -170,7 +170,8 @@
 	},
 	"common": {
 		"goBack": "Volver",
-		"dismiss": "Cerrar"
+		"dismiss": "Cerrar",
+		"cancel": "Cancelar"
 	},
 	"iap": {
 		"networkError": "Comprueba tu conexión a internet e inténtalo de nuevo.",
@@ -216,11 +217,37 @@
 			"screenLabel": "Pantalla Ficha Wada",
 			"instruction": "Asigna tus prendas a cada color de la paleta",
 			"wardrobeLabel": "TU ARMARIO",
-			"linkAssign": "Asignar →",
-			"linkChange": "Cambiar →",
+			"linkAssign": "Asignar",
+			"linkChange": "Cambiar",
+			"linkRemove": "Quitar",
 			"viewLookCta": "Ver tu look",
 			"slotA11yUnassigned": "{{color}}, sin asignar. Doble-tap para asignar.",
-			"slotA11yAssigned": "{{color}}, asignada. Doble-tap para cambiar."
+			"slotA11yAssigned": "{{color}}, asignada. Doble-tap para cambiar.",
+			"slotRemoveA11y": "Quitar prenda de {{color}}",
+			"quitarConfirmBody": "¿Quitar la prenda de {{color}}?",
+			"quitarConfirmYes": "Quitar"
+		},
+		"s3": {
+			"screenLabel": "Selector de armario",
+			"pickerTitle": "Elige para {{color}}",
+			"footerNewPhoto": "Fotografiar prenda nueva",
+			"emptyTitle": "Tu armario está vacío",
+			"emptySubtitle": "Toca el botón de abajo para añadir tu primera prenda",
+			"itemA11y": "Prenda. Doble-tap para asignarla a {{color}}. Mantén pulsado para eliminarla.",
+			"itemA11yAssignedElsewhere": "Prenda ya asignada a otro color de esta paleta. Doble-tap para moverla a {{color}}. Mantén pulsado para eliminarla.",
+			"assignedElsewhere": "Ya asignada",
+			"dismiss": "Cerrar selector",
+			"dragHint": "Arrastra para cerrar",
+			"deleteConfirmTitle": "¿Eliminar esta prenda?",
+			"deleteConfirmBodyNoAssignments": "La foto se eliminará de tu Armario.",
+			"deleteConfirmBodyWithAssignments_one": "También se eliminará de {{count}} paleta donde la has usado.",
+			"deleteConfirmBodyWithAssignments_other": "También se eliminará de {{count}} paletas donde la has usado.",
+			"deleteConfirmYes": "Eliminar"
+		},
+		"unfavoriteCascade": {
+			"body_one": "Se quitará la {{count}} prenda que habías asignado a esta paleta. Las fotos seguirán en tu Armario.",
+			"body_other": "Se quitarán las {{count}} prendas que habías asignado a esta paleta. Las fotos seguirán en tu Armario.",
+			"confirm": "Quitar de favoritos"
 		},
 		"badge": {
 			"complete": "{{assigned}}/{{total}}",

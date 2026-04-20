@@ -1,5 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import type {
+	NativeStackNavigationProp,
+	NativeStackScreenProps,
+} from "@react-navigation/native-stack";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { SymbolView } from "expo-symbols";
@@ -26,6 +29,11 @@ type ArmarioCaptureNav = NativeStackNavigationProp<
 	"ArmarioCapture"
 >;
 
+type ArmarioCaptureRoute = NativeStackScreenProps<
+	ArmarioStackParamList,
+	"ArmarioCapture"
+>["route"];
+
 type ErrorSource =
 	| { kind: BackgroundRemovalErrorKind }
 	| { kind: "libraryPermissionDenied"; canAskAgain: boolean };
@@ -50,6 +58,8 @@ function isBackgroundRemovalError(e: unknown): e is BackgroundRemovalError {
 export function ArmarioCaptureScreen(_props: ArmarioCaptureScreenProps) {
 	const { t } = useTranslation();
 	const navigation = useNavigation<ArmarioCaptureNav>();
+	const route = useRoute<ArmarioCaptureRoute>();
+	const onCutoutSaved = route.params?.onCutoutSaved;
 	const cameraRef = useRef<CameraView>(null);
 	const [permission, requestPermission] = useCameraPermissions();
 	const [processing, setProcessing] = useState(false);
@@ -113,7 +123,11 @@ export function ArmarioCaptureScreen(_props: ArmarioCaptureScreenProps) {
 			if (!isMounted.current) return;
 			setProcessing(false);
 			hapticLight();
-			navigation.push("ArmarioPreview", { cutoutUri, sourceUri: uri });
+			navigation.push("ArmarioPreview", {
+				cutoutUri,
+				sourceUri: uri,
+				onCutoutSaved,
+			});
 		} catch (e) {
 			if (!isMounted.current) return;
 			setProcessing(false);

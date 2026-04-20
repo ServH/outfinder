@@ -1,9 +1,4 @@
-import {
-	act,
-	render,
-	screen,
-	waitFor,
-} from "@testing-library/react-native";
+import { act, render, screen, waitFor } from "@testing-library/react-native";
 
 // Mock modules before importing App
 jest.mock("@react-navigation/native", () => ({

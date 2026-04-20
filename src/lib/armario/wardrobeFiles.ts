@@ -100,6 +100,33 @@ export async function moveToWardrobe(args: {
 }
 
 /**
+ * Fire-and-forget: deletes the master + thumbnail backing files for a
+ * persisted `WardrobeItem`. Unlike `rollbackWardrobeFiles` (which targets
+ * an in-flight save by uuid), this deletes the EXACT files the item
+ * references — safer for user-initiated delete because it doesn't depend
+ * on the filename-uuid matching the item-id (they're allocated independently
+ * per `wardrobeFiles.ts` §collectReferencedIds).
+ *
+ * Per-file failures are swallowed so a missing file (e.g. user already
+ * wiped cache) never blocks the logical delete. The orphan sweep picks
+ * up anything left behind at the next foreground transition.
+ */
+export function deleteItemFiles(paths: {
+	localImagePath: string;
+	thumbnailPath: string;
+}): void {
+	for (const uri of [paths.localImagePath, paths.thumbnailPath]) {
+		try {
+			new File(uri).delete();
+		} catch (e) {
+			if (__DEV__) {
+				console.warn(`[wardrobeFiles] delete failed for ${uri}:`, e);
+			}
+		}
+	}
+}
+
+/**
  * Fire-and-forget: deletes all 4 candidate paths for `uuid`. Per-file
  * failures are swallowed (missing files are expected — normal rollback).
  */

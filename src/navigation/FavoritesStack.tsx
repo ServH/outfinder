@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ArmarioFichaWadaScreen } from "@/screens/armario/ArmarioFichaWadaScreen";
+import { ArmarioPickerScreen } from "@/screens/armario/ArmarioPickerScreen";
 import { ArmarioZeroStateScreen } from "@/screens/armario/ArmarioZeroStateScreen";
 import { FavoritesList } from "@/screens/FavoritesList";
 import { OutfitVisualizer } from "@/screens/OutfitVisualizer";
@@ -35,6 +36,16 @@ export function FavoritesStack() {
 				name="ArmarioFichaWada"
 				component={ArmarioFichaWadaScreen}
 				options={{ headerShown: false }}
+			/>
+			{/* S3 bottom-sheet picker — transparentModal so S2 remains visible behind scrim */}
+			<Stack.Screen
+				name="ArmarioPicker"
+				component={ArmarioPickerScreen}
+				options={{
+					headerShown: false,
+					presentation: "transparentModal",
+					animation: "fade",
+				}}
 			/>
 		</Stack.Navigator>
 	);

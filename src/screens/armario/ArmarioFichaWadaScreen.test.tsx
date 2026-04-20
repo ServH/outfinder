@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
 import { hapticLight } from "@/lib/haptics";
+import { unassign } from "@/lib/wardrobeRepo";
 
 jest.mock("react-native-safe-area-context", () => ({
 	useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
@@ -14,15 +15,28 @@ jest.mock("expo-symbols", () => ({
 
 const mockGoBack = jest.fn();
 const mockReplace = jest.fn();
+const mockPush = jest.fn();
 let mockRouteParams: { combinationId: string } = { combinationId: "combo-3" };
 jest.mock("@react-navigation/native", () => ({
-	useNavigation: () => ({ goBack: mockGoBack, replace: mockReplace }),
+	useNavigation: () => ({
+		goBack: mockGoBack,
+		replace: mockReplace,
+		push: mockPush,
+	}),
 	useRoute: () => ({ params: mockRouteParams }),
 }));
 
 jest.mock("@/lib/haptics", () => ({
 	hapticLight: jest.fn(),
 	hapticMedium: jest.fn(),
+}));
+
+jest.mock("@/lib/wardrobeRepo", () => ({
+	unassign: jest.fn(),
+}));
+
+jest.mock("@/hooks/useReducedMotion", () => ({
+	useReducedMotion: () => false,
 }));
 
 let mockCombination:
@@ -83,10 +97,6 @@ const threeColorCombo = {
 function loadScreen() {
 	const { ArmarioFichaWadaScreen } = require("./ArmarioFichaWadaScreen") as {
 		ArmarioFichaWadaScreen: React.ComponentType<{
-			onOpenPicker?: (args: {
-				combinationId: string;
-				colorIndex: number;
-			}) => void;
 			onViewLook?: (args: { combinationId: string }) => void;
 		}>;
 	};
@@ -97,7 +107,9 @@ describe("ArmarioFichaWadaScreen", () => {
 	beforeEach(() => {
 		mockGoBack.mockClear();
 		mockReplace.mockClear();
+		mockPush.mockClear();
 		(hapticLight as jest.Mock).mockClear();
+		(unassign as jest.Mock).mockClear();
 		mockCombination = threeColorCombo;
 		mockRouteParams = { combinationId: "combo-3" };
 		mockAssignments = [];
@@ -113,14 +125,16 @@ describe("ArmarioFichaWadaScreen", () => {
 		expect(screen.getByTestId("s2-slot-2")).toBeTruthy();
 	});
 
-	it("empty slot shows dashed `+` tile + Assign → link", () => {
+	it("empty slot shows dashed `+` tile + Assign link (no arrow)", () => {
 		const Screen = loadScreen();
 		render(<Screen />);
 		expect(screen.getByTestId("s2-slot-0-empty")).toBeTruthy();
-		expect(screen.getAllByText("Assign →").length).toBeGreaterThan(0);
+		expect(screen.getAllByText("Assign").length).toBeGreaterThan(0);
+		// Ensure the arrow was removed (would break if anyone re-adds it).
+		expect(screen.queryByText("Assign →")).toBeNull();
 	});
 
-	it("filled slot shows WardrobeItemThumb + Change → link", () => {
+	it("filled slot shows WardrobeItemThumb + Change link (no arrow)", () => {
 		mockItems = [
 			{
 				id: "uuid-1",
@@ -140,20 +154,45 @@ describe("ArmarioFichaWadaScreen", () => {
 		const Screen = loadScreen();
 		render(<Screen />);
 		expect(screen.getByTestId("s2-slot-0-thumb")).toBeTruthy();
-		expect(screen.getAllByText("Change →").length).toBeGreaterThan(0);
+		expect(screen.getAllByText("Change").length).toBeGreaterThan(0);
+		expect(screen.queryByText("Change →")).toBeNull();
 	});
 
-	it("slot tap fires hapticLight + onOpenPicker stub with correct args", async () => {
-		const onOpenPicker = jest.fn();
+	it("filled slot no longer renders the standalone color name above the thumb", () => {
+		mockItems = [
+			{
+				id: "uuid-1",
+				localImagePath: "file:///items/uuid-1.png",
+				thumbnailPath: "file:///items/uuid-1.thumb.png",
+				createdAt: 1_700_000_000_000,
+			},
+		];
+		mockAssignments = [
+			{
+				combinationId: "combo-3",
+				colorIndex: 0,
+				wardrobeItemId: "uuid-1",
+				assignedAt: 1_700_000_000_000,
+			},
+		];
 		const Screen = loadScreen();
-		render(<Screen onOpenPicker={onOpenPicker} />);
+		render(<Screen />);
+		// The color name survives only as the thumb's accessibilityLabel (for
+		// VoiceOver), not as a visible Text node under the tile. queryByText
+		// finds any Text node regardless of a11y props.
+		expect(screen.queryByText("Coral Pink")).toBeNull();
+	});
+
+	it("slot tap fires hapticLight + navigation.push ArmarioPicker with correct args", async () => {
+		const Screen = loadScreen();
+		render(<Screen />);
 
 		await act(async () => {
 			fireEvent.press(screen.getByTestId("s2-slot-1"));
 		});
 
 		expect(hapticLight).toHaveBeenCalled();
-		expect(onOpenPicker).toHaveBeenCalledWith({
+		expect(mockPush).toHaveBeenCalledWith("ArmarioPicker", {
 			combinationId: "combo-3",
 			colorIndex: 1,
 		});
@@ -248,5 +287,111 @@ describe("ArmarioFichaWadaScreen", () => {
 		expect(
 			screen.getByTestId("s2-completeness-badge-label").props.children,
 		).toBe("3/3");
+	});
+
+	// --- Story 13.4b: Quitar affordance + confirmation ---
+
+	it("filled slot renders Quitar link with 44pt touch target + accessibilityLabel", () => {
+		mockItems = [
+			{
+				id: "uuid-1",
+				localImagePath: "file:///a.png",
+				thumbnailPath: "file:///a.t.png",
+				createdAt: 1,
+			},
+		];
+		mockAssignments = [
+			{
+				combinationId: "combo-3",
+				colorIndex: 0,
+				wardrobeItemId: "uuid-1",
+				assignedAt: 1,
+			},
+		];
+		const Screen = loadScreen();
+		render(<Screen />);
+		const removeBtn = screen.getByTestId("s2-slot-0-remove");
+		expect(removeBtn).toBeTruthy();
+		expect(removeBtn.props.style.minHeight).toBe(44);
+		expect(removeBtn.props.style.minWidth).toBe(44);
+		expect(removeBtn.props.accessibilityLabel).toBe(
+			"Remove garment from Coral Pink",
+		);
+	});
+
+	it("empty slot does NOT render Quitar link", () => {
+		const Screen = loadScreen();
+		render(<Screen />);
+		expect(screen.queryByTestId("s2-slot-0-remove")).toBeNull();
+	});
+
+	it("Quitar tap opens confirmation sheet → confirm fires unassign + dismisses sheet", async () => {
+		mockItems = [
+			{
+				id: "uuid-1",
+				localImagePath: "file:///a.png",
+				thumbnailPath: "file:///a.t.png",
+				createdAt: 1,
+			},
+		];
+		mockAssignments = [
+			{
+				combinationId: "combo-3",
+				colorIndex: 0,
+				wardrobeItemId: "uuid-1",
+				assignedAt: 1,
+			},
+		];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		// Sheet is not visible initially
+		expect(screen.queryByTestId("s2-quitar-confirm-body")).toBeNull();
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-slot-0-remove"));
+		});
+
+		expect(screen.getByTestId("s2-quitar-confirm-body")).toBeTruthy();
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-quitar-confirm-yes"));
+		});
+
+		expect(unassign).toHaveBeenCalledWith("combo-3", 0);
+		expect(screen.queryByTestId("s2-quitar-confirm-body")).toBeNull();
+	});
+
+	it("Quitar tap → Cancel dismisses sheet without calling unassign", async () => {
+		mockItems = [
+			{
+				id: "uuid-1",
+				localImagePath: "file:///a.png",
+				thumbnailPath: "file:///a.t.png",
+				createdAt: 1,
+			},
+		];
+		mockAssignments = [
+			{
+				combinationId: "combo-3",
+				colorIndex: 1,
+				wardrobeItemId: "uuid-1",
+				assignedAt: 1,
+			},
+		];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-slot-1-remove"));
+		});
+		expect(screen.getByTestId("s2-quitar-confirm-body")).toBeTruthy();
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-quitar-confirm-cancel"));
+		});
+
+		expect(unassign).not.toHaveBeenCalled();
+		expect(screen.queryByTestId("s2-quitar-confirm-body")).toBeNull();
 	});
 });

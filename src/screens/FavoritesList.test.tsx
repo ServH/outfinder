@@ -7,7 +7,9 @@ import {
 } from "@testing-library/react-native";
 import * as ReactNative from "react-native";
 import { getCombination } from "@/data/colorIndex";
+import { useUnfavoriteCascade } from "@/lib/armario/confirmUnfavoriteWithCascade";
 import { hapticLight, hapticMedium } from "@/lib/haptics";
+import { getAssignmentCount } from "@/lib/wardrobeRepo";
 import { FavoritesList } from "./FavoritesList";
 
 const mockPush = jest.fn();
@@ -25,6 +27,17 @@ const mockIsIOS17OrNewer = jest.fn(() => false);
 jest.mock("@/lib/platform", () => ({
 	isIOS17OrNewer: () => mockIsIOS17OrNewer(),
 	useIsIOS17OrNewer: () => mockIsIOS17OrNewer(),
+}));
+
+const mockShowCascadeConfirm = jest.fn((args: { onConfirm: () => void }) =>
+	args.onConfirm(),
+);
+jest.mock("@/lib/armario/confirmUnfavoriteWithCascade", () => ({
+	useUnfavoriteCascade: jest.fn(() => mockShowCascadeConfirm),
+}));
+
+jest.mock("@/lib/wardrobeRepo", () => ({
+	getAssignmentCount: jest.fn(() => 0),
 }));
 
 let mockHydrated = false;
@@ -141,6 +154,13 @@ describe("FavoritesList", () => {
 		mockHydrated = false;
 		mockAssignments = [];
 		(hapticLight as jest.Mock).mockClear();
+		mockShowCascadeConfirm.mockClear();
+		mockShowCascadeConfirm.mockImplementation(
+			(args: { onConfirm: () => void }) => args.onConfirm(),
+		);
+		(useUnfavoriteCascade as jest.Mock).mockReturnValue(mockShowCascadeConfirm);
+		(getAssignmentCount as jest.Mock).mockReset();
+		(getAssignmentCount as jest.Mock).mockReturnValue(0);
 	});
 
 	// --- AC #1: 2-column grid layout ---
@@ -583,6 +603,51 @@ describe("FavoritesList", () => {
 			"ArmarioFichaWada",
 			expect.anything(),
 		);
+	});
+
+	// --- Story 13.4b: Unfavorite cascade integration ---
+
+	it("unfavorite with 0 assignments → cascade short-circuits → toggleFavorite fires once without sheet", () => {
+		(getAssignmentCount as jest.Mock).mockReturnValue(0);
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+
+		fireEvent.press(screen.getByTestId(`favorite-button-${realCombo1.id}`));
+
+		expect(mockShowCascadeConfirm).toHaveBeenCalledWith(
+			expect.objectContaining({ combinationId: realCombo1.id, count: 0 }),
+		);
+		expect(mockToggleFavorite).toHaveBeenCalledWith(realCombo1.id);
+	});
+
+	it("unfavorite with >0 assignments routes through cascade hook: confirm → toggle; cancel aborts", () => {
+		(getAssignmentCount as jest.Mock).mockReturnValue(2);
+		let capturedOnConfirm: (() => void) | null = null;
+		let capturedOnCancel: (() => void) | null = null;
+		mockShowCascadeConfirm.mockImplementation(
+			(args: { onConfirm: () => void; onCancel?: () => void }) => {
+				capturedOnConfirm = args.onConfirm;
+				capturedOnCancel = args.onCancel ?? null;
+			},
+		);
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+
+		fireEvent.press(screen.getByTestId(`favorite-button-${realCombo1.id}`));
+
+		expect(mockShowCascadeConfirm).toHaveBeenCalledWith(
+			expect.objectContaining({ combinationId: realCombo1.id, count: 2 }),
+		);
+		// Toggle is gated — nothing fires until the provider runs onConfirm.
+		expect(mockToggleFavorite).not.toHaveBeenCalled();
+
+		// Simulate Cancel → toggle stays silent.
+		(capturedOnCancel as (() => void) | null)?.();
+		expect(mockToggleFavorite).not.toHaveBeenCalled();
+
+		// Now simulate the provider resolving with Confirm → toggle fires.
+		(capturedOnConfirm as (() => void) | null)?.();
+		expect(mockToggleFavorite).toHaveBeenCalledWith(realCombo1.id);
 	});
 });
 

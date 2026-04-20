@@ -42,14 +42,22 @@ jest.mock("@/lib/haptics", () => ({
 
 const mockGoBack = jest.fn();
 const mockPush = jest.fn();
+const mockParentGoBack = jest.fn();
+let mockRouteParams: {
+	cutoutUri: string;
+	sourceUri: string;
+	onCutoutSaved?: (id: string) => void;
+} = {
+	cutoutUri: "file:///tmp/cutout.png",
+	sourceUri: "file:///tmp/source.jpg",
+};
 jest.mock("@react-navigation/native", () => ({
-	useNavigation: () => ({ goBack: mockGoBack, push: mockPush }),
-	useRoute: () => ({
-		params: {
-			cutoutUri: "file:///tmp/cutout.png",
-			sourceUri: "file:///tmp/source.jpg",
-		},
+	useNavigation: () => ({
+		goBack: mockGoBack,
+		push: mockPush,
+		getParent: () => ({ goBack: mockParentGoBack }),
 	}),
+	useRoute: () => ({ params: mockRouteParams }),
 }));
 
 // Paywall is mocked as a minimal visible sentinel + dismiss triggerer.
@@ -135,11 +143,16 @@ describe("ArmarioPreviewScreen", () => {
 	beforeEach(() => {
 		mockGoBack.mockClear();
 		mockPush.mockClear();
+		mockParentGoBack.mockClear();
 		mockFileDelete.mockReset();
 		saveMock.mockReset();
 		(hapticLight as jest.Mock).mockClear();
 		(hapticRigid as jest.Mock).mockClear();
 		mockAnnounce.mockClear();
+		mockRouteParams = {
+			cutoutUri: "file:///tmp/cutout.png",
+			sourceUri: "file:///tmp/source.jpg",
+		};
 	});
 
 	it("1. Retake tap → File.delete called → navigation.goBack (delete failure still nav-safe)", async () => {
@@ -320,6 +333,51 @@ describe("ArmarioPreviewScreen", () => {
 		expect(
 			screen.getByText("Couldn't process the photo. Please try again."),
 		).toBeTruthy();
+	});
+
+	it("9. onCutoutSaved callback fires with saved id BEFORE dismissing; dismisses the ROOT modal (not just the stack pop)", async () => {
+		const onCutoutSaved = jest.fn();
+		mockRouteParams = {
+			cutoutUri: "file:///tmp/cutout.png",
+			sourceUri: "file:///tmp/source.jpg",
+			onCutoutSaved,
+		};
+		saveMock.mockResolvedValueOnce({ id: "wardrobe-uuid-42" });
+		render(<ArmarioPreviewScreen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
+		});
+		await flushMicrotasks();
+
+		await waitFor(() => {
+			expect(onCutoutSaved).toHaveBeenCalledWith("wardrobe-uuid-42");
+			expect(mockParentGoBack).toHaveBeenCalledTimes(1);
+		});
+		// Callback must fire BEFORE the root dismiss so the picker's commit
+		// lands before the modal closes.
+		const callbackOrder = onCutoutSaved.mock.invocationCallOrder[0];
+		const parentGoBackOrder = mockParentGoBack.mock.invocationCallOrder[0];
+		expect(callbackOrder).toBeLessThan(parentGoBackOrder);
+		// Local goBack should NOT be called when the root modal is closed.
+		expect(mockGoBack).not.toHaveBeenCalled();
+	});
+
+	it("10. When route omits onCutoutSaved, local goBack fires (backwards-compatible single-pop)", async () => {
+		saveMock.mockResolvedValueOnce({ id: "wardrobe-uuid-42" });
+		render(<ArmarioPreviewScreen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
+		});
+		await flushMicrotasks();
+
+		await waitFor(() => {
+			expect(mockGoBack).toHaveBeenCalledTimes(1);
+		});
+		// Parent-level dismiss must NOT fire when no callback is present —
+		// preserves the 13.3b direct-entry flow.
+		expect(mockParentGoBack).not.toHaveBeenCalled();
 	});
 
 	it.each([

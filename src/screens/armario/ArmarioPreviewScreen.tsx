@@ -50,7 +50,7 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 	const { t } = useTranslation();
 	const navigation = useNavigation<ArmarioPreviewNav>();
 	const route = useRoute<ArmarioPreviewRoute>();
-	const { cutoutUri, sourceUri } = route.params;
+	const { cutoutUri, sourceUri, onCutoutSaved } = route.params;
 	const { isPremium } = usePremium();
 	const { favorites } = useFavorites();
 	const gate = usePremiumGate(favorites);
@@ -85,14 +85,33 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 		if (submitting) return;
 		setSubmitting(true);
 		try {
-			await saveCutoutAsWardrobeItem({
+			const result = await saveCutoutAsWardrobeItem({
 				cutoutUri,
 				sourceUri,
 				isPremium,
 			});
 			if (!isMounted.current) return;
 			hapticRigid();
-			navigation.goBack();
+			// Invoke callback BEFORE dismissing so the caller's state lands
+			// before Preview unmounts. Safe to omit — callback is optional.
+			onCutoutSaved?.(result.id);
+			// When launched from S3 (callback present), the user's mental model
+			// is "done, return to the picker" — so dismiss the ArmarioRoot
+			// modal entirely instead of only popping Preview → Capture. The
+			// parent navigator is the RootStack; its goBack dismisses the modal.
+			if (onCutoutSaved) {
+				// Dismiss the ArmarioRoot modal entirely so the user lands back on
+				// the picker. Fall back to local goBack if the parent is unavailable
+				// (deep-link or isolated test harness — avoids a stuck screen).
+				const parent = navigation.getParent();
+				if (parent) {
+					parent.goBack();
+				} else {
+					navigation.goBack();
+				}
+			} else {
+				navigation.goBack();
+			}
 		} catch (e) {
 			if (!isMounted.current) return;
 			setSubmitting(false);
@@ -121,7 +140,15 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 				console.warn("[ArmarioPreviewScreen] save failed:", e);
 			}
 		}
-	}, [cutoutUri, sourceUri, isPremium, navigation, submitting, t]);
+	}, [
+		cutoutUri,
+		sourceUri,
+		isPremium,
+		navigation,
+		onCutoutSaved,
+		submitting,
+		t,
+	]);
 
 	const handleErrorDismiss = useCallback(() => {
 		if (!isMounted.current) return;

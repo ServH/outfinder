@@ -170,7 +170,8 @@
 	},
 	"common": {
 		"goBack": "Go back",
-		"dismiss": "Dismiss"
+		"dismiss": "Dismiss",
+		"cancel": "Cancel"
 	},
 	"iap": {
 		"networkError": "Check your internet connection and try again.",
@@ -216,11 +217,37 @@
 			"screenLabel": "Wada fiche screen",
 			"instruction": "Assign your garments to each color of the palette",
 			"wardrobeLabel": "YOUR WARDROBE",
-			"linkAssign": "Assign →",
-			"linkChange": "Change →",
+			"linkAssign": "Assign",
+			"linkChange": "Change",
+			"linkRemove": "Remove",
 			"viewLookCta": "See your look",
 			"slotA11yUnassigned": "{{color}}, unassigned. Double-tap to assign.",
-			"slotA11yAssigned": "{{color}}, assigned. Double-tap to change."
+			"slotA11yAssigned": "{{color}}, assigned. Double-tap to change.",
+			"slotRemoveA11y": "Remove garment from {{color}}",
+			"quitarConfirmBody": "Remove the garment from {{color}}?",
+			"quitarConfirmYes": "Remove"
+		},
+		"s3": {
+			"screenLabel": "Armario picker",
+			"pickerTitle": "Choose for {{color}}",
+			"footerNewPhoto": "Take a new photo of a garment",
+			"emptyTitle": "Your wardrobe is empty",
+			"emptySubtitle": "Tap the button below to add your first garment",
+			"itemA11y": "Garment. Double-tap to assign to {{color}}. Long-press to delete.",
+			"itemA11yAssignedElsewhere": "Garment already assigned to another color in this palette. Double-tap to move to {{color}}. Long-press to delete.",
+			"assignedElsewhere": "Assigned elsewhere",
+			"dismiss": "Dismiss picker",
+			"dragHint": "Drag down to dismiss",
+			"deleteConfirmTitle": "Delete this garment?",
+			"deleteConfirmBodyNoAssignments": "The photo will be removed from your Wardrobe.",
+			"deleteConfirmBodyWithAssignments_one": "It will also be removed from {{count}} palette where you're using it.",
+			"deleteConfirmBodyWithAssignments_other": "It will also be removed from {{count}} palettes where you're using it.",
+			"deleteConfirmYes": "Delete"
+		},
+		"unfavoriteCascade": {
+			"body_one": "The {{count}} garment you assigned to this palette will be removed. Photos stay in your Wardrobe.",
+			"body_other": "The {{count}} garments you assigned to this palette will be removed. Photos stay in your Wardrobe.",
+			"confirm": "Remove from favorites"
 		},
 		"badge": {
 			"complete": "{{assigned}}/{{total}}",

@@ -3,6 +3,7 @@ import {
 	addItem,
 	assign,
 	cascadeDeleteAssignmentsForCombination,
+	cascadeDeleteAssignmentsForItem,
 	getAssignmentCount,
 	getAssignmentsForCombination,
 	getItems,
@@ -189,5 +190,40 @@ describe("removeItem", () => {
 		const rows = getAssignmentsForCombination("combo-50");
 		expect(rows).toHaveLength(1);
 		expect(rows[0]?.wardrobeItemId).toBe("item-a");
+	});
+});
+
+describe("cascadeDeleteAssignmentsForItem", () => {
+	it("removes every assignment row for the given item across all combos", () => {
+		const itemA = seedItem("item-a");
+		const itemB = seedItem("item-b");
+		useWardrobeStore.setState({ items: [itemA, itemB] });
+
+		assign("combo-100", 0, "item-a");
+		assign("combo-100", 1, "item-b");
+		assign("combo-200", 0, "item-a");
+		assign("combo-300", 2, "item-a");
+
+		cascadeDeleteAssignmentsForItem("item-a");
+
+		// Every combination that referenced item-a is now free in those slots.
+		expect(getAssignmentsForCombination("combo-100")).toHaveLength(1);
+		expect(getAssignmentsForCombination("combo-100")[0]?.wardrobeItemId).toBe(
+			"item-b",
+		);
+		expect(getAssignmentsForCombination("combo-200")).toHaveLength(0);
+		expect(getAssignmentsForCombination("combo-300")).toHaveLength(0);
+		// Wardrobe items themselves are untouched — delete them via removeItem.
+		expect(getItems()).toHaveLength(2);
+	});
+
+	it("is a no-op when the item has no assignments", () => {
+		const itemA = seedItem("item-a");
+		useWardrobeStore.setState({ items: [itemA] });
+		assign("combo-100", 0, "item-a");
+
+		cascadeDeleteAssignmentsForItem("item-never-assigned");
+
+		expect(getAssignmentCount("combo-100")).toBe(1);
 	});
 });

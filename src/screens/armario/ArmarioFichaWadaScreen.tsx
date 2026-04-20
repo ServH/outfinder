@@ -4,14 +4,17 @@ import type {
 	NativeStackScreenProps,
 } from "@react-navigation/native-stack";
 import { SymbolView } from "expo-symbols";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { CompletenessBadge } from "@/components/armario/CompletenessBadge";
 import { WardrobeItemThumb } from "@/components/armario/WardrobeItemThumb";
 import { getCombination } from "@/data/colorIndex";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { hexToRgba } from "@/lib/color";
 import { hapticLight } from "@/lib/haptics";
+import { unassign } from "@/lib/wardrobeRepo";
+import { FAB_PROTRUSION } from "@/navigation/CustomTabBar";
 import type { FavoritesStackParamList } from "@/navigation/types";
 import { useWardrobeStore } from "@/stores/wardrobeStore";
 import { wadaTokens } from "@/styles/theme";
@@ -27,19 +30,8 @@ type ArmarioFichaWadaRoute = NativeStackScreenProps<
 >["route"];
 
 export interface ArmarioFichaWadaScreenProps {
-	onOpenPicker?: (args: { combinationId: string; colorIndex: number }) => void;
 	onViewLook?: (args: { combinationId: string }) => void;
 }
-
-const defaultOpenPicker: NonNullable<
-	ArmarioFichaWadaScreenProps["onOpenPicker"]
-> = () => {
-	if (__DEV__) {
-		console.warn(
-			"[ArmarioFichaWadaScreen] S3 Armario Picker — not implemented until Story 13.4b",
-		);
-	}
-};
 
 const defaultViewLook = (
 	isComplete: boolean,
@@ -56,13 +48,13 @@ const defaultViewLook = (
 };
 
 export function ArmarioFichaWadaScreen({
-	onOpenPicker,
 	onViewLook,
 }: ArmarioFichaWadaScreenProps) {
 	const { t } = useTranslation();
 	const navigation = useNavigation<ArmarioFichaWadaNav>();
 	const route = useRoute<ArmarioFichaWadaRoute>();
 	const { combinationId } = route.params;
+	const reducedMotion = useReducedMotion();
 
 	const combination = useMemo(
 		() => getCombination(combinationId),
@@ -71,6 +63,10 @@ export function ArmarioFichaWadaScreen({
 	const allAssignments = useWardrobeStore((s) => s.assignments);
 	const items = useWardrobeStore((s) => s.items);
 	const hydrated = useWardrobeStore((s) => s.hydrated);
+
+	const [quitarConfirmSlot, setQuitarConfirmSlot] = useState<number | null>(
+		null,
+	);
 
 	const assignments = useMemo(
 		() => allAssignments.filter((a) => a.combinationId === combinationId),
@@ -100,8 +96,23 @@ export function ArmarioFichaWadaScreen({
 
 	function handleSlotTap(colorIndex: number) {
 		hapticLight();
-		const handler = onOpenPicker ?? defaultOpenPicker;
-		handler({ combinationId, colorIndex });
+		navigation.push("ArmarioPicker", { combinationId, colorIndex });
+	}
+
+	function handleRemove(colorIndex: number) {
+		hapticLight();
+		setQuitarConfirmSlot(colorIndex);
+	}
+
+	function handleQuitarConfirm() {
+		if (quitarConfirmSlot === null) return;
+		unassign(combinationId, quitarConfirmSlot);
+		hapticLight();
+		setQuitarConfirmSlot(null);
+	}
+
+	function handleQuitarCancel() {
+		setQuitarConfirmSlot(null);
 	}
 
 	function handleViewLook() {
@@ -220,33 +231,43 @@ export function ArmarioFichaWadaScreen({
 									minWidth: 44,
 								}}
 							>
-								<View
-									style={{
-										backgroundColor: color.hex,
-										aspectRatio: 1.25,
-										borderRadius: 14,
-									}}
-								/>
-								<View style={{ marginTop: 10, aspectRatio: 1 }}>
+								{/*
+								 * Single 1:1 tile — the Wada color is conveyed exclusively
+								 * as the tile's border (dashed when empty, solid when
+								 * assigned). The old approach layered a separate color
+								 * swatch above the thumb, which competed with the garment
+								 * photo and produced a redundant visual.
+								 */}
+								<View style={{ aspectRatio: 1 }}>
 									{isAssigned ? (
-										<WardrobeItemThumb
-											uri={assignedThumb}
-											size={96}
-											testID={`s2-slot-${i}-thumb`}
-											accessibilityLabel={color.nameEn}
-										/>
+										<View
+											style={{
+												flex: 1,
+												borderRadius: 14,
+												borderWidth: 2,
+												borderColor: color.hex,
+												overflow: "hidden",
+												backgroundColor: wadaTokens.bgElevated,
+											}}
+										>
+											<WardrobeItemThumb
+												uri={assignedThumb}
+												fill
+												testID={`s2-slot-${i}-thumb`}
+												accessibilityLabel={color.nameEn}
+											/>
+										</View>
 									) : (
 										<View
 											testID={`s2-slot-${i}-empty`}
 											className="items-center justify-center"
 											style={{
+												flex: 1,
 												borderRadius: 14,
 												borderWidth: 2,
 												borderStyle: "dashed",
 												borderColor: color.hex,
 												backgroundColor: hexToRgba(color.hex, 0.08),
-												width: "100%",
-												height: "100%",
 											}}
 										>
 											<Text
@@ -261,24 +282,45 @@ export function ArmarioFichaWadaScreen({
 										</View>
 									)}
 								</View>
-								<Text
-									numberOfLines={1}
-									ellipsizeMode="tail"
-									style={{
-										fontFamily: "Inter_500Medium",
-										fontSize: 14,
-										color: wadaTokens.textPrimary,
-										marginTop: 10,
-									}}
-								>
-									{color.nameEn}
-								</Text>
+								{isAssigned && (
+									<Pressable
+										testID={`s2-slot-${i}-remove`}
+										onPress={(e) => {
+											// Nested Pressable — stop propagation so the outer slot
+											// tap (which pushes the Picker) does not also fire.
+											// Optional chain guards against test-harness events that
+											// don't include a nativeEvent.
+											e?.stopPropagation?.();
+											handleRemove(i);
+										}}
+										accessibilityRole="button"
+										accessibilityLabel={t("armario.s2.slotRemoveA11y", {
+											color: color.nameEn,
+										})}
+										style={{
+											minHeight: 44,
+											minWidth: 44,
+											marginTop: 8,
+											justifyContent: "center",
+										}}
+									>
+										<Text
+											style={{
+												fontFamily: "Inter_400Regular",
+												fontSize: 13,
+												color: wadaTokens.textTertiary,
+											}}
+										>
+											{t("armario.s2.linkRemove")}
+										</Text>
+									</Pressable>
+								)}
 								<Text
 									style={{
 										fontFamily: "Inter_400Regular",
 										fontSize: 13,
 										color: wadaTokens.textSecondary,
-										marginTop: 2,
+										marginTop: isAssigned ? 2 : 8,
 									}}
 								>
 									{t(
@@ -302,7 +344,9 @@ export function ArmarioFichaWadaScreen({
 				accessibilityState={{ disabled: !hydrated || assignedCount === 0 }}
 				className="absolute self-center items-center justify-center"
 				style={{
-					bottom: 28,
+					// Lift above the tab-bar FAB so the CTA never collides with the
+					// camera-FAB that protrudes over the tab bar (Epic 12 cradle).
+					bottom: 28 + FAB_PROTRUSION,
 					minHeight: 44,
 					minWidth: 44,
 					paddingHorizontal: 24,
@@ -325,6 +369,107 @@ export function ArmarioFichaWadaScreen({
 					</Text>
 				)}
 			</Pressable>
+
+			<Modal
+				testID="s2-quitar-confirm-sheet"
+				transparent
+				visible={quitarConfirmSlot !== null}
+				animationType={reducedMotion ? "none" : "fade"}
+				onRequestClose={handleQuitarCancel}
+				statusBarTranslucent
+			>
+				<View
+					className="flex-1 items-center justify-end"
+					style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
+				>
+					<Pressable
+						testID="s2-quitar-confirm-scrim"
+						accessibilityRole="button"
+						accessibilityLabel={t("common.cancel")}
+						onPress={handleQuitarCancel}
+						style={{
+							position: "absolute",
+							top: 0,
+							left: 0,
+							right: 0,
+							bottom: 0,
+						}}
+					/>
+					<View
+						accessibilityViewIsModal
+						style={{
+							backgroundColor: wadaTokens.bgPaper,
+							borderTopLeftRadius: 20,
+							borderTopRightRadius: 20,
+							paddingHorizontal: 24,
+							paddingTop: 20,
+							paddingBottom: 36,
+							width: "100%",
+						}}
+					>
+						{quitarConfirmSlot !== null && (
+							<>
+								<Text
+									testID="s2-quitar-confirm-body"
+									style={{
+										fontFamily: "Inter_400Regular",
+										fontSize: 15,
+										color: wadaTokens.textPrimary,
+										textAlign: "center",
+										lineHeight: 22,
+									}}
+								>
+									{t("armario.s2.quitarConfirmBody", {
+										color: combination.colors[quitarConfirmSlot]?.nameEn ?? "",
+									})}
+								</Text>
+								<Pressable
+									testID="s2-quitar-confirm-yes"
+									onPress={handleQuitarConfirm}
+									accessibilityRole="button"
+									accessibilityLabel={t("armario.s2.quitarConfirmYes")}
+									className="items-center justify-center"
+									style={{
+										marginTop: 24,
+										minHeight: 44,
+										paddingVertical: 14,
+										borderRadius: 14,
+										backgroundColor: wadaTokens.favoriteRed,
+									}}
+								>
+									<Text
+										style={{
+											fontFamily: "Inter_500Medium",
+											fontSize: 15,
+											color: "#ffffff",
+										}}
+									>
+										{t("armario.s2.quitarConfirmYes")}
+									</Text>
+								</Pressable>
+								<Pressable
+									testID="s2-quitar-confirm-cancel"
+									onPress={handleQuitarCancel}
+									accessibilityRole="button"
+									accessibilityLabel={t("common.cancel")}
+									className="items-center justify-center"
+									style={{ marginTop: 8, minHeight: 44 }}
+								>
+									<Text
+										style={{
+											fontFamily: "Inter_400Regular",
+											fontSize: 14,
+											color: wadaTokens.textSecondary,
+										}}
+									>
+										{t("common.cancel")}
+									</Text>
+								</Pressable>
+							</>
+						)}
+					</View>
+				</View>
+			</Modal>
 		</View>
 	);
 }
