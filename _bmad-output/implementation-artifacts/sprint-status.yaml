@@ -35,6 +35,9 @@
 
 generated: 2026-03-12
 last_updated: 2026-04-21
+# 2026-04-21 — Story 14.1 moved review → done (code review: 2 patches applied — warn quote format + category:null test; 6 deferred D-14.1-1→D-14.1-6; 4 dismissed; 795/60 baseline unchanged).
+# 2026-04-21 — Story 14.1 moved ready-for-dev → in-progress → review (dev-story complete on branch story/14-1-wardrobe-item-category-field; +12 net tests, tsc/lint clean, 0 new regressions vs 783/60 baseline → 795/60).
+# 2026-04-21 — Story 14.1 moved backlog → ready-for-dev (create-story: WardrobeItem.category field + TD-7 backfill). Epic 14 → in-progress (first story).
 # 2026-04-21 — Epic 14 (App Flow Reorganization, v1.4.0 launch blocker) added to sprint-status; 15 stories in backlog; branch: epic-14 (off epic-13). Epic 13 marked done.
 # 2026-04-21 — Story 13.6 moved review → done (3 post-dev UX iters accepted on-device + review hardening patches applied; 785 passing / 60 pre-existing debt; commits b26fea2, 9492e8e, 7fe0c5a on epic-13)
 # 2026-04-20 — Story 13.6 moved in-progress → review (dev-story complete — +37 net tests, tsc/lint clean, 0 new regressions; on-device QA deferred to merge gate)
@@ -164,8 +167,8 @@ development_status:
 
   # Epic 14 — App Flow Reorganization (v1.4.0 launch blocker, branch: epic-14 off epic-13)
   # Dev order: 14.1 → 14.2 → 14.3a → 14.3b → 14.7 → 14.4 → 14.5 → (14.8, 14.9, 14.10, 14.11) → 14.6 → 14.12a → 14.12b → 14.13
-  epic-14: backlog
-  14-1-wardrobe-item-category-field: backlog
+  epic-14: in-progress
+  14-1-wardrobe-item-category-field: done
   14-2-mis-looks-store-unification-migration: backlog
   14-3a-unified-camera-nav-setup-capturescreen-deprecation: backlog
   14-3b-unified-camera-pipeline-swift-module: backlog
