@@ -18,6 +18,21 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 13-6-s5-sugerencia-armonia-favorites-badges (2026-04-21)
+
+- **D-13.6-1** — `sortFavoritesByCompleteness`: `NaN` en `assignedAt` contamina sort DESC — `isCombinationAssignment` en wardrobeStore solo valida `typeof === "number"` pero no `Number.isFinite`. Añadir `Number.isFinite(v.assignedAt)` al validador.
+- **D-13.6-2** — `FavoritesList`: `cardWidth` puede ser 0 en el primer render antes del primer `onLayout`. Se auto-recupera; patrón común en RN. Guardar con `Math.max(1, ...)` si hay reporte de flash.
+- **D-13.6-3** — `drawPolaroidStack`: sin `__DEV__` warning cuando `emptySlotPlusFont` es `undefined` pero `emptySlots` tiene entradas `true`. Añadir `console.warn` en `__DEV__` para detectar en desarrollo.
+- **D-13.6-4** — `FavoritesList`: sin guard explícito `sortMode === "recent"` antes del bloque `sortFavoritesByCompleteness`. Actualmente seguro por early returns; añadir guard si se añade un nuevo sortMode en el futuro.
+- **D-13.6-5** — `CompletenessBadge.test.tsx`: aserciones de strings exactas sin mock de i18n. Funcional con el harness actual que carga en.json. Añadir `jest.mock('react-i18next')` si CI empieza a fallar.
+- **D-13.6-6** — `drawPolaroidStack`: dash intervals `[16, 10]` son fijos en puntos, independientes del tamaño de la tarjeta. Escalar a `cardW * 0.05` cuando se itere el look del empty polaroid post-épica.
+- **D-13.6-7** — `ArmarioSugerenciaArmoniaScreen.test.tsx` test (p): aserta `"second layer"` (string renderizado) en vez de spy sobre la clave i18n. Funcional pero acoplado a la traducción EN. Refactorizar con spy en una sesión de limpieza de tests.
+- **D-13.6-8** — `ArmarioSugerenciaArmoniaScreen`: `navigation.replace("ArmarioTuLook")` en auto-transición no pasa `animation: "none"` bajo Reduce Motion. React Navigation 7 native-stack no acepta override per-call. Investigar `StackActions.replace` con dispatch o screen option condicional en Epic 14.
+- **D-13.6-9** — `ArmarioSugerenciaArmoniaScreen`: `garmentImages` puede tener longitud antigua durante el ciclo de reset async (strict-mode double-invoke). Parcialmente mitigado por P3 (length guard). Monitorear si aparece en tests con `--runInBand`.
+- **D-13.6-10** — `drawPolaroidStack`: caller futuro que pase `emptySlots` sin `emptySlotPlusFont` dibujará el dashed border pero silenciará el glifo `+`. Añadir `__DEV__` assert en `drawPolaroidStack` cuando sea conveniente.
+
+---
+
 ## Deferred from: code review of 13-4b-armario-picker-assignment-mechanics (2026-04-20)
 
 - **D-13.4b-D** — `ArmarioCaptureScreen.test.tsx`: `mockRouteParams` declarado `const undefined` — el forwarding de `onCutoutSaved` Capture→Preview no está ejercitado en test. Spec dijo "no new tests" para este archivo; gap de cobertura aceptado.
