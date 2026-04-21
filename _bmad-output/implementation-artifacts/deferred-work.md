@@ -4,6 +4,13 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 14-4-camera-result-screen-ui (2026-04-21)
+
+- **D-14.4-1** — `UnifiedCameraResultScreen.tsx:127` — `as never` cast en `navigate("Main", {...} as never)` — elude el tipado de React Navigation; si se renombra `ColorsTab` o `Combinations` falla en runtime sin error de compilación. Arreglar cuando se añada tipado completo de `CompositeNavigationProp` en Epic 15+.
+- **D-14.4-2** — `UnifiedCameraResultScreen.tsx:52` — `wadaMatch.top3[0]` sin null-guard en `getInitialConfirmedTone`; crash teórico si el pipeline envía `top3 = []`. Teórico: pipeline 14.3b garantiza ≥3 candidatos cuando `type === "confirm"`. Añadir guard defensivo cuando se refactorice el pipeline.
+
+---
+
 ## Deferred from: code review of 14-2-mis-looks-store-unification-migration (2026-04-21)
 
 - **D-14.2-1** — `App.tsx:60` — AppState listener return value discarded; N Metro hot-reloads = N concurrent hydration handlers. Pre-existing from Epic 13. Fix when adding a module-level cleanup mechanism or when migrating bootstrap to a component.

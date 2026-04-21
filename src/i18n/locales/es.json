@@ -317,6 +317,19 @@
 			"errorVisionFailed": "No pudimos procesar la foto. Inténtalo de nuevo.",
 			"errorIoFailed": "No se pudo leer o guardar la foto. Inténtalo de nuevo.",
 			"retry": "Reintentar"
+		},
+		"result": {
+			"cutoutA11yLabel": "Recorte de tu prenda, tono {{nameEn}}",
+			"wadaNameStackA11y": "Tono {{nameEn}}, {{nameJp}}",
+			"combinationsCount_one": "Aparece en {{count}} combinación",
+			"combinationsCount_other": "Aparece en {{count}} combinaciones",
+			"toneCorrectionPrompt": "¿Es éste el tono correcto?",
+			"toneCorrectionSwatchA11y": "Elegir tono {{nameEn}}",
+			"toneConfirmedA11yLive": "Tono cambiado a {{nameEn}}",
+			"primaryCta": "Guardar en mi armario",
+			"primaryCtaA11yLabel": "Guardar en mi armario. Tono Wada {{nameEn}}. {{count}} combinaciones disponibles.",
+			"secondaryLink": "ver combinaciones sin guardar",
+			"secondaryLinkA11yLabel": "Ver combinaciones sin guardar"
 		}
 	}
 }

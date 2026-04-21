@@ -317,6 +317,19 @@
 			"errorVisionFailed": "We couldn't process the photo. Try again.",
 			"errorIoFailed": "Couldn't read or save the photo. Try again.",
 			"retry": "Try again"
+		},
+		"result": {
+			"cutoutA11yLabel": "Cutout of your garment, tone {{nameEn}}",
+			"wadaNameStackA11y": "Tone {{nameEn}}, {{nameJp}}",
+			"combinationsCount_one": "Appears in {{count}} combination",
+			"combinationsCount_other": "Appears in {{count}} combinations",
+			"toneCorrectionPrompt": "Is this the right tone?",
+			"toneCorrectionSwatchA11y": "Choose tone {{nameEn}}",
+			"toneConfirmedA11yLive": "Tone changed to {{nameEn}}",
+			"primaryCta": "Save to my armario",
+			"primaryCtaA11yLabel": "Save to my armario. Wada tone {{nameEn}}. {{count}} combinations available.",
+			"secondaryLink": "view combinations without saving",
+			"secondaryLinkA11yLabel": "View combinations without saving"
 		}
 	}
 }
