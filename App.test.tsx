@@ -38,6 +38,10 @@ jest.mock("@/navigation/ArmarioStack", () => ({
 	ArmarioStack: () => null,
 }));
 
+jest.mock("@/navigation/UnifiedCameraStack", () => ({
+	UnifiedCameraStack: () => null,
+}));
+
 jest.mock("@/lib/armario/wardrobeFiles", () => ({
 	runOrphanSweep: jest.fn().mockResolvedValue(undefined),
 }));
