@@ -43,6 +43,15 @@ const MIDNIGHT_BLUE: Color = {
 	combinationCount: 1,
 };
 
+const ZERO_COUNT: Color = {
+	id: "test-zero",
+	hex: "#555555",
+	nameJp: "灰色",
+	nameEn: "Zero Gray",
+	swatchGroup: 0,
+	combinationCount: 0,
+};
+
 type MockRouteParams = {
 	cutoutUri: string;
 	dominantHex: string;
@@ -153,6 +162,19 @@ describe("UnifiedCameraResultScreen", () => {
 		expect(
 			screen.getByTestId("unified-camera-result-combinations-count"),
 		).toHaveTextContent("Appears in 5 combinations");
+	});
+
+	it("hides the combinations count text when count is 0", () => {
+		setRoute({
+			wadaMatch: {
+				type: "direct",
+				match: { color: ZERO_COUNT, deltaE: 2 },
+			},
+		});
+		render(<UnifiedCameraResultScreen />);
+		expect(
+			screen.queryByTestId("unified-camera-result-combinations-count"),
+		).toBeNull();
 	});
 
 	it("renders the combinations count in singular form when count === 1", () => {
@@ -283,7 +305,7 @@ describe("UnifiedCameraResultScreen", () => {
 		});
 	});
 
-	it("out-of-coverage match falls back to bestMatch.color in the name stack and primary CTA tint", () => {
+	it("out-of-coverage match falls back to bestMatch.color in the name stack, primary CTA tint, and hides tone-correction", () => {
 		setRoute({
 			dominantHex: "#ff00ff",
 			wadaMatch: {

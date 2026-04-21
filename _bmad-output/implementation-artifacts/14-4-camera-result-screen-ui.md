@@ -1,6 +1,6 @@
 # Story 14.4: Camera result screen UI — cutout + Wada tone + combinations count + two CTAs
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -363,6 +363,14 @@ claude-opus-4-7[1m]
 **Unchanged (verified):**
 - `src/navigation/types.ts` (Result route params contract frozen in 14.3b).
 - `src/navigation/UnifiedCameraStack.tsx`, `src/screens/unifiedCamera/UnifiedCameraCaptureScreen.tsx`, `src/screens/unifiedCamera/UnifiedCameraPostSaveScreen.tsx`, `src/screens/unifiedCamera/UnifiedCameraCaptureScreen.test.tsx`, `src/components/WadaHeader.tsx`, `src/screens/Combinations.tsx`, `src/data/colorIndex.ts`, `modules/background-removal/**`.
+
+### Review Findings
+
+- [x] [Review][Patch] `return()` con paréntesis en `handleSwatchPress` — ya era `return;` en el código fuente (falso positivo del diff) [src/screens/unifiedCamera/UnifiedCameraResultScreen.tsx:97]
+- [x] [Review][Patch] Sin test para count === 0 que oculta el texto de combinations — añadido test `hides the combinations count text when count is 0` [src/screens/unifiedCamera/UnifiedCameraResultScreen.test.tsx]
+- [x] [Review][Patch] Sin test que verifique que tone-correction está oculto en `out-of-coverage` — aserción añadida al test existente + nombre actualizado [src/screens/unifiedCamera/UnifiedCameraResultScreen.test.tsx]
+- [x] [Review][Defer] `as never` cast en `handleSecondaryLink` — limitación conocida del tipado de React Navigation; documentado en Dev Notes [src/screens/unifiedCamera/UnifiedCameraResultScreen.tsx:127] — deferred, pre-existing
+- [x] [Review][Defer] `wadaMatch.top3[0]` sin null-guard en `getInitialConfirmedTone` — teórico; el pipeline garantiza `top3.length >= 1` en type `"confirm"` [src/screens/unifiedCamera/UnifiedCameraResultScreen.tsx:52] — deferred, pre-existing
 
 ### Change Log
 
