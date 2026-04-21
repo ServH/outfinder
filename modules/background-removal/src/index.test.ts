@@ -1,4 +1,4 @@
-import type { BackgroundRemovalError } from "./index";
+import type { BackgroundRemovalError, BackgroundRemovalResult } from "./index";
 
 // Jest hoists `jest.mock()` above imports, so the mock factory runs BEFORE the
 // `const mockRemoveBackground = jest.fn()` executes. If the factory referenced
@@ -6,7 +6,10 @@ import type { BackgroundRemovalError } from "./index";
 // to `requireNativeModule`. Defer the lookup through a closure that only
 // touches `mockRemoveBackground` at call time (which happens inside each test,
 // long after module init) — see `feedback_local_expo_module.md` Regla 4.
-const mockRemoveBackground = jest.fn<Promise<string>, [string]>();
+const mockRemoveBackground = jest.fn<
+	Promise<BackgroundRemovalResult>,
+	[string]
+>();
 
 jest.mock("expo-modules-core", () => ({
 	requireNativeModule: () => ({
@@ -21,13 +24,29 @@ describe("removeBackground", () => {
 		mockRemoveBackground.mockReset();
 	});
 
-	it("resolves with the native PNG URI on the happy path", async () => {
-		mockRemoveBackground.mockResolvedValueOnce("file:///tmp/cutout-abc.png");
+	it("resolves with the native { cutoutUri, dominantHex } on the happy path", async () => {
+		mockRemoveBackground.mockResolvedValueOnce({
+			cutoutUri: "file:///tmp/cutout-abc.png",
+			dominantHex: "#7A3F2B",
+		});
 
-		await expect(removeBackground("file:///in.jpg")).resolves.toBe(
-			"file:///tmp/cutout-abc.png",
-		);
+		await expect(removeBackground("file:///in.jpg")).resolves.toEqual({
+			cutoutUri: "file:///tmp/cutout-abc.png",
+			dominantHex: "#7A3F2B",
+		});
 		expect(mockRemoveBackground).toHaveBeenCalledWith("file:///in.jpg");
+	});
+
+	it("propagates both cutoutUri and dominantHex verbatim from the native layer", async () => {
+		mockRemoveBackground.mockResolvedValueOnce({
+			cutoutUri: "file:///x.png",
+			dominantHex: "#FFAA00",
+		});
+
+		const result = await removeBackground("file:///src.heic");
+
+		expect(result.cutoutUri).toBe("file:///x.png");
+		expect(result.dominantHex).toBe("#FFAA00");
 	});
 
 	it("maps native code 'noSubject' to BackgroundRemovalError.kind === 'noSubject'", async () => {

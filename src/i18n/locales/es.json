@@ -307,5 +307,16 @@
 		"outOfCoverageMessage": "Este color es demasiado vibrante para la paleta de Wada — sus combinaciones se basan en pigmentos naturales del Japón de los años 30. El tono más cercano que encontramos:",
 		"outOfCoverageAction": "Ver combinaciones de {{name}}",
 		"tryAgain": "Intentar de nuevo"
+	},
+	"unifiedCamera": {
+		"capture": {
+			"hint": "Fotografía tu prenda completa",
+			"captureButtonLabel": "Tomar foto",
+			"processing": "Analizando tu prenda...",
+			"errorNoSubject": "No pudimos encontrar la prenda. Prueba con fondo liso y buena luz.",
+			"errorVisionFailed": "No pudimos procesar la foto. Inténtalo de nuevo.",
+			"errorIoFailed": "No se pudo leer o guardar la foto. Inténtalo de nuevo.",
+			"retry": "Reintentar"
+		}
 	}
 }

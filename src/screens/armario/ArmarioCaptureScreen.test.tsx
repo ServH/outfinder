@@ -153,7 +153,10 @@ describe("ArmarioCaptureScreen", () => {
 	});
 
 	it("3. granted + shutter → takePictureAsync → removeBackground → navigation.push to ArmarioPreview", async () => {
-		mockRemoveBackground.mockResolvedValueOnce("file:///cutout.png");
+		mockRemoveBackground.mockResolvedValueOnce({
+			cutoutUri: "file:///cutout.png",
+			dominantHex: "#000000",
+		});
 		const Screen = loadScreen();
 		render(<Screen />);
 
@@ -181,7 +184,10 @@ describe("ArmarioCaptureScreen", () => {
 			canAskAgain: true,
 		});
 		mockLaunchImageLibraryAsync.mockResolvedValueOnce({ canceled: true });
-		mockRemoveBackground.mockResolvedValueOnce("file:///cutout-lib.png");
+		mockRemoveBackground.mockResolvedValueOnce({
+			cutoutUri: "file:///cutout-lib.png",
+			dominantHex: "#000000",
+		});
 
 		const Screen = loadScreen();
 		render(<Screen />);
@@ -249,7 +255,10 @@ describe("ArmarioCaptureScreen", () => {
 
 		// Shutter is re-enabled and its press-handler fires again.
 		(mockTakePictureAsync as jest.Mock).mockClear();
-		mockRemoveBackground.mockResolvedValueOnce("file:///cutout.png");
+		mockRemoveBackground.mockResolvedValueOnce({
+			cutoutUri: "file:///cutout.png",
+			dominantHex: "#000000",
+		});
 		await act(async () => {
 			fireEvent.press(screen.getByTestId("armario-capture-button"));
 		});
@@ -305,10 +314,12 @@ describe("ArmarioCaptureScreen", () => {
 	});
 
 	it("8. Unmount during an in-flight removeBackground does NOT trigger a state-update warning", async () => {
-		let resolveRemoval: ((value: string) => void) | undefined;
+		let resolveRemoval:
+			| ((value: { cutoutUri: string; dominantHex: string }) => void)
+			| undefined;
 		mockRemoveBackground.mockImplementationOnce(
 			() =>
-				new Promise<string>((resolve) => {
+				new Promise<{ cutoutUri: string; dominantHex: string }>((resolve) => {
 					resolveRemoval = resolve;
 				}),
 		);
@@ -330,7 +341,10 @@ describe("ArmarioCaptureScreen", () => {
 
 		unmount();
 		await act(async () => {
-			resolveRemoval?.("file:///cutout-late.png");
+			resolveRemoval?.({
+				cutoutUri: "file:///cutout-late.png",
+				dominantHex: "#000000",
+			});
 			await Promise.resolve();
 			await Promise.resolve();
 		});

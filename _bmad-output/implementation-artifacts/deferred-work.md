@@ -146,6 +146,15 @@ These were reviewed and deliberately left as-is. Revisit only if the surrounding
 
 ---
 
+## Deferred from: code review of 14-3b-unified-camera-pipeline-swift-module (2026-04-21)
+
+- **D-14.3b-1** — Back button disabled while error persists: if Vision fails repeatedly, user is in a retry loop with back button disabled (`disableControls = error !== null`). Pre-existing ArmarioCaptureScreen pattern; modal swipe-to-dismiss is the OS-level escape hatch. [`src/screens/unifiedCamera/UnifiedCameraCaptureScreen.tsx`]
+- **D-14.3b-2** — `PixelLayout.init` default case silently treats all unknown 32-bit formats as BGRA. Vision only returns 32-bit formats today; future OS changes would silently corrupt color extraction. Documented in Dev Notes risk list. Add a `CVPixelBufferFormatType` allowlist guard if Vision changes behavior on iOS 18+. [`modules/background-removal/ios/BackgroundRemovalModule.swift:240`]
+- **D-14.3b-3** — `runPipeline` has no timeout: Vision + `removeBackground` can theoretically hang indefinitely, leaving `processing=true` and the UI frozen. Pre-existing ArmarioCaptureScreen pattern. Add a `Task.sleep` timeout + `cancel()` wrapper if on-device complaints surface. [`src/screens/unifiedCamera/UnifiedCameraCaptureScreen.tsx`]
+- **D-14.3b-4** — `UnifiedCameraResultScreen` diagnostic text (`dominantHex = #XXXX`, `wadaMatch.type = direct`) renders in production without `__DEV__` guard. Intentional per spec; Story 14.4 replaces this screen. Ship as-is; remove placeholder text in Story 14.4. [`src/screens/unifiedCamera/UnifiedCameraResultScreen.tsx`]
+
+---
+
 ## Deferred from: code review of 14-3a-unified-camera-nav-setup-capturescreen-deprecation (2026-04-21)
 
 - **D-14.3a-1** — Root modal slide animation plays even with Reduce Motion — `animation: isReducedMotion ? "none" : "fade"` in UnifiedCameraStack only suppresses intra-stack transitions; the iOS sheet slide on modal open/close is governed by `presentation: "modal"` on RootStack.Screen and has no Reduce Motion override. Pre-existing behavior identical to ArmarioRoot. Fix requires a `useNativeDriver`-compatible custom animation config at the RootStack level — non-trivial Reanimated work best paired with a dedicated accessibility polish story.

@@ -1,7 +1,7 @@
 {
-  "platforms": ["ios"],
-  "ios": {
-    "modules": ["BackgroundRemovalModule"],
-    "podspecPath": "background-removal.podspec"
-  }
+	"platforms": ["ios"],
+	"ios": {
+		"modules": ["BackgroundRemovalModule"],
+		"podspecPath": "background-removal.podspec"
+	}
 }

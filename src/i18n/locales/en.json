@@ -307,5 +307,16 @@
 		"outOfCoverageMessage": "This colour is too vibrant for Wada's palette — his combinations are based on natural pigments from 1930s Japan. The closest tone we found:",
 		"outOfCoverageAction": "See {{name}}'s combinations",
 		"tryAgain": "Try again"
+	},
+	"unifiedCamera": {
+		"capture": {
+			"hint": "Photograph your full garment",
+			"captureButtonLabel": "Take photo",
+			"processing": "Analyzing your garment...",
+			"errorNoSubject": "We couldn't find the garment. Try a plain background with good light.",
+			"errorVisionFailed": "We couldn't process the photo. Try again.",
+			"errorIoFailed": "Couldn't read or save the photo. Try again.",
+			"retry": "Try again"
+		}
 	}
 }

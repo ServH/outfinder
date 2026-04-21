@@ -119,7 +119,7 @@ export function ArmarioCaptureScreen(_props: ArmarioCaptureScreenProps) {
 		setProcessing(true);
 		setError(null);
 		try {
-			const cutoutUri = await removeBackground(uri);
+			const { cutoutUri } = await removeBackground(uri);
 			if (!isMounted.current) return;
 			setProcessing(false);
 			hapticLight();
