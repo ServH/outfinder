@@ -48,16 +48,17 @@ A React Native iOS app that transforms Sanzo Wada's 1930s color masterwork — "
 - **Epic 9: DONE** — Favorites redesign (9.1 2-col grid + ComboCard compact, 9.2 Sort pills + empty state)
 - **Story 10.1: DONE** — Visualizer adjustments (nameEn in WadaHeader + dynamic nav title)
 - **Epic 11: DONE** — Story 11.1: Onboarding v2 (coach marks + permanent arrows). Story 11.2: EN/ES localization (react-i18next, 135 keys). Story 11.3a: iPad primary screens (ColorHome, Favorites, OutfitVisualizer). Story 11.3b: iPad secondary screens (Combinations, Settings, BrowseAllColors, SwatchGroup numColumns).
-- **Epic 12: IN-PROGRESS** — Color Capture feature. Story 12.1 DONE: color math foundation (colorTypes, colorConversion, colorMatch — LAB, CIEDE2000). Story 12.2 DONE: camera entry point + CaptureScreen (expo-camera, permission flow, WB slider, haptics). Story 12.3 DONE: native WB Swift module (`modules/white-balance/`) + AnalysisOverlay component + full analysis pipeline wired in CaptureScreen (WB correction → getColors → hexToLab → matchWadaColor → classifyMatch → navigate). Story 12.4 READY: result sheets + navigation.
-- **Tests:** 539 passing across 41 suites (60 pre-existing failures in i18n + OutfitVisualizer suites — unrelated to Epic 12)
+- **Epic 12: DONE** — Color Capture feature (v1.3.0). Story 12.1 color math foundation (LAB, CIEDE2000). Story 12.2 camera entry point + CaptureScreen. Story 12.3 native WB Swift module (`modules/white-balance/`) + AnalysisOverlay + full analysis pipeline. Story 12.4 result sheets + navigation (replace + colors.background). Final pipeline: WB + downsample + centerCrop; no `fullScreenModal`.
+- **Epic 13: IN-PROGRESS** — Armario Virtual (v1.4.0, branch `epic-13`). Story 13.1 wardrobe data-model + `wardrobeRepo` + `useWardrobeStore` (AsyncStorage). Story 13.2 native background-removal module (`modules/background-removal/`). Story 13.3a capture/background-removal UI flow. Story 13.3b wardrobe persistence lifecycle. Story 13.4a S0 Zero State + S2 Ficha Wada + shared components (`CompletenessBadge`, `PolaroidCard`, `WardrobeItemThumb`, `WadaColorDot`). Story 13.4b S3 `ArmarioPicker` + assignment mechanics + unfavorite cascade. Story 13.5 S4 `ArmarioTuLook` — Skia polaroid cascade + 1080×1920 JPEG export + share. **Story 13.6 DONE (2026-04-21)**: S5 `ArmarioSugerenciaArmonia` (partial-combo destination) with `drawPolaroidStack` empty-slot branch + `getSuggestionCopy` heuristic; FavoritesList completeness-partition sort + enriched cards (badge + thumb strip + CTA override) via new `FavoriteComboEnrichedCard` wrapper; iOS-17 gate preserved; 18 new `armario.s5.*` / `armario.favorites.*` i18n keys. Retrospective optional.
+- **Tests:** 783 passing across 67 suites (60 pre-existing failures in i18n + OutfitVisualizer suites — unchanged across Epic 12/13)
 - **Code Reviews:** Adversarial review on every story since Epic 1. Per-screen code analysis on 2026-04-03
 - **Retrospectives:** Epic 1, 2, 3, 4 completed
-- **App Store:** v1.0.0 submitted 2026-03-26 → v1.2.0 (build 4) current on epic-1
+- **App Store:** v1.0.0 submitted 2026-03-26 → v1.3.0 in Apple review → v1.4.0 target via `epic-13` merge into `epic-1`
 
 ### Epic Execution Order (non-sequential)
 
 Epics were NOT executed in numerical order:
-1. Epic 1 → Epic 2 → **Epic 4** → **Epic 3** → Epic 5 → Epic 6 → Epic 7 → Epic 8 → Epic 9 → Story 10.1 → bugfix polish
+1. Epic 1 → Epic 2 → **Epic 4** → **Epic 3** → Epic 5 → Epic 6 → Epic 7 → Epic 8 → Epic 9 → Story 10.1 → Epic 11 → Epic 12 (v1.3.0) → **Epic 13 (v1.4.0)**
 
 Epic 3 was postponed after Epic 2 because the Visualizer was visually flat for social sharing. Epic 4 (Favorites) was independent and executed first. Story 2.5 (Skia rewrite) + bugfix polish branch resolved the visual debt, unblocking Epic 3.
 
