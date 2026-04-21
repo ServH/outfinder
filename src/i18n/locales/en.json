@@ -287,7 +287,8 @@
 		}
 	},
 	"colorCapture": {
-		"cameraButtonLabel": "Open camera to identify garment color",
+		"cameraButtonLabel": "Camera — capture a garment",
+		"closeCameraLabel": "Close camera",
 		"captureButtonLabel": "Take photo",
 		"overlayHint": "Find natural light · Center the garment",
 		"permissionDenied": "Camera access is required to identify garment colors.",

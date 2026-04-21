@@ -21,6 +21,7 @@ import { UnfavoriteCascadeProvider } from "@/lib/armario/confirmUnfavoriteWithCa
 import { runOrphanSweep } from "@/lib/armario/wardrobeFiles";
 import { ArmarioStack } from "@/navigation/ArmarioStack";
 import { TabNavigator } from "@/navigation/TabNavigator";
+import { UnifiedCameraStack } from "@/navigation/UnifiedCameraStack";
 import type { RootStackParamList } from "@/navigation/types";
 import { runMisLooksMigration } from "@/stores/misLooksMigration";
 import { hydrateMisLooksStore, useMisLooksStore } from "@/stores/misLooksStore";
@@ -81,6 +82,11 @@ function RootNavigator() {
 			<RootStack.Screen
 				name="ArmarioRoot"
 				component={ArmarioStack}
+				options={{ presentation: "modal" }}
+			/>
+			<RootStack.Screen
+				name="UnifiedCameraRoot"
+				component={UnifiedCameraStack}
 				options={{ presentation: "modal" }}
 			/>
 		</RootStack.Navigator>

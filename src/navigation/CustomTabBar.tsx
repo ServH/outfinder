@@ -1,4 +1,5 @@
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { SymbolView } from "expo-symbols";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -12,6 +13,7 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
+import type { RootStackParamList } from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
 
 const COLORS_DARK = "#1c1c1e";
@@ -41,8 +43,6 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 			: undefined;
 	const isWarmScreen =
 		isColorsActive && activeColorsScreen === "OutfitVisualizer";
-	const isCaptureScreen =
-		isColorsActive && activeColorsScreen === "CaptureScreen";
 
 	// Crossfade the tab bar background in sync with the stack's fade animation
 	// (React Navigation's default fade = ~250ms). Without this the bg snaps
@@ -88,13 +88,9 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 
 	function handleCameraPress() {
 		hapticLight();
-		navigation.navigate("ColorsTab", { screen: "CaptureScreen" });
-	}
-
-	// Hide tab bar entirely while CaptureScreen is focused (camera is full-screen).
-	// All hooks above must execute first to satisfy Rules of Hooks.
-	if (isCaptureScreen) {
-		return null;
+		navigation
+			.getParent<NativeStackNavigationProp<RootStackParamList>>()
+			?.navigate("UnifiedCameraRoot");
 	}
 
 	// ─── iPad: flat 3-item tab bar ───────────────────────────────────────────
