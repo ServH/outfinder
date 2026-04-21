@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ArmarioFichaWadaScreen } from "@/screens/armario/ArmarioFichaWadaScreen";
 import { ArmarioPickerScreen } from "@/screens/armario/ArmarioPickerScreen";
+import { ArmarioSugerenciaArmoniaScreen } from "@/screens/armario/ArmarioSugerenciaArmoniaScreen";
 import { ArmarioTuLookScreen } from "@/screens/armario/ArmarioTuLookScreen";
 import { ArmarioZeroStateScreen } from "@/screens/armario/ArmarioZeroStateScreen";
 import { FavoritesList } from "@/screens/FavoritesList";
@@ -52,6 +53,12 @@ export function FavoritesStack() {
 			<Stack.Screen
 				name="ArmarioTuLook"
 				component={ArmarioTuLookScreen}
+				options={{ headerShown: false, animation: "fade" }}
+			/>
+			{/* S5 Sugerencia Armonía — partial-combo destination (13.6) */}
+			<Stack.Screen
+				name="ArmarioSugerenciaArmonia"
+				component={ArmarioSugerenciaArmoniaScreen}
 				options={{ headerShown: false, animation: "fade" }}
 			/>
 		</Stack.Navigator>

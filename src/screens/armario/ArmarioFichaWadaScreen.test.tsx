@@ -125,16 +125,14 @@ describe("ArmarioFichaWadaScreen", () => {
 		expect(screen.getByTestId("s2-slot-2")).toBeTruthy();
 	});
 
-	it("empty slot shows dashed `+` tile + Assign link (no arrow)", () => {
+	it("empty slot shows dashed `+` tile + Assign link with trailing arrow (matches UX spec)", () => {
 		const Screen = loadScreen();
 		render(<Screen />);
 		expect(screen.getByTestId("s2-slot-0-empty")).toBeTruthy();
-		expect(screen.getAllByText("Assign").length).toBeGreaterThan(0);
-		// Ensure the arrow was removed (would break if anyone re-adds it).
-		expect(screen.queryByText("Assign →")).toBeNull();
+		expect(screen.getAllByText("Assign \u2192").length).toBeGreaterThan(0);
 	});
 
-	it("filled slot shows WardrobeItemThumb + Change link (no arrow)", () => {
+	it("filled slot shows WardrobeItemThumb + Change link with trailing arrow (matches UX spec)", () => {
 		mockItems = [
 			{
 				id: "uuid-1",
@@ -154,11 +152,10 @@ describe("ArmarioFichaWadaScreen", () => {
 		const Screen = loadScreen();
 		render(<Screen />);
 		expect(screen.getByTestId("s2-slot-0-thumb")).toBeTruthy();
-		expect(screen.getAllByText("Change").length).toBeGreaterThan(0);
-		expect(screen.queryByText("Change →")).toBeNull();
+		expect(screen.getAllByText("Change \u2192").length).toBeGreaterThan(0);
 	});
 
-	it("filled slot no longer renders the standalone color name above the thumb", () => {
+	it("filled slot renders the Wada color name inside the left identity strip (Story 13.6 S2 redesign)", () => {
 		mockItems = [
 			{
 				id: "uuid-1",
@@ -177,10 +174,10 @@ describe("ArmarioFichaWadaScreen", () => {
 		];
 		const Screen = loadScreen();
 		render(<Screen />);
-		// The color name survives only as the thumb's accessibilityLabel (for
-		// VoiceOver), not as a visible Text node under the tile. queryByText
-		// finds any Text node regardless of a11y props.
-		expect(screen.queryByText("Coral Pink")).toBeNull();
+		// Post-redesign the color name IS a visible Text inside the slot
+		// card's left identity stripe — carries the color identity without
+		// competing with the garment thumbnail on the right.
+		expect(screen.getByText("Coral Pink")).toBeTruthy();
 	});
 
 	it("slot tap fires hapticLight + navigation.push ArmarioPicker with correct args", async () => {
@@ -258,7 +255,7 @@ describe("ArmarioFichaWadaScreen", () => {
 		expect(mockPush).not.toHaveBeenCalled();
 	});
 
-	it("view-look CTA fires onViewLook stub when partial (2/3) — S5 stub path unchanged until 13.6", async () => {
+	it("view-look CTA still defers to onViewLook prop when partial (2/3) — injection seam wins for both branches", async () => {
 		mockItems = [
 			{
 				id: "uuid-1",
@@ -281,6 +278,33 @@ describe("ArmarioFichaWadaScreen", () => {
 			fireEvent.press(screen.getByTestId("s2-view-look-cta"));
 		});
 		expect(onViewLook).toHaveBeenCalledWith({ combinationId: "combo-3" });
+		expect(mockPush).not.toHaveBeenCalled();
+	});
+
+	it("view-look CTA pushes ArmarioSugerenciaArmonia when partial (2/3) and no onViewLook prop (Story 13.6)", async () => {
+		mockItems = [
+			{
+				id: "uuid-1",
+				localImagePath: "file:///a.png",
+				thumbnailPath: "file:///a.t.png",
+				createdAt: 1,
+			},
+		];
+		mockAssignments = [0, 1].map((i) => ({
+			combinationId: "combo-3",
+			colorIndex: i,
+			wardrobeItemId: "uuid-1",
+			assignedAt: 1,
+		}));
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-view-look-cta"));
+		});
+		expect(mockPush).toHaveBeenCalledWith("ArmarioSugerenciaArmonia", {
+			combinationId: "combo-3",
+		});
 	});
 
 	it("CompletenessBadge reflects 2/3 amber vs 3/3 green based on assignment count", () => {

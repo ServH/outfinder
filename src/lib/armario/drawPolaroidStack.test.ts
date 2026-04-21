@@ -156,6 +156,53 @@ describe("drawPolaroidStack", () => {
 		expect(texts).not.toContain("Leaf Green");
 	});
 
+	it("emptySlots — card index 1 empty emits no drawImageRect for that slot AND draws a dashed-border paint", () => {
+		const { Skia } = require("@shopify/react-native-skia") as {
+			Skia: { Paint: jest.Mock; PathEffect: { MakeDash: jest.Mock } };
+		};
+		(Skia.Paint as jest.Mock).mockClear();
+		(Skia.PathEffect.MakeDash as jest.Mock).mockClear();
+		const canvas = createMockCanvas();
+		const props = makeProps(3);
+		props.emptySlots = [false, true, false];
+		props.emptySlotPlusFont = createMockFont(28);
+		drawPolaroidStack(canvas as unknown as SkCanvas, props);
+		// Empty slot skips the image blit entirely.
+		expect(canvas.drawImageRect).toHaveBeenCalledTimes(2);
+		// Dashed border was constructed — the paint created for it should
+		// have had setPathEffect called with the dash pattern.
+		const paintCalls = (Skia.Paint as jest.Mock).mock.results.map(
+			(r) => r.value as { setPathEffect: jest.Mock },
+		);
+		const sawDashedPaint = paintCalls.some((p) => {
+			const calls = p.setPathEffect?.mock?.calls ?? [];
+			return calls.some(
+				(callArgs: unknown[]) =>
+					typeof callArgs[0] === "object" &&
+					callArgs[0] !== null &&
+					(callArgs[0] as { __dashIntervals?: [number, number] })
+						.__dashIntervals?.[0] === 16 &&
+					(callArgs[0] as { __dashIntervals?: [number, number] })
+						.__dashIntervals?.[1] === 10,
+			);
+		});
+		expect(sawDashedPaint).toBe(true);
+	});
+
+	it("emptySlots — empty first card does NOT move the signature band; last (filled) card still carries the Outfinder brand", () => {
+		const canvas = createMockCanvas();
+		const props = makeProps(3);
+		props.emptySlots = [true, false, false];
+		props.emptySlotPlusFont = createMockFont(28);
+		drawPolaroidStack(canvas as unknown as SkCanvas, props);
+		// Last card filled → signature renders once on it.
+		expect(canvas.drawText).toHaveBeenCalled();
+		const brandCalls = canvas.drawText.mock.calls.filter(
+			(args) => args[0] === "Outfinder",
+		);
+		expect(brandCalls).toHaveLength(1);
+	});
+
 	it("is fully synchronous — no Promise return, no awaits", () => {
 		const canvas = createMockCanvas();
 		const result = drawPolaroidStack(

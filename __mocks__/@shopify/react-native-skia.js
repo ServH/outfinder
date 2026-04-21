@@ -21,6 +21,7 @@ function mockPaint() {
 		setAntiAlias: jest.fn(),
 		setStyle: jest.fn(),
 		setStrokeWidth: jest.fn(),
+		setPathEffect: jest.fn(),
 	};
 }
 
@@ -70,6 +71,13 @@ const Skia = {
 	RRectXY: jest.fn((rect, rx, ry) => ({ rect, rx, ry })),
 	MaskFilter: {
 		MakeBlur: jest.fn((style, sigma) => ({ style, sigma, __kind: "blur" })),
+	},
+	PathEffect: {
+		MakeDash: jest.fn((intervals, phase) => ({
+			__kind: "dash",
+			__dashIntervals: intervals,
+			__dashPhase: phase,
+		})),
 	},
 	Data: {
 		fromURI: jest.fn(async () => ({ __data: "from-uri", size: () => 4 })),
@@ -128,6 +136,7 @@ module.exports = {
 	ImageFormat: { JPEG: 3, PNG: 4, WEBP: 6 },
 	BlurStyle: { Normal: 0, Solid: 1, Outer: 2, Inner: 3 },
 	ClipOp: { Difference: 0, Intersect: 1 },
+	PaintStyle: { Fill: "Fill", Stroke: "Stroke" },
 	// Test helpers (not real Skia exports)
 	__createMockCanvas: mockCanvas,
 	__createMockSurface: mockSurface,

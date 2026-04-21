@@ -16,6 +16,7 @@ import {
 	useWindowDimensions,
 	View,
 } from "react-native";
+import { FavoriteComboEnrichedCard } from "@/components/armario/FavoriteComboEnrichedCard";
 import { ComboCard } from "@/components/ComboCard";
 import { EmptyState } from "@/components/EmptyState";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
@@ -23,6 +24,7 @@ import { useFavorites } from "@/contexts/FavoritesContext";
 import { getCombination } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
+import { sortFavoritesByCompleteness } from "@/lib/armario/sortFavoritesByCompleteness";
 import { useFavoritesNumCols, useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
 import { useIsIOS17OrNewer } from "@/lib/platform";
@@ -72,6 +74,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 	const supportsArmario = useIsIOS17OrNewer();
 	const hydrated = useWardrobeStore((s) => s.hydrated);
 	const assignments = useWardrobeStore((s) => s.assignments);
+	const wardrobeItems = useWardrobeStore((s) => s.items);
 	const isNavigating = useRef(false);
 
 	const gate = usePremiumGate(favorites);
@@ -104,8 +107,20 @@ export function FavoritesList(_props: FavoritesListProps) {
 		if (sortMode === "by-size") {
 			return [...result].sort((a, b) => a.colors.length - b.colors.length);
 		}
+		// "recent" mode → completeness partition when the user is on iOS 17+,
+		// the wardrobe store is hydrated, and at least one combo has ≥ 1
+		// assignment. Empty buckets fall back to Set-insertion order. The user-
+		// facing label stays "Recent" (completeness-first is a refinement, not
+		// a new sort dimension).
+		if (supportsArmario && hydrated && assignments.length > 0) {
+			return sortFavoritesByCompleteness(result, assignments);
+		}
 		return result;
-	}, [favorites, sortMode]);
+	}, [favorites, sortMode, supportsArmario, hydrated, assignments]);
+
+	const hasAnyWardrobeState =
+		wardrobeItems.length > 0 || assignments.length > 0;
+	const useEnrichedCards = supportsArmario && hydrated && hasAnyWardrobeState;
 
 	const handleComboPress = useCallback(
 		async (combinationId: string) => {
@@ -143,6 +158,17 @@ export function FavoritesList(_props: FavoritesListProps) {
 	const renderComboCard = useCallback(
 		({ item }: { item: Combination }) => {
 			const currentlyFav = isFavorite(item.id);
+			if (useEnrichedCards) {
+				return (
+					<FavoriteComboEnrichedCard
+						combination={item}
+						isFavorite={currentlyFav}
+						onToggleFavorite={() => toggleFavorite(item.id)}
+						onPress={handleComboPress}
+						cardWidth={cardWidth}
+					/>
+				);
+			}
 			return (
 				<View style={{ width: cardWidth }}>
 					<ComboCard
@@ -156,7 +182,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 				</View>
 			);
 		},
-		[isFavorite, toggleFavorite, cardWidth, handleComboPress],
+		[isFavorite, toggleFavorite, cardWidth, handleComboPress, useEnrichedCards],
 	);
 
 	const listHeaderComponent = useMemo(

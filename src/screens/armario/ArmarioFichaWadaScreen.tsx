@@ -6,7 +6,8 @@ import type {
 import { SymbolView } from "expo-symbols";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { Modal, Pressable, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CompletenessBadge } from "@/components/armario/CompletenessBadge";
 import { WardrobeItemThumb } from "@/components/armario/WardrobeItemThumb";
 import { getCombination } from "@/data/colorIndex";
@@ -33,14 +34,12 @@ export interface ArmarioFichaWadaScreenProps {
 	onViewLook?: (args: { combinationId: string }) => void;
 }
 
-const defaultViewLook: NonNullable<ArmarioFichaWadaScreenProps["onViewLook"]> =
-	() => {
-		if (__DEV__) {
-			console.warn(
-				"[ArmarioFichaWadaScreen] S5 Sugerencia Armonía — not implemented until Story 13.6",
-			);
-		}
-	};
+// Horizontal columns — one column per color, per the UX spec at
+// `docs/planning/feature-armario-virtual/screens/s2-ficha-wada.png`.
+// Each column stacks: color swatch on top, garment thumb below,
+// nameEn + Cambiar link at the bottom. Column width flexes with N
+// (2/3/4-color combos) so every layout stays tight and legible.
+const COLUMN_GAP_PX = 12;
 
 export function ArmarioFichaWadaScreen({
 	onViewLook,
@@ -50,6 +49,7 @@ export function ArmarioFichaWadaScreen({
 	const route = useRoute<ArmarioFichaWadaRoute>();
 	const { combinationId } = route.params;
 	const reducedMotion = useReducedMotion();
+	const insets = useSafeAreaInsets();
 
 	const combination = useMemo(
 		() => getCombination(combinationId),
@@ -113,20 +113,18 @@ export function ArmarioFichaWadaScreen({
 	function handleViewLook() {
 		if (assignedCount === 0) return;
 		hapticLight();
+		// `onViewLook` is the injection seam for tests — when provided it wins
+		// for BOTH the complete and partial branches. Story 13.6 replaced the
+		// partial-branch dev stub with a real S5 push.
+		if (onViewLook) {
+			onViewLook({ combinationId });
+			return;
+		}
 		if (isComplete) {
-			// Story 13.5: complete-branch pushes into S4 on FavoritesStack. The
-			// `onViewLook` prop remains the injection seam for tests and future
-			// partial-branch rewiring (Story 13.6). When the host passes
-			// `onViewLook`, it wins — otherwise we push directly.
-			if (onViewLook) {
-				onViewLook({ combinationId });
-				return;
-			}
 			navigation.push("ArmarioTuLook", { combinationId });
 			return;
 		}
-		const handler = onViewLook ?? defaultViewLook;
-		handler({ combinationId });
+		navigation.push("ArmarioSugerenciaArmonia", { combinationId });
 	}
 
 	function findAssignmentThumb(colorIndex: number): string | undefined {
@@ -141,13 +139,17 @@ export function ArmarioFichaWadaScreen({
 			testID="s2-ficha-wada-screen"
 			accessibilityLabel={t("armario.s2.screenLabel")}
 			className="flex-1"
-			style={{ backgroundColor: wadaTokens.bgPaper }}
+			style={{
+				backgroundColor: wadaTokens.bgPaper,
+				paddingTop: insets.top,
+				paddingBottom: insets.bottom,
+			}}
 		>
 			<View
 				style={{
-					paddingTop: 56,
+					paddingTop: 8,
 					paddingHorizontal: 20,
-					paddingBottom: 12,
+					paddingBottom: 8,
 					flexDirection: "row",
 					alignItems: "center",
 				}}
@@ -186,196 +188,225 @@ export function ArmarioFichaWadaScreen({
 				/>
 			</View>
 
-			<ScrollView
-				contentContainerStyle={{
+			<Text
+				style={{
+					fontFamily: "Inter_400Regular",
+					fontSize: 15,
+					color: wadaTokens.textSecondary,
 					paddingHorizontal: 20,
-					paddingBottom: 140,
+					marginTop: 4,
 				}}
 			>
-				<Text
-					style={{
-						fontFamily: "Inter_400Regular",
-						fontSize: 15,
-						color: wadaTokens.textSecondary,
-						marginTop: 8,
-					}}
-				>
-					{t("armario.s2.instruction")}
-				</Text>
+				{t("armario.s2.instruction")}
+			</Text>
 
-				<Text
-					style={{
-						fontFamily: "Inter_500Medium",
-						fontSize: 11,
-						color: wadaTokens.textTertiary,
-						letterSpacing: 2.5,
-						marginTop: 24,
-					}}
-				>
-					{t("armario.s2.wardrobeLabel")}
-				</Text>
+			<Text
+				style={{
+					fontFamily: "Inter_500Medium",
+					fontSize: 11,
+					color: wadaTokens.textTertiary,
+					letterSpacing: 2.5,
+					paddingHorizontal: 20,
+					marginTop: 16,
+				}}
+			>
+				{t("armario.s2.wardrobeLabel")}
+			</Text>
 
-				<View className="flex-row" style={{ gap: 12, marginTop: 12 }}>
-					{combination.colors.map((color, i) => {
-						const assignedThumb = findAssignmentThumb(i);
-						const isAssigned = typeof assignedThumb === "string";
-						const a11y = t(
-							isAssigned
-								? "armario.s2.slotA11yAssigned"
-								: "armario.s2.slotA11yUnassigned",
-							{ color: color.nameEn },
-						);
-						return (
-							<Pressable
-								key={color.id}
-								testID={`s2-slot-${i}`}
-								accessibilityRole="button"
-								accessibilityLabel={a11y}
-								onPress={() => handleSlotTap(i)}
+			{/* Columns — one per color (N = 2/3/4). Each column flexes so
+			    the layout stays tight on 4-combos and breathes on 2-combos.
+			    Inside each column the stack mirrors the UX spec screenshot:
+			    color swatch (top), garment thumb or dashed "+" (middle),
+			    nameEn + Cambiar/Asignar link (bottom). */}
+			<View
+				style={{
+					flexDirection: "row",
+					paddingHorizontal: 20,
+					marginTop: 12,
+					gap: COLUMN_GAP_PX,
+				}}
+			>
+				{combination.colors.map((color, i) => {
+					const assignedThumb = findAssignmentThumb(i);
+					const isAssigned = typeof assignedThumb === "string";
+					const a11y = t(
+						isAssigned
+							? "armario.s2.slotA11yAssigned"
+							: "armario.s2.slotA11yUnassigned",
+						{ color: color.nameEn },
+					);
+					return (
+						<Pressable
+							key={color.id}
+							testID={`s2-slot-${i}`}
+							accessibilityRole="button"
+							accessibilityLabel={a11y}
+							onPress={() => handleSlotTap(i)}
+							style={{ flex: 1, minHeight: 44 }}
+						>
+							{/* Color swatch — top of the column. */}
+							<View
 								style={{
-									flex: 1,
-									minHeight: 44,
-									minWidth: 44,
+									width: "100%",
+									aspectRatio: 1.35,
+									borderRadius: 14,
+									backgroundColor: color.hex,
 								}}
-							>
-								{/*
-								 * Single 1:1 tile — the Wada color is conveyed exclusively
-								 * as the tile's border (dashed when empty, solid when
-								 * assigned). The old approach layered a separate color
-								 * swatch above the thumb, which competed with the garment
-								 * photo and produced a redundant visual.
-								 */}
-								<View style={{ aspectRatio: 1 }}>
-									{isAssigned ? (
-										<View
-											style={{
-												flex: 1,
-												borderRadius: 14,
-												borderWidth: 2,
-												borderColor: color.hex,
-												overflow: "hidden",
-												backgroundColor: wadaTokens.bgElevated,
-											}}
-										>
-											<WardrobeItemThumb
-												uri={assignedThumb}
-												fill
-												testID={`s2-slot-${i}-thumb`}
-												accessibilityLabel={color.nameEn}
-											/>
-										</View>
-									) : (
-										<View
-											testID={`s2-slot-${i}-empty`}
-											className="items-center justify-center"
-											style={{
-												flex: 1,
-												borderRadius: 14,
-												borderWidth: 2,
-												borderStyle: "dashed",
-												borderColor: color.hex,
-												backgroundColor: hexToRgba(color.hex, 0.08),
-											}}
-										>
-											<Text
-												style={{
-													fontFamily: "Inter_500Medium",
-													fontSize: 28,
-													color: hexToRgba(color.hex, 0.55),
-												}}
-											>
-												+
-											</Text>
-										</View>
-									)}
-								</View>
-								{isAssigned && (
-									<Pressable
-										testID={`s2-slot-${i}-remove`}
-										onPress={(e) => {
-											// Nested Pressable — stop propagation so the outer slot
-											// tap (which pushes the Picker) does not also fire.
-											// Optional chain guards against test-harness events that
-											// don't include a nativeEvent.
-											e?.stopPropagation?.();
-											handleRemove(i);
-										}}
-										accessibilityRole="button"
-										accessibilityLabel={t("armario.s2.slotRemoveA11y", {
-											color: color.nameEn,
-										})}
-										style={{
-											minHeight: 44,
-											minWidth: 44,
-											marginTop: 8,
-											justifyContent: "center",
-										}}
-									>
-										<Text
-											style={{
-												fontFamily: "Inter_400Regular",
-												fontSize: 13,
-												color: wadaTokens.textTertiary,
-											}}
-										>
-											{t("armario.s2.linkRemove")}
-										</Text>
-									</Pressable>
-								)}
-								<Text
+							/>
+
+							{/* Garment slot — middle of the column. Filled → thumb;
+							    empty → dashed tinted rectangle with "+". */}
+							{isAssigned ? (
+								<View
 									style={{
-										fontFamily: "Inter_400Regular",
-										fontSize: 13,
-										color: wadaTokens.textSecondary,
-										marginTop: isAssigned ? 2 : 8,
+										width: "100%",
+										aspectRatio: 1,
+										marginTop: 10,
+										borderRadius: 14,
+										overflow: "hidden",
+										backgroundColor: wadaTokens.bgElevated,
 									}}
 								>
-									{t(
-										isAssigned
-											? "armario.s2.linkChange"
-											: "armario.s2.linkAssign",
-									)}
-								</Text>
-							</Pressable>
-						);
-					})}
-				</View>
-			</ScrollView>
+									<WardrobeItemThumb
+										uri={assignedThumb}
+										fill
+										testID={`s2-slot-${i}-thumb`}
+										accessibilityLabel={color.nameEn}
+									/>
+								</View>
+							) : (
+								<View
+									testID={`s2-slot-${i}-empty`}
+									className="items-center justify-center"
+									style={{
+										width: "100%",
+										aspectRatio: 1,
+										marginTop: 10,
+										borderRadius: 14,
+										borderWidth: 2,
+										borderStyle: "dashed",
+										borderColor: hexToRgba(color.hex, 0.55),
+										backgroundColor: hexToRgba(color.hex, 0.08),
+									}}
+								>
+									<Text
+										style={{
+											fontFamily: "Inter_500Medium",
+											fontSize: 28,
+											color: hexToRgba(color.hex, 0.55),
+										}}
+									>
+										+
+									</Text>
+								</View>
+							)}
 
-			<Pressable
-				testID="s2-view-look-cta"
-				onPress={handleViewLook}
-				disabled={!hydrated || assignedCount === 0}
-				accessibilityRole="button"
-				accessibilityLabel={t("armario.s2.viewLookCta")}
-				accessibilityState={{ disabled: !hydrated || assignedCount === 0 }}
-				className="absolute self-center items-center justify-center"
+							{/* Labels — bottom of the column. */}
+							<Text
+								numberOfLines={1}
+								style={{
+									fontFamily: "Inter_500Medium",
+									fontSize: 14,
+									color: wadaTokens.textPrimary,
+									marginTop: 10,
+								}}
+							>
+								{color.nameEn}
+							</Text>
+							<Text
+								style={{
+									fontFamily: "Inter_400Regular",
+									fontSize: 13,
+									color: wadaTokens.textTertiary,
+									marginTop: 2,
+								}}
+							>
+								{t(
+									isAssigned
+										? "armario.s2.linkChange"
+										: "armario.s2.linkAssign",
+								)}
+								{" \u2192"}
+							</Text>
+							{isAssigned && (
+								<Pressable
+									testID={`s2-slot-${i}-remove`}
+									onPress={(e) => {
+										e?.stopPropagation?.();
+										handleRemove(i);
+									}}
+									accessibilityRole="button"
+									accessibilityLabel={t("armario.s2.slotRemoveA11y", {
+										color: color.nameEn,
+									})}
+									style={{
+										minHeight: 44,
+										minWidth: 44,
+										marginTop: 4,
+										justifyContent: "center",
+									}}
+								>
+									<Text
+										style={{
+											fontFamily: "Inter_400Regular",
+											fontSize: 12,
+											color: wadaTokens.textTertiary,
+										}}
+									>
+										{t("armario.s2.linkRemove")}
+									</Text>
+								</Pressable>
+							)}
+						</Pressable>
+					);
+				})}
+			</View>
+
+			{/* Flex spacer pushes the CTA to the bottom while cards stay
+			    anchored just under the "TU ARMARIO" label — preserves the
+			    mockup's composition for 2/3/4-color combos alike. */}
+			<View style={{ flex: 1 }} />
+
+			<View
 				style={{
-					// Lift above the tab-bar FAB so the CTA never collides with the
-					// camera-FAB that protrudes over the tab bar (Epic 12 cradle).
-					bottom: 28 + FAB_PROTRUSION,
-					minHeight: 44,
-					minWidth: 44,
-					paddingHorizontal: 24,
-					paddingVertical: 14,
-					borderRadius: 28,
-					backgroundColor: wadaTokens.textPrimary,
-					opacity: !hydrated || assignedCount === 0 ? 0.5 : 1,
+					paddingHorizontal: 20,
+					paddingTop: 8,
+					paddingBottom: FAB_PROTRUSION + 12,
+					alignItems: "center",
 				}}
 			>
-				{({ pressed }) => (
-					<Text
-						style={{
-							fontFamily: "Inter_500Medium",
-							fontSize: 16,
-							color: "#ffffff",
-							opacity: pressed ? 0.85 : 1,
-						}}
-					>
-						{t("armario.s2.viewLookCta")}
-					</Text>
-				)}
-			</Pressable>
+				<Pressable
+					testID="s2-view-look-cta"
+					onPress={handleViewLook}
+					disabled={!hydrated || assignedCount === 0}
+					accessibilityRole="button"
+					accessibilityLabel={t("armario.s2.viewLookCta")}
+					accessibilityState={{ disabled: !hydrated || assignedCount === 0 }}
+					className="items-center justify-center"
+					style={{
+						minHeight: 44,
+						minWidth: 44,
+						paddingHorizontal: 28,
+						paddingVertical: 14,
+						borderRadius: 28,
+						backgroundColor: wadaTokens.textPrimary,
+						opacity: !hydrated || assignedCount === 0 ? 0.5 : 1,
+					}}
+				>
+					{({ pressed }) => (
+						<Text
+							style={{
+								fontFamily: "Inter_500Medium",
+								fontSize: 16,
+								color: "#ffffff",
+								opacity: pressed ? 0.85 : 1,
+							}}
+						>
+							{t("armario.s2.viewLookCta")}
+						</Text>
+					)}
+				</Pressable>
+			</View>
 
 			<Modal
 				testID="s2-quitar-confirm-sheet"

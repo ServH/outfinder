@@ -235,6 +235,28 @@
 			"shareError": "Could not create share image. Please try again.",
 			"canvasA11y": "Outfit: {{combo}}, {{count}} garments assigned. Use the Share button to share your look."
 		},
+		"s5": {
+			"screenLabel": "Harmony suggestion screen",
+			"subtitle": "Complete the look to see the full harmony.",
+			"suggestionTitle": "Complete the harmony.",
+			"suggestionCopyAccessory": "Perfect for an accessory: shoes, bag, or belt.",
+			"suggestionCopyMain": "This is usually the main piece of the look.",
+			"suggestionCopyLayer": "Consider a second layer or a knitted piece.",
+			"suggestionCta": "Add garment in {{color}}",
+			"backToFicha": "Back to palette",
+			"canvasA11y": "Outfit: {{combo}}, {{assigned}} of {{total}} garments assigned. Missing: {{missing}}."
+		},
+		"favorites": {
+			"badgeComplete": "{{assigned}}/{{total}} garments",
+			"badgePartial": "{{assigned}}/{{total}} garments",
+			"badgeNone": "No garments",
+			"ctaComplete": "See your look \u2192",
+			"ctaPartial": "Complete your look \u2192",
+			"ctaEmpty": "Assign garments \u2192",
+			"a11yHintComplete": "Complete look. Double-tap to see your look.",
+			"a11yHintPartial": "{{count}} of {{total}} garments assigned. Double-tap to complete the look.",
+			"a11yHintEmpty": "No garments assigned yet. Double-tap to start assigning."
+		},
 		"s3": {
 			"screenLabel": "Armario picker",
 			"pickerTitle": "Choose for {{color}}",

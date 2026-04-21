@@ -1,11 +1,13 @@
 import {
 	BlurStyle,
 	ClipOp,
+	PaintStyle,
 	type SkCanvas,
 	type SkFont,
 	type SkImage,
 	Skia,
 } from "@shopify/react-native-skia";
+import { hexToRgba } from "@/lib/color";
 
 /**
  * Fraction of a polaroid card that is overlapped by the next card in the
@@ -59,7 +61,18 @@ const SIG_DOT_RADIUS_FRACTION = 0.018;
 const SIG_DOT_GAP_FRACTION = 0.015;
 const SIG_BRAND_GAP_FRACTION = 0.026;
 const SIG_BRAND_ALPHA = 0.7;
+const SIG_BRAND_ALPHA_EMPTY = 0.5;
 const SIG_BRAND_TEXT = "Outfinder";
+
+// Story 13.6 — empty polaroid visual metrics. The `+` glyph renders in
+// the garment color at 70% alpha so the dashed border stays the primary
+// affordance. Dashed dash/gap pattern mirrors the Wada mood of the s5
+// zero-state card (dashed borders already used on S2 slot tiles).
+const EMPTY_CARD_FILL = "#EEF2F8";
+const EMPTY_DASH_INTERVALS: readonly [number, number] = [16, 10];
+const EMPTY_BORDER_STROKE_FRACTION = 0.012;
+const EMPTY_PLUS_FONT_SIZE_FRACTION = 0.18;
+const EMPTY_PLUS_ALPHA = 0.7;
 
 export interface PolaroidGarment {
 	imageFileUri: string;
@@ -78,6 +91,20 @@ export interface PolaroidStackProps {
 	 * reserves chrome space (titles, CTAs, etc.) outside targetSize.
 	 */
 	padding?: { top: number; right: number; bottom: number; left: number };
+	/**
+	 * Optional boolean flags index-aligned with `garments[]`. A `true` entry
+	 * means that slot is UNASSIGNED — the card is painted as a dashed-border
+	 * tinted empty polaroid (no shadow, no image) instead of the default
+	 * white polaroid. Used by S5 (Sugerencia Armonía). When omitted, every
+	 * slot renders as filled — preserves the S4 behavior byte-for-byte.
+	 */
+	emptySlots?: boolean[];
+	/**
+	 * Font used to draw the central `+` glyph inside empty polaroids. Must
+	 * be provided whenever `emptySlots` contains at least one `true`. Pass
+	 * `undefined` from S4 — it never paints empty cards.
+	 */
+	emptySlotPlusFont?: SkFont;
 }
 
 interface PolaroidCardParams {
@@ -95,7 +122,11 @@ interface PolaroidCardParams {
 	signature: {
 		colorHexes: string[];
 		font: SkFont;
+		alpha: number;
 	} | null;
+	isEmpty: boolean;
+	colorHex: string;
+	emptySlotPlusFont: SkFont | null;
 }
 
 function drawSignatureInBand(
@@ -108,9 +139,10 @@ function drawSignatureInBand(
 		colorHexes: string[];
 		font: SkFont;
 		cardH: number;
+		alpha: number;
 	},
 ): void {
-	const { bandX, bandY, bandW, bandH, colorHexes, font, cardH } = params;
+	const { bandX, bandY, bandW, bandH, colorHexes, font, cardH, alpha } = params;
 
 	const dotRadius = cardH * SIG_DOT_RADIUS_FRACTION;
 	const dotGap = cardH * SIG_DOT_GAP_FRACTION;
@@ -132,6 +164,7 @@ function drawSignatureInBand(
 	for (const hex of colorHexes) {
 		const paint = Skia.Paint();
 		paint.setColor(Skia.Color(hex));
+		paint.setAlphaf(alpha);
 		paint.setAntiAlias(true);
 		const rect = Skia.XYWHRect(
 			dotX - dotRadius,
@@ -149,7 +182,7 @@ function drawSignatureInBand(
 	const brandBaseline = signatureTop + dotsRowH + brandGap + fontSize * 0.82;
 	const brandPaint = Skia.Paint();
 	brandPaint.setColor(Skia.Color("#1a1a1a"));
-	brandPaint.setAlphaf(SIG_BRAND_ALPHA);
+	brandPaint.setAlphaf(alpha);
 	brandPaint.setAntiAlias(true);
 	canvas.drawText(
 		SIG_BRAND_TEXT,
@@ -174,6 +207,9 @@ function drawPolaroidCard(canvas: SkCanvas, params: PolaroidCardParams) {
 		imageInset,
 		labelBandH,
 		signature,
+		isEmpty,
+		colorHex,
+		emptySlotPlusFont,
 	} = params;
 
 	const centerX = x + w / 2;
@@ -182,68 +218,111 @@ function drawPolaroidCard(canvas: SkCanvas, params: PolaroidCardParams) {
 	canvas.save();
 	canvas.rotate(rotation, centerX, centerY);
 
-	// Drop shadow
-	const shadowPaint = Skia.Paint();
-	shadowPaint.setColor(Skia.Color("rgba(0,0,0,0.22)"));
-	shadowPaint.setMaskFilter(
-		Skia.MaskFilter.MakeBlur(BlurStyle.Normal, shadowBlur, true),
-	);
-	const shadowRect = Skia.XYWHRect(x, y + shadowOffsetY, w, h);
-	canvas.drawRRect(Skia.RRectXY(shadowRect, cornerR, cornerR), shadowPaint);
+	if (!isEmpty) {
+		// Drop shadow — suppressed on empty cards so the dashed border stays
+		// the dominant affordance.
+		const shadowPaint = Skia.Paint();
+		shadowPaint.setColor(Skia.Color("rgba(0,0,0,0.22)"));
+		shadowPaint.setMaskFilter(
+			Skia.MaskFilter.MakeBlur(BlurStyle.Normal, shadowBlur, true),
+		);
+		const shadowRect = Skia.XYWHRect(x, y + shadowOffsetY, w, h);
+		canvas.drawRRect(Skia.RRectXY(shadowRect, cornerR, cornerR), shadowPaint);
+	}
 
-	// White polaroid card
+	// Card background — white for filled, light-blue for empty.
 	const cardPaint = Skia.Paint();
-	cardPaint.setColor(Skia.Color("#FFFFFF"));
+	cardPaint.setColor(Skia.Color(isEmpty ? EMPTY_CARD_FILL : "#FFFFFF"));
 	cardPaint.setAntiAlias(true);
 	const cardRect = Skia.XYWHRect(x, y, w, h);
-	canvas.drawRRect(Skia.RRectXY(cardRect, cornerR, cornerR), cardPaint);
+	const cardRRect = Skia.RRectXY(cardRect, cornerR, cornerR);
+	canvas.drawRRect(cardRRect, cardPaint);
 
-	// Image frame (top section above the label band) — soft paper behind so
-	// `contain` fit on portrait garments doesn't show harsh seams.
-	const frameX = x + imageInset;
-	const frameY = y + imageInset;
-	const frameW = w - imageInset * 2;
-	const frameH = h - imageInset - labelBandH;
-
-	const framePaint = Skia.Paint();
-	framePaint.setColor(Skia.Color("#f4f1ec"));
-	framePaint.setAntiAlias(true);
-	const frameRect = Skia.XYWHRect(frameX, frameY, frameW, frameH);
-	canvas.drawRRect(Skia.RRectXY(frameRect, cornerR, cornerR), framePaint);
-
-	if (image) {
-		canvas.save();
-		canvas.clipRRect(
-			Skia.RRectXY(frameRect, cornerR, cornerR),
-			ClipOp.Intersect,
-			true,
+	if (isEmpty) {
+		// Dashed border in the Wada color for this slot.
+		const strokePaint = Skia.Paint();
+		strokePaint.setColor(Skia.Color(colorHex));
+		strokePaint.setStyle(PaintStyle.Stroke);
+		strokePaint.setStrokeWidth(h * EMPTY_BORDER_STROKE_FRACTION);
+		strokePaint.setAntiAlias(true);
+		strokePaint.setPathEffect(
+			Skia.PathEffect.MakeDash(
+				[EMPTY_DASH_INTERVALS[0], EMPTY_DASH_INTERVALS[1]],
+				0,
+			),
 		);
+		canvas.drawRRect(cardRRect, strokePaint);
 
-		const imgW = image.width();
-		const imgH = image.height();
-		const imgAspect = imgW / imgH;
-		const frameAspect = frameW / frameH;
-
-		let dstW = frameW;
-		let dstH = frameH;
-		if (imgAspect > frameAspect) {
-			dstH = frameW / imgAspect;
-		} else {
-			dstW = frameH * imgAspect;
+		// Central `+` glyph in the Wada color (alpha 0.7). Text is centered
+		// on the image-frame area (above the label band) so the signature
+		// band — when drawn on the last card — doesn't visually compete.
+		if (emptySlotPlusFont) {
+			const frameY = y + imageInset;
+			const frameH = h - imageInset - labelBandH;
+			const plusFontSize = h * EMPTY_PLUS_FONT_SIZE_FRACTION;
+			const plusMeasure = emptySlotPlusFont.measureText("+");
+			const plusW = plusMeasure?.width || 0;
+			const plusPaint = Skia.Paint();
+			plusPaint.setColor(Skia.Color(hexToRgba(colorHex, EMPTY_PLUS_ALPHA)));
+			plusPaint.setAntiAlias(true);
+			canvas.drawText(
+				"+",
+				centerX - plusW / 2,
+				frameY + frameH / 2 + plusFontSize * 0.35,
+				plusPaint,
+				emptySlotPlusFont,
+			);
 		}
-		const dstX = frameX + (frameW - dstW) / 2;
-		const dstY = frameY + (frameH - dstH) / 2;
+	} else {
+		// Image frame (top section above the label band) — soft paper behind
+		// so `contain` fit on portrait garments doesn't show harsh seams.
+		const frameX = x + imageInset;
+		const frameY = y + imageInset;
+		const frameW = w - imageInset * 2;
+		const frameH = h - imageInset - labelBandH;
 
-		const srcRect = Skia.XYWHRect(0, 0, imgW, imgH);
-		const dstRect = Skia.XYWHRect(dstX, dstY, dstW, dstH);
-		const imgPaint = Skia.Paint();
-		imgPaint.setAntiAlias(true);
-		canvas.drawImageRect(image, srcRect, dstRect, imgPaint);
-		canvas.restore();
+		const framePaint = Skia.Paint();
+		framePaint.setColor(Skia.Color("#f4f1ec"));
+		framePaint.setAntiAlias(true);
+		const frameRect = Skia.XYWHRect(frameX, frameY, frameW, frameH);
+		canvas.drawRRect(Skia.RRectXY(frameRect, cornerR, cornerR), framePaint);
+
+		if (image) {
+			canvas.save();
+			canvas.clipRRect(
+				Skia.RRectXY(frameRect, cornerR, cornerR),
+				ClipOp.Intersect,
+				true,
+			);
+
+			const imgW = image.width();
+			const imgH = image.height();
+			const imgAspect = imgW / imgH;
+			const frameAspect = frameW / frameH;
+
+			let dstW = frameW;
+			let dstH = frameH;
+			if (imgAspect > frameAspect) {
+				dstH = frameW / imgAspect;
+			} else {
+				dstW = frameH * imgAspect;
+			}
+			const dstX = frameX + (frameW - dstW) / 2;
+			const dstY = frameY + (frameH - dstH) / 2;
+
+			const srcRect = Skia.XYWHRect(0, 0, imgW, imgH);
+			const dstRect = Skia.XYWHRect(dstX, dstY, dstW, dstH);
+			const imgPaint = Skia.Paint();
+			imgPaint.setAntiAlias(true);
+			canvas.drawImageRect(image, srcRect, dstRect, imgPaint);
+			canvas.restore();
+		}
 	}
 
 	// Signature (Wada dots + "Outfinder") only on the last polaroid — the
 	// rest have their bottom band hidden under the next card's overlap.
+	// On an empty last card, signature is rendered at reduced alpha so the
+	// dashed border remains the dominant affordance.
 	if (signature) {
 		drawSignatureInBand(canvas, {
 			bandX: x,
@@ -253,6 +332,7 @@ function drawPolaroidCard(canvas: SkCanvas, params: PolaroidCardParams) {
 			colorHexes: signature.colorHexes,
 			font: signature.font,
 			cardH: h,
+			alpha: signature.alpha,
 		});
 	}
 
@@ -270,6 +350,11 @@ function drawPolaroidCard(canvas: SkCanvas, params: PolaroidCardParams) {
  * next card's overlap, so it stays blank. Color names are intentionally
  * NOT rendered — they'd be invisible under the cascade anyway.
  *
+ * Empty slots (Story 13.6, S5) are painted as dashed-border, tinted
+ * "invite cards" — no shadow, no image, a central `+` glyph in the Wada
+ * color. On the last card the signature band still renders, at 0.5 alpha
+ * instead of 0.7, so the dashed border stays the primary affordance.
+ *
  * Caller is expected to reserve space for any chrome (titles, CTAs) OUTSIDE
  * targetSize. The function fills targetSize with the cascade; it does not
  * paint a background.
@@ -278,7 +363,14 @@ export function drawPolaroidStack(
 	canvas: SkCanvas,
 	props: PolaroidStackProps,
 ): void {
-	const { garments, signatureFont, garmentImages, targetSize } = props;
+	const {
+		garments,
+		signatureFont,
+		garmentImages,
+		targetSize,
+		emptySlots,
+		emptySlotPlusFont,
+	} = props;
 	const padTop = props.padding?.top ?? 0;
 	const padRight = props.padding?.right ?? 0;
 	const padBottom = props.padding?.bottom ?? 0;
@@ -328,6 +420,7 @@ export function drawPolaroidStack(
 
 	for (let i = 0; i < N; i++) {
 		const isLast = i === N - 1;
+		const isEmpty = emptySlots?.[i] === true;
 		drawPolaroidCard(canvas, {
 			x: startX,
 			y: startY + i * spacingY,
@@ -340,7 +433,16 @@ export function drawPolaroidStack(
 			shadowBlur,
 			imageInset,
 			labelBandH,
-			signature: isLast ? { colorHexes, font: signatureFont } : null,
+			signature: isLast
+				? {
+						colorHexes,
+						font: signatureFont,
+						alpha: isEmpty ? SIG_BRAND_ALPHA_EMPTY : SIG_BRAND_ALPHA,
+					}
+				: null,
+			isEmpty,
+			colorHex: garments[i]?.colorHex ?? "#808080",
+			emptySlotPlusFont: emptySlotPlusFont ?? null,
 		});
 	}
 }

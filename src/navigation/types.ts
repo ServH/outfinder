@@ -15,6 +15,7 @@ export type FavoritesStackParamList = {
 	ArmarioFichaWada: { combinationId: string };
 	ArmarioPicker: { combinationId: string; colorIndex: number };
 	ArmarioTuLook: { combinationId: string };
+	ArmarioSugerenciaArmonia: { combinationId: string };
 };
 
 export type SettingsStackParamList = {

@@ -51,6 +51,42 @@ describe("CompletenessBadge", () => {
 		expect(label.props.children).toBe("No garments yet");
 	});
 
+	it("variant='long' + complete 3/3 → renders '3/3 garments' via armario.favorites.badgeComplete", () => {
+		const { getByTestId } = render(
+			<CompletenessBadge
+				assigned={3}
+				total={3}
+				variant="long"
+				testID="badge"
+			/>,
+		);
+		expect(getByTestId("badge-label").props.children).toBe("3/3 garments");
+	});
+
+	it("variant='long' + partial 2/3 → '2/3 garments'", () => {
+		const { getByTestId } = render(
+			<CompletenessBadge
+				assigned={2}
+				total={3}
+				variant="long"
+				testID="badge"
+			/>,
+		);
+		expect(getByTestId("badge-label").props.children).toBe("2/3 garments");
+	});
+
+	it("variant='long' + none → renders 'No garments' via armario.favorites.badgeNone", () => {
+		const { getByTestId } = render(
+			<CompletenessBadge
+				assigned={0}
+				total={3}
+				variant="long"
+				testID="badge"
+			/>,
+		);
+		expect(getByTestId("badge-label").props.children).toBe("No garments");
+	});
+
 	it("defensively renders grey none variant when total is 0", () => {
 		const { getByTestId } = render(
 			<CompletenessBadge assigned={0} total={0} testID="badge" />,

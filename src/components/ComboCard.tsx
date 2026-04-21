@@ -24,6 +24,30 @@ export interface ComboCardProps {
 	 * is still fired by `ComboCard`, so overrides must not re-fire it.
 	 */
 	onPress?: (combinationId: string) => void;
+	/**
+	 * Story 13.6 — optional override for the compact-variant CTA copy. When
+	 * provided, the CTA reads `t(ctaOverrideKey)` instead of the default
+	 * `t("comboCard.seeOutfit")`. Currently only set by
+	 * `FavoriteComboEnrichedCard` on iOS 17+ hydrated users. The full variant
+	 * ignores this prop (its CTA pill lives in a different layout).
+	 */
+	ctaOverrideKey?: string;
+	/**
+	 * Story 13.6 — optional override for the outer Pressable's
+	 * `accessibilityHint`. When provided, replaces the default
+	 * `t("comboCard.openHint")` string — used by the enriched Favorites
+	 * wrapper to communicate completeness + next-action in a single rotor
+	 * stop.
+	 */
+	accessibilityHintOverride?: string;
+	/**
+	 * Story 13.6 — optional leading text for the compact-variant bottom row
+	 * (same vertical line as the favorite heart + tshirt icon). When
+	 * provided, the row switches to `justify-between` and renders the text
+	 * to the left. Typical use: the enriched Favorites card's "N/N
+	 * garments" badge.
+	 */
+	bottomRowLeadingText?: string;
 }
 
 type ComboCardNav = {
@@ -39,6 +63,9 @@ export function ComboCard({
 	onToggleFavorite,
 	onPremiumGate,
 	onPress,
+	ctaOverrideKey,
+	accessibilityHintOverride,
+	bottomRowLeadingText,
 }: ComboCardProps) {
 	const { t } = useTranslation();
 	const isTablet = useIsIPad();
@@ -71,7 +98,7 @@ export function ComboCard({
 				name: combination.nameEn,
 				colors: colorNames,
 			})}
-			accessibilityHint={t("comboCard.openHint")}
+			accessibilityHint={accessibilityHintOverride ?? t("comboCard.openHint")}
 			onPress={handleCardPress}
 		>
 			<View
@@ -197,28 +224,63 @@ export function ComboCard({
 						>
 							{combination.nameEn}
 						</Text>
-						<View className="mt-1 flex-row items-center justify-end">
-							<FavoriteButton
-								combinationId={combination.id}
-								combinationName={combination.nameEn}
-								isFavorite={isFavorite}
-								onToggle={onToggleFavorite}
-								onPremiumGate={onPremiumGate}
-								size={isTablet ? 20 : 16}
-							/>
-							<View
-								className="ml-1 items-center justify-center"
-								accessibilityElementsHidden={true}
+						{ctaOverrideKey ? (
+							<Text
+								testID="combo-card-cta-override"
+								numberOfLines={1}
+								className="font-sans-medium"
+								style={{
+									fontSize: isTablet ? 13 : 11,
+									color: wadaTokens.textPrimary,
+									marginTop: 6,
+								}}
 							>
-								<SymbolView
-									name="tshirt"
-									tintColor={wadaTokens.wadaMuted}
+								{t(ctaOverrideKey)}
+							</Text>
+						) : null}
+						<View
+							className={`mt-1 flex-row items-center ${bottomRowLeadingText ? "justify-between" : "justify-end"}`}
+						>
+							{bottomRowLeadingText ? (
+								<Text
+									testID="combo-card-bottom-row-leading"
+									numberOfLines={1}
 									style={{
-										width: isTablet ? 20 : 16,
-										height: isTablet ? 20 : 16,
+										fontFamily: "Inter_400Regular",
+										fontSize: 11,
+										letterSpacing: 0.2,
+										color: wadaTokens.textTertiary,
+										flexShrink: 1,
+										marginRight: 8,
 									}}
-									testID="compact-shirt-icon"
+									accessibilityElementsHidden={true}
+								>
+									{bottomRowLeadingText}
+								</Text>
+							) : null}
+							<View className="flex-row items-center">
+								<FavoriteButton
+									combinationId={combination.id}
+									combinationName={combination.nameEn}
+									isFavorite={isFavorite}
+									onToggle={onToggleFavorite}
+									onPremiumGate={onPremiumGate}
+									size={isTablet ? 20 : 16}
 								/>
+								<View
+									className="ml-1 items-center justify-center"
+									accessibilityElementsHidden={true}
+								>
+									<SymbolView
+										name="tshirt"
+										tintColor={wadaTokens.wadaMuted}
+										style={{
+											width: isTablet ? 20 : 16,
+											height: isTablet ? 20 : 16,
+										}}
+										testID="compact-shirt-icon"
+									/>
+								</View>
 							</View>
 						</View>
 					</View>

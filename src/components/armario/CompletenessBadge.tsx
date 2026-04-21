@@ -6,6 +6,13 @@ export interface CompletenessBadgeProps {
 	assigned: number;
 	total: number;
 	testID?: string;
+	/**
+	 * Visual/copy variant. `"short"` (default) is the compact N/N pill used
+	 * in S2/S4 chrome. `"long"` swaps the copy to the Favorites-enrichment
+	 * strings ("3/3 garments" / "No garments") — used by
+	 * `FavoriteComboEnrichedCard`.
+	 */
+	variant?: "short" | "long";
 }
 
 type Variant = "none" | "complete" | "partial";
@@ -27,13 +34,20 @@ export function CompletenessBadge({
 	assigned,
 	total,
 	testID,
+	variant: copyVariant = "short",
 }: CompletenessBadgeProps) {
 	const { t } = useTranslation();
 	const variant = resolveVariant(assigned, total);
 	const { bg, fg } = COMPLETENESS_COLORS[variant];
 
-	const label =
-		variant === "none"
+	const isLong = copyVariant === "long";
+	const label = isLong
+		? variant === "none"
+			? t("armario.favorites.badgeNone")
+			: variant === "complete"
+				? t("armario.favorites.badgeComplete", { assigned, total })
+				: t("armario.favorites.badgePartial", { assigned, total })
+		: variant === "none"
 			? t("armario.badge.none")
 			: variant === "complete"
 				? t("armario.badge.complete", { assigned, total })
@@ -48,7 +62,7 @@ export function CompletenessBadge({
 			style={{
 				backgroundColor: bg,
 				borderRadius: 10,
-				paddingHorizontal: 10,
+				paddingHorizontal: isLong ? 12 : 10,
 				paddingVertical: 4,
 				flexDirection: "row",
 				alignItems: "center",

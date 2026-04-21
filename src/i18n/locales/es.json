@@ -235,6 +235,28 @@
 			"shareError": "No se pudo crear la imagen para compartir. Int\u00e9ntalo de nuevo.",
 			"canvasA11y": "Look: {{combo}}, {{count}} prendas asignadas. Usa el bot\u00f3n Compartir para compartir tu look."
 		},
+		"s5": {
+			"screenLabel": "Pantalla de sugerencia de armonía",
+			"subtitle": "Completa el look para ver la armonía completa.",
+			"suggestionTitle": "Completa la armonía.",
+			"suggestionCopyAccessory": "Ideal para un accesorio: zapatos, bolso o cinturón.",
+			"suggestionCopyMain": "Suele ser la pieza principal del look.",
+			"suggestionCopyLayer": "Puede ser una segunda capa o prenda de punto.",
+			"suggestionCta": "Añadir prenda en {{color}}",
+			"backToFicha": "Volver a la paleta",
+			"canvasA11y": "Look: {{combo}}, {{assigned}} de {{total}} prendas asignadas. Falta: {{missing}}."
+		},
+		"favorites": {
+			"badgeComplete": "{{assigned}}/{{total}} prendas",
+			"badgePartial": "{{assigned}}/{{total}} prendas",
+			"badgeNone": "Sin prendas",
+			"ctaComplete": "Ver tu look \u2192",
+			"ctaPartial": "Completa tu look \u2192",
+			"ctaEmpty": "Asignar prendas \u2192",
+			"a11yHintComplete": "Look completo. Doble-tap para ver tu look.",
+			"a11yHintPartial": "{{count}} de {{total}} prendas asignadas. Doble-tap para completar el look.",
+			"a11yHintEmpty": "Sin prendas asignadas. Doble-tap para empezar a asignar."
+		},
 		"s3": {
 			"screenLabel": "Selector de armario",
 			"pickerTitle": "Elige para {{color}}",

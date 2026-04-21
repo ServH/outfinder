@@ -52,7 +52,7 @@ const SERIF_MEDIUM_TTF = require("@expo-google-fonts/noto-serif-jp/500Medium/Not
 const INTER_REGULAR_TTF = require("@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf");
 const INTER_MEDIUM_TTF = require("@expo-google-fonts/inter/500Medium/Inter_500Medium.ttf");
 
-export interface ArmarioTuLookScreenProps {}
+export type ArmarioTuLookScreenProps = Record<string, never>;
 
 export function ArmarioTuLookScreen(_props: ArmarioTuLookScreenProps) {
 	const { t } = useTranslation();
