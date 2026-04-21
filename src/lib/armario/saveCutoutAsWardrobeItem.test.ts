@@ -65,6 +65,7 @@ function makeItem(id: number): WardrobeItem {
 		id: `item-${id}`,
 		localImagePath: `file:///item-${id}.webp`,
 		thumbnailPath: `file:///item-${id}-thumb.webp`,
+		category: "top",
 		createdAt: Date.now() - id,
 	};
 }
@@ -110,6 +111,7 @@ describe("saveCutoutAsWardrobeItem", () => {
 			id: "repo-assigned-42",
 			localImagePath: "file:///doc/wardrobe/test-uuid-0001.webp",
 			thumbnailPath: "file:///cache/wardrobe-thumbs/test-uuid-0001.webp",
+			category: "top",
 			createdAt: 0,
 		});
 
@@ -117,6 +119,7 @@ describe("saveCutoutAsWardrobeItem", () => {
 			cutoutUri: "file:///tmp/cutout.png",
 			sourceUri: "file:///tmp/source.jpg",
 			isPremium: false,
+			category: "top",
 		});
 
 		expect(result).toEqual({ id: "repo-assigned-42" });
@@ -137,6 +140,7 @@ describe("saveCutoutAsWardrobeItem", () => {
 			{
 				localImagePath: "file:///doc/wardrobe/test-uuid-0001.webp",
 				thumbnailPath: "file:///cache/wardrobe-thumbs/test-uuid-0001.webp",
+				category: "top",
 			},
 			false,
 		);
@@ -154,6 +158,7 @@ describe("saveCutoutAsWardrobeItem", () => {
 			cutoutUri: "file:///tmp/cutout.png",
 			sourceUri: "file:///tmp/source.jpg",
 			isPremium: false,
+			category: "top",
 		}).catch((e) => e);
 
 		expect(caught).toBeInstanceOf(WardrobePersistenceError);
@@ -179,6 +184,7 @@ describe("saveCutoutAsWardrobeItem", () => {
 			id: "premium-id",
 			localImagePath: "file:///doc/wardrobe/test-uuid-0001.webp",
 			thumbnailPath: "file:///cache/wardrobe-thumbs/test-uuid-0001.webp",
+			category: "top",
 			createdAt: 0,
 		});
 
@@ -186,6 +192,7 @@ describe("saveCutoutAsWardrobeItem", () => {
 			cutoutUri: "file:///tmp/cutout.png",
 			sourceUri: "file:///tmp/source.jpg",
 			isPremium: true,
+			category: "top",
 		});
 
 		expect(result).toEqual({ id: "premium-id" });
@@ -202,6 +209,7 @@ describe("saveCutoutAsWardrobeItem", () => {
 			cutoutUri: "file:///tmp/cutout.png",
 			sourceUri: "file:///tmp/source.jpg",
 			isPremium: false,
+			category: "top",
 		}).catch((e) => e);
 
 		expect(caught).toBeInstanceOf(WardrobePersistenceError);
@@ -225,6 +233,7 @@ describe("saveCutoutAsWardrobeItem", () => {
 			cutoutUri: "file:///tmp/cutout.png",
 			sourceUri: "file:///tmp/source.jpg",
 			isPremium: false,
+			category: "top",
 		}).catch((e) => e);
 
 		expect(caught).toBeInstanceOf(WardrobePersistenceError);
@@ -247,6 +256,7 @@ describe("saveCutoutAsWardrobeItem", () => {
 			cutoutUri: "file:///tmp/cutout.png",
 			sourceUri: "file:///tmp/source.jpg",
 			isPremium: false,
+			category: "top",
 		}).catch((e) => e);
 
 		expect(caught).toBeInstanceOf(WardrobePersistenceError);
@@ -269,6 +279,7 @@ describe("saveCutoutAsWardrobeItem", () => {
 			cutoutUri: "file:///tmp/cutout.png",
 			sourceUri: "file:///tmp/source.jpg",
 			isPremium: false,
+			category: "top",
 		}).catch((e) => e);
 
 		expect(caught).toBeInstanceOf(WardrobePersistenceError);
@@ -295,6 +306,7 @@ describe("saveCutoutAsWardrobeItem", () => {
 			cutoutUri: "file:///tmp/cutout.png",
 			sourceUri: "file:///tmp/source.jpg",
 			isPremium: false,
+			category: "top",
 		}).catch((e) => e);
 
 		expect(caught).toBeInstanceOf(WardrobePersistenceError);
@@ -317,6 +329,7 @@ describe("saveCutoutAsWardrobeItem", () => {
 			id: "post-hydration",
 			localImagePath: "",
 			thumbnailPath: "",
+			category: "top",
 			createdAt: 0,
 		});
 
@@ -324,8 +337,43 @@ describe("saveCutoutAsWardrobeItem", () => {
 			cutoutUri: "file:///tmp/cutout.png",
 			sourceUri: "file:///tmp/source.jpg",
 			isPremium: true,
+			category: "top",
 		});
 
 		expect(storeMock.hydrateWardrobeStore).toHaveBeenCalledTimes(1);
+	});
+
+	// AC #8: forwards the caller's category to addItem verbatim
+	it("forwards the caller's category to addItem verbatim", async () => {
+		repoMock.getItems.mockReturnValue([]);
+		imagesMock.encodeMaster.mockResolvedValue("file:///tmp-m");
+		imagesMock.encodeThumbnail.mockResolvedValue("file:///tmp-t");
+		filesMock.moveToWardrobe.mockResolvedValue({
+			localImagePath: "file:///doc/wardrobe/x.webp",
+			thumbnailPath: "file:///cache/wardrobe-thumbs/x.webp",
+		});
+		repoMock.addItem.mockReturnValue({
+			id: "footwear-id",
+			localImagePath: "file:///doc/wardrobe/x.webp",
+			thumbnailPath: "file:///cache/wardrobe-thumbs/x.webp",
+			category: "footwear",
+			createdAt: 0,
+		});
+
+		await saveCutoutAsWardrobeItem({
+			cutoutUri: "file:///tmp/cutout.png",
+			sourceUri: "file:///tmp/source.jpg",
+			isPremium: true,
+			category: "footwear",
+		});
+
+		expect(repoMock.addItem).toHaveBeenCalledWith(
+			{
+				localImagePath: "file:///doc/wardrobe/x.webp",
+				thumbnailPath: "file:///cache/wardrobe-thumbs/x.webp",
+				category: "footwear",
+			},
+			true,
+		);
 	});
 });

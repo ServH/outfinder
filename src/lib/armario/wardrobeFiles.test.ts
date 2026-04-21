@@ -100,6 +100,7 @@ function itemWithUuid(uuid: string): WardrobeItem {
 		id: `repo-id-${uuid}`,
 		localImagePath: `file:///doc/wardrobe/${uuid}.webp`,
 		thumbnailPath: `file:///cache/wardrobe-thumbs/${uuid}.webp`,
+		category: "top",
 		createdAt: 0,
 	};
 }

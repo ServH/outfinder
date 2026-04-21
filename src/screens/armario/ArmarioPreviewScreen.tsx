@@ -89,6 +89,11 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 				cutoutUri,
 				sourceUri,
 				isPremium,
+				// TD-7 temporary default — in-Ficha-Wada ArmarioCapture flow
+				// (preserved per TD-2); real user-selected category lands via
+				// Story 14.5 in the unified camera flow. User can correct via
+				// Story 14.12b edit-category affordance.
+				category: "top",
 			});
 			if (!isMounted.current) return;
 			hapticRigid();

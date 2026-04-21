@@ -1,4 +1,13 @@
 /**
+ * Garment category taxonomy. Epic 14 (v1.4.0) makes `category` required on
+ * every `WardrobeItem` so downstream filters (Story 14.5 camera save, Story
+ * 14.12b edit affordance) can rely on type-level exhaustiveness without
+ * `undefined` handling. No fifth `"unknown"` value per TD-7 — legacy
+ * Epic-13 items hydrated without the field backfill to `"top"`.
+ */
+export type WardrobeCategory = "top" | "bottom" | "footwear" | "accessory";
+
+/**
  * A single garment photo saved by the user. `localImagePath` and `thumbnailPath`
  * point to files written by the capture/persistence flow (Story 13.3b); this
  * story only stores the strings.
@@ -7,6 +16,11 @@ export interface WardrobeItem {
 	id: string;
 	localImagePath: string;
 	thumbnailPath: string;
+	/**
+	 * Garment category. Legacy Epic-13 items without this field backfill to
+	 * "top" per TD-7 — users correct via Story 14.12b edit-category affordance.
+	 */
+	category: WardrobeCategory;
 	createdAt: number;
 }
 
