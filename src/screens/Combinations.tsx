@@ -5,12 +5,12 @@ import { FlatList, Pressable, Text, View } from "react-native";
 import { ComboCard } from "@/components/ComboCard";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
 import { PREMIUM_CONFIG } from "@/config/premium";
-import { useFavorites } from "@/contexts/FavoritesContext";
 import { getColor, getCombinations } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
 import { useIsIPad } from "@/lib/device";
 import type { ColorsStackParamList } from "@/navigation/types";
+import { useMisLooksStore } from "@/stores/misLooksStore";
 import { wadaTokens } from "@/styles/theme";
 
 type CombinationsProps = NativeStackScreenProps<
@@ -26,7 +26,9 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 	const combinations = getCombinations(colorId).sort(
 		(a, b) => a.colors.length - b.colors.length,
 	);
-	const { isFavorite, toggleFavorite, favorites } = useFavorites();
+	const favorites = useMisLooksStore((s) => s.favorites);
+	const isFavorite = useMisLooksStore((s) => s.isFavorite);
+	const toggleFavorite = useMisLooksStore((s) => s.toggleFavorite);
 	const gate = usePremiumGate(favorites);
 
 	const renderSeparator = useCallback(

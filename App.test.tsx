@@ -42,16 +42,23 @@ jest.mock("@/lib/armario/wardrobeFiles", () => ({
 	runOrphanSweep: jest.fn().mockResolvedValue(undefined),
 }));
 
-jest.mock("@/stores/wardrobeStore", () => ({
-	hydrateWardrobeStore: jest.fn().mockResolvedValue(undefined),
-	useWardrobeStore: Object.assign(() => ({ items: [], assignments: [] }), {
-		getState: jest.fn().mockReturnValue({ items: [], assignments: [] }),
-		setState: jest.fn(),
-	}),
+jest.mock("@/stores/misLooksStore", () => ({
+	hydrateMisLooksStore: jest.fn().mockResolvedValue(undefined),
+	useMisLooksStore: Object.assign(
+		() => ({ items: [], assignments: [], favorites: new Set() }),
+		{
+			getState: jest.fn().mockReturnValue({
+				items: [],
+				assignments: [],
+				favorites: new Set(),
+			}),
+			setState: jest.fn(),
+		},
+	),
 }));
 
-jest.mock("@/contexts/FavoritesContext", () => ({
-	FavoritesProvider: ({ children }: { children: React.ReactNode }) => children,
+jest.mock("@/stores/misLooksMigration", () => ({
+	runMisLooksMigration: jest.fn().mockResolvedValue({ status: "completed" }),
 }));
 
 jest.mock("@/contexts/PremiumContext", () => ({

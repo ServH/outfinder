@@ -98,13 +98,9 @@ jest.mock("@/hooks/usePremiumGate", () => ({
 	}),
 }));
 
-jest.mock("@/contexts/FavoritesContext", () => ({
-	useFavorites: () => ({
-		favorites: new Set<string>(),
-		toggleFavorite: jest.fn(),
-		isFavorite: jest.fn(),
-		count: 0,
-	}),
+jest.mock("@/stores/misLooksStore", () => ({
+	useMisLooksStore: (selector: (s: { favorites: Set<string> }) => unknown) =>
+		selector({ favorites: new Set<string>() }),
 }));
 
 jest.mock("@/contexts/PremiumContext", () => ({

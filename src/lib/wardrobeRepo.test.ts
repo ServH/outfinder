@@ -1,4 +1,4 @@
-import { useWardrobeStore } from "@/stores/wardrobeStore";
+import { useMisLooksStore } from "@/stores/misLooksStore";
 import {
 	addItem,
 	assign,
@@ -32,7 +32,7 @@ function seedItem(
 }
 
 beforeEach(() => {
-	useWardrobeStore.setState({
+	useMisLooksStore.setState({
 		items: [],
 		assignments: [],
 		hydrated: true,
@@ -62,7 +62,7 @@ describe("addItem", () => {
 
 	it("succeeds for free tier when items.length is just under the limit", () => {
 		const seeded = Array.from({ length: 9 }, (_, i) => seedItem(`item-${i}`));
-		useWardrobeStore.setState({ items: seeded });
+		useMisLooksStore.setState({ items: seeded });
 
 		expect(() =>
 			addItem(
@@ -79,7 +79,7 @@ describe("addItem", () => {
 
 	it("throws WardrobeLimitExceeded for free tier at the limit", () => {
 		const seeded = Array.from({ length: 10 }, (_, i) => seedItem(`item-${i}`));
-		useWardrobeStore.setState({ items: seeded });
+		useMisLooksStore.setState({ items: seeded });
 
 		expect(() =>
 			addItem(
@@ -96,7 +96,7 @@ describe("addItem", () => {
 
 	it("bypasses the limit for premium callers", () => {
 		const seeded = Array.from({ length: 10 }, (_, i) => seedItem(`item-${i}`));
-		useWardrobeStore.setState({ items: seeded });
+		useMisLooksStore.setState({ items: seeded });
 
 		expect(() =>
 			addItem(
@@ -161,7 +161,7 @@ describe("assign / unassign", () => {
 	it("upserts a (combinationId, colorIndex) pair — second assign overwrites and never duplicates the item row", () => {
 		const itemA = seedItem("item-a");
 		const itemB = seedItem("item-b");
-		useWardrobeStore.setState({ items: [itemA, itemB] });
+		useMisLooksStore.setState({ items: [itemA, itemB] });
 
 		assign("combo-42", 0, "item-a");
 		assign("combo-42", 0, "item-b");
@@ -176,7 +176,7 @@ describe("assign / unassign", () => {
 
 	it("allows the same wardrobe item to be reused across multiple combinations (FR6 reuse — never gated)", () => {
 		const itemA = seedItem("item-a");
-		useWardrobeStore.setState({ items: [itemA] });
+		useMisLooksStore.setState({ items: [itemA] });
 
 		assign("combo-1", 0, "item-a");
 		assign("combo-2", 1, "item-a");
@@ -190,7 +190,7 @@ describe("assign / unassign", () => {
 
 	it("removes a single (combinationId, colorIndex) row via unassign", () => {
 		const itemA = seedItem("item-a");
-		useWardrobeStore.setState({ items: [itemA] });
+		useMisLooksStore.setState({ items: [itemA] });
 
 		assign("combo-7", 0, "item-a");
 		assign("combo-7", 1, "item-a");
@@ -205,7 +205,7 @@ describe("assign / unassign", () => {
 
 	it("isCombinationComplete reflects assignment count vs total colors", () => {
 		const itemA = seedItem("item-a");
-		useWardrobeStore.setState({ items: [itemA] });
+		useMisLooksStore.setState({ items: [itemA] });
 
 		assign("combo-9", 0, "item-a");
 		assign("combo-9", 1, "item-a");
@@ -224,7 +224,7 @@ describe("cascadeDeleteAssignmentsForCombination", () => {
 	it("removes only matching-combo rows and leaves wardrobe items intact", () => {
 		const itemA = seedItem("item-a");
 		const itemB = seedItem("item-b");
-		useWardrobeStore.setState({ items: [itemA, itemB] });
+		useMisLooksStore.setState({ items: [itemA, itemB] });
 
 		assign("combo-100", 0, "item-a");
 		assign("combo-100", 1, "item-b");
@@ -245,7 +245,7 @@ describe("removeItem", () => {
 	// and mirrors AsyncStorage's lack of foreign-key semantics.
 	it("deletes the item row but leaves assignments referencing it dangling", () => {
 		const itemA = seedItem("item-a");
-		useWardrobeStore.setState({ items: [itemA] });
+		useMisLooksStore.setState({ items: [itemA] });
 
 		assign("combo-50", 0, "item-a");
 		removeItem("item-a");
@@ -261,7 +261,7 @@ describe("cascadeDeleteAssignmentsForItem", () => {
 	it("removes every assignment row for the given item across all combos", () => {
 		const itemA = seedItem("item-a");
 		const itemB = seedItem("item-b");
-		useWardrobeStore.setState({ items: [itemA, itemB] });
+		useMisLooksStore.setState({ items: [itemA, itemB] });
 
 		assign("combo-100", 0, "item-a");
 		assign("combo-100", 1, "item-b");
@@ -283,7 +283,7 @@ describe("cascadeDeleteAssignmentsForItem", () => {
 
 	it("is a no-op when the item has no assignments", () => {
 		const itemA = seedItem("item-a");
-		useWardrobeStore.setState({ items: [itemA] });
+		useMisLooksStore.setState({ items: [itemA] });
 		assign("combo-100", 0, "item-a");
 
 		cascadeDeleteAssignmentsForItem("item-never-assigned");

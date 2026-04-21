@@ -9,13 +9,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AccessibilityInfo, Image, Pressable, Text, View } from "react-native";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
-import { useFavorites } from "@/contexts/FavoritesContext";
 import { usePremium } from "@/contexts/PremiumContext";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
 import { saveCutoutAsWardrobeItem } from "@/lib/armario/saveCutoutAsWardrobeItem";
 import { WardrobePersistenceError } from "@/lib/armario/wardrobeErrors";
 import { hapticLight, hapticRigid } from "@/lib/haptics";
 import type { ArmarioStackParamList } from "@/navigation/types";
+import { useMisLooksStore } from "@/stores/misLooksStore";
 import { wadaTokens } from "@/styles/theme";
 
 type ArmarioPreviewRoute = NativeStackScreenProps<
@@ -52,7 +52,7 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 	const route = useRoute<ArmarioPreviewRoute>();
 	const { cutoutUri, sourceUri, onCutoutSaved } = route.params;
 	const { isPremium } = usePremium();
-	const { favorites } = useFavorites();
+	const favorites = useMisLooksStore((s) => s.favorites);
 	const gate = usePremiumGate(favorites);
 
 	const [submitting, setSubmitting] = useState(false);

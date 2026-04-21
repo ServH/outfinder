@@ -43,7 +43,7 @@ import type {
 	FavoritesStackParamList,
 	RootStackParamList,
 } from "@/navigation/types";
-import { useWardrobeStore } from "@/stores/wardrobeStore";
+import { useMisLooksStore } from "@/stores/misLooksStore";
 import { wadaTokens } from "@/styles/theme";
 
 const DISMISS_THRESHOLD = 100;
@@ -81,8 +81,8 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 	const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 	const reducedMotion = useReducedMotion();
 
-	const items = useWardrobeStore((s) => s.items);
-	const assignments = useWardrobeStore((s) => s.assignments);
+	const items = useMisLooksStore((s) => s.items);
+	const assignments = useMisLooksStore((s) => s.assignments);
 
 	const combination = useMemo(
 		() => getCombination(combinationId),

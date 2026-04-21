@@ -29,7 +29,7 @@ import {
 } from "@/lib/armario/getSuggestionCopy";
 import { hapticLight } from "@/lib/haptics";
 import type { FavoritesStackParamList } from "@/navigation/types";
-import { useWardrobeStore } from "@/stores/wardrobeStore";
+import { useMisLooksStore } from "@/stores/misLooksStore";
 import { wadaTokens } from "@/styles/theme";
 
 type ArmarioSugerenciaArmoniaNav = NativeStackNavigationProp<
@@ -144,8 +144,8 @@ export function ArmarioSugerenciaArmoniaScreen(
 		() => getCombination(combinationId),
 		[combinationId],
 	);
-	const assignments = useWardrobeStore((s) => s.assignments);
-	const items = useWardrobeStore((s) => s.items);
+	const assignments = useMisLooksStore((s) => s.assignments);
+	const items = useMisLooksStore((s) => s.items);
 
 	const filteredAssignments = useMemo(
 		() => assignments.filter((a) => a.combinationId === combinationId),

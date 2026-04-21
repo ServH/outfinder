@@ -34,7 +34,7 @@ import {
 import { exportLookImage } from "@/lib/armario/exportLookImage";
 import { hapticLight } from "@/lib/haptics";
 import type { FavoritesStackParamList } from "@/navigation/types";
-import { useWardrobeStore } from "@/stores/wardrobeStore";
+import { useMisLooksStore } from "@/stores/misLooksStore";
 import { wadaTokens } from "@/styles/theme";
 
 type ArmarioTuLookNav = NativeStackNavigationProp<
@@ -65,8 +65,8 @@ export function ArmarioTuLookScreen(_props: ArmarioTuLookScreenProps) {
 		() => getCombination(combinationId),
 		[combinationId],
 	);
-	const assignments = useWardrobeStore((s) => s.assignments);
-	const items = useWardrobeStore((s) => s.items);
+	const assignments = useMisLooksStore((s) => s.assignments);
+	const items = useMisLooksStore((s) => s.items);
 
 	const totalColors = combination?.colors.length ?? 0;
 	const filteredAssignments = useMemo(

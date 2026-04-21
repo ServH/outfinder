@@ -35,6 +35,10 @@
 
 generated: 2026-03-12
 last_updated: 2026-04-21
+# 2026-04-21 — Story 14.2 moved review → done (code review: 4 patches applied — handleRerunMigration try/catch, hydrateMisLooksStore call after re-run, 3 Settings dev row tests, misLooksMigration test name fix; P4 reverted after discovering AsyncStorage mock routes getItem through multiGet internally; 5 deferred D-14.2-1→D-14.2-5; 15 dismissed; 819 passing / 60 pre-existing / 0 new failures — net +3 vs 14.2 dev baseline of 816; tsc + biome clean).
+# 2026-04-21 — Story 14.2 moved in-progress → review (dev-story complete: useMisLooksStore unification + TD-5 migration + FavoritesContext deletion; 816 passing / 60 pre-existing / 0 new failures / 0 new skips vs 795/60 baseline → +21 net; tsc + biome clean; 5 useFavorites + 15 useWardrobeStore call sites rewired; __DEV__ re-run migration row added to Settings).
+# 2026-04-21 — Story 14.2 moved ready-for-dev → in-progress (dev-story: useMisLooksStore unification + TD-5 migration + FavoritesContext deletion on branch story/14-2-mis-looks-store-unification-migration).
+# 2026-04-21 — Story 14.2 moved backlog → ready-for-dev (create-story: useMisLooksStore unification + TD-5 migration + FavoritesContext deletion + 5 call-site rewires). Implements TD-3 (ADR-005), TD-5, preserves TD-7. 14 AC, 5 tasks, 20+ new tests expected. Branch: story/14-2-mis-looks-store-unification-migration.
 # 2026-04-21 — Story 14.1 moved review → done (code review: 2 patches applied — warn quote format + category:null test; 6 deferred D-14.1-1→D-14.1-6; 4 dismissed; 795/60 baseline unchanged).
 # 2026-04-21 — Story 14.1 moved ready-for-dev → in-progress → review (dev-story complete on branch story/14-1-wardrobe-item-category-field; +12 net tests, tsc/lint clean, 0 new regressions vs 783/60 baseline → 795/60).
 # 2026-04-21 — Story 14.1 moved backlog → ready-for-dev (create-story: WardrobeItem.category field + TD-7 backfill). Epic 14 → in-progress (first story).
@@ -169,7 +173,7 @@ development_status:
   # Dev order: 14.1 → 14.2 → 14.3a → 14.3b → 14.7 → 14.4 → 14.5 → (14.8, 14.9, 14.10, 14.11) → 14.6 → 14.12a → 14.12b → 14.13
   epic-14: in-progress
   14-1-wardrobe-item-category-field: done
-  14-2-mis-looks-store-unification-migration: backlog
+  14-2-mis-looks-store-unification-migration: done
   14-3a-unified-camera-nav-setup-capturescreen-deprecation: backlog
   14-3b-unified-camera-pipeline-swift-module: backlog
   14-4-camera-result-screen-ui: backlog
