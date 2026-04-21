@@ -17,7 +17,7 @@ import { hapticLight } from "@/lib/haptics";
 import { unassign } from "@/lib/wardrobeRepo";
 import { FAB_PROTRUSION } from "@/navigation/CustomTabBar";
 import type { FavoritesStackParamList } from "@/navigation/types";
-import { useWardrobeStore } from "@/stores/wardrobeStore";
+import { useMisLooksStore } from "@/stores/misLooksStore";
 import { wadaTokens } from "@/styles/theme";
 
 type ArmarioFichaWadaNav = NativeStackNavigationProp<
@@ -55,9 +55,9 @@ export function ArmarioFichaWadaScreen({
 		() => getCombination(combinationId),
 		[combinationId],
 	);
-	const allAssignments = useWardrobeStore((s) => s.assignments);
-	const items = useWardrobeStore((s) => s.items);
-	const hydrated = useWardrobeStore((s) => s.hydrated);
+	const allAssignments = useMisLooksStore((s) => s.assignments);
+	const items = useMisLooksStore((s) => s.items);
+	const hydrated = useMisLooksStore((s) => s.hydrated);
 
 	const [quitarConfirmSlot, setQuitarConfirmSlot] = useState<number | null>(
 		null,

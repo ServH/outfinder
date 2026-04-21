@@ -9,9 +9,9 @@ jest.mock("@/lib/wardrobeRepo", () => ({
 	removeItem: jest.fn(),
 }));
 
-jest.mock("@/stores/wardrobeStore", () => ({
-	hydrateWardrobeStore: jest.fn().mockResolvedValue(undefined),
-	useWardrobeStore: {
+jest.mock("@/stores/misLooksStore", () => ({
+	hydrateMisLooksStore: jest.fn().mockResolvedValue(undefined),
+	useMisLooksStore: {
 		getState: jest.fn().mockReturnValue({ hydrated: true }),
 	},
 }));
@@ -43,9 +43,9 @@ const repoMock = jest.requireMock("@/lib/wardrobeRepo") as {
 	addItem: jest.Mock;
 	removeItem: jest.Mock;
 };
-const storeMock = jest.requireMock("@/stores/wardrobeStore") as {
-	hydrateWardrobeStore: jest.Mock;
-	useWardrobeStore: { getState: jest.Mock };
+const storeMock = jest.requireMock("@/stores/misLooksStore") as {
+	hydrateMisLooksStore: jest.Mock;
+	useMisLooksStore: { getState: jest.Mock };
 };
 const imagesMock = jest.requireMock("./wardrobeImages") as {
 	encodeMaster: jest.Mock;
@@ -74,9 +74,9 @@ beforeEach(() => {
 	repoMock.getItems.mockReset();
 	repoMock.addItem.mockReset();
 	repoMock.removeItem.mockReset();
-	storeMock.hydrateWardrobeStore.mockReset().mockResolvedValue(undefined);
-	storeMock.useWardrobeStore.getState.mockReset();
-	storeMock.useWardrobeStore.getState.mockReturnValue({ hydrated: true });
+	storeMock.hydrateMisLooksStore.mockReset().mockResolvedValue(undefined);
+	storeMock.useMisLooksStore.getState.mockReset();
+	storeMock.useMisLooksStore.getState.mockReturnValue({ hydrated: true });
 	imagesMock.encodeMaster.mockReset();
 	imagesMock.encodeThumbnail.mockReset();
 	filesMock.ensureWardrobeDirectories.mockReset();
@@ -316,8 +316,8 @@ describe("saveCutoutAsWardrobeItem", () => {
 		);
 	});
 
-	it("hydration gate: if store.hydrated=false, awaits hydrateWardrobeStore before gate", async () => {
-		storeMock.useWardrobeStore.getState.mockReturnValue({ hydrated: false });
+	it("hydration gate: if store.hydrated=false, awaits hydrateMisLooksStore before gate", async () => {
+		storeMock.useMisLooksStore.getState.mockReturnValue({ hydrated: false });
 		repoMock.getItems.mockReturnValue([]);
 		imagesMock.encodeMaster.mockResolvedValue("file:///tmp-m");
 		imagesMock.encodeThumbnail.mockResolvedValue("file:///tmp-t");
@@ -340,7 +340,7 @@ describe("saveCutoutAsWardrobeItem", () => {
 			category: "top",
 		});
 
-		expect(storeMock.hydrateWardrobeStore).toHaveBeenCalledTimes(1);
+		expect(storeMock.hydrateMisLooksStore).toHaveBeenCalledTimes(1);
 	});
 
 	// AC #8: forwards the caller's category to addItem verbatim

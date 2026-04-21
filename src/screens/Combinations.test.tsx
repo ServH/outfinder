@@ -21,13 +21,19 @@ jest.mock("@/hooks/useReducedMotion", () => ({
 const mockIsFavorite = jest.fn().mockReturnValue(false);
 const mockToggleFavorite = jest.fn();
 
-jest.mock("@/contexts/FavoritesContext", () => ({
-	useFavorites: () => ({
-		favorites: new Set(),
-		isFavorite: mockIsFavorite,
-		toggleFavorite: mockToggleFavorite,
-		count: 0,
-	}),
+jest.mock("@/stores/misLooksStore", () => ({
+	useMisLooksStore: (
+		selector: (s: {
+			favorites: Set<string>;
+			isFavorite: (id: string) => boolean;
+			toggleFavorite: (id: string) => void;
+		}) => unknown,
+	) =>
+		selector({
+			favorites: new Set(),
+			isFavorite: mockIsFavorite,
+			toggleFavorite: mockToggleFavorite,
+		}),
 }));
 
 jest.mock("expo-symbols", () => ({

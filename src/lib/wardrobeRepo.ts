@@ -1,5 +1,5 @@
 import { PREMIUM_CONFIG } from "@/config/premium";
-import { useWardrobeStore } from "@/stores/wardrobeStore";
+import { useMisLooksStore } from "@/stores/misLooksStore";
 import { uuidv4 } from "./uuid";
 import {
 	type CombinationAssignment,
@@ -9,7 +9,7 @@ import {
 } from "./wardrobeTypes";
 
 function warnIfNotHydrated(action: string): void {
-	if (__DEV__ && !useWardrobeStore.getState().hydrated) {
+	if (__DEV__ && !useMisLooksStore.getState().hydrated) {
 		console.warn(
 			`wardrobeRepo.${action}: called before hydration completed — write may race AsyncStorage read`,
 		);
@@ -18,7 +18,7 @@ function warnIfNotHydrated(action: string): void {
 
 /** Returns the current wardrobe items array (read-only snapshot from the store). */
 export function getItems(): WardrobeItem[] {
-	return useWardrobeStore.getState().items;
+	return useMisLooksStore.getState().items;
 }
 
 /**
@@ -34,7 +34,7 @@ export function addItem(
 	isPremium: boolean,
 ): WardrobeItem {
 	warnIfNotHydrated("addItem");
-	const { items, setItems } = useWardrobeStore.getState();
+	const { items, setItems } = useMisLooksStore.getState();
 
 	if (!isPremium && items.length >= PREMIUM_CONFIG.FREE_WARDROBE_LIMIT) {
 		throw new WardrobeLimitExceeded();
@@ -60,7 +60,7 @@ export function addItem(
  */
 export function removeItem(id: string): void {
 	warnIfNotHydrated("removeItem");
-	const { items, setItems } = useWardrobeStore.getState();
+	const { items, setItems } = useMisLooksStore.getState();
 	setItems(items.filter((item) => item.id !== id));
 }
 
@@ -73,7 +73,7 @@ export function removeItem(id: string): void {
  */
 export function cascadeDeleteAssignmentsForItem(wardrobeItemId: string): void {
 	warnIfNotHydrated("cascadeDeleteAssignmentsForItem");
-	const { assignments, setAssignments } = useWardrobeStore.getState();
+	const { assignments, setAssignments } = useMisLooksStore.getState();
 	setAssignments(
 		assignments.filter((a) => a.wardrobeItemId !== wardrobeItemId),
 	);
@@ -83,7 +83,7 @@ export function cascadeDeleteAssignmentsForItem(wardrobeItemId: string): void {
 export function getAssignmentsForCombination(
 	combinationId: string,
 ): CombinationAssignment[] {
-	return useWardrobeStore
+	return useMisLooksStore
 		.getState()
 		.assignments.filter((a) => a.combinationId === combinationId);
 }
@@ -99,7 +99,7 @@ export function assign(
 	wardrobeItemId: string,
 ): void {
 	warnIfNotHydrated("assign");
-	const { assignments, setAssignments } = useWardrobeStore.getState();
+	const { assignments, setAssignments } = useMisLooksStore.getState();
 	const filtered = assignments.filter(
 		(a) => !(a.combinationId === combinationId && a.colorIndex === colorIndex),
 	);
@@ -115,7 +115,7 @@ export function assign(
 /** Removes the assignment for a given `(combinationId, colorIndex)` slot. */
 export function unassign(combinationId: string, colorIndex: number): void {
 	warnIfNotHydrated("unassign");
-	const { assignments, setAssignments } = useWardrobeStore.getState();
+	const { assignments, setAssignments } = useMisLooksStore.getState();
 	setAssignments(
 		assignments.filter(
 			(a) =>
@@ -126,7 +126,7 @@ export function unassign(combinationId: string, colorIndex: number): void {
 
 /** Number of slots currently assigned for a combination. */
 export function getAssignmentCount(combinationId: string): number {
-	return useWardrobeStore
+	return useMisLooksStore
 		.getState()
 		.assignments.filter((a) => a.combinationId === combinationId).length;
 }
@@ -149,6 +149,6 @@ export function cascadeDeleteAssignmentsForCombination(
 	combinationId: string,
 ): void {
 	warnIfNotHydrated("cascadeDeleteAssignmentsForCombination");
-	const { assignments, setAssignments } = useWardrobeStore.getState();
+	const { assignments, setAssignments } = useMisLooksStore.getState();
 	setAssignments(assignments.filter((a) => a.combinationId !== combinationId));
 }

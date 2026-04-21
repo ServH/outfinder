@@ -21,15 +21,22 @@ jest.mock("expo-symbols", () => ({
 	SymbolView: "SymbolView",
 }));
 
-// Mock FavoritesContext
+// Mock the unified Mis Looks store (favorites slice only — items/assignments
+// not exercised by ColorHome).
 const mockToggleFavorite = jest.fn();
-jest.mock("@/contexts/FavoritesContext", () => ({
-	useFavorites: () => ({
-		favorites: new Set<string>(),
-		isFavorite: () => false,
-		toggleFavorite: mockToggleFavorite,
-		count: 0,
-	}),
+jest.mock("@/stores/misLooksStore", () => ({
+	useMisLooksStore: (
+		selector: (s: {
+			favorites: Set<string>;
+			isFavorite: (id: string) => boolean;
+			toggleFavorite: (id: string) => void;
+		}) => unknown,
+	) =>
+		selector({
+			favorites: new Set<string>(),
+			isFavorite: () => false,
+			toggleFavorite: mockToggleFavorite,
+		}),
 }));
 
 // Mock usePremiumGate (prevents PremiumContext from loading)

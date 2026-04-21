@@ -16,41 +16,52 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { PremiumProvider } from "@/contexts/PremiumContext";
 import { UnfavoriteCascadeProvider } from "@/lib/armario/confirmUnfavoriteWithCascade";
 import { runOrphanSweep } from "@/lib/armario/wardrobeFiles";
 import { ArmarioStack } from "@/navigation/ArmarioStack";
 import { TabNavigator } from "@/navigation/TabNavigator";
 import type { RootStackParamList } from "@/navigation/types";
-import { hydrateWardrobeStore, useWardrobeStore } from "@/stores/wardrobeStore";
+import { runMisLooksMigration } from "@/stores/misLooksMigration";
+import { hydrateMisLooksStore, useMisLooksStore } from "@/stores/misLooksStore";
 
 SplashScreen.preventAutoHideAsync();
 
-// Orphan sweep — runs at module load (covers fresh installs) and on every
-// AppState=active transition. Lives at module scope (not a React effect) so
-// its lifetime is tied to the process, not any component's mount window.
-// `hydrateWardrobeStore` is idempotent; the await below only blocks if a
-// prior hydration is still in flight.
+// Cold-boot bootstrap — runs once at module load (covers fresh installs).
+// Lives at module scope (not a React effect) so its lifetime is tied to the
+// process, not any component's mount window.
+//
+// Order is load-bearing (per ADR-005 / TD-5):
+//   1. runMisLooksMigration() — drains legacy @outfinder/favorites +
+//      @wardrobe:* keys into the unified @mislooks:* namespace. Short-
+//      circuits when the idempotency flag is set. MUST complete before
+//      hydration so the store doesn't flash an empty state.
+//   2. hydrateMisLooksStore() — reads the @mislooks:* keys into the store.
+//   3. runOrphanSweep — reconciles durable wardrobe files against the
+//      freshly-hydrated items list.
 void (async () => {
 	try {
-		await hydrateWardrobeStore();
-		const items = useWardrobeStore.getState().items;
+		await runMisLooksMigration();
+		await hydrateMisLooksStore();
+		const items = useMisLooksStore.getState().items;
 		requestIdleCallback(() => {
 			void runOrphanSweep({ items });
 		});
 	} catch (error) {
 		if (__DEV__) {
-			console.warn("[App] initial orphan sweep failed:", error);
+			console.warn("[App] initial bootstrap failed:", error);
 		}
 	}
 })();
 
+// AppState=active re-runs hydration only (migration is cold-boot-only; the
+// idempotency flag would guard it anyway, but calling it here would be dead
+// weight — we want pure re-read after backgrounding).
 AppState.addEventListener("change", async (next) => {
 	if (next !== "active") return;
 	try {
-		await hydrateWardrobeStore();
-		const items = useWardrobeStore.getState().items;
+		await hydrateMisLooksStore();
+		const items = useMisLooksStore.getState().items;
 		requestIdleCallback(() => {
 			void runOrphanSweep({ items });
 		});
@@ -96,16 +107,14 @@ export function App() {
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<SafeAreaProvider>
 				<ErrorBoundary>
-					<FavoritesProvider>
-						<PremiumProvider>
-							{/* UnfavoriteCascadeProvider wraps FavoritesProvider's consumers so FavoriteButton can surface the cascade confirmation sheet */}
-							<UnfavoriteCascadeProvider>
-								<NavigationContainer>
-									<RootNavigator />
-								</NavigationContainer>
-							</UnfavoriteCascadeProvider>
-						</PremiumProvider>
-					</FavoritesProvider>
+					<PremiumProvider>
+						{/* UnfavoriteCascadeProvider lets FavoriteButton surface the cascade confirmation sheet when the user un-favorites a combo with assignments */}
+						<UnfavoriteCascadeProvider>
+							<NavigationContainer>
+								<RootNavigator />
+							</NavigationContainer>
+						</UnfavoriteCascadeProvider>
+					</PremiumProvider>
 				</ErrorBoundary>
 			</SafeAreaProvider>
 		</GestureHandlerRootView>

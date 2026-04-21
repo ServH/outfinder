@@ -53,18 +53,27 @@ let mockItems: Array<{
 	thumbnailPath: string;
 	createdAt: number;
 }> = [];
-jest.mock("@/stores/wardrobeStore", () => ({
-	useWardrobeStore: (
+const mockToggleFavorite = jest.fn();
+let mockFavorites = new Set<string>();
+
+jest.mock("@/stores/misLooksStore", () => ({
+	useMisLooksStore: (
 		selector: (s: {
 			hydrated: boolean;
 			assignments: typeof mockAssignments;
 			items: typeof mockItems;
+			favorites: typeof mockFavorites;
+			toggleFavorite: typeof mockToggleFavorite;
+			isFavorite: (id: string) => boolean;
 		}) => unknown,
 	) =>
 		selector({
 			hydrated: mockHydrated,
 			assignments: mockAssignments,
 			items: mockItems,
+			favorites: mockFavorites,
+			toggleFavorite: mockToggleFavorite,
+			isFavorite: (id: string) => mockFavorites.has(id),
 		}),
 }));
 
@@ -88,18 +97,6 @@ jest.mock("expo-symbols", () => ({
 }));
 
 jest.mock("react-native-reanimated");
-
-const mockToggleFavorite = jest.fn();
-let mockFavorites = new Set<string>();
-
-jest.mock("@/contexts/FavoritesContext", () => ({
-	useFavorites: () => ({
-		favorites: mockFavorites,
-		isFavorite: (id: string) => mockFavorites.has(id),
-		toggleFavorite: mockToggleFavorite,
-		count: mockFavorites.size,
-	}),
-}));
 
 jest.mock("@/contexts/PremiumContext", () => ({
 	usePremium: () => ({

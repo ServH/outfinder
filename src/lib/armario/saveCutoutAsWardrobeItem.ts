@@ -6,7 +6,7 @@ import {
 	type WardrobeCategory,
 	WardrobeLimitExceeded,
 } from "@/lib/wardrobeTypes";
-import { hydrateWardrobeStore, useWardrobeStore } from "@/stores/wardrobeStore";
+import { hydrateMisLooksStore, useMisLooksStore } from "@/stores/misLooksStore";
 import { WardrobePersistenceError } from "./wardrobeErrors";
 import {
 	ensureWardrobeDirectories,
@@ -60,8 +60,8 @@ export async function saveCutoutAsWardrobeItem(
 	// Defensive hydration gate — in practice the user cannot reach the Preview
 	// screen before hydration finishes (app boot → permission → photo → ~1s
 	// Vision call ≫ AsyncStorage read). Near-zero overhead if already hydrated.
-	if (!useWardrobeStore.getState().hydrated) {
-		await hydrateWardrobeStore();
+	if (!useMisLooksStore.getState().hydrated) {
+		await hydrateMisLooksStore();
 	}
 
 	// (1) Pre-flight paywall gate — authoritative; the repo's own gate is a

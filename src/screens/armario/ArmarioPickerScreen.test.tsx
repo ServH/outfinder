@@ -81,8 +81,8 @@ let mockItems: Array<{
 	thumbnailPath: string;
 	createdAt: number;
 }> = [];
-jest.mock("@/stores/wardrobeStore", () => ({
-	useWardrobeStore: (
+jest.mock("@/stores/misLooksStore", () => ({
+	useMisLooksStore: (
 		selector: (s: {
 			hydrated: boolean;
 			assignments: typeof mockAssignments;

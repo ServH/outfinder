@@ -4,6 +4,16 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 14-2-mis-looks-store-unification-migration (2026-04-21)
+
+- **D-14.2-1** — `App.tsx:60` — AppState listener return value discarded; N Metro hot-reloads = N concurrent hydration handlers. Pre-existing from Epic 13. Fix when adding a module-level cleanup mechanism or when migrating bootstrap to a component.
+- **D-14.2-2** — `App.tsx:42–73` — Cold-boot IIFE + AppState `active` race: OS can fire `active` during migration await, causing concurrent `hydrateMisLooksStore` calls and premature `hydrated: true` with empty `@mislooks:*` keys. Low probability on iOS cold launch. Fix with an in-flight guard (`let hydrating = false`).
+- **D-14.2-3** — `misLooksStore.ts:180–189` — `toggleFavorite` persists fire-and-forget; a concurrent `hydrateMisLooksStore` (AppState `active`) can read pre-toggle storage and silently revert the toggle. Pre-existing fire-and-forget pattern from wardrobeStore. Fix by bumping a generation counter in setState and ignoring stale hydration results.
+- **D-14.2-4** — `misLooksStore.ts:265` — `new Set(...)` on every hydration is never reference-equal to prior Set; all `favorites` subscribers re-render unconditionally on every app foreground. Fix by deep-comparing Set contents (sorted JSON) before calling setState.
+- **D-14.2-5** — `misLooksStore.ts:49–53` — `isWardrobeItem` accepts empty strings for `localImagePath`/`thumbnailPath`; items pass validation but fail at render. Pre-existing from Story 13.1. Add `v.localImagePath.length > 0` to the guard when hardening data validation.
+
+---
+
 ## Deferred from: code review of 13-5-s4-tu-look-skia-composition-share (2026-04-20)
 
 - **D-13.5-1** — Stale `/share/look-*.jpg` accumulate on process crash — no sweep-on-mount. `exportLookImage.ts:219`. Risk is low (files excluded from iCloud backup; always deleted in `finally`). Implement a startup sweep if user reports storage growth.

@@ -20,7 +20,6 @@ import { FavoriteComboEnrichedCard } from "@/components/armario/FavoriteComboEnr
 import { ComboCard } from "@/components/ComboCard";
 import { EmptyState } from "@/components/EmptyState";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
-import { useFavorites } from "@/contexts/FavoritesContext";
 import { getCombination } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
@@ -29,7 +28,7 @@ import { useFavoritesNumCols, useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
 import { useIsIOS17OrNewer } from "@/lib/platform";
 import type { FavoritesStackParamList, TabParamList } from "@/navigation/types";
-import { useWardrobeStore } from "@/stores/wardrobeStore";
+import { useMisLooksStore } from "@/stores/misLooksStore";
 import { wadaTokens } from "@/styles/theme";
 
 type FavoritesListNav = CompositeNavigationProp<
@@ -70,11 +69,13 @@ export function FavoritesList(_props: FavoritesListProps) {
 		navigation.navigate("SettingsTab");
 	}
 	const numCols = useFavoritesNumCols();
-	const { favorites, toggleFavorite, isFavorite } = useFavorites();
+	const favorites = useMisLooksStore((s) => s.favorites);
+	const toggleFavorite = useMisLooksStore((s) => s.toggleFavorite);
+	const isFavorite = useMisLooksStore((s) => s.isFavorite);
 	const supportsArmario = useIsIOS17OrNewer();
-	const hydrated = useWardrobeStore((s) => s.hydrated);
-	const assignments = useWardrobeStore((s) => s.assignments);
-	const wardrobeItems = useWardrobeStore((s) => s.items);
+	const hydrated = useMisLooksStore((s) => s.hydrated);
+	const assignments = useMisLooksStore((s) => s.assignments);
+	const wardrobeItems = useMisLooksStore((s) => s.items);
 	const isNavigating = useRef(false);
 
 	const gate = usePremiumGate(favorites);

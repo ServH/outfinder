@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Constants from "expo-constants";
@@ -13,13 +14,17 @@ import {
 } from "react-native";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
 import { PREMIUM_CONFIG } from "@/config/premium";
-import { useFavorites } from "@/contexts/FavoritesContext";
 import { usePremium } from "@/contexts/PremiumContext";
 import { getRestoreErrorMessage, usePremiumGate } from "@/hooks/usePremiumGate";
 import { useIsIPad } from "@/lib/device";
 import { openAppStoreReview } from "@/lib/storeReview";
 import type { RootStackParamList } from "@/navigation/types";
-import { useWardrobeStore } from "@/stores/wardrobeStore";
+import {
+	IDEMPOTENCY_KEY as MISLOOKS_MIGRATION_FLAG,
+	type MigrationResult,
+	runMisLooksMigration,
+} from "@/stores/misLooksMigration";
+import { hydrateMisLooksStore, useMisLooksStore } from "@/stores/misLooksStore";
 import { wadaTokens } from "@/styles/theme";
 
 const PRIVACY_URL = "https://servh.github.io/outfinder-legal/";
@@ -34,12 +39,38 @@ export function Settings(_props: SettingsProps) {
 	const navigation =
 		useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 	const { isPremium, restore } = usePremium();
-	const { favorites, toggleFavorite, count } = useFavorites();
+	const favorites = useMisLooksStore((s) => s.favorites);
+	const toggleFavorite = useMisLooksStore((s) => s.toggleFavorite);
+	const count = useMisLooksStore((s) => s.favorites.size);
 	const gate = usePremiumGate(favorites);
 	const isTablet = useIsIPad();
 	// Reactive read for the dev-menu wardrobe item count badge.
-	// useWardrobeStore.getState() inside JSX is a stale snapshot — hook selector keeps it live.
-	const wardrobeDevItemCount = useWardrobeStore((s) => s.items.length);
+	// useMisLooksStore.getState() inside JSX is a stale snapshot — hook selector keeps it live.
+	const wardrobeDevItemCount = useMisLooksStore((s) => s.items.length);
+	const [lastMigrationRun, setLastMigrationRun] = useState<{
+		at: string;
+		status: MigrationResult["status"];
+	} | null>(null);
+
+	const handleRerunMigration = useCallback(async () => {
+		try {
+			await AsyncStorage.removeItem(MISLOOKS_MIGRATION_FLAG);
+			const result = await runMisLooksMigration();
+			await hydrateMisLooksStore();
+			setLastMigrationRun({
+				at: new Date().toISOString(),
+				status: result.status,
+			});
+		} catch (error) {
+			if (__DEV__) {
+				console.warn("Settings: handleRerunMigration error", error);
+			}
+			setLastMigrationRun({
+				at: new Date().toISOString(),
+				status: "aborted",
+			});
+		}
+	}, []);
 
 	const [restoreState, setRestoreState] = useState<RestoreState>("idle");
 	const [restoreMessage, setRestoreMessage] = useState<string | null>(null);
@@ -276,7 +307,7 @@ export function Settings(_props: SettingsProps) {
 									accessibilityRole="button"
 									accessibilityLabel="Toggle wardrobe @limit override"
 									onPress={() => {
-										const { items, setItems } = useWardrobeStore.getState();
+										const { items, setItems } = useMisLooksStore.getState();
 										if (items.length === 0) {
 											const now = Date.now();
 											setItems(
@@ -306,6 +337,32 @@ export function Settings(_props: SettingsProps) {
 										{wardrobeDevItemCount} /{" "}
 										{PREMIUM_CONFIG.FREE_WARDROBE_LIMIT}
 									</Text>
+								</Pressable>
+
+								<View className="h-[1px] bg-divider mx-4" />
+
+								<Pressable
+									testID="dev-rerun-mislooks-migration-row"
+									className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+									accessibilityRole="button"
+									accessibilityLabel="Re-run Mis Looks migration (dev)"
+									onPress={handleRerunMigration}
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[14px] text-primary"
+									>
+										Re-run Mis Looks migration
+									</Text>
+									{lastMigrationRun ? (
+										<Text
+											allowFontScaling
+											className="font-sans text-[12px] text-tertiary"
+										>
+											last run: {lastMigrationRun.at} · status:{" "}
+											{lastMigrationRun.status}
+										</Text>
+									) : null}
 								</Pressable>
 							</View>
 						</View>

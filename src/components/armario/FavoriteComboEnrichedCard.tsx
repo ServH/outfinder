@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { ComboCard } from "@/components/ComboCard";
 import type { Combination } from "@/data/types";
-import { useWardrobeStore } from "@/stores/wardrobeStore";
+import { useMisLooksStore } from "@/stores/misLooksStore";
 import { WardrobeItemThumb } from "./WardrobeItemThumb";
 
 export interface FavoriteComboEnrichedCardProps {
@@ -45,8 +45,8 @@ export function FavoriteComboEnrichedCard({
 	cardWidth,
 }: FavoriteComboEnrichedCardProps) {
 	const { t } = useTranslation();
-	const assignments = useWardrobeStore((s) => s.assignments);
-	const items = useWardrobeStore((s) => s.items);
+	const assignments = useMisLooksStore((s) => s.assignments);
+	const items = useMisLooksStore((s) => s.items);
 
 	const thumbs = useMemo<Array<string | null>>(() => {
 		const byItem = new Map(items.map((i) => [i.id, i]));
