@@ -30,6 +30,24 @@ Epic 14 reorganizes the app's activation and retention loops so the Armario Virt
 
 Primary replacement of prior PRD: `docs/epic-14-scope.md` (approved 2026-04-21 via John/Alejandro PM session).
 
+## 📦 Release context — Epic 13 + Epic 14 ship together as v1.4.0
+
+> **Critical mental model for anyone working on this epic.** Epic 13 (Armario Virtual) was technically completed on `epic-13` branch at commit `eae624e` but **NEVER released to the App Store**. The current production release is **v1.3.0**. v1.4.0 will be the first release containing BOTH Epic 13 functionality (Armario, cutout pipeline, Ficha Wada, `WardrobeItem` model, assignments) AND Epic 14 functionality (unified camera, Mis Looks rename, flow reorganization).
+
+**Implications for migrations (Story 14.2):**
+
+- **Production users upgrading v1.3.0 → v1.4.0 have ZERO pre-existing wardrobe data.** They never had `WardrobeItem` entries, assignments, `category` fields, or `@wardrobe:*` storage keys. The **only user-data migration** that matters for production is `@outfinder/favorites` (Set<combinationId>) → the new `useMisLooksStore.favorites` slice.
+- **The unified `useMisLooksStore` (TD-3 / ADR-005) is STILL required** — it is an internal code consolidation to support FR12 (auto-save on first garment assignment) without cross-store orchestration. It is NOT user-data migration and does not depend on any legacy production data existing.
+- **TD-7 (legacy category default = `"top"`) is DEFENSIVE for internal testers only** — TestFlight/internal-beta users who installed Epic 13 builds may have `WardrobeItem` entries without `category`. The default-to-`"top"` code path is cheap safety and should remain, but it is **NOT load-bearing for production users** (who have zero legacy items).
+- **Story 14.13 QA** does NOT need to certify "upgrade from Epic 13 internal beta" as a blocker. The blocker is "upgrade from v1.3.0 production → v1.4.0 preserving favorites" (see Ajuste 3 in the QA checklist).
+
+**Implications for QA narrative (Story 14.13):**
+
+- Epic 13 functionality enters production for the first time via v1.4.0 — QA must exercise it end-to-end even though it has existed in code since `epic-13` branch.
+- "Upgrade path" testing reduces to a single user variable: `N` favorites in v1.3.0 where `N ∈ {0, 3, 5}`. No wardrobe-items-upgrade scenario exists in production.
+
+This context was recognised by Alejandro on 2026-04-21 after Stories 14.1 and 14.2 were already implemented. The existing implementation of 14.1 + 14.2 is correct and does not need rework — the defensive code paths are cheap and protect internal testers. This release-context note simply clarifies the mental model for the remaining stories and for QA.
+
 ## ⚠️ Technical Decisions (post-review) — READ BEFORE IMPLEMENTING ANY STORY
 
 > **Story agents and devs:** these are the load-bearing technical decisions closed by Alejandro + Winston (Architect) on 2026-04-21 after the full technical review documented at `docs/planning/epic-14-tech-review.md`. Every story below references the decision(s) it depends on via a **Technical notes** block. If any of the decisions below seem contradictory to a story's AC, the decision WINS and the story must be adjusted — not the other way around.
@@ -40,7 +58,7 @@ Primary replacement of prior PRD: `docs/epic-14-scope.md` (approved 2026-04-21 v
 - **TD-4 · Paywall-limbo resolution — disabled state + explanatory strip.** When a free user at 5/5 Mis Looks taps "Asignar" (Story 14.8) or "Guardar para luego" (Story 14.9) and dismisses the paywall without upgrading, the Ficha Wada remains visible but assignment affordances render in a disabled visual state (opacity 40%), tapping re-triggers the paywall, and a discrete explanatory strip appears at the top: *"Alcanzaste el límite de 5 looks guardados. Elimina uno para continuar."* Swipe-back works normally. NO automatic `goBack()`. NO blocking overlay. Affects stories 14.8 and 14.9.
 - **TD-5 · Migration idempotency pattern (Story 14.2).** Migration uses a source-preserving, flag-gated pattern: (a) write each migrated record atomically to destination; (b) after the full batch, write idempotency flag `@outfinder/migration:favorites-to-mis-looks:v1` with value `"complete"`; (c) ONLY then clear legacy source key `@outfinder/favorites`. On re-run, detect destination records by ID and skip duplicates. Half-crashed migration leaves source intact — re-run is safe. Records referencing `combinationId`s that no longer exist in the Wada dataset are dropped with a single warn log per orphan.
 - **TD-6 · Category is editable in v1.4.0 (not deferred).** Alejandro's decision 2026-04-21: after initial plan to defer to v1.5.0, product pulled this back into Epic 14 scope. Implemented via a new **Story 14.12b** (see below): in the delete edit mode (UX-DR3, Story 14.12a), each wardrobe thumbnail also gets a pencil icon (top-right corner) alongside the (−) icon. Tap pencil → reopens the category sheet from Story 14.5 (component reuse) → user picks new category → persists to the `WardrobeItem`.
-- **TD-7 · Legacy `WardrobeItem` default category = `"top"`.** For items that existed before the category field was introduced (edge: internal/TestFlight Epic 13 beta builds), the migration sets `category: "top"` as the pragmatic default. Users can correct via TD-6 edit mode. Rationale: "top" is the most common category and avoids polluting the taxonomy with a 5th `"unknown"` value.
+- **TD-7 · Legacy `WardrobeItem` default category = `"top"` (DEFENSIVE for internal testers only).** For items that existed before the category field was introduced (edge: internal/TestFlight Epic 13 beta builds), the migration sets `category: "top"` as the pragmatic default. Users can correct via TD-6 edit mode. **NOT load-bearing for production** — production users upgrading v1.3.0 → v1.4.0 have no pre-existing wardrobe items (see "Release context" section above). Keep the code path as a cheap safety net; do NOT invest additional engineering in strengthening it. Rationale for `"top"` over `"unknown"`: most common category, avoids polluting the taxonomy with a 5th value.
 
 Any future technical deviation from TD-1 through TD-7 requires explicit sign-off from Alejandro. Story agents: treat this block as binding.
 
@@ -895,7 +913,13 @@ Stories annotated with `[UX]` require `bmad-create-ux-design` with Sally before 
 **And** the S4 polaroid share screen works unchanged on a completed look.
 
 **Tasks (≤5):**
-1. Produce on-device QA checklist covering: photo-first golden path, color-first/Juan golden path, upgrade from v1.3.0 (N=0/3/5, including orphan combinationId scenario), S4 share regression, paywall trips (wardrobe + favorites), **paywall-limbo recovery (TD-4 verification: disabled state + explanatory strip + swipe-back works)**, **migration idempotency (TD-5 verification: dev-menu re-run, crash recovery)**, **dominantHex accuracy (TD-1 verification: transparent / pale / dark garments match the expected Wada tone)**, **edit-category flow (TD-6 verification: pencil icon, category change persists, VoiceOver)**, **ArmarioCaptureScreen preserved (TD-2 verification: still reachable from Ficha Wada slot picker)**, accessibility audit.
+1. Produce on-device QA checklist covering:
+   - **Epic 13 functionality (first release to production)**: cutout pipeline for slot-assignment from Ficha Wada, `ArmarioCaptureScreen` preserved per TD-2, `cascadeDeleteAssignmentsForItem` works, wardrobe paywall at 10 items.
+   - **Epic 14 golden paths**: photo-first new-user journey (open → FAB → unified camera → scan → save with category → see combinations → "Hacer este look mío" → assign prenda → Mis Looks auto-save); color-first "Juan" journey (home → palette → Visualizer → "Hacer este look mío" → Ficha Wada empty state → "Guardar para luego" → close → reopen → see incomplete in retention surface → complete).
+   - **v1.3.0 → v1.4.0 upgrade (production blocker)**: ONLY test variable is `N` favorites in v1.3.0 where `N ∈ {0, 3, 5}`. Verify: all N favorites appear under Mis Looks post-upgrade, zero data loss, orphan combinationId dropped with warn log, idempotency flag written, legacy `@outfinder/favorites` key cleared only after flag write, re-running migration is idempotent. **NO wardrobe-items-legacy scenario exists in production — do not invent one.**
+   - **TD verification**: TD-1 (`dominantHex` accuracy on transparent/pale/dark garments), TD-2 (`ArmarioCaptureScreen` still reachable from Ficha Wada slot picker), TD-3 (unified store works post-migration), TD-4 (paywall-limbo disabled state + explanatory strip + swipe-back works), TD-5 (idempotency + crash recovery via dev-menu re-run), TD-6 (pencil icon edit-category flow persists + VoiceOver).
+   - **S4 share regression** (polaroid export still works on completed look).
+   - **Accessibility audit** (VoiceOver traversal, touch targets, Reduce Motion).
 2. Execute checklist on iPhone 16 Pro; capture screenshots / screen recordings for evidence.
 3. File bug entries (or follow-up stories) for any issue found.
 4. Verify `tsc`, `lint`, `test` suites green.
