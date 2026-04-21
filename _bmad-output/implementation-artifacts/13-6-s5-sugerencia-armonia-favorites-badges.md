@@ -1,6 +1,6 @@
 # Story 13.6: S5 Sugerencia Armonía + Favorites Badges, Thumbnails, Completeness Sort
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -518,18 +518,18 @@ Code review executed 2026-04-21. 3 parallel layers: Blind Hunter · Edge Case Hu
 
 #### Patches
 
-- [ ] [Review][Patch][HIGH] FavoriteComboEnrichedCard: `thumbnailPath === ""` cuenta como ranura asignada — cambiar `?? null` a `|| null` en la derivación de `thumbs` para que strings vacíos caigan a `null` [src/components/armario/FavoriteComboEnrichedCard.tsx:~53,65]
-- [ ] [Review][Patch][MEDIUM] FavoriteComboEnrichedCard: dos `useWardrobeStore` sin `shallow` → double re-render en hidratación — combinar en un selector con `shallow` [src/components/armario/FavoriteComboEnrichedCard.tsx:~36-37]
-- [ ] [Review][Patch][MEDIUM] ArmarioSugerenciaArmoniaScreen: `picture` useMemo puede recibir `garmentImages[i] === undefined` (en vez de `null`) cuando el array se resetea async — añadir guard de longitud + cambiar `=== null` a `!garmentImages[i]` [src/screens/armario/ArmarioSugerenciaArmoniaScreen.tsx:~300-308]
-- [ ] [Review][Patch][MEDIUM] ArmarioSugerenciaArmoniaScreen: back chevron + secondary CTA pueden ambos llamar `navigation.goBack()` en double-tap — añadir `isNavigating` ref (patrón de FavoritesList/ArmarioZeroStateScreen) [src/screens/armario/ArmarioSugerenciaArmoniaScreen.tsx:~777-780]
-- [ ] [Review][Patch][MEDIUM] ArmarioZeroStateScreen: `accessible={false}` en el container NO propaga a hijos en React Native — VoiceOver puede enfocar tarjetas con `opacity: 0` antes del primer layout; añadir `accessibilityElementsHidden={!measured}` en cada wrapper `<View>` individual [src/screens/armario/ArmarioZeroStateScreen.tsx:~1940-1958]
-- [ ] [Review][Patch][MEDIUM] i18n inconsistencia: `armario.favorites.a11yHintPartial` usa `{{count}}` pero las claves de badge usan `{{assigned}}` — renombrar a `{{assigned}}` en en.json/es.json y en `FavoriteComboEnrichedCard.tsx` para evitar confusión con pluralización i18next [src/i18n/locales/en.json:~295-296]
-- [ ] [Review][Patch][LOW] getSuggestionCopy.test.ts: falta el test explícito de combo de 2 colores requerido por AC #5 — añadir `(1,2)→suggestionCopyAccessory` y `(0,2)→suggestionCopyMain` [src/lib/armario/getSuggestionCopy.test.ts]
-- [ ] [Review][Patch][LOW] ArmarioFichaWadaScreen: `handleViewLook` no guarda `totalColors === 0` — flash de S5 antes del `goBack` defensivo; añadir `if (totalColors === 0) return;` [src/screens/armario/ArmarioFichaWadaScreen.tsx:~113-128]
-- [ ] [Review][Patch][LOW] drawPolaroidStack: `plusFontSize` re-computado internamente (`h * 0.18`) puede divergir del tamaño con que se cargó la fuente en el screen → glifo `+` descentrado; usar el tamaño real de la fuente para el offset del baseline [src/lib/armario/drawPolaroidStack.ts:~424]
-- [ ] [Review][Patch][LOW] drawPolaroidStack: `plusMeasure?.width || 0` falsifica anchos positivos pequeños — cambiar a `?? 0` [src/lib/armario/drawPolaroidStack.ts]
-- [ ] [Review][Patch][LOW] FavoriteComboEnrichedCard: la variable `t` del callback `.filter((t) => t !== null)` sombrea `t` de `useTranslation` — renombrar a `thumb` [src/components/armario/FavoriteComboEnrichedCard.tsx:~65]
-- [ ] [Review][Patch][LOW] ArmarioSugerenciaArmoniaScreen.test.tsx: fixture `setupPartial1of3MidSlotMissing` configura 2 asignaciones (2/3) pero el nombre dice "1of3" — renombrar a `setupPartial2of3MidSlotMissing` [src/screens/armario/ArmarioSugerenciaArmoniaScreen.test.tsx:~1079]
+- [x] [Review][Patch][HIGH] FavoriteComboEnrichedCard: `thumbnailPath === ""` cuenta como ranura asignada — cambiar `?? null` a `|| null` en la derivación de `thumbs` para que strings vacíos caigan a `null` [src/components/armario/FavoriteComboEnrichedCard.tsx:~53,65] ✅ aplicado
+- [x] [Review][Patch][MEDIUM] FavoriteComboEnrichedCard: dos `useWardrobeStore` sin `shallow` → double re-render en hidratación — combinar en un selector con `shallow` [src/components/armario/FavoriteComboEnrichedCard.tsx:~36-37] — OMITIDO (`shallow` no está disponible en el codebase; dos suscripciones separadas son safe en React 18 batching)
+- [x] [Review][Patch][MEDIUM] ArmarioSugerenciaArmoniaScreen: `picture` useMemo puede recibir `garmentImages[i] === undefined` (en vez de `null`) cuando el array se resetea async — añadir guard de longitud + cambiar `=== null` a `!garmentImages[i]` [src/screens/armario/ArmarioSugerenciaArmoniaScreen.tsx:~300-308] ✅ aplicado
+- [x] [Review][Patch][MEDIUM] ArmarioSugerenciaArmoniaScreen: back chevron + secondary CTA pueden ambos llamar `navigation.goBack()` en double-tap — añadir `isNavigating` ref (patrón de FavoritesList/ArmarioZeroStateScreen) [src/screens/armario/ArmarioSugerenciaArmoniaScreen.tsx:~777-780] ✅ aplicado
+- [x] [Review][Patch][MEDIUM] ArmarioZeroStateScreen: `accessible={false}` en el container NO propaga a hijos en React Native — VoiceOver puede enfocar tarjetas con `opacity: 0` antes del primer layout; reemplazado `accessible={false}` por `accessibilityElementsHidden` + `importantForAccessibility="no-hide-descendants"` en el contenedor externo [src/screens/armario/ArmarioZeroStateScreen.tsx:~253] ✅ aplicado
+- [x] [Review][Patch][MEDIUM] i18n inconsistencia: `armario.favorites.a11yHintPartial` usa `{{count}}` pero las claves de badge usan `{{assigned}}` — renombrar a `{{assigned}}` en en.json/es.json y en `FavoriteComboEnrichedCard.tsx` para evitar confusión con pluralización i18next [src/i18n/locales/en.json:~295-296] ✅ aplicado
+- [x] [Review][Patch][LOW] getSuggestionCopy.test.ts: falta el test explícito de combo de 2 colores requerido por AC #5 — añadir `(1,2)→suggestionCopyAccessory` y `(0,2)→suggestionCopyMain` [src/lib/armario/getSuggestionCopy.test.ts] ✅ aplicado (+2 tests)
+- [x] [Review][Patch][LOW] ArmarioFichaWadaScreen: `handleViewLook` no guarda `totalColors === 0` — flash de S5 antes del `goBack` defensivo; añadir `if (totalColors === 0) return;` [src/screens/armario/ArmarioFichaWadaScreen.tsx:~113-128] ✅ aplicado
+- [x] [Review][Patch][LOW] drawPolaroidStack: `plusFontSize` re-computado internamente (`h * 0.18`) puede divergir del tamaño con que se cargó la fuente en el screen → glifo `+` descentrado; usar `emptySlotPlusFont.getSize()` para el offset del baseline + eliminado `EMPTY_PLUS_FONT_SIZE_FRACTION` (constante huérfana) [src/lib/armario/drawPolaroidStack.ts:~424] ✅ aplicado
+- [x] [Review][Patch][LOW] drawPolaroidStack: `plusMeasure?.width || 0` falsifica anchos positivos pequeños — cambiar a `?? 0` [src/lib/armario/drawPolaroidStack.ts] ✅ aplicado
+- [x] [Review][Patch][LOW] FavoriteComboEnrichedCard: la variable `t` del callback `.filter((t) => t !== null)` sombrea `t` de `useTranslation` — renombrar a `thumb` [src/components/armario/FavoriteComboEnrichedCard.tsx:~65] ✅ aplicado
+- [x] [Review][Patch][LOW] ArmarioSugerenciaArmoniaScreen.test.tsx: fixture `setupPartial1of3MidSlotMissing` configura 2 asignaciones (2/3) pero el nombre dice "1of3" — renombrar a `setupPartial2of3MidSlotMissing` + test description actualizada [src/screens/armario/ArmarioSugerenciaArmoniaScreen.test.tsx:~1079] ✅ aplicado
 
 #### Deferred
 
