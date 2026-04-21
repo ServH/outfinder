@@ -90,9 +90,18 @@ describe("ArmarioZeroStateScreen", () => {
 		expect(screen.getByText(/Assign a real garment/i)).toBeTruthy();
 		expect(screen.getByTestId("s0-primary-cta")).toBeTruthy();
 		expect(screen.getByTestId("s0-secondary-cta")).toBeTruthy();
-		expect(screen.getByTestId("s0-polaroid-0")).toBeTruthy();
-		expect(screen.getByTestId("s0-polaroid-1")).toBeTruthy();
-		expect(screen.getByTestId("s0-polaroid-2")).toBeTruthy();
+		// Polaroids are rendered with `accessibilityElementsHidden` until
+		// onLayout measures the cascade — pass `includeHiddenElements` to
+		// verify their presence from the initial render.
+		expect(
+			screen.getByTestId("s0-polaroid-0", { includeHiddenElements: true }),
+		).toBeTruthy();
+		expect(
+			screen.getByTestId("s0-polaroid-1", { includeHiddenElements: true }),
+		).toBeTruthy();
+		expect(
+			screen.getByTestId("s0-polaroid-2", { includeHiddenElements: true }),
+		).toBeTruthy();
 	});
 
 	it("primary CTA tap → hapticLight + AsyncStorage.setItem(seen flag) + navigation.replace(ArmarioFichaWada)", async () => {
@@ -148,9 +157,15 @@ describe("ArmarioZeroStateScreen", () => {
 		const Screen = loadScreen();
 		render(<Screen />);
 		// No explicit animation ships; the screen must still render all 3 polaroids.
-		expect(screen.getByTestId("s0-polaroid-0")).toBeTruthy();
-		expect(screen.getByTestId("s0-polaroid-1")).toBeTruthy();
-		expect(screen.getByTestId("s0-polaroid-2")).toBeTruthy();
+		expect(
+			screen.getByTestId("s0-polaroid-0", { includeHiddenElements: true }),
+		).toBeTruthy();
+		expect(
+			screen.getByTestId("s0-polaroid-1", { includeHiddenElements: true }),
+		).toBeTruthy();
+		expect(
+			screen.getByTestId("s0-polaroid-2", { includeHiddenElements: true }),
+		).toBeTruthy();
 	});
 
 	it("defensive: combination with 0 colors short-circuits to goBack and renders null", () => {

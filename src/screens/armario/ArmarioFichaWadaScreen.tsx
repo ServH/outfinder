@@ -111,6 +111,7 @@ export function ArmarioFichaWadaScreen({
 	}
 
 	function handleViewLook() {
+		if (totalColors === 0) return;
 		if (assignedCount === 0) return;
 		hapticLight();
 		// `onViewLook` is the injection seam for tests — when provided it wins

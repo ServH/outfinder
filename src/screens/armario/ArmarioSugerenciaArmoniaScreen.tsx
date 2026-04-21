@@ -280,6 +280,7 @@ export function ArmarioSugerenciaArmoniaScreen(
 	// `replace` (not `push`) preserves the Epic-12 capture → combinations
 	// transition pattern — the user already scrolled past S5.
 	const didReplaceRef = useRef(false);
+	const isNavigating = useRef(false);
 	useEffect(() => {
 		if (!combination || combination.colors.length === 0) {
 			navigation.goBack();
@@ -301,8 +302,9 @@ export function ArmarioSugerenciaArmoniaScreen(
 		if (!emptySlotPlusFont) return null;
 		if (canvasSize.w <= 0 || canvasSize.h <= 0) return null;
 		if (garmentDescriptors.length === 0) return null;
+		if (garmentImages.length !== garmentDescriptors.length) return null;
 		const filledMissingImage = garmentDescriptors.some(
-			(_g, i) => !emptySlots[i] && garmentImages[i] === null,
+			(_g, i) => !emptySlots[i] && !garmentImages[i],
 		);
 		if (filledMissingImage) return null;
 		return createPicture((canvas) => {
@@ -325,6 +327,8 @@ export function ArmarioSugerenciaArmoniaScreen(
 	]);
 
 	const handleBack = useCallback(() => {
+		if (isNavigating.current) return;
+		isNavigating.current = true;
 		hapticLight();
 		navigation.goBack();
 	}, [navigation]);
@@ -339,6 +343,8 @@ export function ArmarioSugerenciaArmoniaScreen(
 	}, [missingColor, combinationId, navigation]);
 
 	const handleGoBackToS2 = useCallback(() => {
+		if (isNavigating.current) return;
+		isNavigating.current = true;
 		navigation.goBack();
 	}, [navigation]);
 

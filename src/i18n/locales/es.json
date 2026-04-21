@@ -254,7 +254,7 @@
 			"ctaPartial": "Completa tu look \u2192",
 			"ctaEmpty": "Asignar prendas \u2192",
 			"a11yHintComplete": "Look completo. Doble-tap para ver tu look.",
-			"a11yHintPartial": "{{count}} de {{total}} prendas asignadas. Doble-tap para completar el look.",
+			"a11yHintPartial": "{{assigned}} de {{total}} prendas asignadas. Doble-tap para completar el look.",
 			"a11yHintEmpty": "Sin prendas asignadas. Doble-tap para empezar a asignar."
 		},
 		"s3": {

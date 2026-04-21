@@ -130,7 +130,7 @@ function setupPartial2of3() {
 	];
 }
 
-function setupPartial1of3MidSlotMissing() {
+function setupPartial2of3MidSlotMissing() {
 	// Filled slots: 0 and 2 — missing slot is index 1 (middle).
 	mockItems = [makeItem("u1"), makeItem("u3")];
 	mockAssignments = [
@@ -260,8 +260,8 @@ describe("ArmarioSugerenciaArmoniaScreen", () => {
 		expect(mockGoBack).toHaveBeenCalled();
 	});
 
-	it("1/3 mid-slot missing → suggestion copy is suggestionCopyLayer", async () => {
-		setupPartial1of3MidSlotMissing();
+	it("2/3 mid-slot missing → suggestion copy is suggestionCopyLayer", async () => {
+		setupPartial2of3MidSlotMissing();
 		const Screen = loadScreen();
 		render(<Screen />);
 		await flushEffects();

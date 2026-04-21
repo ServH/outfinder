@@ -252,6 +252,8 @@ export function ArmarioZeroStateScreen(_props: ArmarioZeroStateScreenProps) {
 			    derive from onLayout's measured (w, h), not fixed percentages. */}
 			<View
 				onLayout={handleCascadeLayout}
+				accessibilityElementsHidden
+				importantForAccessibility="no-hide-descendants"
 				style={{
 					flex: 1,
 					width: "100%",
@@ -259,7 +261,6 @@ export function ArmarioZeroStateScreen(_props: ArmarioZeroStateScreenProps) {
 					justifyContent: "center",
 					paddingVertical: 8,
 				}}
-				accessible={false}
 			>
 				{combination.colors.map((color, i) => {
 					const measured = wrapperWidth > 0;

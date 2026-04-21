@@ -58,11 +58,11 @@ export function FavoriteComboEnrichedCard({
 		return combination.colors.map((_color, idx) => {
 			const a = assignmentByIndex.get(idx);
 			const item = a ? byItem.get(a.wardrobeItemId) : undefined;
-			return item?.thumbnailPath ?? null;
+			return item?.thumbnailPath || null;
 		});
 	}, [assignments, items, combination.id, combination.colors]);
 
-	const assigned = thumbs.filter((t) => t !== null).length;
+	const assigned = thumbs.filter((thumb) => thumb !== null).length;
 	const total = combination.colors.length;
 	const bucket = resolveBucket(assigned, total);
 
@@ -72,7 +72,7 @@ export function FavoriteComboEnrichedCard({
 			? t("armario.favorites.a11yHintComplete")
 			: bucket === "partial"
 				? t("armario.favorites.a11yHintPartial", {
-						count: assigned,
+						assigned,
 						total,
 					})
 				: t("armario.favorites.a11yHintEmpty");

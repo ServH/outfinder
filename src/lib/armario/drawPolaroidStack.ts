@@ -71,7 +71,6 @@ const SIG_BRAND_TEXT = "Outfinder";
 const EMPTY_CARD_FILL = "#EEF2F8";
 const EMPTY_DASH_INTERVALS: readonly [number, number] = [16, 10];
 const EMPTY_BORDER_STROKE_FRACTION = 0.012;
-const EMPTY_PLUS_FONT_SIZE_FRACTION = 0.18;
 const EMPTY_PLUS_ALPHA = 0.7;
 
 export interface PolaroidGarment {
@@ -259,16 +258,16 @@ function drawPolaroidCard(canvas: SkCanvas, params: PolaroidCardParams) {
 		if (emptySlotPlusFont) {
 			const frameY = y + imageInset;
 			const frameH = h - imageInset - labelBandH;
-			const plusFontSize = h * EMPTY_PLUS_FONT_SIZE_FRACTION;
+			const loadedFontSize = emptySlotPlusFont.getSize();
 			const plusMeasure = emptySlotPlusFont.measureText("+");
-			const plusW = plusMeasure?.width || 0;
+			const plusW = plusMeasure?.width ?? 0;
 			const plusPaint = Skia.Paint();
 			plusPaint.setColor(Skia.Color(hexToRgba(colorHex, EMPTY_PLUS_ALPHA)));
 			plusPaint.setAntiAlias(true);
 			canvas.drawText(
 				"+",
 				centerX - plusW / 2,
-				frameY + frameH / 2 + plusFontSize * 0.35,
+				frameY + frameH / 2 + loadedFontSize * 0.35,
 				plusPaint,
 				emptySlotPlusFont,
 			);

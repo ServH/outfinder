@@ -254,7 +254,7 @@
 			"ctaPartial": "Complete your look \u2192",
 			"ctaEmpty": "Assign garments \u2192",
 			"a11yHintComplete": "Complete look. Double-tap to see your look.",
-			"a11yHintPartial": "{{count}} of {{total}} garments assigned. Double-tap to complete the look.",
+			"a11yHintPartial": "{{assigned}} of {{total}} garments assigned. Double-tap to complete the look.",
 			"a11yHintEmpty": "No garments assigned yet. Double-tap to start assigning."
 		},
 		"s3": {
