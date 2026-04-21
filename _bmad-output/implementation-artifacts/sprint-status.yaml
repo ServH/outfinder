@@ -34,7 +34,8 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-12
-last_updated: 2026-04-20
+last_updated: 2026-04-21
+# 2026-04-21 — Story 13.6 moved review → done (3 post-dev UX iters accepted on-device + review hardening patches applied; 785 passing / 60 pre-existing debt; commits b26fea2, 9492e8e, 7fe0c5a on epic-13)
 # 2026-04-20 — Story 13.6 moved in-progress → review (dev-story complete — +37 net tests, tsc/lint clean, 0 new regressions; on-device QA deferred to merge gate)
 # 2026-04-20 — Story 13.6 moved ready-for-dev → in-progress (dev-story)
 # 2026-04-20 — Story 13.6 moved backlog → ready-for-dev (create-story: S5 Sugerencia Armonía + Favorites badges/thumbs/completeness sort)
@@ -157,5 +158,5 @@ development_status:
   13-4a-zero-state-ficha-wada-shared-components: done
   13-4b-armario-picker-assignment-mechanics: done
   13-5-s4-tu-look-skia-composition-share: done
-  13-6-s5-sugerencia-armonia-favorites-badges: review
+  13-6-s5-sugerencia-armonia-favorites-badges: done
   epic-13-retrospective: optional
