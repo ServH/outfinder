@@ -11,6 +11,42 @@ export function isLightColor(hex: string): boolean {
 }
 
 /**
+ * WCAG sRGB → linear channel transform. Input `c` is in [0, 1] on the sRGB
+ * scale; output is the corresponding linear-light intensity.
+ */
+function channelLinear(c: number): number {
+	return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+}
+
+/**
+ * WCAG relative luminance in [0, 1] for a 6-digit hex color.
+ *
+ * Used by the unified-camera Result screen (Story 14.4) to pick between
+ * dark pergamino ink (#2d2a26) and cream (#faf7f2) for the primary-CTA label
+ * against a Wada-hex background: threshold `> 0.40` → dark text, `≤ 0.40`
+ * → cream. The threshold is an aesthetic choice — not WCAG contrast —
+ * tuned for the Wada palette.
+ *
+ * Returns `0` for malformed input so a bad hex yields cream text, which
+ * is more readable on the likely fallback `#000000` than dark-on-dark.
+ */
+export function relativeLuminance(hex: string): number {
+	if (!hex || typeof hex !== "string") return 0;
+	const stripped = hex.startsWith("#") ? hex.slice(1) : hex;
+	if (stripped.length !== 6) return 0;
+	const r = Number.parseInt(stripped.slice(0, 2), 16);
+	const g = Number.parseInt(stripped.slice(2, 4), 16);
+	const b = Number.parseInt(stripped.slice(4, 6), 16);
+	if (!Number.isFinite(r) || !Number.isFinite(g) || !Number.isFinite(b)) {
+		return 0;
+	}
+	const R = channelLinear(r / 255);
+	const G = channelLinear(g / 255);
+	const B = channelLinear(b / 255);
+	return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+}
+
+/**
  * Converts a 3- or 6-digit hex (with or without leading `#`) to `rgba(r, g, b, a)`.
  * RN 0.83 accepts 8-digit hex, but the rgba form matches the codebase's
  * existing color-util style and avoids alpha-math foot-guns at call sites.
