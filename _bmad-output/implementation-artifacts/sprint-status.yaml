@@ -35,6 +35,9 @@
 
 generated: 2026-03-12
 last_updated: 2026-04-21
+# 2026-04-21 — Story 14.3b moved review → done (code review: 0 patches; 4 deferred D-14.3b-1→4 — back-button trap, PixelLayout default case, runPipeline no timeout, diagnostic text in prod; 10 dismissed; tsc + biome clean; 778/60/0 tests confirmed; AC#14 on-device smoke previously verified by Alejandro).
+# 2026-04-21 — Story 14.3b moved ready-for-dev → in-progress → review (dev-story: Swift [String:String] return shape with computeDominantHex helper per TD-1 + UnifiedCameraCaptureScreen real pipeline + Result route params tightened to {cutoutUri, dominantHex, wadaMatch} + 1-line ArmarioCaptureScreen destructure for TD-2 preservation). Result: 778 passing / 60 pre-existing / 0 new failures / 0 new skips vs 771/60 14.3a baseline → +7 net (target +3..+6 was +1 above upper bound from it.each expanding 3 cases + 1 null-photo case). tsc + biome clean. Native module change requires `npx expo run:ios` rebuild before on-device smoke for AC#14 (3-garment accuracy) + AC#15 (TD-2 armario byte-for-byte).
+# 2026-04-21 — Story 14.3b moved backlog → ready-for-dev (create-story: Swift module dominantHex extraction per TD-1 + UnifiedCameraCaptureScreen pipeline rewrite + Result route params tightening + 1-line ArmarioCaptureScreen destructure back-compat). 15 AC, 5 tasks. Branch: story/14-3b-unified-camera-pipeline-swift-module. Requires npx expo run:ios rebuild per feedback_native_module_rebuild.md. Expected net +3 to +6 tests vs 771 baseline.
 # 2026-04-21 — Story 14.3a moved review → done (code review: 2 patches — useSafeAreaInsets back button top pos + closeCameraLabel i18n; AC#11 manual smoke verified by Alejandro; 6 deferred D-14.3a-1→6; 13 dismissed; tsc + biome clean; 3/3 UnifiedCameraCaptureScreen tests passing).
 # 2026-04-21 — Story 14.3a moved ready-for-dev → in-progress → review (dev-story: UnifiedCameraRoot nav shell + CaptureScreen + 3 orphan helper deletion per TD-2). Result: 771 passing / 60 pre-existing (OutfitVisualizer.getState + i18n detectLanguage — verified via clean-tree stash) / 0 new failures / 0 new skips vs 819/60 baseline from 14.2 done; net delta −48 (−53 deleted tests + 5 new placeholder smokes); tsc + biome clean. Armario paths byte-for-byte untouched. Branch: story/14-3a-unified-camera-nav-setup-capturescreen-deprecation.
 # 2026-04-21 — Story 14.3a moved backlog → ready-for-dev (create-story: UnifiedCameraRoot nav shell + CaptureScreen deletion + 3 orphaned helper components deletion, per TD-2 narrow deprecation — ArmarioRoot/ArmarioCapture/ArmarioPreview PRESERVED). 11 AC, 5 tasks. Branch: story/14-3a-unified-camera-nav-setup-capturescreen-deprecation. Expected net test-count drop (deleting ~41 tests across CaptureScreen + 3 helper files, adding 3 placeholder smokes).
@@ -178,7 +181,7 @@ development_status:
   14-1-wardrobe-item-category-field: done
   14-2-mis-looks-store-unification-migration: done
   14-3a-unified-camera-nav-setup-capturescreen-deprecation: done
-  14-3b-unified-camera-pipeline-swift-module: backlog
+  14-3b-unified-camera-pipeline-swift-module: done
   14-4-camera-result-screen-ui: backlog
   14-5-camera-save-flow-category-selector-paywall: backlog
   14-6-visualizer-bridge-cta-swap-share-removal: backlog
