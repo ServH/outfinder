@@ -284,6 +284,7 @@ export function Settings(_props: SettingsProps) {
 													id: `__dev-stub-${i}__`,
 													localImagePath: "file:///dev-stub.png",
 													thumbnailPath: "file:///dev-stub-thumb.png",
+													category: "top" as const,
 													createdAt: now - i * 1000,
 												})),
 											);

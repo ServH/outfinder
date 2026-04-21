@@ -13,15 +13,53 @@ interface WardrobeStoreState {
 	setAssignments: (next: CombinationAssignment[]) => void;
 }
 
+/**
+ * Parse-time guard. `category` is intentionally OPTIONAL here (Epic-14 Story
+ * 14.1, TD-7): legacy Epic-13 items persisted before the field existed lack
+ * the key and must survive hydration. A foreign `category` value (anything
+ * other than undefined or one of the four enum strings) still fails the guard
+ * and falls through to the corrupt-payload path — backfill is only for
+ * MISSING keys, not invalid values (preserves Story 13.1 F1 semantics).
+ */
 function isWardrobeItem(value: unknown): value is WardrobeItem {
 	if (typeof value !== "object" || value === null) return false;
 	const v = value as Record<string, unknown>;
+	const c = v.category;
+	const categoryValid =
+		c === undefined ||
+		c === "top" ||
+		c === "bottom" ||
+		c === "footwear" ||
+		c === "accessory";
 	return (
 		typeof v.id === "string" &&
 		typeof v.localImagePath === "string" &&
 		typeof v.thumbnailPath === "string" &&
-		typeof v.createdAt === "number"
+		typeof v.createdAt === "number" &&
+		categoryValid
 	);
+}
+
+/**
+ * Backfills `category: "top"` onto any parsed item missing the field (TD-7).
+ * Returns the normalized array and the count of touched records so the
+ * hydration site can emit a single summary warn instead of per-record spam.
+ * The next `setItems(...)` write will persist the normalized shape, so the
+ * default "sticks" on first write without requiring an explicit migration.
+ */
+function normalizeItems(parsed: WardrobeItem[]): {
+	items: WardrobeItem[];
+	backfilledCount: number;
+} {
+	let backfilledCount = 0;
+	const items = parsed.map((item) => {
+		if ((item as { category?: unknown }).category === undefined) {
+			backfilledCount += 1;
+			return { ...item, category: "top" as const };
+		}
+		return item;
+	});
+	return { items, backfilledCount };
 }
 
 function isCombinationAssignment(
@@ -103,7 +141,14 @@ export async function hydrateWardrobeStore(): Promise<void> {
 		let assignments: CombinationAssignment[] = [];
 
 		try {
-			items = parseItems(rawItems);
+			const parsed = parseItems(rawItems);
+			const normalized = normalizeItems(parsed);
+			items = normalized.items;
+			if (__DEV__ && normalized.backfilledCount > 0) {
+				console.warn(
+					`wardrobeStore: backfilled category='top' on ${normalized.backfilledCount} legacy item(s) per TD-7`,
+				);
+			}
 		} catch (error) {
 			if (__DEV__) {
 				console.warn("wardrobeStore: items parse failed, falling back", error);

@@ -11,17 +11,22 @@ import {
 	removeItem,
 	unassign,
 } from "./wardrobeRepo";
-import { WardrobeLimitExceeded } from "./wardrobeTypes";
+import { type WardrobeCategory, WardrobeLimitExceeded } from "./wardrobeTypes";
 
 jest.mock("@react-native-async-storage/async-storage", () =>
 	require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
 );
 
-function seedItem(id: string, createdAt = 0) {
+function seedItem(
+	id: string,
+	createdAt = 0,
+	category: WardrobeCategory = "top",
+) {
 	return {
 		id,
 		localImagePath: `file:///items/${id}.png`,
 		thumbnailPath: `file:///items/${id}.thumb.png`,
+		category,
 		createdAt,
 	};
 }
@@ -41,6 +46,7 @@ describe("addItem", () => {
 			{
 				localImagePath: "file:///cutout.png",
 				thumbnailPath: "file:///cutout.thumb.png",
+				category: "top",
 			},
 			false,
 		);
@@ -49,6 +55,7 @@ describe("addItem", () => {
 		expect(created.id.length).toBeGreaterThan(0);
 		expect(created.localImagePath).toBe("file:///cutout.png");
 		expect(created.thumbnailPath).toBe("file:///cutout.thumb.png");
+		expect(created.category).toBe("top");
 		expect(created.createdAt).toBeGreaterThanOrEqual(before);
 		expect(getItems()).toHaveLength(1);
 	});
@@ -59,7 +66,11 @@ describe("addItem", () => {
 
 		expect(() =>
 			addItem(
-				{ localImagePath: "file:///x.png", thumbnailPath: "file:///x.t.png" },
+				{
+					localImagePath: "file:///x.png",
+					thumbnailPath: "file:///x.t.png",
+					category: "top",
+				},
 				false,
 			),
 		).not.toThrow();
@@ -72,7 +83,11 @@ describe("addItem", () => {
 
 		expect(() =>
 			addItem(
-				{ localImagePath: "file:///x.png", thumbnailPath: "file:///x.t.png" },
+				{
+					localImagePath: "file:///x.png",
+					thumbnailPath: "file:///x.t.png",
+					category: "top",
+				},
 				false,
 			),
 		).toThrow(WardrobeLimitExceeded);
@@ -85,11 +100,60 @@ describe("addItem", () => {
 
 		expect(() =>
 			addItem(
-				{ localImagePath: "file:///x.png", thumbnailPath: "file:///x.t.png" },
+				{
+					localImagePath: "file:///x.png",
+					thumbnailPath: "file:///x.t.png",
+					category: "top",
+				},
 				true,
 			),
 		).not.toThrow();
 		expect(getItems()).toHaveLength(11);
+	});
+
+	// AC #7(a): round-trip all four enum values
+	test.each<WardrobeCategory>([
+		"top",
+		"bottom",
+		"footwear",
+		"accessory",
+	])("persists category=%s on the returned item and via getItems()", (category) => {
+		const created = addItem(
+			{
+				localImagePath: `file:///${category}.png`,
+				thumbnailPath: `file:///${category}.thumb.png`,
+				category,
+			},
+			true,
+		);
+		expect(created.category).toBe(category);
+		expect(getItems()).toHaveLength(1);
+		expect(getItems()[0]?.category).toBe(category);
+	});
+
+	// AC #7(b): different items can carry different categories and both survive
+	it("preserves heterogeneous categories across multiple addItem calls", () => {
+		const a = addItem(
+			{
+				localImagePath: "file:///a.png",
+				thumbnailPath: "file:///a.thumb.png",
+				category: "bottom",
+			},
+			true,
+		);
+		const b = addItem(
+			{
+				localImagePath: "file:///b.png",
+				thumbnailPath: "file:///b.thumb.png",
+				category: "footwear",
+			},
+			true,
+		);
+
+		const items = getItems();
+		expect(items).toHaveLength(2);
+		expect(items.find((i) => i.id === a.id)?.category).toBe("bottom");
+		expect(items.find((i) => i.id === b.id)?.category).toBe("footwear");
 	});
 });
 

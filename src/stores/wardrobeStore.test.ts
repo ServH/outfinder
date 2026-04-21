@@ -13,6 +13,7 @@ const validItem = {
 	id: "uuid-1",
 	localImagePath: "file:///items/uuid-1.png",
 	thumbnailPath: "file:///items/uuid-1.thumb.png",
+	category: "top" as const,
 	createdAt: 1_700_000_000_000,
 };
 
@@ -107,6 +108,160 @@ describe("hydrateWardrobeStore", () => {
 			configurable: true,
 			writable: true,
 		});
+	});
+
+	// AC #7(c): backfills category='top' on a legacy item missing the field
+	it("backfills category='top' on a legacy item missing the field (TD-7)", async () => {
+		const warn = jest.spyOn(console, "warn").mockImplementation();
+		const legacyItem = {
+			id: "uuid-legacy",
+			localImagePath: "file:///items/uuid-legacy.png",
+			thumbnailPath: "file:///items/uuid-legacy.thumb.png",
+			createdAt: 1_700_000_000_000,
+		};
+		await AsyncStorage.setItem(ITEMS_KEY, JSON.stringify([legacyItem]));
+
+		await hydrateWardrobeStore();
+
+		const state = useWardrobeStore.getState();
+		expect(state.items).toHaveLength(1);
+		expect(state.items[0]?.category).toBe("top");
+		expect(state.items[0]?.id).toBe("uuid-legacy");
+		expect(warn).toHaveBeenCalledWith(
+			expect.stringContaining("backfilled category='top' on 1 legacy item"),
+		);
+
+		warn.mockRestore();
+	});
+
+	// AC #7(d): mixed payload — preserve explicit + backfill only missing
+	it("preserves explicit categories and backfills only the missing ones on a mixed payload", async () => {
+		const warn = jest.spyOn(console, "warn").mockImplementation();
+		const seeded = [
+			{
+				id: "uuid-a",
+				localImagePath: "file:///a.png",
+				thumbnailPath: "file:///a.thumb.png",
+				category: "bottom",
+				createdAt: 1,
+			},
+			{
+				id: "uuid-b",
+				localImagePath: "file:///b.png",
+				thumbnailPath: "file:///b.thumb.png",
+				// legacy: no category
+				createdAt: 2,
+			},
+			{
+				id: "uuid-c",
+				localImagePath: "file:///c.png",
+				thumbnailPath: "file:///c.thumb.png",
+				category: "accessory",
+				createdAt: 3,
+			},
+		];
+		await AsyncStorage.setItem(ITEMS_KEY, JSON.stringify(seeded));
+
+		await hydrateWardrobeStore();
+
+		const items = useWardrobeStore.getState().items;
+		expect(items).toHaveLength(3);
+		expect(items.find((i) => i.id === "uuid-a")?.category).toBe("bottom");
+		expect(items.find((i) => i.id === "uuid-b")?.category).toBe("top");
+		expect(items.find((i) => i.id === "uuid-c")?.category).toBe("accessory");
+		// Single aggregate warn (count === 1)
+		const backfillWarns = warn.mock.calls.filter((args) =>
+			String(args[0]).includes("backfilled category"),
+		);
+		expect(backfillWarns).toHaveLength(1);
+		expect(String(backfillWarns[0]?.[0])).toContain("1 legacy item");
+
+		warn.mockRestore();
+	});
+
+	// AC #7(e): backfill warn is silenced when __DEV__ is false
+	it("does not emit the backfill warn in production mode (__DEV__ === false)", async () => {
+		const originalDev = (globalThis as { __DEV__?: boolean }).__DEV__;
+		Object.defineProperty(globalThis, "__DEV__", {
+			value: false,
+			configurable: true,
+			writable: true,
+		});
+
+		const warn = jest.spyOn(console, "warn").mockImplementation();
+		const legacyItem = {
+			id: "uuid-legacy",
+			localImagePath: "file:///a.png",
+			thumbnailPath: "file:///a.thumb.png",
+			createdAt: 1,
+		};
+		await AsyncStorage.setItem(ITEMS_KEY, JSON.stringify([legacyItem]));
+
+		await hydrateWardrobeStore();
+
+		expect(useWardrobeStore.getState().items[0]?.category).toBe("top");
+		expect(warn).not.toHaveBeenCalled();
+
+		warn.mockRestore();
+		Object.defineProperty(globalThis, "__DEV__", {
+			value: originalDev,
+			configurable: true,
+			writable: true,
+		});
+	});
+
+	// AC #7(f): a foreign category value is rejected — backfill is ONLY for
+	// missing keys, invalid values fall through to corrupt-payload path (F1).
+	it("rejects records with an invalid category string and falls through to empty-array corrupt-payload path", async () => {
+		const warn = jest.spyOn(console, "warn").mockImplementation();
+		const seeded = [
+			{
+				id: "uuid-bad",
+				localImagePath: "file:///bad.png",
+				thumbnailPath: "file:///bad.thumb.png",
+				category: "hat",
+				createdAt: 1,
+			},
+		];
+		await AsyncStorage.setItem(ITEMS_KEY, JSON.stringify(seeded));
+
+		await hydrateWardrobeStore();
+
+		const state = useWardrobeStore.getState();
+		expect(state.items).toEqual([]);
+		expect(warn).toHaveBeenCalledWith(
+			expect.stringContaining("items parse failed"),
+			expect.any(Error),
+		);
+
+		warn.mockRestore();
+	});
+
+	// P2 (review patch): `category: null` is NOT a missing key — it must be treated as an
+	// invalid value and fall through to the corrupt-payload path, NOT backfilled to "top".
+	it("rejects records with category: null and falls through to empty-array corrupt-payload path", async () => {
+		const warn = jest.spyOn(console, "warn").mockImplementation();
+		const seeded = [
+			{
+				id: "uuid-null-cat",
+				localImagePath: "file:///null.png",
+				thumbnailPath: "file:///null.thumb.png",
+				category: null,
+				createdAt: 1,
+			},
+		];
+		await AsyncStorage.setItem(ITEMS_KEY, JSON.stringify(seeded));
+
+		await hydrateWardrobeStore();
+
+		const state = useWardrobeStore.getState();
+		expect(state.items).toEqual([]);
+		expect(warn).toHaveBeenCalledWith(
+			expect.stringContaining("items parse failed"),
+			expect.any(Error),
+		);
+
+		warn.mockRestore();
 	});
 });
 

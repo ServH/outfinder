@@ -2,7 +2,10 @@ import { File } from "expo-file-system";
 import { PREMIUM_CONFIG } from "@/config/premium";
 import { uuidv4 } from "@/lib/uuid";
 import { addItem, getItems, removeItem } from "@/lib/wardrobeRepo";
-import { WardrobeLimitExceeded } from "@/lib/wardrobeTypes";
+import {
+	type WardrobeCategory,
+	WardrobeLimitExceeded,
+} from "@/lib/wardrobeTypes";
 import { hydrateWardrobeStore, useWardrobeStore } from "@/stores/wardrobeStore";
 import { WardrobePersistenceError } from "./wardrobeErrors";
 import {
@@ -16,6 +19,7 @@ export interface SaveCutoutArgs {
 	cutoutUri: string;
 	sourceUri: string;
 	isPremium: boolean;
+	category: WardrobeCategory;
 }
 
 export interface SaveCutoutResult {
@@ -93,7 +97,10 @@ export async function saveCutoutAsWardrobeItem(
 		});
 
 		// (6) Commit repo row. Throws `WardrobeLimitExceeded` on race.
-		const item = addItem({ localImagePath, thumbnailPath }, args.isPremium);
+		const item = addItem(
+			{ localImagePath, thumbnailPath, category: args.category },
+			args.isPremium,
+		);
 		committedItemId = item.id;
 
 		// (7) Fire-and-forget tmp PNG cleanup — never block resolution.
