@@ -1,6 +1,6 @@
 # Story 14.12b: Edit category affordance (pencil icon in edit mode)
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -152,6 +152,15 @@ so that **TD-6 closes (category is editable in v1.4.0, not deferred to v1.5.0 pe
   - [x] `sprint-status.yaml` moved `14-12b-edit-category-affordance` ready-for-dev → in-progress → review.
   - [x] Commit on branch `story/14-12b-edit-category-affordance`; do NOT merge into `epic-14` yet.
   - [x] Hand off for Alejandro's Expo simulator visual smoke + adversarial code-review gate before merge into `epic-14`.
+
+### Review Findings
+
+- [x] [Review][Defer] D1: `mockAddFavorite.mockReset()` vs `mockUpdateItemCategory.mockClear()` inconsistency in test `beforeEach` [`ArmarioPickerScreen.test.tsx`] — deferred, inconsistencia heredada del patrón de 14.12a; no causa fallos de test
+- [x] [Review][Defer] D2: Stale `editingItem` closure si el item es eliminado mientras el sheet está abierto [`ArmarioPickerScreen.tsx:320-327`] — deferred, imposible en práctica (CategoryPickerSheet Modal bloquea el grid); ghost-write silencioso teórico al store que hace no-op
+- [x] [Review][Defer] D3: No hay `AccessibilityInfo.announceForAccessibility` tras confirmar cambio de categoría [`ArmarioPickerScreen.tsx:323`] — deferred, gap de accesibilidad no requerido por spec AC #7; mejora futura deseable para usuarios VoiceOver
+- [x] [Review][Defer] D4: `exitEditMode` no limpia `editingItem` si es non-null al salir del modo edición [`ArmarioPickerScreen.tsx` - `exitEditMode` handler] — deferred, bug latente no alcanzable via UI actual (el sheet Modal bloquea header "Listo"/"Cancelar"); añadir `setEditingItem(null)` en future-proof pass
+- [x] [Review][Defer] D5: `Dimensions.get("window").height` estático al cargar módulo en `CategoryPickerSheet` [`CategoryPickerSheet.tsx:58`] — deferred, pre-existente en el componente reutilizado (no introducido por esta story); riesgo de height incorrecto en iPad split-screen u orientación landscape
+- [x] [Review][Defer] D6: `editCategoryA11yLabel` calculado unconditionally en `renderItem` para todos los tiles aunque `isEditMode=false` [`ArmarioPickerScreen.tsx:567-577`] — deferred, micro-observación de perf; negligible con ≤10 items (FREE_WARDROBE_LIMIT)
 
 ## Dev Notes
 
