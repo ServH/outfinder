@@ -161,7 +161,7 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 					style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
 				>
 					<SymbolView
-						name="heart"
+						name="archivebox"
 						size={22}
 						tintColor={isFavsActive ? COLORS_DARK : wadaTokens.wadaMuted}
 					/>
@@ -274,7 +274,7 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 					{({ pressed }) => (
 						<View style={{ alignItems: "center", opacity: pressed ? 0.7 : 1 }}>
 							<SymbolView
-								name="heart"
+								name="archivebox"
 								size={22}
 								tintColor={isFavsActive ? COLORS_DARK : wadaTokens.wadaMuted}
 							/>

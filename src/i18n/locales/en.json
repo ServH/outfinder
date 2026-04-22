@@ -2,11 +2,11 @@
 	"tabs": {
 		"colors": "Colors",
 		"favs": "Favs",
-		"favorites": "Favorites",
+		"favorites": "My looks",
 		"settings": "Settings",
 		"camera": "Camera",
 		"colorsTab": "Colors tab",
-		"favoritesTab": "Favorites tab",
+		"favoritesTab": "My looks tab",
 		"settingsTab": "Settings tab",
 		"cameraTab": "Open camera scanner"
 	},
@@ -46,16 +46,16 @@
 		"changedTo": "Changed to {{label}}"
 	},
 	"favorites": {
-		"title": "Favorites",
-		"screenLabel": "Favorites List screen",
+		"title": "My looks",
+		"screenLabel": "My looks screen",
 		"sortRecent": "Recent",
 		"sortAZ": "A-Z",
 		"sortSize": "By size",
 		"sortRecentLabel": "Sort by recent",
 		"sortAZLabel": "Sort alphabetically",
 		"sortSizeLabel": "Sort by size",
-		"emptyTitle": "No favorites yet",
-		"emptySubtitle": "Pick a color, explore combinations, and tap \u2661 to save the ones you love"
+		"emptyTitle": "No saved looks yet",
+		"emptySubtitle": "Photograph a garment or pick a palette to begin."
 	},
 	"settings": {
 		"title": "Settings",

@@ -224,7 +224,7 @@ describe("FavoritesList", () => {
 		render(<FavoritesList />);
 
 		expect(screen.getByTestId("empty-state")).toBeTruthy();
-		expect(screen.getByText("No favorites yet")).toBeTruthy();
+		expect(screen.getByText("No saved looks yet")).toBeTruthy();
 	});
 
 	// --- AC #5: Odd-count alignment ---
@@ -263,10 +263,10 @@ describe("FavoritesList", () => {
 		render(<FavoritesList />);
 
 		expect(screen.getByTestId("empty-state")).toBeTruthy();
-		expect(screen.getByText("No favorites yet")).toBeTruthy();
+		expect(screen.getByText("No saved looks yet")).toBeTruthy();
 		expect(
 			screen.getByText(
-				"Pick a color, explore combinations, and tap ♡ to save the ones you love",
+				"Photograph a garment or pick a palette to begin.",
 			),
 		).toBeTruthy();
 	});
@@ -276,7 +276,7 @@ describe("FavoritesList", () => {
 
 		expect(
 			screen.getByLabelText(
-				"No favorites yet. Pick a color, explore combinations, and tap ♡ to save the ones you love",
+				"No saved looks yet. Photograph a garment or pick a palette to begin.",
 			),
 		).toBeTruthy();
 	});
@@ -470,7 +470,7 @@ describe("FavoritesList", () => {
 
 		expect(
 			screen.getByText(
-				"Pick a color, explore combinations, and tap ♡ to save the ones you love",
+				"Photograph a garment or pick a palette to begin.",
 			),
 		).toBeTruthy();
 	});
