@@ -162,6 +162,15 @@ These were reviewed and deliberately left as-is. Revisit only if the surrounding
 
 ---
 
+## Deferred from: code review of 14-6-visualizer-bridge-cta-swap-share-removal (2026-04-22)
+
+- **D-14.6-1** — `FavoritesTab: undefined` en TabParamList bloquea el tipado anidado del cross-nav a `ArmarioFichaWada`. Runtime funciona (React Navigation acepta los params en tiempo de ejecución); el `as never` silencia el error de TS. Fix correcto: `FavoritesTab: NavigatorScreenParams<FavoritesStackParamList> | undefined` en `src/navigation/types.ts:28`. Natural en Story 14.7 cuando se renombra FavoritesStack → MisLooksStack.
+- **D-14.6-2** — `slots[0]` se accede sin null-guard cuando `combination.colors` es un array vacío (dataset malformado). Bug pre-existente: `<Aureola>`, `<OutfitCard>` y `<MiniPaletteStrip>` tienen el mismo riesgo. Añadir guard `if (slots.length === 0) return <NotFound>` cuando se endurezca el dataset en Epic 15+.
+- **D-14.6-3** — `react-native-view-shot` permanece en `package.json` sin referencias en `src/` tras la eliminación de `share.ts`. Fuera de scope explícito (spec §Out of scope). Eliminar en una pasada de limpieza de dependencias post-epic con `expo run:ios` obligatorio.
+- **D-14.6-4** — `CTA_LABEL_CREAM = "#faf7f2"` duplicado en `OutfitVisualizer.tsx` y su test; no exportado desde `styles/theme.ts`. Misma situación que `UnifiedCameraResultScreen`. Mover a `wadaTokens.ctaLabelCream` o `src/lib/color.ts` cuando se unifiquen las constantes de accesibilidad de color.
+
+---
+
 ## Deferred from: code review of 14-5-camera-save-flow-category-selector-paywall (2026-04-22)
 
 - **D-14.5-1** — `CategoryPickerSheet.tsx:58` — `SCREEN_HEIGHT = Dimensions.get("window").height` a nivel de módulo, no reactivo a orientación/multitasking. iPhone-only MVP minimiza el riesgo. Usar `useWindowDimensions()` si se añade soporte iPad o landscape.

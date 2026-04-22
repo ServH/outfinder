@@ -19,7 +19,10 @@ jest.mock("@react-navigation/native", () => ({
 	useRoute: () => ({ params: mockRouteParams }),
 	useNavigation: () => ({
 		goBack: mockGoBack,
-		getParent: () => ({ navigate: mockRootNavigate }),
+		getParent: () => ({
+			getParent: () => ({ navigate: mockRootNavigate }),
+			getState: () => undefined,
+		}),
 		getState: () => undefined,
 	}),
 	useNavigationState: () => undefined,
@@ -37,7 +40,6 @@ const mockHapticMedium = jest.fn();
 jest.mock("@/lib/haptics", () => ({
 	hapticLight: (...args: unknown[]) => mockHapticLight(...args),
 	hapticMedium: (...args: unknown[]) => mockHapticMedium(...args),
-	hapticRigid: jest.fn(),
 }));
 
 // Mock AsyncStorage

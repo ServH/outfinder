@@ -35,6 +35,7 @@
 
 generated: 2026-03-12
 last_updated: 2026-04-22
+# 2026-04-22 — Story 14.6 moved review → done (code review: 2 patches applied — P1: getParent() missing one hop (TabNavigator → RootStack requires double getParent) + P2: hapticRigid: jest.fn() dangling mock removed; 4 deferred D-14.6-1→4; 5 dismissed; 57/57 tests pass. Status: done).
 # 2026-04-22 — Story 14.6 moved ready-for-dev → in-progress → review (dev-story: share button removal + Wada-tinted "Hacer este look mío" CTA + cross-nav to Main → FavoritesTab → ArmarioFichaWada + `relativeLuminance > 0.4` label rule + `src/lib/share.ts` + `.test.ts` deletion + 4→3 i18n key swap + 6 share tests removed + 5 CTA tests added). Result: 863 passing / 3 pre-existing / 0 new failures / 0 new skips vs 813/60 baseline → net +50 passing, −57 pre-existing failures (48 `OutfitVisualizer.getState` resolved passively by new `getState: () => undefined` mock + 9/12 i18n detectLanguage test-ordering cleanup; AC #9 permits pre-existing decrease). tsc + biome clean. Branch story/14-6-visualizer-bridge-cta-swap-share-removal off epic-14 HEAD=b156430. No native rebuild required (pure JS/TSX + JSON + file deletions).
 # 2026-04-22 — Story 14.6 moved backlog → ready-for-dev (create-story: Visualizer bridge CTA swap — replace "Compartir Outfit" with Wada-tinted "Hacer este look mío" CTA + arrow glyph + hapticMedium + cross-nav to Main→FavoritesTab→ArmarioFichaWada (working mode, no persistence); `relativeLuminance > 0.4` label-color rule reusing Story 14.4 helper; DELETE dead `src/lib/share.ts` + `share.test.ts` (only Visualizer consumed them — S4 polaroid uses `exportLookImage` independently); swap 4 `visualizer.share*` i18n keys for 3 `visualizer.makeMine*` keys (ES+EN); delete 6 Visualizer share tests + add 5 makeMine tests. 15 AC, 5 tasks. Branch: story/14-6-visualizer-bridge-cta-swap-share-removal off epic-14 HEAD=b156430. Expected test delta -9..-5 net (passing ≥ 804 / pre-existing ≤ 60 / 0 new failures / 0 new skips). No native rebuild required (pure JS/TSX). Covers FR8 + FR9 + FR10; depends only on UX-DR6 (approved).
 # 2026-04-22 — Story 14.5 moved review → done (code review: 2 patches applied — P1: backdrop disabled durante confirming=true en CategoryPickerSheet + P2: test para error encode en ResultScreen; 7 deferred D-14.5-1→7; 10 dismissed; 27/27 tests pasan en CategoryPickerSheet + ResultScreen).
@@ -192,7 +193,7 @@ development_status:
   14-3b-unified-camera-pipeline-swift-module: done
   14-4-camera-result-screen-ui: done
   14-5-camera-save-flow-category-selector-paywall: done
-  14-6-visualizer-bridge-cta-swap-share-removal: review
+  14-6-visualizer-bridge-cta-swap-share-removal: done
   14-7-mis-looks-tab-rename-icon: backlog
   14-8-auto-save-look-on-first-assignment: backlog
   14-9-guardar-para-luego-ficha-wada: backlog

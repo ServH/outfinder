@@ -1,6 +1,6 @@
 # Story 14.6: Visualizer bridge CTA swap — "Hacer este look mío" + external share removal
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -406,7 +406,12 @@ Claude Opus 4.7 (`claude-opus-4-7`) via Claude Code dev-story workflow (2026-04-
 
 ### Review Findings
 
-_TBD by code review (run `code-review` workflow; prefer a different LLM per dev-story guidance)._
+- [x] [Review][Patch] P1 — `getParent()` missing one hop: `OutfitVisualizer` lives two levels below RootStack (ColorsStack/FavoritesStack → TabNavigator → RootStack), so a single `getParent()` returns the TabNavigator, not RootStack. `navigate("Main", ...)` silently no-ops at runtime. Fix: `navigation.getParent()?.getParent<NativeStackNavigationProp<RootStackParamList>>()`. Update test mock to chain two `getParent` calls. [src/screens/OutfitVisualizer.tsx:196 + OutfitVisualizer.test.tsx:22]
+- [x] [Review][Patch] P2 — `hapticRigid: jest.fn()` dangling mock entry in haptics mock after `hapticRigid` import was removed from production code. Remove the entry from `jest.mock("@/lib/haptics", ...)`. [src/screens/OutfitVisualizer.test.tsx:40]
+- [x] [Review][Defer] D1 — `FavoritesTab: undefined` in TabParamList blocks TS-level deep-link typing; runtime works via React Navigation's runtime routing. Pre-existing type hygiene gap (same pattern in ColorsTab/UnifiedCamera stacks). Requires `NavigatorScreenParams<FavoritesStackParamList>` in types.ts — Story 14.7 stack rename is the natural moment to fix. [src/navigation/types.ts:28] — deferred, pre-existing
+- [x] [Review][Defer] D2 — `slots[0]` would crash if a malformed combination entry has `colors: []`; same risk exists in `<Aureola>` and `<OutfitCard>` pre-dating this story. A dataset invariant violation, not introduced here. [src/screens/OutfitVisualizer.tsx:301] — deferred, pre-existing
+- [x] [Review][Defer] D3 — `react-native-view-shot` now unreferenced in `src/` but retained in `package.json`. Explicitly out of scope per spec §Out of scope line 249. [package.json] — deferred, out of scope
+- [x] [Review][Defer] D4 — `CTA_LABEL_CREAM = "#faf7f2"` hardcoded in component and test independently; minor token drift risk. Low severity cosmetic concern; Story 14.4 uses same pattern. [src/screens/OutfitVisualizer.tsx:44, test:1075] — deferred, low priority
 
 ## Change Log
 

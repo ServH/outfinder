@@ -195,7 +195,7 @@ export function OutfitVisualizer() {
 	const handleMakeMine = useCallback(() => {
 		hapticMedium();
 		const rootNav =
-			navigation.getParent<NativeStackNavigationProp<RootStackParamList>>();
+			navigation.getParent()?.getParent<NativeStackNavigationProp<RootStackParamList>>();
 		rootNav?.navigate("Main", {
 			screen: "FavoritesTab",
 			params: {
