@@ -424,7 +424,9 @@ Branch: `story/14-10-nuevo-look-entry-point-mis-looks` off `epic-14` HEAD `a222c
 **Implementation deviation from AC (documented):**
 - AC #4 specifies `handleNewLookPress` as a function declaration. Implementation uses `useCallback([navigation])` instead because Biome's `useExhaustiveDependencies` required a stable ref inside `listHeaderComponent`'s `useMemo`. Semantics identical (handler closes over the stable `navigation` ref). AC #11 itself permits this ("OR reference the navigation object directly in the deps array if the lint insists" — equivalent outcome).
 
-**Awaiting:** (a) Alejandro Expo simulator visual smoke per `feedback_visual_review.md` (see Task 5 sub-list for the visual-check items). (b) Adversarial code-review gate before merge into `epic-14`.
+**Visual smoke (2026-04-22):** ✅ Validado por Alejandro en simulador Expo. Checklist (a)–(o) confirmado: card renderiza arriba en EMPTY entre header y EmptyState, arriba en POPULATED sobre sort-pills (scrollea con contenido, no sticky), glifos sparkles + chevron.right correctos, tipografía Noto Serif JP + Inter, `bg-elevated` + hairline sin shadow, tap dispara hapticLight + cross-nav a ColorHome, estado Mis Looks inalterado al volver, copias ES/EN correctas, VoiceOver lee label + hint con rol botón.
+
+**Awaiting:** Adversarial code-review gate before merge into `epic-14`.
 
 ### Change Log
 
