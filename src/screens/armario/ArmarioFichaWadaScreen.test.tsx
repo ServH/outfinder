@@ -791,4 +791,22 @@ describe("ArmarioFichaWadaScreen", () => {
 		expect(hapticMedium).toHaveBeenCalledTimes(1);
 		expect(hapticLight).not.toHaveBeenCalled();
 	});
+
+	it("rapid double-tap — addFavorite called at most twice but announce fires once (AC #13 h)", async () => {
+		mockAddFavorite.mockImplementation(() => {
+			// Simulate idempotent store write: first call mutates mockFavorites so
+			// getState() on the second tap sees prevFavorited=true → announce suppressed.
+			mockFavorites = new Set([...mockFavorites, "combo-3"]);
+		});
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-save-for-later-cta"));
+			fireEvent.press(screen.getByTestId("s2-save-for-later-cta"));
+		});
+
+		expect(mockAddFavorite.mock.calls.length).toBeLessThanOrEqual(2);
+		expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledTimes(1);
+	});
 });

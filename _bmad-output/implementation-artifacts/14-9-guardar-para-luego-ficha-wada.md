@@ -1,6 +1,6 @@
 # Story 14.9: "Guardar para luego" explicit bookmark in Ficha Wada
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -405,6 +405,15 @@ claude-opus-4-7 (Opus 4.7, 1M context)
 - `_bmad-output/implementation-artifacts/sprint-status.yaml` — MODIFIED (story 14.9 ready-for-dev → in-progress → review; dated note appended)
 - `_bmad-output/implementation-artifacts/14-9-guardar-para-luego-ficha-wada.md` — MODIFIED (tasks checked, Status: review, completion notes + file list populated)
 
+### Review Findings
+
+- [x] [Review][Patch] P1 — Falta test de doble-tap idempotencia (AC #13 caso h) [`src/screens/armario/ArmarioFichaWadaScreen.test.tsx`] — El test `"rapid double-tap → addFavorite called once only"` listado en AC #13(h) no fue implementado. El mecanismo `prevFavorited` via `getState()` es correcto en producción (segundo tap ve `prevFavorited = true` → announce no dispara), pero no está verificado por ningún test. Implementar con `mockAddFavorite` que mute `mockFavorites` en la primera llamada, o con `fireEvent.press(cta)` dos veces y assert `announceForAccessibility.mock.calls.length === 1`.
+- [x] [Review][Defer] D-14.9-1 — `accessibilityHint` estático no refleja estado paywall-limbo [`ArmarioFichaWadaScreen.tsx:446`] — deferred, patrón pre-existente (slot taps en 14.8 tienen el mismo gap; consistencia intencional)
+- [x] [Review][Defer] D-14.9-2 — Sin indicador visual de loading cuando `hydrated=false` (CTA a opacity 1 mientras disabled) [`ArmarioFichaWadaScreen.tsx:458`] — deferred, patrón pre-existente igual que "Ver tu look"
+- [x] [Review][Defer] D-14.9-3 — announce-on-throw anuncia éxito cuando el write falló [`ArmarioFichaWadaScreen.tsx:126-137`] — deferred, hereda D-14.8-2 explícitamente documentado en spec
+- [x] [Review][Defer] D-14.9-4 — `marginHorizontal: -20` número mágico asume padding fijo del contenedor padre [`ArmarioFichaWadaScreen.tsx:436`] — deferred, patrón pre-existente en todos los screens armario
+- [x] [Review][Defer] D-14.9-5 — Ruta post-compra desde esta pantalla no tiene test dedicado (se fía del mock `mockHandlePurchase`) [`ArmarioFichaWadaScreen.tsx:624`] — deferred, fuera del scope de AC #13
+
 ### Change Log
 
-- 2026-04-22 — Story 14.9 "Guardar para luego" CTA implemented on `story/14-9-guardar-para-luego-ficha-wada` off epic-14 HEAD `0d2755a`. Net +10 tests vs 14.8 baseline. tsc + lint clean. Ready for visual smoke + adversarial code-review gate.
+- 2026-04-22 — Story 14.9 "Guardar para luego" CTA implementada en `story/14-9-guardar-para-luego-ficha-wada` off epic-14 HEAD `0d2755a`. Net +10 tests vs 14.8 baseline. tsc + lint clean. Ready for visual smoke + adversarial code-review gate.
