@@ -162,6 +162,18 @@ These were reviewed and deliberately left as-is. Revisit only if the surrounding
 
 ---
 
+## Deferred from: code review of 14-5-camera-save-flow-category-selector-paywall (2026-04-22)
+
+- **D-14.5-1** — `CategoryPickerSheet.tsx:58` — `SCREEN_HEIGHT = Dimensions.get("window").height` a nivel de módulo, no reactivo a orientación/multitasking. iPhone-only MVP minimiza el riesgo. Usar `useWindowDimensions()` si se añade soporte iPad o landscape.
+- **D-14.5-2** — `UnifiedCameraPostSaveScreen.tsx:54,61` — casts `as never` en `navigate("Main", {...} as never)` eluden el tipado de React Navigation. Patrón existente en todo Epic 14 (mismo que D-14.4-1). Corregir con `CompositeNavigationProp` en Epic 15+.
+- **D-14.5-3** — `UnifiedCameraPostSaveScreen.tsx:53-61` — `rootNav?.navigate(...)` silencia el fallo si `getParent()` es undefined. En prod el stack siempre tiene padre; añadir fallback defensivo (`navigation.goBack()`) si se añade deep-linking o isolated test harness.
+- **D-14.5-4** — `UnifiedCameraResultScreen.tsx` — error banner `bottom: 200` es un magic number sin relación con safe-area insets. Coincide con el precedente de `ArmarioPreviewScreen.tsx:295`. Derivar de `insets.bottom + offset` en una pasada de polish.
+- **D-14.5-5** — `src/lib/armario/saveCutoutAsWardrobeItem.ts` — `ensureWardrobeDirectories()` puede propagar un error raw de `diskFull` que no es instancia de `WardrobePersistenceError`, llegando al catch-all como `"repoAdd"`. Bug pre-existente en el helper; no introducido por esta story. Fix: añadir try/catch en `ensureWardrobeDirectories` que envuelva en `WardrobePersistenceError("diskFull")`.
+- **D-14.5-6** — `UnifiedCameraPostSaveScreen.tsx:48` — `wadaName = ""` cuando `getColor(wadaColorId)` devuelve undefined, produciendo CTA con interpolación vacía. `wadaColorId` siempre válido desde el pipeline; añadir fallback solo si se permite deep-link directo a PostSave.
+- **D-14.5-7** — `CategoryPickerSheet.tsx` — Confirmar button no aplica opacity reduced mientras `confirming=true` (solo muestra spinner). VoiceOver `busy: true` es correcto; riesgo visual bajo. Añadir `opacity: confirming ? 0.7 : 1` en una pasada de polish.
+
+---
+
 ## Deferred from: code review of 14-3a-unified-camera-nav-setup-capturescreen-deprecation (2026-04-21)
 
 - **D-14.3a-1** — Root modal slide animation plays even with Reduce Motion — `animation: isReducedMotion ? "none" : "fade"` in UnifiedCameraStack only suppresses intra-stack transitions; the iOS sheet slide on modal open/close is governed by `presentation: "modal"` on RootStack.Screen and has no Reduce Motion override. Pre-existing behavior identical to ArmarioRoot. Fix requires a `useNativeDriver`-compatible custom animation config at the RootStack level — non-trivial Reanimated work best paired with a dedicated accessibility polish story.
