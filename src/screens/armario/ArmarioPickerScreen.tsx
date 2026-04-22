@@ -7,6 +7,7 @@ import type {
 	NativeStackNavigationProp,
 	NativeStackScreenProps,
 } from "@react-navigation/native-stack";
+import { SymbolView } from "expo-symbols";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -33,14 +34,14 @@ import { getCombination } from "@/data/colorIndex";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { i18n } from "@/i18n";
 import { deleteItemFiles } from "@/lib/armario/wardrobeFiles";
-import { hapticLight, hapticMedium } from "@/lib/haptics";
+import { hapticLight, hapticMedium, hapticRigid } from "@/lib/haptics";
 import {
 	assign,
 	cascadeDeleteAssignmentsForItem,
 	removeItem,
 	unassign,
 } from "@/lib/wardrobeRepo";
-import type { WardrobeItem } from "@/lib/wardrobeTypes";
+import type { WardrobeCategory, WardrobeItem } from "@/lib/wardrobeTypes";
 import type {
 	FavoritesStackParamList,
 	RootStackParamList,
@@ -59,6 +60,14 @@ const SHEET_HEIGHT_RATIO = 0.78;
 const GRID_COLUMNS = 3;
 const GRID_H_PADDING = 16;
 const GRID_GAP = 12;
+const EDIT_MODE_FADE_DURATION = 250;
+
+const categoryLabelKey = {
+	top: "rowTop",
+	bottom: "rowBottom",
+	footwear: "rowFootwear",
+	accessory: "rowAccessory",
+} as const satisfies Record<WardrobeCategory, string>;
 
 type ArmarioPickerNav = NativeStackNavigationProp<
 	FavoritesStackParamList,
@@ -99,9 +108,11 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 		GRID_COLUMNS;
 
 	const translateY = useSharedValue(sheetHeight);
+	const editOpacity = useSharedValue(0);
 	const isClosing = useRef(false);
 
 	const [pendingDelete, setPendingDelete] = useState<WardrobeItem | null>(null);
+	const [isEditMode, setIsEditMode] = useState(false);
 	const pendingDeleteAssignmentCount = useMemo(() => {
 		if (!pendingDelete) return 0;
 		return assignments.filter((a) => a.wardrobeItemId === pendingDelete.id)
@@ -227,8 +238,48 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 		});
 	}, [rootNavigation, handleCutoutSaved]);
 
-	const handleLongPressItem = useCallback((item: WardrobeItem) => {
+	const enterEditMode = useCallback(() => {
 		hapticMedium();
+		setIsEditMode(true);
+		AccessibilityInfo.announceForAccessibility(
+			i18n.t("armario.s3.editMode.enterAnnouncement"),
+		);
+		if (reducedMotion) {
+			editOpacity.value = 1;
+		} else {
+			editOpacity.value = withTiming(1, {
+				duration: EDIT_MODE_FADE_DURATION,
+				easing: Easing.out(Easing.cubic),
+			});
+		}
+	}, [reducedMotion, editOpacity]);
+
+	const exitEditMode = useCallback(() => {
+		if (reducedMotion) {
+			editOpacity.value = 0;
+			setIsEditMode(false);
+			return;
+		}
+		editOpacity.value = withTiming(
+			0,
+			{
+				duration: EDIT_MODE_FADE_DURATION,
+				easing: Easing.in(Easing.cubic),
+			},
+			(finished) => {
+				if (finished) {
+					runOnJS(setIsEditMode)(false);
+				}
+			},
+		);
+	}, [reducedMotion, editOpacity]);
+
+	const handleLongPressTile = useCallback(() => {
+		enterEditMode();
+	}, [enterEditMode]);
+
+	const handleDeleteBadgePress = useCallback((item: WardrobeItem) => {
+		hapticRigid();
 		setPendingDelete(item);
 	}, []);
 
@@ -280,6 +331,10 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 
 	const sheetStyle = useAnimatedStyle(() => ({
 		transform: [{ translateY: translateY.value }],
+	}));
+
+	const editBadgeAnimStyle = useAnimatedStyle(() => ({
+		opacity: editOpacity.value,
 	}));
 
 	if (missingOrInvalid) {
@@ -342,31 +397,92 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 						/>
 					</View>
 
-					<View
-						className="flex-row items-center"
-						style={{
-							paddingHorizontal: GRID_H_PADDING,
-							paddingTop: 16,
-							paddingBottom: 16,
-							gap: 8,
-							borderBottomWidth: 1,
-							borderBottomColor: wadaTokens.hairline,
-						}}
-					>
-						<WadaColorDot hex={wadaColor.hex} size={14} />
-						<Text
-							testID="s3-picker-title"
-							numberOfLines={1}
+					{isEditMode ? (
+						<View
+							className="flex-row items-center"
 							style={{
-								fontFamily: "NotoSerifJP_500Medium",
-								fontSize: 20,
-								color: wadaTokens.textPrimary,
-								flex: 1,
+								paddingHorizontal: GRID_H_PADDING,
+								paddingTop: 16,
+								paddingBottom: 16,
+								borderBottomWidth: 1,
+								borderBottomColor: wadaTokens.hairline,
 							}}
 						>
-							{t("armario.s3.pickerTitle", { color: wadaColor.nameEn })}
-						</Text>
-					</View>
+							<Pressable
+								testID="s3-edit-cancel"
+								onPress={exitEditMode}
+								accessibilityRole="button"
+								accessibilityLabel={t("armario.s3.editMode.cancelA11yLabel")}
+								style={{ minHeight: 44, justifyContent: "center" }}
+							>
+								<Text
+									style={{
+										fontFamily: "Inter_500Medium",
+										fontSize: 15,
+										color: wadaTokens.textSecondary,
+									}}
+								>
+									{t("armario.s3.editMode.cancel")}
+								</Text>
+							</Pressable>
+							<Text
+								testID="s3-edit-title"
+								numberOfLines={1}
+								style={{
+									fontFamily: "Inter_500Medium",
+									fontSize: 17,
+									color: wadaTokens.textPrimary,
+									textAlign: "center",
+									flex: 1,
+								}}
+							>
+								{t("armario.s3.editMode.title")}
+							</Text>
+							<Pressable
+								testID="s3-edit-done"
+								onPress={exitEditMode}
+								accessibilityRole="button"
+								accessibilityLabel={t("armario.s3.editMode.doneA11yLabel")}
+								style={{ minHeight: 44, justifyContent: "center" }}
+							>
+								<Text
+									style={{
+										fontFamily: "Inter_500Medium",
+										fontSize: 15,
+										color: wadaTokens.textPrimary,
+									}}
+								>
+									{t("armario.s3.editMode.done")}
+								</Text>
+							</Pressable>
+						</View>
+					) : (
+						<View
+							className="flex-row items-center"
+							style={{
+								paddingHorizontal: GRID_H_PADDING,
+								paddingTop: 16,
+								paddingBottom: 16,
+								gap: 8,
+								borderBottomWidth: 1,
+								borderBottomColor: wadaTokens.hairline,
+							}}
+						>
+							<WadaColorDot hex={wadaColor.hex} size={14} />
+							<Text
+								testID="s3-picker-title"
+								numberOfLines={1}
+								style={{
+									fontFamily: "NotoSerifJP_500Medium",
+									fontSize: 20,
+									color: wadaTokens.textPrimary,
+									flex: 1,
+								}}
+							>
+								{t("armario.s3.pickerTitle", { color: wadaColor.nameEn })}
+							</Text>
+						</View>
+					)}
 
 					{isEmpty ? (
 						<View
@@ -413,19 +529,32 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 							}}
 							renderItem={({ item }) => {
 								const isConflict = conflictSet.has(item.id);
-								const a11yLabel = t(
+								const baseA11yLabel = t(
 									isConflict
 										? "armario.s3.itemA11yAssignedElsewhere"
 										: "armario.s3.itemA11y",
 									{ color: wadaColor.nameEn },
 								);
+								const tileA11yLabel = isEditMode
+									? t("armario.s3.editMode.tileA11yInEditMode")
+									: baseA11yLabel;
+								const deleteA11yLabel = t(
+									"armario.s3.editMode.deleteA11yLabel",
+									{
+										category: t(
+											`unifiedCamera.categorySheet.${categoryLabelKey[item.category]}`,
+										).toLowerCase(),
+									},
+								);
 								return (
 									<Pressable
 										testID={`s3-item-${item.id}`}
 										accessibilityRole="button"
-										accessibilityLabel={a11yLabel}
-										onPress={() => commitAndDismiss(item.id)}
-										onLongPress={() => handleLongPressItem(item)}
+										accessibilityLabel={tileA11yLabel}
+										onPress={
+											isEditMode ? undefined : () => commitAndDismiss(item.id)
+										}
+										onLongPress={handleLongPressTile}
 										delayLongPress={450}
 										style={{
 											width: tileSize,
@@ -464,6 +593,46 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 													{t("armario.s3.assignedElsewhere")}
 												</Text>
 											</View>
+										)}
+										{/* Story 14.12b: pencil icon sibling added here (top-right) */}
+										{isEditMode && (
+											<Animated.View
+												style={[
+													editBadgeAnimStyle,
+													{
+														position: "absolute",
+														top: 4,
+														left: 4,
+														zIndex: 2,
+													},
+												]}
+											>
+												<Pressable
+													testID={`armario-delete-${item.id}`}
+													onPress={() => handleDeleteBadgePress(item)}
+													hitSlop={10}
+													accessibilityRole="button"
+													accessibilityLabel={deleteA11yLabel}
+													style={{
+														width: 24,
+														height: 24,
+														borderRadius: 12,
+														backgroundColor: wadaTokens.bgPaper,
+														borderWidth: 1,
+														borderColor: wadaTokens.textSecondary,
+														alignItems: "center",
+														justifyContent: "center",
+													}}
+												>
+													<SymbolView
+														name="minus"
+														size={14}
+														tintColor={wadaTokens.textPrimary}
+														type="hierarchical"
+														resizeMode="scaleAspectFit"
+													/>
+												</Pressable>
+											</Animated.View>
 										)}
 									</Pressable>
 								);
