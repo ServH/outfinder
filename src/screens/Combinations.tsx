@@ -68,16 +68,14 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 		return null;
 	}
 
-	const comboCount = combinations.length;
-
 	return (
 		<View className="flex-1" style={{ backgroundColor: wadaTokens.bgPaper }}>
-			{/* Header: ← ColorName + combo count (matches State 2 style) */}
+			{/* Header: ← ColorName */}
 			<View
 				testID="color-header"
-				className="flex-row items-center justify-between pb-2"
+				className="flex-row items-center pb-2"
 				style={{ paddingTop: 60, paddingHorizontal: isTablet ? 24 : 16 }}
-				accessibilityLabel={`${color.nameEn}, ${comboCount} ${t("combinations.combination", { count: comboCount })}`}
+				accessibilityLabel={color.nameEn}
 			>
 				<Pressable
 					onPress={() => navigation.goBack()}
@@ -99,17 +97,6 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 						← {color.nameEn}
 					</Text>
 				</Pressable>
-				<Text
-					style={{
-						fontFamily: "Inter_400Regular",
-						fontSize: 15,
-						color: wadaTokens.textSecondary,
-						flexShrink: 0,
-					}}
-					testID="combo-count"
-				>
-					{comboCount} {t("combinations.combo", { count: comboCount })}
-				</Text>
 			</View>
 
 			{/* Combo cards feed */}

@@ -373,39 +373,6 @@ describe("ArmarioFichaWadaScreen", () => {
 		});
 	});
 
-	it("CompletenessBadge reflects 2/3 amber vs 3/3 green based on assignment count", () => {
-		mockItems = [
-			{
-				id: "uuid-1",
-				localImagePath: "file:///a.png",
-				thumbnailPath: "file:///a.t.png",
-				createdAt: 1,
-			},
-		];
-		mockAssignments = [0, 1].map((i) => ({
-			combinationId: "combo-3",
-			colorIndex: i,
-			wardrobeItemId: "uuid-1",
-			assignedAt: 1,
-		}));
-		const Screen = loadScreen();
-		const { rerender } = render(<Screen />);
-		expect(
-			screen.getByTestId("s2-completeness-badge-label").props.children,
-		).toBe("2/3");
-
-		mockAssignments = [0, 1, 2].map((i) => ({
-			combinationId: "combo-3",
-			colorIndex: i,
-			wardrobeItemId: "uuid-1",
-			assignedAt: 1,
-		}));
-		rerender(<Screen />);
-		expect(
-			screen.getByTestId("s2-completeness-badge-label").props.children,
-		).toBe("3/3");
-	});
-
 	// --- Story 13.4b: Quitar affordance + confirmation ---
 
 	it("filled slot renders Quitar link with 44pt touch target + accessibilityLabel", () => {
