@@ -194,6 +194,16 @@ These were reviewed and deliberately left as-is. Revisit only if the surrounding
 
 ---
 
+## Deferred from: code review of 14-9-guardar-para-luego-ficha-wada (2026-04-22)
+
+- **D-14.9-1** — `ArmarioFichaWadaScreen.tsx:446` — `accessibilityHint` estático no cambia bajo `needsLimitGate`; VoiceOver dice "Añade a Mis Looks" pero la acción abre el paywall. Consistente con el patrón de slot-tap de 14.8. Evaluar en pasada de polish de accesibilidad.
+- **D-14.9-2** — `ArmarioFichaWadaScreen.tsx:458` — Cuando `hydrated=false` el CTA "Guardar para luego" muestra opacity 1 (solo `disabled` bloquea la tap); sighted users no ven indicación de estado loading. Patrón pre-existente igual que "Ver tu look". Añadir `opacity: !hydrated ? 0.5 : needsLimitGate ? 0.4 : 1` si se añade un loading state visual en una pasada futura.
+- **D-14.9-3** — `ArmarioFichaWadaScreen.tsx:126-137` — `announceForAccessibility` se ejecuta fuera del try/catch; si `addFavorite` lanza, VoiceOver anuncia éxito con write fallido. Hereda D-14.8-2 explícitamente aceptado en spec AC #13(i). Fix: mover announce dentro del bloque success cuando addFavorite gane ruta async/fallible.
+- **D-14.9-4** — `ArmarioFichaWadaScreen.tsx:436` — `marginHorizontal: -20` en el divider asume `paddingHorizontal: 20` fijo del contenedor padre. Patrón pre-existente en todos los screens armario. Extraer a `CONTAINER_H_PADDING = 20` como constante compartida si el padding cambia en el futuro.
+- **D-14.9-5** — `ArmarioFichaWadaScreen.tsx:624` — La ruta post-compra desde esta pantalla (`onPurchase={() => gate.handlePurchase(addFavorite)}`) no tiene test dedicado que verifique `addFavorite(blockedCombinationId)` tras compra exitosa. Fuera del scope de AC #13. Cubrir en una historia de hardening de paywall si D-14.8-4 se aborda.
+
+---
+
 ## Deferred from: code review of 14-8-auto-save-look-on-first-assignment (2026-04-22)
 
 - **D-14.8-1** — `ArmarioPickerScreen.tsx:190-195` — `addFavorite` error swallowed silently in production (`__DEV__`-only guard). Synchronous Zustand setter won't throw in practice; addFavorite failure is theoretical. Fix if store gains async persistence path.

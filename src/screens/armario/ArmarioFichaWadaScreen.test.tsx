@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
-import { hapticLight } from "@/lib/haptics";
+import { AccessibilityInfo } from "react-native";
+import { hapticLight, hapticMedium } from "@/lib/haptics";
 import { unassign } from "@/lib/wardrobeRepo";
 
 let mockIsPremium = false;
@@ -115,25 +116,23 @@ let mockItems: Array<{
 	createdAt: number;
 }> = [];
 let mockFavorites: Set<string> = new Set();
+let mockHydrated = true;
 const mockAddFavorite = jest.fn();
-jest.mock("@/stores/misLooksStore", () => ({
-	useMisLooksStore: (
-		selector: (s: {
-			hydrated: boolean;
-			assignments: typeof mockAssignments;
-			items: typeof mockItems;
-			favorites: Set<string>;
-			addFavorite: (id: string) => void;
-		}) => unknown,
-	) =>
-		selector({
-			hydrated: true,
-			assignments: mockAssignments,
-			items: mockItems,
-			favorites: mockFavorites,
-			addFavorite: mockAddFavorite,
-		}),
-}));
+jest.mock("@/stores/misLooksStore", () => {
+	const buildState = () => ({
+		hydrated: mockHydrated,
+		assignments: mockAssignments,
+		items: mockItems,
+		favorites: mockFavorites,
+		addFavorite: mockAddFavorite,
+	});
+	const hook = (selector: (s: ReturnType<typeof buildState>) => unknown) =>
+		selector(buildState());
+	(
+		hook as unknown as { getState: () => ReturnType<typeof buildState> }
+	).getState = () => buildState();
+	return { useMisLooksStore: hook };
+});
 
 const threeColorCombo = {
 	id: "combo-3",
@@ -161,12 +160,14 @@ describe("ArmarioFichaWadaScreen", () => {
 		mockReplace.mockClear();
 		mockPush.mockClear();
 		(hapticLight as jest.Mock).mockClear();
+		(hapticMedium as jest.Mock).mockClear();
 		(unassign as jest.Mock).mockClear();
 		mockHandlePremiumGate.mockClear();
 		mockHandlePurchase.mockClear();
 		mockHandleDismiss.mockClear();
 		mockHandleRestore.mockClear();
 		mockAddFavorite.mockClear();
+		mockAddFavorite.mockImplementation(() => {});
 		mockCombination = threeColorCombo;
 		mockRouteParams = { combinationId: "combo-3" };
 		mockAssignments = [];
@@ -174,6 +175,11 @@ describe("ArmarioFichaWadaScreen", () => {
 		mockFavorites = new Set();
 		mockIsPremium = false;
 		mockPaywallVisible = false;
+		mockHydrated = true;
+		jest
+			.spyOn(AccessibilityInfo, "announceForAccessibility")
+			.mockImplementation(() => {})
+			.mockClear();
 	});
 
 	it("renders N slot cards for a 3-color combination", () => {
@@ -650,5 +656,157 @@ describe("ArmarioFichaWadaScreen", () => {
 		render(<Screen />);
 		const cta = screen.getByTestId("s2-view-look-cta");
 		expect(cta.props.accessibilityState.disabled).toBe(false);
+	});
+
+	// --- Story 14.9: "Guardar para luego" explicit bookmark CTA ---
+
+	it("renders Guardar para luego CTA + divider when combination not yet favorited (AC #1, #2)", () => {
+		const Screen = loadScreen();
+		render(<Screen />);
+		const cta = screen.getByTestId("s2-save-for-later-cta");
+		expect(cta).toBeTruthy();
+		expect(screen.getByTestId("s2-save-for-later-divider")).toBeTruthy();
+		expect(cta.props.accessibilityRole).toBe("button");
+		expect(cta.props.accessibilityLabel).toBe(
+			"Save this look to work on later",
+		);
+		expect(cta.props.accessibilityHint).toBe(
+			"Adds it to My Looks with no garments assigned",
+		);
+	});
+
+	it("hides Guardar para luego CTA + divider when combination already in favorites (AC #9)", () => {
+		mockFavorites = new Set(["combo-3"]);
+		const Screen = loadScreen();
+		render(<Screen />);
+		expect(screen.queryByTestId("s2-save-for-later-cta")).toBeNull();
+		expect(screen.queryByTestId("s2-save-for-later-divider")).toBeNull();
+	});
+
+	it("CTA disabled while hydrated=false (AC #2)", () => {
+		mockHydrated = false;
+		const Screen = loadScreen();
+		render(<Screen />);
+		const cta = screen.getByTestId("s2-save-for-later-cta");
+		expect(cta.props.accessibilityState.disabled).toBe(true);
+	});
+
+	it("tap writes favorite via addFavorite + hapticMedium + announceForAccessibility (AC #4)", async () => {
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-save-for-later-cta"));
+		});
+
+		expect(hapticMedium).toHaveBeenCalledTimes(1);
+		expect(mockAddFavorite).toHaveBeenCalledWith("combo-3");
+		expect(mockAddFavorite).toHaveBeenCalledTimes(1);
+		expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledWith(
+			"Look saved to My Looks",
+		);
+		expect(mockHandlePremiumGate).not.toHaveBeenCalled();
+		expect(mockGoBack).not.toHaveBeenCalled();
+	});
+
+	it("tap with paywall-limbo opens paywall, NOT addFavorite (AC #5)", async () => {
+		mockIsPremium = false;
+		mockFavorites = new Set(["a", "b", "c", "d", "e"]);
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-save-for-later-cta"));
+		});
+
+		expect(hapticMedium).toHaveBeenCalledTimes(1);
+		expect(mockHandlePremiumGate).toHaveBeenCalledWith("combo-3");
+		expect(mockAddFavorite).not.toHaveBeenCalled();
+		expect(AccessibilityInfo.announceForAccessibility).not.toHaveBeenCalled();
+	});
+
+	it("CTA renders at opacity 0.4 under paywall-limbo (AC #2, #6)", () => {
+		mockIsPremium = false;
+		mockFavorites = new Set(["a", "b", "c", "d", "e"]);
+		const Screen = loadScreen();
+		render(<Screen />);
+		const cta = screen.getByTestId("s2-save-for-later-cta");
+		expect(cta.props.style.opacity).toBe(0.4);
+		// 14.8 strip and 14.9 CTA coexist on the screen.
+		expect(screen.getByTestId("mislooks-limit-strip")).toBeTruthy();
+	});
+
+	it("premium user + size 100 + tap writes favorite without paywall (AC #10)", async () => {
+		mockIsPremium = true;
+		const bigSet = new Set<string>();
+		for (let i = 0; i < 100; i++) bigSet.add(`c-${i}`);
+		mockFavorites = bigSet;
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-save-for-later-cta"));
+		});
+
+		expect(mockAddFavorite).toHaveBeenCalledWith("combo-3");
+		expect(mockHandlePremiumGate).not.toHaveBeenCalled();
+		expect(screen.queryByTestId("mislooks-limit-strip")).toBeNull();
+	});
+
+	it("addFavorite throw is contained — handler does not rethrow, announce still fires (AC #13 resilience)", async () => {
+		mockAddFavorite.mockImplementation(() => {
+			throw new Error("boom");
+		});
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			expect(() =>
+				fireEvent.press(screen.getByTestId("s2-save-for-later-cta")),
+			).not.toThrow();
+		});
+
+		expect(mockAddFavorite).toHaveBeenCalledWith("combo-3");
+		// `prevFavorited` was false before the (throwing) write, so the announce
+		// still fires — this mirrors the pre-existing 14.8 D-14.8-2 design.
+		expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledWith(
+			"Look saved to My Looks",
+		);
+	});
+
+	it("bookmark SymbolView renders inside the CTA (AC #13 k)", () => {
+		const Screen = loadScreen();
+		render(<Screen />);
+		expect(screen.getByTestId("symbol-bookmark")).toBeTruthy();
+	});
+
+	it("haptic is hapticMedium, NOT hapticLight, on CTA tap (AC #13 l)", async () => {
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-save-for-later-cta"));
+		});
+
+		expect(hapticMedium).toHaveBeenCalledTimes(1);
+		expect(hapticLight).not.toHaveBeenCalled();
+	});
+
+	it("rapid double-tap — addFavorite called at most twice but announce fires once (AC #13 h)", async () => {
+		mockAddFavorite.mockImplementation(() => {
+			// Simulate idempotent store write: first call mutates mockFavorites so
+			// getState() on the second tap sees prevFavorited=true → announce suppressed.
+			mockFavorites = new Set([...mockFavorites, "combo-3"]);
+		});
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-save-for-later-cta"));
+			fireEvent.press(screen.getByTestId("s2-save-for-later-cta"));
+		});
+
+		expect(mockAddFavorite.mock.calls.length).toBeLessThanOrEqual(2);
+		expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledTimes(1);
 	});
 });

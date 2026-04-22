@@ -225,7 +225,10 @@
 			"slotRemoveA11y": "Remove garment from {{color}}",
 			"quitarConfirmBody": "Remove the garment from {{color}}?",
 			"quitarConfirmYes": "Remove",
-			"lookSavedAnnouncement": "Look saved to My Looks"
+			"lookSavedAnnouncement": "Look saved to My Looks",
+			"saveForLaterCta": "Save for later",
+			"saveForLaterA11yLabel": "Save this look to work on later",
+			"saveForLaterA11yHint": "Adds it to My Looks with no garments assigned"
 		},
 		"misLooksLimit": {
 			"strip": "You've reached the 5 saved-looks limit. Delete one to continue.",

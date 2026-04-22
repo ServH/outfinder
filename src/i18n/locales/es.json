@@ -225,7 +225,10 @@
 			"slotRemoveA11y": "Quitar prenda de {{color}}",
 			"quitarConfirmBody": "¿Quitar la prenda de {{color}}?",
 			"quitarConfirmYes": "Quitar",
-			"lookSavedAnnouncement": "Look guardado en Mis Looks"
+			"lookSavedAnnouncement": "Look guardado en Mis Looks",
+			"saveForLaterCta": "Guardar para luego",
+			"saveForLaterA11yLabel": "Guardar este look para trabajarlo más tarde",
+			"saveForLaterA11yHint": "Lo añade a Mis Looks sin prendas asignadas"
 		},
 		"misLooksLimit": {
 			"strip": "Alcanzaste el límite de 5 looks guardados. Elimina uno para continuar.",
