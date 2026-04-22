@@ -110,10 +110,15 @@
   3. Ver que la frase CTA aparece dentro del texto de la sugerencia **y** en el botón inmediatamente debajo.
 - **Dispositivo / build:** iPhone físico de Alejandro (misma build que BUG-001/002/003)
 - **Severidad:** `medium` _(afecta claridad de copy en un camino frecuente; confirmar)_
-- **Estado:** new
+- **Estado:** fixed — 2026-04-22 · fix-in-14.13
 - **Notas:**
   - Revisar el componente de la card de sugerencia — probablemente el copy interno incluye el CTA como cierre y a la vez el botón lo renderiza como label propio.
   - **Decisión confirmada por Alejandro:** dejar el CTA **solo en el botón negro**; reescribir el texto de la sugerencia para que termine sin repetir la acción (ej. "Ideal para equilibrar tu look." sin "Añadir prenda en Rose" al final). El texto interno de la card no debe repetir el call-to-action — es redundante.
+- **Solución:**
+  - Diagnóstico: el copy interno de la card (`suggestionCopyAccessory/Main/Layer` en `es.json`/`en.json`) ya era limpio (no incluía el CTA) — la duplicación la causaba el propio componente `SuggestionCard` en `ArmarioSugerenciaArmoniaScreen.tsx`, que renderizaba un tercer `<Text testID="s5-suggestion-card-cta">` con la cadena `"Añadir prenda en {{color}}"` JUSTO sobre el botón negro que ya llevaba la misma label.
+  - `src/screens/armario/ArmarioSugerenciaArmoniaScreen.tsx`: eliminado el bloque `<Text testID="s5-suggestion-card-cta">{ctaText}</Text>` dentro de `SuggestionCard`; quitado el prop `ctaText` de `SuggestionCardProps`, de la firma de la función y del call-site. La card queda con solo `titleText` + `bodyText`; el botón negro inferior (`s5-primary-cta`) sigue siendo el único CTA explícito.
+  - **A11y preservada:** la card sigue siendo tappable (`<Pressable onPress={handleOpenPicker}>`) y su `accessibilityLabel` sigue siendo `"Añadir prenda en {{color}}"` — VoiceOver anuncia la acción al enfocar la card. No se pierde funcionalidad, solo redundancia visual.
+  - Tests: cero borrados. Los tests existentes de `ArmarioSugerenciaArmoniaScreen.test.tsx` solo asertan sobre `s5-suggestion-card` (wrapper), `s5-suggestion-card-body` y los CTAs de pantalla — ningún test asertaba sobre el `s5-suggestion-card-cta` ahora removido. 10/10 tests del screen pasan.
 
 ### BUG-005 — Layout Mis Looks: relación entre "En curso" y filtros de ordenación confusa
 - **Fecha:** 2026-04-22
@@ -186,7 +191,30 @@
 | BUG-001 | Navegación apilada tras guardar prenda               | high      | new    | —                 |
 | BUG-002 | Contador "X combos" en header                        | polish    | fixed  | fix-in-14.13      |
 | BUG-003 | Contador "1/3" en asignación (S2 Ficha Wada)         | polish    | fixed  | fix-in-14.13      |
-| BUG-004 | CTA duplicado en sugerencia de prenda faltante       | medium    | new    | —                 |
+| BUG-004 | CTA duplicado en sugerencia de prenda faltante       | medium    | fixed  | fix-in-14.13      |
 | BUG-005 | Layout Mis Looks "En curso" vs filtros confuso       | medium    | new    | —                 |
 | BUG-006 | Flash Mis Looks antes del selector desde Visualizer  | medium    | new    | —                 |
 | BUG-007 | "Sin prendas" redundante en asignación               | polish    | fixed  | fix-in-14.13      |
+| BUG-008 | Falta feedback visual tras "Usar esta foto" (~1s)    | medium    | new    | —                 |
+
+### BUG-008 — Falta feedback visual tras pulsar "Usar esta foto" al añadir prenda a combo
+- **Fecha:** 2026-04-22
+- **Pantalla / Área:** Flow de completar combinación — añadir prenda nueva → pantalla de preview de foto → botón "Usar esta foto"
+- **Qué observo:** Al pulsar "Usar esta foto" tras hacer la foto de una prenda nueva (flow: completar combinación → cámara → preview), hay aproximadamente **1 segundo** de espera en un iPhone 14 sin ningún feedback visual. El usuario no sabe si se ha pulsado, si está procesando o si algo se ha colgado.
+- **Esperado:** Feedback visual inmediato que indique que se está procesando (spinner / estado loading en el botón, overlay sutil, o transición animada) durante el tiempo entre la pulsación y el siguiente paso del flow.
+- **Pasos para reproducir:**
+  1. Entrar al flow de completar una combinación que necesita una prenda más.
+  2. Abrir la cámara para añadir una prenda nueva.
+  3. Tomar la foto → llegar a la pantalla de preview.
+  4. Pulsar "Usar esta foto".
+  5. Observar que durante ~1s no hay ninguna señal visual de que se esté procesando.
+- **Dispositivo / build:** iPhone 14 físico de Alejandro (misma build que bugs previos)
+- **Severidad:** `medium` _(afecta percepción de calidad/respuesta en un camino crítico; no rompe pero invita a pulsar de nuevo o dudar)_
+- **Estado:** new
+- **Notas:**
+  - Durante ese segundo se están ejecutando probablemente: recorte (Vision / Swift), extracción de color dominante (`react-native-image-colors`), y persistencia. Todo síncrono desde la UI aunque haya pasos async por debajo.
+  - Posibles soluciones (elegir según arquitectura):
+    - **Estado loading en el botón** `"Usar esta foto"` → spinner + disable durante el procesamiento (mínimo viable).
+    - **Overlay full-screen** con mensaje breve ("Procesando…" / "Extrayendo color…") si queremos aprovechar para comunicar valor (opción más rica).
+    - **Navegación inmediata** a la siguiente pantalla con skeleton loader para el preview de la prenda mientras se completa el procesamiento en background (óptimo pero más invasivo).
+  - Revisar si este mismo gap existe en el flow equivalente de **cámara desde Home** (post-guardado de prenda inicial); si sí, aplicar el mismo patrón de feedback para mantener consistencia.

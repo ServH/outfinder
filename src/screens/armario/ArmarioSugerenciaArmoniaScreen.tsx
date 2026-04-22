@@ -55,7 +55,6 @@ interface MissingColor {
 interface SuggestionCardProps {
 	titleText: string;
 	bodyText: string;
-	ctaText: string;
 	colorHex: string;
 	onPress: () => void;
 	accessibilityLabel: string;
@@ -64,7 +63,6 @@ interface SuggestionCardProps {
 function SuggestionCard({
 	titleText,
 	bodyText,
-	ctaText,
 	colorHex,
 	onPress,
 	accessibilityLabel,
@@ -113,17 +111,6 @@ function SuggestionCard({
 				}}
 			>
 				{bodyText}
-			</Text>
-			<Text
-				testID="s5-suggestion-card-cta"
-				style={{
-					fontFamily: "Inter_500Medium",
-					fontSize: 15,
-					color: wadaTokens.textPrimary,
-					marginTop: 12,
-				}}
-			>
-				{ctaText}
 			</Text>
 		</Pressable>
 	);
@@ -452,7 +439,6 @@ export function ArmarioSugerenciaArmoniaScreen(
 			<SuggestionCard
 				titleText={t("armario.s5.suggestionTitle")}
 				bodyText={t(suggestionCopyKey, { color: missingColor.nameEn })}
-				ctaText={primaryCtaLabel}
 				colorHex={missingColor.hex}
 				onPress={handleOpenPicker}
 				accessibilityLabel={primaryCtaLabel}
