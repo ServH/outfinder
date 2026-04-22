@@ -13,6 +13,7 @@ import { getAssignmentCount } from "@/lib/wardrobeRepo";
 import { FavoritesList } from "./FavoritesList";
 
 const mockPush = jest.fn();
+const mockRootNavigate = jest.fn();
 let mockFocusEffectCallback: (() => void) | null = null;
 
 jest.mock("@react-native-async-storage/async-storage", () =>
@@ -82,6 +83,11 @@ jest.mock("@react-navigation/native", () => ({
 		push: mockPush,
 		navigate: jest.fn(),
 		goBack: jest.fn(),
+		getParent: () => ({
+			getParent: () => ({
+				navigate: mockRootNavigate,
+			}),
+		}),
 	}),
 	useFocusEffect: (cb: () => void) => {
 		mockFocusEffectCallback = cb;
@@ -150,6 +156,7 @@ describe("FavoritesList", () => {
 		mockFavorites = new Set<string>();
 		mockToggleFavorite.mockClear();
 		mockPush.mockClear();
+		mockRootNavigate.mockClear();
 		mockHandlePremiumGate.mockClear();
 		mockToastVisible = false;
 		mockFocusEffectCallback = null;
@@ -859,6 +866,113 @@ describe("FavoritesList", () => {
 		const texts = ctaEls.map((el) => el.props.children as string);
 		expect(texts).toContain("See your look \u2192");
 		expect(texts).toContain("Assign garments \u2192");
+	});
+
+	// --- Story 14.10: "+ Nuevo look" entry-point card ---
+
+	// DFS helper: collects testIDs in document order for order assertions
+	function collectTestIDs(node: unknown): string[] {
+		if (!node || typeof node !== "object") return [];
+		const n = node as { props?: { testID?: string }; children?: unknown };
+		const ids: string[] = n.props?.testID ? [n.props.testID] : [];
+		if (Array.isArray(n.children))
+			ids.push(...n.children.flatMap(collectTestIDs));
+		return ids;
+	}
+
+	it("renders the Nuevo look CTA in empty state", () => {
+		mockFavorites = new Set<string>();
+		const { toJSON } = render(<FavoritesList />);
+
+		expect(screen.getByTestId("mis-looks-new-look-cta")).toBeTruthy();
+		expect(screen.getByTestId("empty-state")).toBeTruthy();
+		// AC #9.1: CTA must appear before empty-state in the tree
+		const ids = collectTestIDs(toJSON());
+		expect(ids.indexOf("mis-looks-new-look-cta")).toBeLessThan(
+			ids.indexOf("empty-state"),
+		);
+	});
+
+	it("renders the Nuevo look CTA as first ListHeader item when list is populated", () => {
+		mockFavorites = new Set(["p001"]);
+		const { toJSON } = render(<FavoritesList />);
+
+		expect(screen.getByTestId("mis-looks-new-look-cta")).toBeTruthy();
+		expect(screen.getByTestId("sort-pills-row")).toBeTruthy();
+		// AC #9.2: CTA must appear before sort-pills-row in the ListHeader
+		const ids = collectTestIDs(toJSON());
+		expect(ids.indexOf("mis-looks-new-look-cta")).toBeLessThan(
+			ids.indexOf("sort-pills-row"),
+		);
+	});
+
+	it("tapping the CTA navigates to Main → ColorsTab → ColorHome via root", () => {
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+
+		fireEvent.press(screen.getByTestId("mis-looks-new-look-cta"));
+
+		expect(mockRootNavigate).toHaveBeenCalledTimes(1);
+		expect(mockRootNavigate).toHaveBeenCalledWith("Main", {
+			screen: "ColorsTab",
+			params: {
+				screen: "ColorHome",
+			},
+		});
+	});
+
+	it("tapping the CTA fires hapticLight", () => {
+		mockFavorites = new Set<string>();
+		(hapticLight as jest.Mock).mockClear();
+		render(<FavoritesList />);
+
+		fireEvent.press(screen.getByTestId("mis-looks-new-look-cta"));
+
+		expect(hapticLight).toHaveBeenCalledTimes(1);
+	});
+
+	it("tapping the CTA does not mutate favorites (no toggleFavorite, no premium gate)", () => {
+		mockFavorites = new Set<string>();
+		render(<FavoritesList />);
+
+		fireEvent.press(screen.getByTestId("mis-looks-new-look-cta"));
+
+		expect(mockToggleFavorite).not.toHaveBeenCalled();
+		expect(mockHandlePremiumGate).not.toHaveBeenCalled();
+	});
+
+	it("CTA has correct accessibility attributes", () => {
+		mockFavorites = new Set<string>();
+		render(<FavoritesList />);
+
+		const cta = screen.getByTestId("mis-looks-new-look-cta");
+		expect(cta.props.accessibilityRole).toBe("button");
+		expect(cta.props.accessibilityLabel).toBe("Start a new look");
+		expect(cta.props.accessibilityHint).toBe(
+			"Explore Sanzo Wada palettes to start a look",
+		);
+	});
+
+	it("renders sparkles SymbolView inside the CTA", () => {
+		mockFavorites = new Set<string>();
+		const tree = render(<FavoritesList />).toJSON();
+
+		function hasSparkles(node: unknown): boolean {
+			if (!node || typeof node !== "object") return false;
+			const n = node as {
+				type?: unknown;
+				props?: { name?: unknown };
+				children?: unknown;
+			};
+			if (n.type === "SymbolView" && n.props?.name === "sparkles") return true;
+			const children = n.children;
+			if (Array.isArray(children)) {
+				return children.some(hasSparkles);
+			}
+			return false;
+		}
+
+		expect(hasSparkles(tree)).toBe(true);
 	});
 });
 

@@ -17,6 +17,7 @@ import {
 	View,
 } from "react-native";
 import { FavoriteComboEnrichedCard } from "@/components/armario/FavoriteComboEnrichedCard";
+import { NewLookCtaCard } from "@/components/armario/NewLookCtaCard";
 import { ComboCard } from "@/components/ComboCard";
 import { EmptyState } from "@/components/EmptyState";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
@@ -27,7 +28,11 @@ import { sortFavoritesByCompleteness } from "@/lib/armario/sortFavoritesByComple
 import { useFavoritesNumCols, useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
 import { useIsIOS17OrNewer } from "@/lib/platform";
-import type { FavoritesStackParamList, TabParamList } from "@/navigation/types";
+import type {
+	FavoritesStackParamList,
+	RootStackParamList,
+	TabParamList,
+} from "@/navigation/types";
 import { useMisLooksStore } from "@/stores/misLooksStore";
 import { wadaTokens } from "@/styles/theme";
 
@@ -68,6 +73,18 @@ export function FavoritesList(_props: FavoritesListProps) {
 		hapticLight();
 		navigation.navigate("SettingsTab");
 	}
+
+	const handleNewLookPress = useCallback(() => {
+		const rootNav = navigation
+			.getParent()
+			?.getParent<NativeStackNavigationProp<RootStackParamList>>();
+		rootNav?.navigate("Main", {
+			screen: "ColorsTab",
+			params: {
+				screen: "ColorHome",
+			},
+		} as never);
+	}, [navigation]);
 	const numCols = useFavoritesNumCols();
 	const favorites = useMisLooksStore((s) => s.favorites);
 	const toggleFavorite = useMisLooksStore((s) => s.toggleFavorite);
@@ -188,39 +205,42 @@ export function FavoritesList(_props: FavoritesListProps) {
 
 	const listHeaderComponent = useMemo(
 		() => (
-			<View testID="sort-pills-row" className="flex-row gap-2 px-4 py-3">
-				{SORT_PILLS.map(({ mode, labelKey, a11yKey }) => {
-					const isActive = sortMode === mode;
-					const a11yLabel = t(a11yKey);
-					return (
-						<Pressable
-							key={mode}
-							testID={`sort-pill-${mode}`}
-							className={`px-3 py-2 min-h-[44px] justify-center rounded-full ${isActive ? "bg-primary" : "bg-elevated"}`}
-							accessibilityRole="tab"
-							accessibilityLabel={
-								isActive ? `${a11yLabel}, selected` : a11yLabel
-							}
-							accessibilityState={{ selected: isActive }}
-							onPress={() => {
-								hapticLight();
-								setSortMode(mode);
-							}}
-						>
-							{({ pressed }) => (
-								<Text
-									className={`font-sans text-[13px] ${isActive ? "font-medium text-white" : "text-secondary"}`}
-									style={{ opacity: pressed ? 0.7 : 1 }}
-								>
-									{t(labelKey)}
-								</Text>
-							)}
-						</Pressable>
-					);
-				})}
+			<View>
+				<NewLookCtaCard onPress={handleNewLookPress} />
+				<View testID="sort-pills-row" className="flex-row gap-2 px-4 py-3">
+					{SORT_PILLS.map(({ mode, labelKey, a11yKey }) => {
+						const isActive = sortMode === mode;
+						const a11yLabel = t(a11yKey);
+						return (
+							<Pressable
+								key={mode}
+								testID={`sort-pill-${mode}`}
+								className={`px-3 py-2 min-h-[44px] justify-center rounded-full ${isActive ? "bg-primary" : "bg-elevated"}`}
+								accessibilityRole="tab"
+								accessibilityLabel={
+									isActive ? `${a11yLabel}, selected` : a11yLabel
+								}
+								accessibilityState={{ selected: isActive }}
+								onPress={() => {
+									hapticLight();
+									setSortMode(mode);
+								}}
+							>
+								{({ pressed }) => (
+									<Text
+										className={`font-sans text-[13px] ${isActive ? "font-medium text-white" : "text-secondary"}`}
+										style={{ opacity: pressed ? 0.7 : 1 }}
+									>
+										{t(labelKey)}
+									</Text>
+								)}
+							</Pressable>
+						);
+					})}
+				</View>
 			</View>
 		),
-		[sortMode, t],
+		[sortMode, t, handleNewLookPress],
 	);
 
 	const header = (
@@ -266,6 +286,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 				accessibilityLabel={t("favorites.screenLabel")}
 			>
 				{header}
+				<NewLookCtaCard onPress={handleNewLookPress} />
 				<EmptyState
 					title={t("favorites.emptyTitle")}
 					subtitle={t("favorites.emptySubtitle")}

@@ -55,7 +55,13 @@
 		"sortAZLabel": "Sort alphabetically",
 		"sortSizeLabel": "Sort by size",
 		"emptyTitle": "No saved looks yet",
-		"emptySubtitle": "Photograph a garment or pick a palette to begin."
+		"emptySubtitle": "Photograph a garment or pick a palette to begin.",
+		"newLookCta": {
+			"title": "Start a new look",
+			"subtitle": "Explore Sanzo Wada palettes and build your look",
+			"a11yLabel": "Start a new look",
+			"a11yHint": "Explore Sanzo Wada palettes to start a look"
+		}
 	},
 	"settings": {
 		"title": "Settings",
