@@ -1,6 +1,6 @@
 # Story 14.11: Incomplete-looks retention surface
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -485,6 +485,13 @@ No halts. Two test setups required adjustment: (1) component test's i18n mock ne
 - `src/i18n/locales/en.json`
 - `_bmad-output/implementation-artifacts/sprint-status.yaml`
 - `_bmad-output/implementation-artifacts/14-11-incomplete-looks-retention-surface.md`
+
+### Review Findings
+
+- [x] [Review][Defer] Duplicate slot assignment counting not validated in `selectIncompleteLooks` [src/lib/armario/selectIncompleteLooks.ts] — deferred, pre-existing store contract (same pattern as `sortFavoritesByCompleteness.ts`). Store prevents duplicate colorIndex assignments per combinationId.
+- [x] [Review][Defer] `isNavigating.current` not reset on navigation exception [src/screens/FavoritesList.tsx] — deferred, pre-existing pattern shared with `handleComboPress`; reset via `useFocusEffect` on screen focus, which is the established guard.
+- [x] [Review][Defer] Stale assignments for unfavorited combinations accumulate in store without cleanup [src/stores/misLooksStore.ts] — deferred, pre-existing architecture concern not introduced by this story.
+- [x] [Review][Defer] `keyboardShouldPersistTaps` missing on horizontal FlatList inside vertical FlatList [src/components/armario/IncompleteLooksSection.tsx] — deferred, advisory only; not required by spec; consistent with existing horizontal FlatList pattern (HomeState1FabricSwatchGrid).
 
 ### Change Log
 
