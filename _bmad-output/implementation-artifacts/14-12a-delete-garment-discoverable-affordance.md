@@ -1,6 +1,6 @@
 # Story 14.12a: Delete garment discoverable affordance (edit mode)
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -276,3 +276,13 @@ Claude Opus 4.7 (claude-opus-4-7, 1M context)
 2. **Scrim / pan-gesture behavior during edit mode**: The scrim (`s3-scrim`) and pan-to-dismiss remain active — tapping the scrim dismisses the sheet entirely even if the user is mid-delete. This is consistent with the current S3 picker behavior (no modal-within-modal lock). If Alejandro wants the scrim/pan disabled during edit mode (force exit via "Listo" first), add an `isEditMode ? null : onPress={dismissWithAnimation}` gate on the scrim — out of scope for this story.
 3. **`"Cancelar"` vs `"Listo"` semantic equivalence**: Both call `exitEditMode()` — functionally identical. UX-DR3 `:442` explicitly lists this as a Pencil TODO ("Whether 'Cancelar' and 'Listo' are both needed, or only 'Listo'"). Current default: render both for iOS convention compliance. If Alejandro picks Listo-only, remove the `s3-edit-cancel` Pressable.
 4. **Edit-mode nav bar animation**: AC #4 says the nav bar swap is a discrete conditional render (not animated). If Alejandro wants a cross-fade between the Wada title row and the edit nav bar, add a second `headerOpacity` shared value — out of scope for this story.
+
+### Review Findings
+
+- [x] [Review][Patch] P1 — `enterEditMode` has no `isEditMode` guard — long-press while already in edit mode re-fires `hapticMedium` + VoiceOver announcement + restarts fade-in animation [ArmarioPickerScreen.tsx: `handleLongPressTile` / `enterEditMode`] — **applied**: added `if (isEditMode) return;` at start of `enterEditMode`; added `isEditMode` to useCallback deps
+- [x] [Review][Patch] P2 — Delete pipeline ordering invariant test removed and not replaced — new test asserts mocks were called but doesn't verify `cascade < remove < files` via `invocationCallOrder` [ArmarioPickerScreen.test.tsx: `describe("Story 14.12a")` confirm test] — **applied**: added `invocationCallOrder` assertions to confirm test; 37/37 passing
+- [x] [Review][Defer] D-14.12a-1 — `exitEditMode` `finished=false` branch (animation cancelled) never calls `runOnJS(setIsEditMode)(false)` — if the animation is interrupted, `isEditMode` stays `true` as stale state [ArmarioPickerScreen.tsx: `exitEditMode` callback] — deferred, Reanimated cancellation edge case; sheet navigates back on dismiss so stale state has no visible surface; matches existing `translateY` pattern in the same file
+- [x] [Review][Defer] D-14.12a-2 — `deleteA11yLabel` computed unconditionally inside `renderItem` regardless of `isEditMode` — adds a nested `t()` call per tile render in non-edit-mode [ArmarioPickerScreen.tsx: `renderItem` deleteA11yLabel] — deferred, micro-optimization; not a correctness issue; typical wardrobe grid is small
+- [x] [Review][Defer] D-14.12a-3 — `s3-edit-cancel` and `s3-edit-done` both call `exitEditMode` — architectural smell if future stories add in-edit-mode state requiring different commit/discard semantics [ArmarioPickerScreen.tsx: header ternary] — deferred, spec-mandated equivalence per AC #2 ("semantically equivalent, no pending state"); Story 14.12b can split if needed
+- [x] [Review][Defer] D-14.12a-4 — `SymbolView name="minus"` has no fallback for iOS < 16 where some SF Symbol variants may not render [ArmarioPickerScreen.tsx: badge SymbolView] — deferred, pre-existing Epic 14 pattern; all other 14.x stories use SymbolView identically; iOS 15 market share declining; consistent with project conventions
+- [x] [Review][Defer] D-14.12a-5 — `reducedMotion` changing mid-animation (user toggles in Settings while fade is in progress) could start a second concurrent `withTiming` on the same `editOpacity` shared value [ArmarioPickerScreen.tsx: `exitEditMode` / `enterEditMode`] — deferred, theoretical race; Reduce Motion toggle typically requires app foreground cycle; matches pre-existing `translateY` risk profile

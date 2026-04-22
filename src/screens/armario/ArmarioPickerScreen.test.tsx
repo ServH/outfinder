@@ -670,6 +670,15 @@ describe("Story 14.12a — edit mode", () => {
 			localImagePath: item.localImagePath,
 			thumbnailPath: item.thumbnailPath,
 		});
+
+		const cascadeOrder = (cascadeDeleteAssignmentsForItem as jest.Mock).mock
+			.invocationCallOrder[0];
+		const removeOrder = (removeItem as jest.Mock).mock.invocationCallOrder[0];
+		const filesOrder = (deleteItemFiles as jest.Mock).mock
+			.invocationCallOrder[0];
+		expect(cascadeOrder).toBeLessThan(removeOrder);
+		expect(removeOrder).toBeLessThan(filesOrder);
+
 		expect(hapticLight).toHaveBeenCalled();
 		expect(
 			screen.queryByTestId("s3-delete-confirm-title", {

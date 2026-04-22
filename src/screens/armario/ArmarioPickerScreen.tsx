@@ -239,6 +239,7 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 	}, [rootNavigation, handleCutoutSaved]);
 
 	const enterEditMode = useCallback(() => {
+		if (isEditMode) return;
 		hapticMedium();
 		setIsEditMode(true);
 		AccessibilityInfo.announceForAccessibility(
@@ -252,7 +253,7 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 				easing: Easing.out(Easing.cubic),
 			});
 		}
-	}, [reducedMotion, editOpacity]);
+	}, [isEditMode, reducedMotion, editOpacity]);
 
 	const exitEditMode = useCallback(() => {
 		if (reducedMotion) {
