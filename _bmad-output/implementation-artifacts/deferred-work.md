@@ -4,6 +4,14 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 14-12a-delete-garment-discoverable-affordance (2026-04-22)
+
+- **D-14.12a-1** — `ArmarioPickerScreen.tsx` `exitEditMode` — `finished=false` cancellation branch never calls `runOnJS(setIsEditMode)(false)`, leaving `isEditMode` as stale `true` if animation is interrupted. Reanimated cancellation edge case; sheet navigates back on dismiss so stale state has no visible surface. Add `else { runOnJS(setIsEditMode)(false); }` or a mounted-ref guard when hardening the edit-mode state machine.
+- **D-14.12a-2** — `ArmarioPickerScreen.tsx` `renderItem` — `deleteA11yLabel` (and its nested `t()` for category lookup) is computed unconditionally on every tile render regardless of `isEditMode`. Micro-optimization only. Move computation inside the `isEditMode && (...)` block or memoize per-item when grid performance becomes a concern.
+- **D-14.12a-3** — `ArmarioPickerScreen.tsx` header ternary — `s3-edit-cancel` and `s3-edit-done` both wire to `exitEditMode` with no semantic distinction. Spec-mandated equivalence (AC #2). If Story 14.12b or later adds in-edit-mode state (e.g., selection) requiring commit vs. discard semantics, split into separate handlers at that point.
+- **D-14.12a-4** — `ArmarioPickerScreen.tsx` `SymbolView name="minus"` — No fallback for iOS < 16. Pre-existing Epic 14 pattern (all 14.x SymbolView usages are unguarded). Revisit if minimum iOS target is raised or if SF Symbol availability issues surface in TestFlight.
+- **D-14.12a-5** — `ArmarioPickerScreen.tsx` `enterEditMode` / `exitEditMode` — Toggling Reduce Motion while a fade animation is in progress starts a second concurrent `withTiming` on the same `editOpacity` shared value. Theoretical race; Reduce Motion toggle typically requires app foreground cycle. Matches pre-existing `translateY` animation risk in the same file.
+
 ## Deferred from: code review of 14-11-incomplete-looks-retention-surface (2026-04-22)
 
 - **D-14.11-1** — `selectIncompleteLooks.ts` — Duplicate slot assignment counting not validated: `assignedCount` could be inflated if two CombinationAssignment records share the same `colorIndex` (data corruption path). Pre-existing store contract (same counting pattern as `sortFavoritesByCompleteness.ts`). Add deduplication by `(combinationId, colorIndex)` pair when hardening wardrobe assignment storage.

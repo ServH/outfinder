@@ -1,12 +1,13 @@
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
 import { deleteItemFiles } from "@/lib/armario/wardrobeFiles";
-import { hapticLight, hapticMedium } from "@/lib/haptics";
+import { hapticLight, hapticMedium, hapticRigid } from "@/lib/haptics";
 import {
 	assign,
 	cascadeDeleteAssignmentsForItem,
 	removeItem,
 	unassign,
 } from "@/lib/wardrobeRepo";
+import type { WardrobeCategory } from "@/lib/wardrobeTypes";
 
 jest.mock("react-native-safe-area-context", () => ({
 	useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
@@ -37,6 +38,7 @@ jest.mock("@react-navigation/native", () => ({
 jest.mock("@/lib/haptics", () => ({
 	hapticLight: jest.fn(),
 	hapticMedium: jest.fn(),
+	hapticRigid: jest.fn(),
 }));
 
 jest.mock("@/lib/wardrobeRepo", () => ({
@@ -79,6 +81,7 @@ let mockItems: Array<{
 	id: string;
 	localImagePath: string;
 	thumbnailPath: string;
+	category: WardrobeCategory;
 	createdAt: number;
 }> = [];
 let mockFavorites: Set<string> = new Set();
@@ -117,11 +120,12 @@ function loadScreen() {
 	return ArmarioPickerScreen;
 }
 
-function sampleItem(id: string) {
+function sampleItem(id: string, category: WardrobeCategory = "top") {
 	return {
 		id,
 		localImagePath: `file:///items/${id}.png`,
 		thumbnailPath: `file:///items/${id}.thumb.png`,
+		category,
 		createdAt: 1,
 	};
 }
@@ -132,6 +136,7 @@ describe("ArmarioPickerScreen", () => {
 		mockNavigate.mockClear();
 		(hapticLight as jest.Mock).mockClear();
 		(hapticMedium as jest.Mock).mockClear();
+		(hapticRigid as jest.Mock).mockClear();
 		(assign as jest.Mock).mockClear();
 		(unassign as jest.Mock).mockClear();
 		(removeItem as jest.Mock).mockClear();
@@ -351,28 +356,10 @@ describe("ArmarioPickerScreen", () => {
 	// root. Each lookup inside the confirm sheet passes
 	// `{ includeHiddenElements: true }`.
 
-	it("long-press on a tile opens delete confirmation sheet with hapticMedium", async () => {
-		mockItems = [sampleItem("u1")];
-		const Screen = loadScreen();
-		render(<Screen />);
-
-		expect(
-			screen.queryByTestId("s3-delete-confirm-title", {
-				includeHiddenElements: true,
-			}),
-		).toBeNull();
-
-		await act(async () => {
-			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
-		});
-
-		expect(hapticMedium).toHaveBeenCalled();
-		expect(
-			screen.getByTestId("s3-delete-confirm-title", {
-				includeHiddenElements: true,
-			}),
-		).toBeTruthy();
-	});
+	// Story 14.12a replaces the direct long-press → confirm sheet path with
+	// long-press → edit mode → (−) tap → confirm sheet. The confirm sheet
+	// itself is reused byte-for-byte, so these legacy body/cancel assertions
+	// still apply — they just open the sheet via the new (−) tap path.
 
 	it("delete confirm body uses no-assignments copy when item is unassigned", async () => {
 		mockItems = [sampleItem("u1")];
@@ -382,6 +369,9 @@ describe("ArmarioPickerScreen", () => {
 
 		await act(async () => {
 			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-delete-u1"));
 		});
 
 		expect(
@@ -413,60 +403,14 @@ describe("ArmarioPickerScreen", () => {
 		await act(async () => {
 			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
 		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-delete-u1"));
+		});
 
 		const body = screen.getByTestId("s3-delete-confirm-body", {
 			includeHiddenElements: true,
 		}).props.children;
 		expect(body).toContain("2 palettes");
-	});
-
-	it("confirm fires cascade-then-removeItem-then-deleteFiles in order, then closes the sheet", async () => {
-		const item = sampleItem("u1");
-		mockItems = [item];
-		mockAssignments = [
-			{
-				combinationId: "combo-3",
-				colorIndex: 1,
-				wardrobeItemId: "u1",
-				assignedAt: 1,
-			},
-		];
-		const Screen = loadScreen();
-		render(<Screen />);
-
-		await act(async () => {
-			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
-		});
-		await act(async () => {
-			fireEvent.press(
-				screen.getByTestId("s3-delete-confirm-yes", {
-					includeHiddenElements: true,
-				}),
-			);
-		});
-
-		expect(cascadeDeleteAssignmentsForItem).toHaveBeenCalledWith("u1");
-		expect(removeItem).toHaveBeenCalledWith("u1");
-		expect(deleteItemFiles).toHaveBeenCalledWith({
-			localImagePath: item.localImagePath,
-			thumbnailPath: item.thumbnailPath,
-		});
-
-		const cascadeOrder = (cascadeDeleteAssignmentsForItem as jest.Mock).mock
-			.invocationCallOrder[0];
-		const removeOrder = (removeItem as jest.Mock).mock.invocationCallOrder[0];
-		const filesOrder = (deleteItemFiles as jest.Mock).mock
-			.invocationCallOrder[0];
-		expect(cascadeOrder).toBeLessThan(removeOrder);
-		expect(removeOrder).toBeLessThan(filesOrder);
-
-		expect(
-			screen.queryByTestId("s3-delete-confirm-title", {
-				includeHiddenElements: true,
-			}),
-		).toBeNull();
-		// Picker stays open — user can assign another item.
-		expect(mockGoBack).not.toHaveBeenCalled();
 	});
 
 	it("cancel dismisses sheet without any repo or file-system calls", async () => {
@@ -476,6 +420,9 @@ describe("ArmarioPickerScreen", () => {
 
 		await act(async () => {
 			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-delete-u1"));
 		});
 		await act(async () => {
 			fireEvent.press(
@@ -612,5 +559,283 @@ describe("ArmarioPickerScreen", () => {
 		expect(assign).toHaveBeenCalledWith("combo-3", 0, "u1");
 		expect(mockGoBack).toHaveBeenCalledTimes(1);
 		warnSpy.mockRestore();
+	});
+});
+
+describe("Story 14.12a — edit mode", () => {
+	beforeEach(() => {
+		mockGoBack.mockClear();
+		mockNavigate.mockClear();
+		(hapticLight as jest.Mock).mockClear();
+		(hapticMedium as jest.Mock).mockClear();
+		(hapticRigid as jest.Mock).mockClear();
+		(assign as jest.Mock).mockClear();
+		(unassign as jest.Mock).mockClear();
+		(removeItem as jest.Mock).mockClear();
+		(cascadeDeleteAssignmentsForItem as jest.Mock).mockClear();
+		(deleteItemFiles as jest.Mock).mockClear();
+		mockAddFavorite.mockReset();
+		mockAnnounce.mockClear();
+		mockCombination = threeColorCombo;
+		mockRouteParams = { combinationId: "combo-3", colorIndex: 0 };
+		mockAssignments = [];
+		mockItems = [];
+		mockFavorites = new Set();
+	});
+
+	it("long-press on a thumbnail enters edit mode, fires hapticMedium, and renders (−) badges on every tile", async () => {
+		mockItems = [sampleItem("u1"), sampleItem("u2")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		expect(screen.queryByTestId("s3-edit-title")).toBeNull();
+		expect(screen.queryByTestId("armario-delete-u1")).toBeNull();
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+
+		expect(hapticMedium).toHaveBeenCalledTimes(1);
+		expect(screen.getByTestId("armario-delete-u1")).toBeTruthy();
+		expect(screen.getByTestId("armario-delete-u2")).toBeTruthy();
+		expect(screen.getByTestId("s3-edit-title")).toBeTruthy();
+		expect(screen.queryByTestId("s3-picker-title")).toBeNull();
+	});
+
+	it("long-press fires VoiceOver announcement with enterAnnouncement string", async () => {
+		mockItems = [sampleItem("u1")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+
+		expect(mockAnnounce).toHaveBeenCalledWith(
+			"Edit mode activated. Tap the delete button on a garment to remove it.",
+		);
+	});
+
+	it("(−) tap opens confirm sheet and fires hapticRigid", async () => {
+		mockItems = [sampleItem("u1")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-delete-u1"));
+		});
+
+		expect(hapticRigid).toHaveBeenCalledTimes(1);
+		expect(
+			screen.getByTestId("s3-delete-confirm-title", {
+				includeHiddenElements: true,
+			}),
+		).toBeTruthy();
+	});
+
+	it("confirm sheet 'Eliminar' runs cascadeDeleteAssignmentsForItem → removeItem → deleteItemFiles", async () => {
+		const item = sampleItem("u1");
+		mockItems = [item];
+		mockAssignments = [
+			{
+				combinationId: "combo-3",
+				colorIndex: 1,
+				wardrobeItemId: "u1",
+				assignedAt: 1,
+			},
+		];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-delete-u1"));
+		});
+		await act(async () => {
+			fireEvent.press(
+				screen.getByTestId("s3-delete-confirm-yes", {
+					includeHiddenElements: true,
+				}),
+			);
+		});
+
+		expect(cascadeDeleteAssignmentsForItem).toHaveBeenCalledWith("u1");
+		expect(removeItem).toHaveBeenCalledWith("u1");
+		expect(deleteItemFiles).toHaveBeenCalledWith({
+			localImagePath: item.localImagePath,
+			thumbnailPath: item.thumbnailPath,
+		});
+
+		const cascadeOrder = (cascadeDeleteAssignmentsForItem as jest.Mock).mock
+			.invocationCallOrder[0];
+		const removeOrder = (removeItem as jest.Mock).mock.invocationCallOrder[0];
+		const filesOrder = (deleteItemFiles as jest.Mock).mock
+			.invocationCallOrder[0];
+		expect(cascadeOrder).toBeLessThan(removeOrder);
+		expect(removeOrder).toBeLessThan(filesOrder);
+
+		expect(hapticLight).toHaveBeenCalled();
+		expect(
+			screen.queryByTestId("s3-delete-confirm-title", {
+				includeHiddenElements: true,
+			}),
+		).toBeNull();
+	});
+
+	it("user remains in edit mode after a successful delete (multi-delete flow)", async () => {
+		mockItems = [sampleItem("u1"), sampleItem("u2")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-delete-u1"));
+		});
+		await act(async () => {
+			fireEvent.press(
+				screen.getByTestId("s3-delete-confirm-yes", {
+					includeHiddenElements: true,
+				}),
+			);
+		});
+
+		expect(screen.getByTestId("s3-edit-title")).toBeTruthy();
+		expect(screen.getByTestId("armario-delete-u2")).toBeTruthy();
+	});
+
+	it("tap 'Listo' exits edit mode, removes (−) badges, and restores the normal header", async () => {
+		mockItems = [sampleItem("u1")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-edit-done"));
+		});
+
+		expect(screen.queryByTestId("s3-edit-title")).toBeNull();
+		expect(screen.queryByTestId("armario-delete-u1")).toBeNull();
+		expect(screen.getByTestId("s3-picker-title")).toBeTruthy();
+	});
+
+	it("tap 'Cancelar' exits edit mode identically to 'Listo'", async () => {
+		mockItems = [sampleItem("u1")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-edit-cancel"));
+		});
+
+		expect(screen.queryByTestId("s3-edit-title")).toBeNull();
+		expect(screen.queryByTestId("armario-delete-u1")).toBeNull();
+		expect(screen.getByTestId("s3-picker-title")).toBeTruthy();
+	});
+
+	it("in edit mode, tapping the tile body does NOT assign and does NOT dismiss", async () => {
+		mockItems = [sampleItem("u1")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-item-u1"));
+		});
+
+		expect(assign).not.toHaveBeenCalled();
+		expect(hapticLight).not.toHaveBeenCalled();
+		expect(mockGoBack).not.toHaveBeenCalled();
+	});
+
+	it("under Reduce Motion, (−) badges appear synchronously on enter edit mode", async () => {
+		mockItems = [sampleItem("u1")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+
+		// useReducedMotion() mock returns true — badge renders immediately.
+		expect(screen.getByTestId("armario-delete-u1")).toBeTruthy();
+	});
+
+	it("under Reduce Motion, 'Listo' exits synchronously without fade-out delay", async () => {
+		mockItems = [sampleItem("u1")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-edit-done"));
+		});
+
+		// Reduce-motion branch flips isEditMode synchronously.
+		expect(screen.queryByTestId("s3-edit-title")).toBeNull();
+	});
+
+	it("each (−) badge has accessibilityLabel interpolated with the item's category", async () => {
+		mockItems = [sampleItem("u1", "top")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+
+		const badge = screen.getByTestId("armario-delete-u1");
+		expect(badge.props.accessibilityLabel).toBe("Delete top");
+		expect(badge.props.accessibilityRole).toBe("button");
+	});
+
+	it("tile accessibilityLabel switches to tileA11yInEditMode when edit mode is active", async () => {
+		mockItems = [sampleItem("u1")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+
+		expect(screen.getByTestId("s3-item-u1").props.accessibilityLabel).toBe(
+			"Garment in edit mode. Use the delete button in the corner to remove it.",
+		);
+	});
+
+	it("(−) badge renders on conflict tiles above the 'Assigned elsewhere' overlay", async () => {
+		mockItems = [sampleItem("u1")];
+		mockAssignments = [
+			{
+				combinationId: "combo-3",
+				colorIndex: 1,
+				wardrobeItemId: "u1",
+				assignedAt: 1,
+			},
+		];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+
+		expect(screen.getByTestId("armario-delete-u1")).toBeTruthy();
+		expect(screen.getByTestId("s3-item-u1-assigned-elsewhere")).toBeTruthy();
 	});
 });

@@ -297,7 +297,17 @@
 			"deleteConfirmBodyNoAssignments": "The photo will be removed from your Wardrobe.",
 			"deleteConfirmBodyWithAssignments_one": "It will also be removed from {{count}} palette where you're using it.",
 			"deleteConfirmBodyWithAssignments_other": "It will also be removed from {{count}} palettes where you're using it.",
-			"deleteConfirmYes": "Delete"
+			"deleteConfirmYes": "Delete",
+			"editMode": {
+				"title": "Edit wardrobe",
+				"cancel": "Cancel",
+				"done": "Done",
+				"cancelA11yLabel": "Cancel",
+				"doneA11yLabel": "Done",
+				"enterAnnouncement": "Edit mode activated. Tap the delete button on a garment to remove it.",
+				"deleteA11yLabel": "Delete {{category}}",
+				"tileA11yInEditMode": "Garment in edit mode. Use the delete button in the corner to remove it."
+			}
 		},
 		"unfavoriteCascade": {
 			"body_one": "The {{count}} garment you assigned to this palette will be removed. Photos stay in your Wardrobe.",

@@ -297,7 +297,17 @@
 			"deleteConfirmBodyNoAssignments": "La foto se eliminará de tu Armario.",
 			"deleteConfirmBodyWithAssignments_one": "También se eliminará de {{count}} paleta donde la has usado.",
 			"deleteConfirmBodyWithAssignments_other": "También se eliminará de {{count}} paletas donde la has usado.",
-			"deleteConfirmYes": "Eliminar"
+			"deleteConfirmYes": "Eliminar",
+			"editMode": {
+				"title": "Editar armario",
+				"cancel": "Cancelar",
+				"done": "Listo",
+				"cancelA11yLabel": "Cancelar",
+				"doneA11yLabel": "Listo",
+				"enterAnnouncement": "Modo edición activado. Toca el botón eliminar de una prenda para borrarla.",
+				"deleteA11yLabel": "Eliminar {{category}}",
+				"tileA11yInEditMode": "Prenda en modo edición. Usa el botón eliminar de la esquina para borrarla."
+			}
 		},
 		"unfavoriteCascade": {
 			"body_one": "Se quitará la {{count}} prenda que habías asignado a esta paleta. Las fotos seguirán en tu Armario.",
