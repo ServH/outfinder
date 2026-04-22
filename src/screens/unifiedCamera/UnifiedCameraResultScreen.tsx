@@ -230,6 +230,9 @@ export function UnifiedCameraResultScreen(
 		}
 	}, [isPremium, paywallVisible, confirming, handleCategoryConfirm]);
 
+	// BUG-001: dismiss the UnifiedCameraRoot modal after pointing Main at
+	// Combinations — otherwise the modal stays mounted and combos renders
+	// with the camera/result screens visible as layers behind it.
 	function handleSecondaryLink() {
 		hapticLight();
 		const rootNav =
@@ -241,6 +244,7 @@ export function UnifiedCameraResultScreen(
 				params: { colorId: confirmedTone.id, capturedHex: dominantHex },
 			},
 		} as never);
+		rootNav?.goBack();
 	}
 
 	const handlePaywallDismiss = useCallback(() => {

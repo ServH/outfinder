@@ -45,10 +45,19 @@
   6. Ir a Mis Looks y notar que tampoco está a pantalla completa hasta retroceder.
 - **Dispositivo / build:** iPhone físico de Alejandro (build instalada — presumiblemente TestFlight v1.3.0 o build local de Epic 14; confirmar build exacta si hace falta)
 - **Severidad:** `high` _(propuesta: rompe sensación de flow lineal en camino crítico post-Epic 14; confirmar)_
-- **Estado:** new
+- **Estado:** fixed — 2026-04-22 · fix-in-14.13
 - **Notas:**
   - Huele al mismo patrón ya resuelto en Epic 12 (`replace` nav sin `fullScreenModal`) — revisar rutas implicadas: pantallas de resultado de cámara, detalle de prenda post-guardado, navegación a Combos y a Mis Looks.
   - Posible causa: uso de `navigation.navigate` (push) donde debería ser `navigation.replace` en los hand-offs post-guardado.
+- **Solución:**
+  - **Root cause confirmado:** no era `push` vs `replace` dentro del stack; era que los CTAs de cross-nav del `UnifiedCameraRoot` (modal sobre RootStack) llamaban `rootNav.navigate("Main", {...})` para actualizar el tab destino, pero **nunca cerraban el modal**. React Navigation mantenía el `UnifiedCameraStack` montado encima de `Main`, así que el usuario veía Combinations (o Mis Looks) detrás de las capas apiladas del camera flow.
+  - Fix: añadir `rootNav?.goBack()` JUSTO DESPUÉS del `rootNav?.navigate(...)` — el orden es crítico. Navigate primero actualiza el nested state bajo el modal (invisible al user), goBack después dispara la animación de dismiss del modal con el destino ya correcto debajo. Invertir el orden daría flash del estado pre-save.
+  - Archivos tocados (3 sitios, 1 patrón):
+    - `src/screens/unifiedCamera/UnifiedCameraPostSaveScreen.tsx:51–69`: primary CTA ("Ver combinaciones con {{wadaName}}") + secondary CTA ("Mis Looks") — ambos ahora `navigate + goBack`.
+    - `src/screens/unifiedCamera/UnifiedCameraResultScreen.tsx:233–244`: `handleSecondaryLink` ("ver combinaciones de este tono" antes de guardar) — mismo fix. Mismo root cause; mismo modal stacking si el user salta directo a Combinations sin guardar.
+  - Comentarios añadidos en cada callsite para que futuros refactors no inviertan el orden.
+  - Tests: **cero borrados**; extendidos los mocks de `getParent()` en `UnifiedCameraPostSaveScreen.test.tsx` + `UnifiedCameraResultScreen.test.tsx` con `mockRootGoBack: jest.fn()`. +3 casos nuevos (uno por callsite) que asertan `mockRootGoBack` fue llamado 1× y que su `invocationCallOrder` es posterior al de `mockRootNavigate`. Baseline: **942 passing / 3 pre-existing / 945 total** — exactamente la baseline 14.12b done recuperada (+3 tests vs. commit de BUG-004).
+  - **Validación on-device pendiente** (tú): flow cámara → guardar prenda → tap "Ver combinaciones" → Combinations debe renderizar limpia sin capas + swipe-back desde Combinations debe llevarte al ColorHome anterior (no al Camera). Ídem con "Mis Looks" como secondary CTA.
 
 <!-- Formato solución por bug cerrado (añadir al final del bug, NO editar el cuerpo original):
 
@@ -161,6 +170,14 @@
     - El handler de "Hacer este look mío" hace `navigation.navigate('MisLooks')` y luego encadena la apertura del selector, en vez de abrir el selector directamente.
     - Animación de cambio de tab visible antes del `present`/`push` del selector.
   - Relacionado con BUG-001 (problema de stack): ambos apuntan a hand-offs de navegación post-acción mal encadenados. Considerar revisar ambos juntos cuando se haga la spec.
+- **Análisis deferred — 2026-04-22 (no aplicado en 14.13, candidato follow-up):**
+  - **Root cause identificado, NO es el mismo que BUG-001.** BUG-001 era modal-stacking (fix trivial: `navigate + goBack`). BUG-006 es un compound-fade: `OutfitVisualizer.handleMakeMine` en `src/screens/OutfitVisualizer.tsx:195–206` llama `rootNav.navigate("Main", { screen: "FavoritesTab", params: { screen: "ArmarioFichaWada", params: { combinationId } } })` — RN aplica el nested state atomically, PERO el `TabNavigator` tiene `animation: "fade"` (300ms) + el `FavoritesStack` también tiene `animation: "fade"` (300ms). Durante esos ~600ms combinados, se alcanza a ver el estado root del FavoritesStack (FavoritesList) fade-out mientras ArmarioFichaWada fade-in, todo bajo el cross-fade del tab.
+  - **Por qué NO se fixea en 14.13:** `TabNavigator.tsx` ya tiene `lazy: false` + `detachInactiveScreens: false` (correctos — no es un mount tardío). La solución limpia requiere uno de:
+    1. **`CommonActions.reset`** con estado nested completo preparado (verboso, ~20 líneas, frágil si el orden de tabs cambia, rompe back-behavior si no se preserva FavoritesList en la stack).
+    2. **Override local de `animation: "none"`** para esta transición específica — requiere una API que RN7 no expone limpiamente a un caller externo (habría que cambiar screenOptions globalmente del FavoritesStack — efecto colateral en otras transiciones).
+    3. **Pre-dispatch del stack push seguido del tab switch** — dos dispatches separados, requiere research del timing exacto de RN7 batching.
+  - Cualquier opción excede los 30min del contrato `fix-in-14.13` y merece su propia story con UX-DR de Alejandro sobre la transición deseada (¿fade corto? ¿slide? ¿spinner intermedio?).
+  - **Disposición propuesta:** `follow-up` → abrir story dedicada en Epic 14 polish (o v1.4.1) con 3 tasks: (a) decidir UX de la transición en `feature-spec`, (b) implementar la opción elegida, (c) validar on-device. No bloquea v1.4.0 ship — es cosmético y el flash, aunque notable, NO rompe funcionalidad.
 
 ### BUG-007 — Etiqueta "Sin prendas" redundante en asignación de prendas (polish)
 - **Fecha:** 2026-04-22
@@ -188,14 +205,15 @@
 
 | ID      | Título                                               | Severidad | Estado | Spec generada     |
 |---------|------------------------------------------------------|-----------|--------|-------------------|
-| BUG-001 | Navegación apilada tras guardar prenda               | high      | new    | —                 |
+| BUG-001 | Navegación apilada tras guardar prenda               | high      | fixed  | fix-in-14.13      |
 | BUG-002 | Contador "X combos" en header                        | polish    | fixed  | fix-in-14.13      |
 | BUG-003 | Contador "1/3" en asignación (S2 Ficha Wada)         | polish    | fixed  | fix-in-14.13      |
 | BUG-004 | CTA duplicado en sugerencia de prenda faltante       | medium    | fixed  | fix-in-14.13      |
 | BUG-005 | Layout Mis Looks "En curso" vs filtros confuso       | medium    | new    | —                 |
-| BUG-006 | Flash Mis Looks antes del selector desde Visualizer  | medium    | new    | —                 |
+| BUG-006 | Flash Mis Looks antes del selector desde Visualizer  | medium    | triaged | follow-up propuesto |
 | BUG-007 | "Sin prendas" redundante en asignación               | polish    | fixed  | fix-in-14.13      |
 | BUG-008 | Falta feedback visual tras "Usar esta foto" (~1s)    | medium    | new    | —                 |
+| BUG-009 | Prenda fotografiada no auto-rellena slot del combo   | high      | new    | —                 |
 
 ### BUG-008 — Falta feedback visual tras pulsar "Usar esta foto" al añadir prenda a combo
 - **Fecha:** 2026-04-22
@@ -218,3 +236,34 @@
     - **Overlay full-screen** con mensaje breve ("Procesando…" / "Extrayendo color…") si queremos aprovechar para comunicar valor (opción más rica).
     - **Navegación inmediata** a la siguiente pantalla con skeleton loader para el preview de la prenda mientras se completa el procesamiento en background (óptimo pero más invasivo).
   - Revisar si este mismo gap existe en el flow equivalente de **cámara desde Home** (post-guardado de prenda inicial); si sí, aplicar el mismo patrón de feedback para mantener consistencia.
+
+### BUG-009 — La prenda recién fotografiada no auto-rellena el slot al hacer look desde combo
+- **Fecha:** 2026-04-22
+- **Pantalla / Área:** Flow cámara → guardar prenda → combos → Outfit Visualizer → "Hacer este look mío" → look resultante en Mis Looks
+- **Qué observo:** Flow completo:
+  1. Foto a una camiseta, la app detecta un color Wada cercano (ej. Carmín).
+  2. Acepto el color y guardo la prenda en el Armario como "camiseta Carmín".
+  3. Post-guardado, la app me propone ver combinaciones. Elijo una de las N que contienen Carmín.
+  4. Entro al Outfit Visualizer y pulso "Hacer este look mío".
+  5. El look se crea, pero **el slot de camiseta (la prenda con color Carmín) aparece vacío**, aunque la camiseta guardada sí figura en el Armario si navego allí.
+- **Esperado:** Al "Hacer este look mío" partiendo de un combo en el que una de las prendas del look es el color Wada que el usuario acaba de declarar (y guardar como prenda real en el Armario), ese slot se debería **auto-rellenar con la prenda recién creada**, dejando solo los slots restantes para que el usuario los complete. El usuario ya le ha dicho a la app "esta camiseta es Carmín" — la app tiene información suficiente para hacer la asociación.
+- **Pasos para reproducir:**
+  1. Armario vacío o sin camisetas Carmín previas.
+  2. Cámara → foto de camiseta roja → la app propone Carmín (o una variante cercana) → aceptar.
+  3. Guardar como camiseta Carmín.
+  4. "Ver combinaciones" → elegir uno que incluya Carmín.
+  5. Visualizer → "Hacer este look mío".
+  6. Observar: el slot de camiseta del look aparece vacío.
+- **Dispositivo / build:** iPhone 14 físico de Alejandro
+- **Severidad:** `high` _(rompe una promesa implícita fuerte del flow: "ya te dije qué prenda tengo en ese color"; además es el happy path de descubrimiento de la app)_
+- **Estado:** new
+- **Notas:**
+  - Este bug es **lógica de producto**, no polish: el sistema tiene toda la info para hacer la asociación (prenda recién creada con color X + slot del look que pide color X + mismo tipo de prenda si está determinado).
+  - Requisitos de matching (a confirmar con arquitectura de Epic 13/14):
+    - **Color Wada exacto** entre la prenda guardada y el slot del combo.
+    - **Tipo de prenda** compatible con el slot (si la prenda guardada es "camiseta" y el slot pide "top", debería matchear; si pide "pantalón", no).
+  - Si hay **varias prendas del Armario que matchean** (ej. el usuario ya tiene otra camiseta Carmín), priorizar la **recién creada en este flow** — es la que el usuario tiene en mente.
+  - Casos edge a pensar al espec-ar:
+    - ¿Qué pasa si el combo tiene 2 slots del mismo color Wada y el usuario solo ha fotografiado una prenda? Auto-rellena uno, el otro queda vacío.
+    - ¿Qué pasa si el tipo de prenda detectado por la app es distinto al del slot del combo? Probablemente NO auto-rellenar (evita matches raros).
+  - Relacionado con BUG-001 y BUG-006: los tres están en la misma secuencia de hand-offs cámara → combo → Visualizer → Mis Looks. Al espec-ar conviene mirar el flow end-to-end como unidad, no cada bug aislado.

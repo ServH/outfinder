@@ -76,9 +76,13 @@ const mockRouteHolder: { current: MockRouteParams } = {
 };
 
 const mockRootNavigate = jest.fn();
+const mockRootGoBack = jest.fn();
 const mockLocalPush = jest.fn();
 const mockLocalReplace = jest.fn();
-const mockGetParent = jest.fn(() => ({ navigate: mockRootNavigate }));
+const mockGetParent = jest.fn(() => ({
+	navigate: mockRootNavigate,
+	goBack: mockRootGoBack,
+}));
 
 jest.mock("@react-navigation/native", () => ({
 	useRoute: () => ({ params: mockRouteHolder.current }),
@@ -256,6 +260,7 @@ describe("UnifiedCameraResultScreen", () => {
 			wadaMatch: { type: "direct", match: { color: BRICK_RED, deltaE: 2 } },
 		};
 		mockRootNavigate.mockClear();
+		mockRootGoBack.mockClear();
 		mockLocalPush.mockClear();
 		mockLocalReplace.mockClear();
 		mockGetParent.mockClear();
@@ -571,6 +576,17 @@ describe("UnifiedCameraResultScreen", () => {
 				params: { colorId: BRICK_RED.id, capturedHex: "#7a3f2b" },
 			},
 		});
+	});
+
+	// BUG-001: secondary link also dismisses the UnifiedCameraRoot modal
+	// after updating Main (navigate first, then goBack).
+	it("secondary link dismisses the UnifiedCameraRoot modal via rootNav.goBack() after navigate", () => {
+		render(<UnifiedCameraResultScreen />);
+		fireEvent.press(screen.getByTestId("unified-camera-result-secondary-link"));
+		expect(mockRootGoBack).toHaveBeenCalledTimes(1);
+		const navigateOrder = mockRootNavigate.mock.invocationCallOrder[0];
+		const goBackOrder = mockRootGoBack.mock.invocationCallOrder[0];
+		expect(navigateOrder).toBeLessThan(goBackOrder);
 	});
 
 	it("out-of-coverage match falls back to bestMatch.color in the name stack, primary CTA tint, and hides tone-correction", () => {

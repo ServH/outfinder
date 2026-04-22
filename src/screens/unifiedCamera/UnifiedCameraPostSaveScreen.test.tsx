@@ -27,7 +27,11 @@ const mockRouteHolder: { current: MockRouteParams } = {
 };
 
 const mockRootNavigate = jest.fn();
-const mockGetParent = jest.fn(() => ({ navigate: mockRootNavigate }));
+const mockRootGoBack = jest.fn();
+const mockGetParent = jest.fn(() => ({
+	navigate: mockRootNavigate,
+	goBack: mockRootGoBack,
+}));
 
 jest.mock("@react-navigation/native", () => ({
 	useRoute: () => ({ params: mockRouteHolder.current }),
@@ -67,6 +71,7 @@ describe("UnifiedCameraPostSaveScreen", () => {
 			categoryKey: "top",
 		};
 		mockRootNavigate.mockClear();
+		mockRootGoBack.mockClear();
 		mockGetParent.mockClear();
 		(hapticLight as jest.Mock).mockClear();
 	});
@@ -108,6 +113,17 @@ describe("UnifiedCameraPostSaveScreen", () => {
 		});
 	});
 
+	// BUG-001: primary CTA must dismiss the UnifiedCameraRoot modal after
+	// updating Main — navigate then goBack in that order.
+	it("primary CTA dismisses the UnifiedCameraRoot modal via rootNav.goBack() after navigate", () => {
+		render(<UnifiedCameraPostSaveScreen />);
+		fireEvent.press(screen.getByTestId("unified-camera-postsave-primary-cta"));
+		expect(mockRootGoBack).toHaveBeenCalledTimes(1);
+		const navigateOrder = mockRootNavigate.mock.invocationCallOrder[0];
+		const goBackOrder = mockRootGoBack.mock.invocationCallOrder[0];
+		expect(navigateOrder).toBeLessThan(goBackOrder);
+	});
+
 	it("secondary CTA tap fires hapticLight and cross-navigates to FavoritesTab", () => {
 		render(<UnifiedCameraPostSaveScreen />);
 		fireEvent.press(
@@ -117,5 +133,17 @@ describe("UnifiedCameraPostSaveScreen", () => {
 		expect(mockRootNavigate).toHaveBeenCalledWith("Main", {
 			screen: "FavoritesTab",
 		});
+	});
+
+	// BUG-001: secondary CTA also dismisses the modal.
+	it("secondary CTA dismisses the UnifiedCameraRoot modal via rootNav.goBack() after navigate", () => {
+		render(<UnifiedCameraPostSaveScreen />);
+		fireEvent.press(
+			screen.getByTestId("unified-camera-postsave-secondary-cta"),
+		);
+		expect(mockRootGoBack).toHaveBeenCalledTimes(1);
+		const navigateOrder = mockRootNavigate.mock.invocationCallOrder[0];
+		const goBackOrder = mockRootGoBack.mock.invocationCallOrder[0];
+		expect(navigateOrder).toBeLessThan(goBackOrder);
 	});
 });

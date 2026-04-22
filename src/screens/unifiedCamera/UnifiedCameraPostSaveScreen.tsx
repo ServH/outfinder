@@ -48,6 +48,12 @@ export function UnifiedCameraPostSaveScreen(
 	const wadaName = wadaColor?.nameEn ?? "";
 	const categoryLabel = t(categoryLabelKey(categoryKey));
 
+	// BUG-001: both CTAs must DISMISS the UnifiedCameraRoot modal after
+	// updating the Main tab state — otherwise the modal stays mounted over
+	// Main and the user sees layered screens (color page + camera + combos).
+	// Order matters: navigate first (updates the nested state under the
+	// modal), then goBack (slides the modal down over an already-correct
+	// destination). Reverse order would flash the pre-save state briefly.
 	function handlePrimary() {
 		hapticLight();
 		const rootNav =
@@ -59,6 +65,7 @@ export function UnifiedCameraPostSaveScreen(
 				params: { colorId: wadaColorId, capturedHex },
 			},
 		} as never);
+		rootNav?.goBack();
 	}
 
 	function handleSecondary() {
@@ -66,6 +73,7 @@ export function UnifiedCameraPostSaveScreen(
 		const rootNav =
 			navigation.getParent<NativeStackNavigationProp<RootStackParamList>>();
 		rootNav?.navigate("Main", { screen: "FavoritesTab" } as never);
+		rootNav?.goBack();
 	}
 
 	return (
