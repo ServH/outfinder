@@ -55,7 +55,13 @@
 		"sortAZLabel": "Ordenar alfab\u00e9ticamente",
 		"sortSizeLabel": "Ordenar por tama\u00f1o",
 		"emptyTitle": "Aún no tienes looks guardados",
-		"emptySubtitle": "Fotografía una prenda o escoge una paleta para empezar."
+		"emptySubtitle": "Fotografía una prenda o escoge una paleta para empezar.",
+		"newLookCta": {
+			"title": "Empieza un look nuevo",
+			"subtitle": "Explora las paletas de Sanzo Wada y arma tu look",
+			"a11yLabel": "Empezar un look nuevo",
+			"a11yHint": "Explora paletas de Sanzo Wada para empezar un look"
+		}
 	},
 	"settings": {
 		"title": "Ajustes",
