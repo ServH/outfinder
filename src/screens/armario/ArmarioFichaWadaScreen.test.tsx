@@ -2,6 +2,52 @@ import { act, fireEvent, render, screen } from "@testing-library/react-native";
 import { hapticLight } from "@/lib/haptics";
 import { unassign } from "@/lib/wardrobeRepo";
 
+let mockIsPremium = false;
+jest.mock("@/contexts/PremiumContext", () => ({
+	usePremium: () => ({
+		isPremium: mockIsPremium,
+		loading: false,
+		paywallDismissedThisSession: false,
+		setPaywallDismissedThisSession: jest.fn(),
+		priceString: "€0.99",
+		purchase: jest.fn(),
+		restore: jest.fn(),
+	}),
+}));
+
+const mockHandlePremiumGate = jest.fn();
+const mockHandlePurchase = jest.fn();
+const mockHandleDismiss = jest.fn();
+const mockHandleRestore = jest.fn();
+let mockPaywallVisible = false;
+jest.mock("@/hooks/usePremiumGate", () => ({
+	usePremiumGate: () => ({
+		isPremium: mockIsPremium,
+		paywallVisible: mockPaywallVisible,
+		blockedCombination: undefined,
+		toastVisible: false,
+		toastOpacity: { current: 1 },
+		favoriteCombinationIds: [],
+		priceString: "€0.99",
+		purchaseState: "idle",
+		errorMessage: null,
+		handlePremiumGate: mockHandlePremiumGate,
+		handlePurchase: mockHandlePurchase,
+		handleDismiss: mockHandleDismiss,
+		handleRestore: mockHandleRestore,
+		openPaywall: jest.fn(),
+	}),
+	getRestoreErrorMessage: jest.fn(),
+}));
+
+jest.mock("@/components/PremiumPaywall", () => {
+	const { View } = require("react-native");
+	return {
+		PremiumPaywall: ({ visible }: { visible: boolean }) =>
+			visible ? <View testID="premium-paywall" /> : null,
+	};
+});
+
 jest.mock("react-native-safe-area-context", () => ({
 	useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
 }));
@@ -68,18 +114,24 @@ let mockItems: Array<{
 	thumbnailPath: string;
 	createdAt: number;
 }> = [];
+let mockFavorites: Set<string> = new Set();
+const mockAddFavorite = jest.fn();
 jest.mock("@/stores/misLooksStore", () => ({
 	useMisLooksStore: (
 		selector: (s: {
 			hydrated: boolean;
 			assignments: typeof mockAssignments;
 			items: typeof mockItems;
+			favorites: Set<string>;
+			addFavorite: (id: string) => void;
 		}) => unknown,
 	) =>
 		selector({
 			hydrated: true,
 			assignments: mockAssignments,
 			items: mockItems,
+			favorites: mockFavorites,
+			addFavorite: mockAddFavorite,
 		}),
 }));
 
@@ -110,10 +162,18 @@ describe("ArmarioFichaWadaScreen", () => {
 		mockPush.mockClear();
 		(hapticLight as jest.Mock).mockClear();
 		(unassign as jest.Mock).mockClear();
+		mockHandlePremiumGate.mockClear();
+		mockHandlePurchase.mockClear();
+		mockHandleDismiss.mockClear();
+		mockHandleRestore.mockClear();
+		mockAddFavorite.mockClear();
 		mockCombination = threeColorCombo;
 		mockRouteParams = { combinationId: "combo-3" };
 		mockAssignments = [];
 		mockItems = [];
+		mockFavorites = new Set();
+		mockIsPremium = false;
+		mockPaywallVisible = false;
 	});
 
 	it("renders N slot cards for a 3-color combination", () => {
@@ -444,5 +504,151 @@ describe("ArmarioFichaWadaScreen", () => {
 
 		expect(unassign).not.toHaveBeenCalled();
 		expect(screen.queryByTestId("s2-quitar-confirm-body")).toBeNull();
+	});
+
+	// --- Story 14.8: paywall-limbo (TD-4) ---
+
+	it("premium user + 5 favorites → no limit gate, slot tap navigates normally (AC #9)", async () => {
+		mockIsPremium = true;
+		mockFavorites = new Set(["a", "b", "c", "d", "e"]);
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		expect(screen.queryByTestId("mislooks-limit-strip")).toBeNull();
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-slot-0"));
+		});
+
+		expect(mockPush).toHaveBeenCalledWith("ArmarioPicker", {
+			combinationId: "combo-3",
+			colorIndex: 0,
+		});
+		expect(mockHandlePremiumGate).not.toHaveBeenCalled();
+	});
+
+	it("free user + 0 favorites → no limit gate (AC #3)", () => {
+		mockIsPremium = false;
+		mockFavorites = new Set();
+		const Screen = loadScreen();
+		render(<Screen />);
+		expect(screen.queryByTestId("mislooks-limit-strip")).toBeNull();
+	});
+
+	it("free user + 5 favorites AND combo already favorited → no limit gate (AC #3)", async () => {
+		mockIsPremium = false;
+		mockFavorites = new Set(["combo-3", "a", "b", "c", "d"]);
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		expect(screen.queryByTestId("mislooks-limit-strip")).toBeNull();
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-slot-0"));
+		});
+		expect(mockPush).toHaveBeenCalled();
+		expect(mockHandlePremiumGate).not.toHaveBeenCalled();
+	});
+
+	it("free user + 5 favorites AND combo NOT favorited → limit gate renders strip + disables slots + CTA (AC #3)", () => {
+		mockIsPremium = false;
+		mockFavorites = new Set(["a", "b", "c", "d", "e"]);
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		expect(screen.getByTestId("mislooks-limit-strip")).toBeTruthy();
+		expect(screen.getByTestId("s2-slot-0").props.style).toMatchObject({
+			opacity: 0.4,
+		});
+		const cta = screen.getByTestId("s2-view-look-cta");
+		expect(cta.props.accessibilityState.disabled).toBe(true);
+		expect(cta.props.style.opacity).toBe(0.5);
+	});
+
+	it("slot tap under limit gate short-circuits into handlePremiumGate, NOT navigation.push (AC #4)", async () => {
+		mockIsPremium = false;
+		mockFavorites = new Set(["a", "b", "c", "d", "e"]);
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s2-slot-1"));
+		});
+
+		expect(hapticLight).toHaveBeenCalled();
+		expect(mockHandlePremiumGate).toHaveBeenCalledWith("combo-3");
+		expect(mockPush).not.toHaveBeenCalled();
+	});
+
+	it("paywall mounts as sibling when gate.paywallVisible true (AC #13)", () => {
+		mockIsPremium = false;
+		mockFavorites = new Set(["a", "b", "c", "d", "e"]);
+		mockPaywallVisible = true;
+		const Screen = loadScreen();
+		render(<Screen />);
+		expect(screen.getByTestId("premium-paywall")).toBeTruthy();
+	});
+
+	it("delete-from-Mis-Looks simulation (size 5 → 4) clears the limit gate (AC #7)", () => {
+		mockIsPremium = false;
+		mockFavorites = new Set(["a", "b", "c", "d", "e"]);
+		const Screen = loadScreen();
+		const { rerender } = render(<Screen />);
+		expect(screen.getByTestId("mislooks-limit-strip")).toBeTruthy();
+
+		mockFavorites = new Set(["a", "b", "c", "d"]);
+		rerender(<Screen />);
+		expect(screen.queryByTestId("mislooks-limit-strip")).toBeNull();
+		expect(screen.getByTestId("s2-slot-0").props.style).toMatchObject({
+			opacity: 1,
+		});
+	});
+
+	it("view-look CTA stays disabled under limit gate even with assignments (AC #3c)", () => {
+		mockIsPremium = false;
+		mockFavorites = new Set(["a", "b", "c", "d", "e"]);
+		mockItems = [
+			{
+				id: "uuid-1",
+				localImagePath: "file:///a.png",
+				thumbnailPath: "file:///a.t.png",
+				createdAt: 1,
+			},
+		];
+		mockAssignments = [0, 1, 2].map((i) => ({
+			combinationId: "combo-3",
+			colorIndex: i,
+			wardrobeItemId: "uuid-1",
+			assignedAt: 1,
+		}));
+		const Screen = loadScreen();
+		render(<Screen />);
+		const cta = screen.getByTestId("s2-view-look-cta");
+		expect(cta.props.accessibilityState.disabled).toBe(true);
+	});
+
+	it("view-look CTA enabled when limit gate false and assignedCount > 0 (AC #3c baseline)", () => {
+		mockIsPremium = false;
+		mockFavorites = new Set();
+		mockItems = [
+			{
+				id: "uuid-1",
+				localImagePath: "file:///a.png",
+				thumbnailPath: "file:///a.t.png",
+				createdAt: 1,
+			},
+		];
+		mockAssignments = [
+			{
+				combinationId: "combo-3",
+				colorIndex: 0,
+				wardrobeItemId: "uuid-1",
+				assignedAt: 1,
+			},
+		];
+		const Screen = loadScreen();
+		render(<Screen />);
+		const cta = screen.getByTestId("s2-view-look-cta");
+		expect(cta.props.accessibilityState.disabled).toBe(false);
 	});
 });

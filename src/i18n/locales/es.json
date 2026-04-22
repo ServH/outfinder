@@ -224,7 +224,12 @@
 			"slotA11yAssigned": "{{color}}, asignada. Doble-tap para cambiar.",
 			"slotRemoveA11y": "Quitar prenda de {{color}}",
 			"quitarConfirmBody": "¿Quitar la prenda de {{color}}?",
-			"quitarConfirmYes": "Quitar"
+			"quitarConfirmYes": "Quitar",
+			"lookSavedAnnouncement": "Look guardado en Mis Looks"
+		},
+		"misLooksLimit": {
+			"strip": "Alcanzaste el límite de 5 looks guardados. Elimina uno para continuar.",
+			"stripA11y": "Aviso: has alcanzado el límite de 5 looks guardados. Elimina uno desde Mis Looks para continuar."
 		},
 		"s4": {
 			"screenLabel": "Tu look",

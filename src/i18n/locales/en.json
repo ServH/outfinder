@@ -224,7 +224,12 @@
 			"slotA11yAssigned": "{{color}}, assigned. Double-tap to change.",
 			"slotRemoveA11y": "Remove garment from {{color}}",
 			"quitarConfirmBody": "Remove the garment from {{color}}?",
-			"quitarConfirmYes": "Remove"
+			"quitarConfirmYes": "Remove",
+			"lookSavedAnnouncement": "Look saved to My Looks"
+		},
+		"misLooksLimit": {
+			"strip": "You've reached the 5 saved-looks limit. Delete one to continue.",
+			"stripA11y": "Alert: you've reached the 5 saved-looks limit. Delete one from My Looks to continue."
 		},
 		"s4": {
 			"screenLabel": "Your look",

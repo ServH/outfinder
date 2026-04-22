@@ -9,8 +9,13 @@ import { useTranslation } from "react-i18next";
 import { Modal, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CompletenessBadge } from "@/components/armario/CompletenessBadge";
+import { MisLooksLimitStrip } from "@/components/armario/MisLooksLimitStrip";
 import { WardrobeItemThumb } from "@/components/armario/WardrobeItemThumb";
+import { PremiumPaywall } from "@/components/PremiumPaywall";
+import { PREMIUM_CONFIG } from "@/config/premium";
+import { usePremium } from "@/contexts/PremiumContext";
 import { getCombination } from "@/data/colorIndex";
+import { usePremiumGate } from "@/hooks/usePremiumGate";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { hexToRgba } from "@/lib/color";
 import { hapticLight } from "@/lib/haptics";
@@ -58,6 +63,10 @@ export function ArmarioFichaWadaScreen({
 	const allAssignments = useMisLooksStore((s) => s.assignments);
 	const items = useMisLooksStore((s) => s.items);
 	const hydrated = useMisLooksStore((s) => s.hydrated);
+	const favorites = useMisLooksStore((s) => s.favorites);
+	const addFavorite = useMisLooksStore((s) => s.addFavorite);
+	const { isPremium } = usePremium();
+	const gate = usePremiumGate(favorites);
 
 	const [quitarConfirmSlot, setQuitarConfirmSlot] = useState<number | null>(
 		null,
@@ -73,6 +82,11 @@ export function ArmarioFichaWadaScreen({
 	const isComplete = assignedCount === totalColors && totalColors > 0;
 
 	const missingOrEmpty = !combination || combination.colors.length === 0;
+
+	const needsLimitGate =
+		!isPremium &&
+		favorites.size >= PREMIUM_CONFIG.FREE_FAVORITES_LIMIT &&
+		!favorites.has(combinationId);
 
 	useEffect(() => {
 		if (missingOrEmpty) {
@@ -91,6 +105,10 @@ export function ArmarioFichaWadaScreen({
 
 	function handleSlotTap(colorIndex: number) {
 		hapticLight();
+		if (needsLimitGate) {
+			gate.handlePremiumGate(combinationId);
+			return;
+		}
 		navigation.push("ArmarioPicker", { combinationId, colorIndex });
 	}
 
@@ -201,6 +219,8 @@ export function ArmarioFichaWadaScreen({
 				{t("armario.s2.instruction")}
 			</Text>
 
+			{needsLimitGate && <MisLooksLimitStrip />}
+
 			<Text
 				style={{
 					fontFamily: "Inter_500Medium",
@@ -243,7 +263,11 @@ export function ArmarioFichaWadaScreen({
 							accessibilityRole="button"
 							accessibilityLabel={a11y}
 							onPress={() => handleSlotTap(i)}
-							style={{ flex: 1, minHeight: 44 }}
+							style={{
+								flex: 1,
+								minHeight: 44,
+								opacity: needsLimitGate ? 0.4 : 1,
+							}}
 						>
 							{/* Color swatch — top of the column. */}
 							<View
@@ -379,10 +403,12 @@ export function ArmarioFichaWadaScreen({
 				<Pressable
 					testID="s2-view-look-cta"
 					onPress={handleViewLook}
-					disabled={!hydrated || assignedCount === 0}
+					disabled={!hydrated || assignedCount === 0 || needsLimitGate}
 					accessibilityRole="button"
 					accessibilityLabel={t("armario.s2.viewLookCta")}
-					accessibilityState={{ disabled: !hydrated || assignedCount === 0 }}
+					accessibilityState={{
+						disabled: !hydrated || assignedCount === 0 || needsLimitGate,
+					}}
 					className="items-center justify-center"
 					style={{
 						minHeight: 44,
@@ -391,7 +417,8 @@ export function ArmarioFichaWadaScreen({
 						paddingVertical: 14,
 						borderRadius: 28,
 						backgroundColor: wadaTokens.textPrimary,
-						opacity: !hydrated || assignedCount === 0 ? 0.5 : 1,
+						opacity:
+							!hydrated || assignedCount === 0 || needsLimitGate ? 0.5 : 1,
 					}}
 				>
 					{({ pressed }) => (
@@ -509,6 +536,18 @@ export function ArmarioFichaWadaScreen({
 					</View>
 				</View>
 			</Modal>
+
+			<PremiumPaywall
+				visible={gate.paywallVisible}
+				blockedCombination={gate.blockedCombination}
+				favoriteCombinationIds={gate.favoriteCombinationIds}
+				priceString={gate.priceString}
+				purchaseState={gate.purchaseState}
+				errorMessage={gate.errorMessage}
+				onPurchase={() => gate.handlePurchase(addFavorite)}
+				onRestore={gate.handleRestore}
+				onDismiss={gate.handleDismiss}
+			/>
 		</View>
 	);
 }
