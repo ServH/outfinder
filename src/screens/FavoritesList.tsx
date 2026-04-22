@@ -17,6 +17,7 @@ import {
 	View,
 } from "react-native";
 import { FavoriteComboEnrichedCard } from "@/components/armario/FavoriteComboEnrichedCard";
+import { IncompleteLooksSection } from "@/components/armario/IncompleteLooksSection";
 import { NewLookCtaCard } from "@/components/armario/NewLookCtaCard";
 import { ComboCard } from "@/components/ComboCard";
 import { EmptyState } from "@/components/EmptyState";
@@ -24,6 +25,7 @@ import { PremiumPaywall } from "@/components/PremiumPaywall";
 import { getCombination } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
+import { selectIncompleteLooks } from "@/lib/armario/selectIncompleteLooks";
 import { sortFavoritesByCompleteness } from "@/lib/armario/sortFavoritesByCompleteness";
 import { useFavoritesNumCols, useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
@@ -136,9 +138,32 @@ export function FavoritesList(_props: FavoritesListProps) {
 		return result;
 	}, [favorites, sortMode, supportsArmario, hydrated, assignments]);
 
+	const { incompleteLooks, completeLooks } = useMemo(() => {
+		if (!supportsArmario || !hydrated) {
+			return {
+				incompleteLooks: [] as Combination[],
+				completeLooks: combinations,
+			};
+		}
+		const incomplete = selectIncompleteLooks(combinations, assignments);
+		const incompleteIds = new Set(incomplete.map((c) => c.id));
+		const complete = combinations.filter((c) => !incompleteIds.has(c.id));
+		return { incompleteLooks: incomplete, completeLooks: complete };
+	}, [combinations, assignments, supportsArmario, hydrated]);
+
 	const hasAnyWardrobeState =
 		wardrobeItems.length > 0 || assignments.length > 0;
 	const useEnrichedCards = supportsArmario && hydrated && hasAnyWardrobeState;
+
+	const handleIncompleteTilePress = useCallback(
+		(combinationId: string) => {
+			if (isNavigating.current) return;
+			isNavigating.current = true;
+			hapticLight();
+			navigation.push("ArmarioFichaWada", { combinationId });
+		},
+		[navigation],
+	);
 
 	const handleComboPress = useCallback(
 		async (combinationId: string) => {
@@ -207,6 +232,11 @@ export function FavoritesList(_props: FavoritesListProps) {
 		() => (
 			<View>
 				<NewLookCtaCard onPress={handleNewLookPress} />
+				<IncompleteLooksSection
+					incompleteLooks={incompleteLooks}
+					assignments={assignments}
+					onTilePress={handleIncompleteTilePress}
+				/>
 				<View testID="sort-pills-row" className="flex-row gap-2 px-4 py-3">
 					{SORT_PILLS.map(({ mode, labelKey, a11yKey }) => {
 						const isActive = sortMode === mode;
@@ -238,9 +268,35 @@ export function FavoritesList(_props: FavoritesListProps) {
 						);
 					})}
 				</View>
+				{incompleteLooks.length > 0 && completeLooks.length > 0 ? (
+					<View
+						testID="complete-section-header"
+						accessibilityRole="header"
+						accessibilityLabel={t("favorites.completeSection.a11yLabel")}
+						className="px-4 mt-4 mb-2"
+					>
+						<Text
+							style={{
+								fontFamily: "Inter_500Medium",
+								fontSize: 13,
+								color: wadaTokens.textSecondary,
+							}}
+						>
+							{t("favorites.completeSection.title")}
+						</Text>
+					</View>
+				) : null}
 			</View>
 		),
-		[sortMode, t, handleNewLookPress],
+		[
+			sortMode,
+			t,
+			handleNewLookPress,
+			incompleteLooks,
+			completeLooks,
+			assignments,
+			handleIncompleteTilePress,
+		],
 	);
 
 	const header = (
@@ -304,7 +360,7 @@ export function FavoritesList(_props: FavoritesListProps) {
 				key={`grid-${numCols}`}
 				testID="favorites-list"
 				className="flex-1"
-				data={combinations}
+				data={supportsArmario && hydrated ? completeLooks : combinations}
 				numColumns={numCols}
 				columnWrapperStyle={{ gap: cardGap, paddingHorizontal: hPadding }}
 				contentContainerStyle={{

@@ -4,6 +4,15 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 14-11-incomplete-looks-retention-surface (2026-04-22)
+
+- **D-14.11-1** — `selectIncompleteLooks.ts` — Duplicate slot assignment counting not validated: `assignedCount` could be inflated if two CombinationAssignment records share the same `colorIndex` (data corruption path). Pre-existing store contract (same counting pattern as `sortFavoritesByCompleteness.ts`). Add deduplication by `(combinationId, colorIndex)` pair when hardening wardrobe assignment storage.
+- **D-14.11-2** — `FavoritesList.tsx` — `isNavigating.current` not reset to `false` on navigation exception in `handleIncompleteTilePress`. Guard resets only via `useFocusEffect` on screen focus. Pre-existing shared behavior with `handleComboPress`. Add a try/finally reset if navigation is ever made async or fallible.
+- **D-14.11-3** — `misLooksStore.ts` — Assignments for un-favorited combinations are never pruned from the store; `assignedCountByCombination` Map in `IncompleteLooksSection` silently holds stale entries. Pre-existing architecture concern — fix when adding a wardrobe cleanup sweep or migration.
+- **D-14.11-4** — `IncompleteLooksSection.tsx` — `keyboardShouldPersistTaps` missing on horizontal `FlatList` inside vertical `FlatList`. Can swallow taps when iOS software keyboard is open. Advisory; not required by spec; consistent with existing horizontal FlatList pattern. Add if users report missed taps.
+
+---
+
 ## Deferred from: code review of 14-4-camera-result-screen-ui (2026-04-21)
 
 - **D-14.4-1** — `UnifiedCameraResultScreen.tsx:127` — `as never` cast en `navigate("Main", {...} as never)` — elude el tipado de React Navigation; si se renombra `ColorsTab` o `Combinations` falla en runtime sin error de compilación. Arreglar cuando se añada tipado completo de `CompositeNavigationProp` en Epic 15+.
