@@ -10,6 +10,7 @@ import type {
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+	AccessibilityInfo,
 	FlatList,
 	Modal,
 	Pressable,
@@ -30,6 +31,7 @@ import { WadaColorDot } from "@/components/armario/WadaColorDot";
 import { WardrobeItemThumb } from "@/components/armario/WardrobeItemThumb";
 import { getCombination } from "@/data/colorIndex";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { i18n } from "@/i18n";
 import { deleteItemFiles } from "@/lib/armario/wardrobeFiles";
 import { hapticLight, hapticMedium } from "@/lib/haptics";
 import {
@@ -165,6 +167,12 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 			// started, skip the second commit entirely rather than letting two
 			// assign() calls race before the first goBack lands.
 			if (isClosing.current) return;
+			// Snapshot favorites BEFORE assign so the VoiceOver announce fires
+			// once per first-assignment only (AC #12). Read via getState() since
+			// this callback lives outside the React tree.
+			const prevFavorited = useMisLooksStore
+				.getState()
+				.favorites.has(combinationId);
 			try {
 				const existing = assignments.find(
 					(a) =>
@@ -176,6 +184,21 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 					unassign(combinationId, existing.colorIndex);
 				}
 				assign(combinationId, colorIndex, wardrobeItemId);
+				try {
+					useMisLooksStore.getState().addFavorite(combinationId);
+				} catch (err) {
+					if (__DEV__) {
+						console.warn(
+							"[ArmarioPickerScreen] auto-save addFavorite failed",
+							err,
+						);
+					}
+				}
+				if (!prevFavorited) {
+					AccessibilityInfo.announceForAccessibility(
+						i18n.t("armario.s2.lookSavedAnnouncement"),
+					);
+				}
 				hapticLight();
 			} catch (err) {
 				if (__DEV__) {

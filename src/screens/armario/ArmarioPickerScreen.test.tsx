@@ -81,20 +81,34 @@ let mockItems: Array<{
 	thumbnailPath: string;
 	createdAt: number;
 }> = [];
-jest.mock("@/stores/misLooksStore", () => ({
-	useMisLooksStore: (
-		selector: (s: {
-			hydrated: boolean;
-			assignments: typeof mockAssignments;
-			items: typeof mockItems;
-		}) => unknown,
-	) =>
-		selector({
-			hydrated: true,
-			assignments: mockAssignments,
-			items: mockItems,
-		}),
-}));
+let mockFavorites: Set<string> = new Set();
+const mockAddFavorite = jest.fn();
+jest.mock("@/stores/misLooksStore", () => {
+	const state = () => ({
+		hydrated: true,
+		get assignments() {
+			return mockAssignments;
+		},
+		get items() {
+			return mockItems;
+		},
+		get favorites() {
+			return mockFavorites;
+		},
+		addFavorite: mockAddFavorite,
+	});
+	const hook = (selector: (s: ReturnType<typeof state>) => unknown) =>
+		selector(state());
+	(hook as unknown as { getState: () => ReturnType<typeof state> }).getState =
+		() => state();
+	return { useMisLooksStore: hook };
+});
+
+import { AccessibilityInfo } from "react-native";
+
+const mockAnnounce = jest
+	.spyOn(AccessibilityInfo, "announceForAccessibility")
+	.mockImplementation(() => undefined);
 
 function loadScreen() {
 	const { ArmarioPickerScreen } = require("./ArmarioPickerScreen") as {
@@ -123,10 +137,13 @@ describe("ArmarioPickerScreen", () => {
 		(removeItem as jest.Mock).mockClear();
 		(cascadeDeleteAssignmentsForItem as jest.Mock).mockClear();
 		(deleteItemFiles as jest.Mock).mockClear();
+		mockAddFavorite.mockReset();
+		mockAnnounce.mockClear();
 		mockCombination = threeColorCombo;
 		mockRouteParams = { combinationId: "combo-3", colorIndex: 0 };
 		mockAssignments = [];
 		mockItems = [];
+		mockFavorites = new Set();
 	});
 
 	it("renders header, picker title and empty state when wardrobe is empty", () => {
@@ -476,5 +493,124 @@ describe("ArmarioPickerScreen", () => {
 				includeHiddenElements: true,
 			}),
 		).toBeNull();
+	});
+
+	// --- Story 14.8: commit auto-saves to Mis Looks + VoiceOver announce ---
+
+	it("commit on fresh combo → addFavorite(combinationId) is called (AC #1)", async () => {
+		mockItems = [sampleItem("u1")];
+		mockFavorites = new Set();
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-item-u1"));
+		});
+
+		expect(assign).toHaveBeenCalledWith("combo-3", 0, "u1");
+		expect(mockAddFavorite).toHaveBeenCalledWith("combo-3");
+	});
+
+	it("commit on already-favorited combo still calls addFavorite (idempotent no-op expected downstream, AC #2)", async () => {
+		mockItems = [sampleItem("u1")];
+		mockFavorites = new Set(["combo-3"]);
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-item-u1"));
+		});
+
+		expect(mockAddFavorite).toHaveBeenCalledWith("combo-3");
+	});
+
+	it("move-semantic branch still triggers auto-save addFavorite (AC #1 move case)", async () => {
+		mockItems = [sampleItem("u1")];
+		mockAssignments = [
+			{
+				combinationId: "combo-3",
+				colorIndex: 1,
+				wardrobeItemId: "u1",
+				assignedAt: 1,
+			},
+		];
+		mockFavorites = new Set();
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-item-u1"));
+		});
+
+		expect(unassign).toHaveBeenCalledWith("combo-3", 1);
+		expect(assign).toHaveBeenCalledWith("combo-3", 0, "u1");
+		expect(mockAddFavorite).toHaveBeenCalledWith("combo-3");
+	});
+
+	it("VoiceOver announces ONCE on first assignment (combo not previously favorited, AC #12)", async () => {
+		mockItems = [sampleItem("u1")];
+		mockFavorites = new Set();
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-item-u1"));
+		});
+
+		expect(mockAnnounce).toHaveBeenCalledTimes(1);
+		expect(mockAnnounce).toHaveBeenCalledWith("Look saved to My Looks");
+	});
+
+	it("VoiceOver silent on second assignment (combo already favorited, AC #12)", async () => {
+		mockItems = [sampleItem("u1")];
+		mockFavorites = new Set(["combo-3"]);
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-item-u1"));
+		});
+
+		expect(mockAnnounce).not.toHaveBeenCalled();
+	});
+
+	it("VoiceOver silent on move within already-favorited combo (AC #12)", async () => {
+		mockItems = [sampleItem("u1")];
+		mockAssignments = [
+			{
+				combinationId: "combo-3",
+				colorIndex: 1,
+				wardrobeItemId: "u1",
+				assignedAt: 1,
+			},
+		];
+		mockFavorites = new Set(["combo-3"]);
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-item-u1"));
+		});
+
+		expect(mockAnnounce).not.toHaveBeenCalled();
+	});
+
+	it("addFavorite throwing does NOT throw out of commitAndDismiss — assignment still commits (AC #1 try/catch)", async () => {
+		mockItems = [sampleItem("u1")];
+		mockFavorites = new Set();
+		mockAddFavorite.mockImplementationOnce(() => {
+			throw new Error("simulated persist failure");
+		});
+		const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("s3-item-u1"));
+		});
+
+		expect(assign).toHaveBeenCalledWith("combo-3", 0, "u1");
+		expect(mockGoBack).toHaveBeenCalledTimes(1);
+		warnSpy.mockRestore();
 	});
 });
