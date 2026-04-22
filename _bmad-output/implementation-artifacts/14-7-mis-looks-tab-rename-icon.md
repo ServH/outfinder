@@ -1,6 +1,6 @@
 # Story 14.7: Mis Looks tab — rename + icon swap
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -220,6 +220,16 @@ claude-opus-4-7 (1M context) — bmad-dev-story workflow
 - `_bmad-output/implementation-artifacts/14-7-mis-looks-tab-rename-icon.md` — task checkboxes + Dev Agent Record + status (modified)
 - `_bmad-output/implementation-artifacts/sprint-status.yaml` — story status transitions + dev note (modified)
 
+### Review Findings
+
+- [x] [Review][Defer] D-14.7-1: `archivebox.fill` active variant — deferred, pre-existing design decision
+- [x] [Review][Defer] D-14.7-2: `favoriteButton.*` vocabulary rename — deferred, pre-existing
+- [x] [Review][Defer] D-14.7-3: `tabs.favs` orphan key cleanup — deferred, pre-existing
+- [x] [Review][Defer] D-14.7-4: Pre-existing Biome format in OutfitVisualizer.tsx — deferred, pre-existing from 14.6
+
+8 findings dismissed (5 blind / 0 edge / 3 auditor) — all false positives or by-design. Clean review.
+
 ### Change Log
 
 - 2026-04-22 — Renamed Favorites tab user-visible surface to "Mis Looks" / "My looks" across both locales; swapped tab `heart` SF Symbol for `archivebox` (iPad + iPhone branches); updated 2 locale-parity test assertions and 4 FavoritesList empty-state assertions to match new copy. Net 0 test delta vs 14.6 baseline (863 passing / 3 pre-existing). Visual smoke deferred to Alejandro's hand-review.
+- 2026-04-22 — Code review: 0 patches applied; 4 deferred (D-14.7-1→4, all pre-existing); 8 dismissed. Clean review → status: done.
