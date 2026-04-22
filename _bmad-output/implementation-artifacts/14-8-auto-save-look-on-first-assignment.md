@@ -1,6 +1,6 @@
 # Story 14.8: Auto-save look to Mis Looks on first garment assignment
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -294,6 +294,16 @@ Deferred (none). Future-work handoffs (none).
 - `_bmad-output/implementation-artifacts/sprint-status.yaml`
 - `_bmad-output/implementation-artifacts/14-8-auto-save-look-on-first-assignment.md` (this file)
 
+### Review Findings
+
+- [x] [Review][Defer] addFavorite production error swallowed silently — `__DEV__`-only guard; in production, a failed `addFavorite` call (synchronous Set + AsyncStorage) is invisible. Theoretical: store's Zustand setter won't throw in practice. [ArmarioPickerScreen.tsx:190-195] — deferred, pre-existing design per spec AC #1
+- [x] [Review][Defer] VoiceOver announce fires even when addFavorite throws — `announceForAccessibility` lives outside the inner try/catch; user would hear "Look saved" even if the store write failed. Theoretical. [ArmarioPickerScreen.tsx:196-200] — deferred, pre-existing design per spec AC #12
+- [x] [Review][Defer] MisLooksLimitStrip may not auto-announce on dynamic appearance — `accessibilityRole="alert"` is a static role descriptor on iOS, not a live-region trigger; VoiceOver may not read the strip when it appears. Spec explicitly chose this over `accessibilityLiveRegion`. [MisLooksLimitStrip.tsx] — deferred, spec-intentional
+- [x] [Review][Defer] usePremiumGate internal useCallback deps may capture stale state — `handlePremiumGate`/`handlePurchase`/`handleRestore` may not include `blockedCombinationId` in their useCallback dep arrays. Pre-existing in usePremiumGate (hook unchanged by this story). [usePremiumGate.ts:140,152,178] — deferred, pre-existing
+- [x] [Review][Defer] handlePurchase parameter named "toggleFavorite" while callers pass addFavorite — naming inconsistency in usePremiumGate.ts creates reader confusion (addFavorite on absent id = add, semantically correct but parameter name misleads). Unchanged hook. [usePremiumGate.ts:153] — deferred, cosmetic
+- [x] [Review][Defer] pnpm lint exits code 1 due to 2 pre-existing format errors — `FavoritesList.test.tsx` (14.7 scope) + `OutfitVisualizer.tsx` (14.6/D-14.7-4 scope). Neither file touched by this story. — deferred, pre-existing
+
 ### Change Log
 
+- 2026-04-22 — Story 14.8 code review: 0 patches applied; 6 deferred D-14.8-1→6 (addFavorite error swallow, announce-on-throw, strip live-region, usePremiumGate deps, toggleFavorite naming, lint pre-existing); 15 dismissed (stale closure FP, React batch FP, slot disabled FP, test stub FP × 4, i18n singleton intentional, inline style, stale favIds FP, boundary design-decision, needsLimitGate sync FP, null blockedCombination pre-existing, zero-color handled, announce timing FP, concurrent-add FP). tsc + lint (pre-existing) confirmed clean. 883/3/886 baseline unchanged. Status: done.
 - 2026-04-22 — Story 14.8 implementation complete; status `ready-for-dev` → `in-progress` → `review`. Branch `story/14-8-auto-save-look-on-first-assignment` off `epic-14` HEAD `481be7a`. Awaits adversarial code-review before merge.

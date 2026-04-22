@@ -191,3 +191,14 @@ These were reviewed and deliberately left as-is. Revisit only if the surrounding
 - **D-14.3a-4** — `pnpm test` exits non-zero (2 pre-existing suites fail: OutfitVisualizer.test.tsx `navigation.getState` mock missing + i18n.test.ts `detectLanguage` locale probe). Zero new failures in 14.3a. Fix OutfitVisualizer mock when the test infrastructure is refactored; i18n test fix tracked separately.
 - **D-14.3a-5** — No test file for UnifiedCameraStack navigator wrapper — mirrors pre-existing ArmarioStack.tsx gap. Add a smoke test asserting the initial route is `Capture` and `useReducedMotion` controls the animation option when UnifiedCameraStack gets real content in Story 14.3b.
 - **D-14.3a-6** — No CustomTabBar.test.tsx for FAB rewire — spec explicitly deferred (Task 3.4). Add a test asserting `camera-fab-phone` press calls `getParent().navigate("UnifiedCameraRoot")` when CustomTabBar unit tests are created (recommended before Story 14.3b ships the real camera pipeline).
+
+---
+
+## Deferred from: code review of 14-8-auto-save-look-on-first-assignment (2026-04-22)
+
+- **D-14.8-1** — `ArmarioPickerScreen.tsx:190-195` — `addFavorite` error swallowed silently in production (`__DEV__`-only guard). Synchronous Zustand setter won't throw in practice; addFavorite failure is theoretical. Fix if store gains async persistence path.
+- **D-14.8-2** — `ArmarioPickerScreen.tsx:196-200` — `announceForAccessibility` fires outside inner try/catch; user would hear "Look saved" even if `addFavorite` threw. Theoretical. Move announce inside success branch if addFavorite ever gains async/fallible path.
+- **D-14.8-3** — `MisLooksLimitStrip.tsx` — `accessibilityRole="alert"` is a static role descriptor on iOS; VoiceOver may not auto-announce the strip on dynamic appearance. Spec chose this over `accessibilityLiveRegion` intentionally. Evaluate in dedicated accessibility polish story.
+- **D-14.8-4** — `usePremiumGate.ts:140,152,178` — internal `useCallback` hooks may capture stale `blockedCombinationId` if dep arrays are incomplete. Pre-existing in unchanged hook; validated by prior stories (14.4, 14.5, 14.6). Fix when refactoring usePremiumGate.
+- **D-14.8-5** — `usePremiumGate.ts:153` — `handlePurchase` parameter named `toggleFavorite` while Story 14.8 (and future stories) pass `addFavorite`. Naming inconsistency. Rename parameter to `onFavoriteAction` or similar in a hook refactor.
+- **D-14.8-6** — Pre-existing `pnpm lint` exit-code 1 due to formatting in `FavoritesList.test.tsx` (14.7) + `OutfitVisualizer.tsx` (14.6/D-14.7-4). Not introduced by 14.8. Fix in dedicated lint-cleanup pass.
