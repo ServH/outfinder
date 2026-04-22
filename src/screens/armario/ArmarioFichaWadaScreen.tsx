@@ -6,7 +6,7 @@ import type {
 import { SymbolView } from "expo-symbols";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal, Pressable, Text, View } from "react-native";
+import { AccessibilityInfo, Modal, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CompletenessBadge } from "@/components/armario/CompletenessBadge";
 import { MisLooksLimitStrip } from "@/components/armario/MisLooksLimitStrip";
@@ -17,8 +17,9 @@ import { usePremium } from "@/contexts/PremiumContext";
 import { getCombination } from "@/data/colorIndex";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { i18n } from "@/i18n";
 import { hexToRgba } from "@/lib/color";
-import { hapticLight } from "@/lib/haptics";
+import { hapticLight, hapticMedium } from "@/lib/haptics";
 import { unassign } from "@/lib/wardrobeRepo";
 import { FAB_PROTRUSION } from "@/navigation/CustomTabBar";
 import type { FavoritesStackParamList } from "@/navigation/types";
@@ -87,6 +88,7 @@ export function ArmarioFichaWadaScreen({
 		!isPremium &&
 		favorites.size >= PREMIUM_CONFIG.FREE_FAVORITES_LIMIT &&
 		!favorites.has(combinationId);
+	const alreadySaved = favorites.has(combinationId);
 
 	useEffect(() => {
 		if (missingOrEmpty) {
@@ -110,6 +112,29 @@ export function ArmarioFichaWadaScreen({
 			return;
 		}
 		navigation.push("ArmarioPicker", { combinationId, colorIndex });
+	}
+
+	function handleSaveForLater() {
+		hapticMedium();
+		if (needsLimitGate) {
+			gate.handlePremiumGate(combinationId);
+			return;
+		}
+		const prevFavorited = useMisLooksStore
+			.getState()
+			.favorites.has(combinationId);
+		try {
+			useMisLooksStore.getState().addFavorite(combinationId);
+		} catch (error) {
+			if (__DEV__) {
+				console.warn("[Ficha Wada] addFavorite failed", error);
+			}
+		}
+		if (!prevFavorited) {
+			AccessibilityInfo.announceForAccessibility(
+				i18n.t("armario.s2.lookSavedAnnouncement"),
+			);
+		}
 	}
 
 	function handleRemove(colorIndex: number) {
@@ -400,6 +425,58 @@ export function ArmarioFichaWadaScreen({
 					alignItems: "center",
 				}}
 			>
+				{!alreadySaved && (
+					<>
+						<View
+							testID="s2-save-for-later-divider"
+							style={{
+								height: 1,
+								backgroundColor: wadaTokens.hairline,
+								alignSelf: "stretch",
+								marginHorizontal: -20,
+								marginBottom: 16,
+							}}
+						/>
+						<Pressable
+							testID="s2-save-for-later-cta"
+							onPress={handleSaveForLater}
+							disabled={!hydrated}
+							accessibilityRole="button"
+							accessibilityLabel={t("armario.s2.saveForLaterA11yLabel")}
+							accessibilityHint={t("armario.s2.saveForLaterA11yHint")}
+							accessibilityState={{ disabled: !hydrated }}
+							className="items-center justify-center flex-row"
+							style={{
+								minHeight: 44,
+								minWidth: 44,
+								paddingHorizontal: 24,
+								paddingVertical: 12,
+								borderRadius: 24,
+								borderWidth: 1,
+								borderColor: wadaTokens.hairline,
+								backgroundColor: "transparent",
+								opacity: needsLimitGate ? 0.4 : 1,
+								marginBottom: 16,
+							}}
+						>
+							<SymbolView
+								name="bookmark"
+								size={16}
+								tintColor={wadaTokens.textSecondary}
+								style={{ marginRight: 8 }}
+							/>
+							<Text
+								style={{
+									fontFamily: "Inter_500Medium",
+									fontSize: 15,
+									color: wadaTokens.textSecondary,
+								}}
+							>
+								{t("armario.s2.saveForLaterCta")}
+							</Text>
+						</Pressable>
+					</>
+				)}
 				<Pressable
 					testID="s2-view-look-cta"
 					onPress={handleViewLook}
