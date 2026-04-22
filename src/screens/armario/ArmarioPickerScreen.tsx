@@ -28,6 +28,7 @@ import Animated, {
 	withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { CategoryPickerSheet } from "@/components/armario/CategoryPickerSheet";
 import { WadaColorDot } from "@/components/armario/WadaColorDot";
 import { WardrobeItemThumb } from "@/components/armario/WardrobeItemThumb";
 import { getCombination } from "@/data/colorIndex";
@@ -112,6 +113,7 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 	const isClosing = useRef(false);
 
 	const [pendingDelete, setPendingDelete] = useState<WardrobeItem | null>(null);
+	const [editingItem, setEditingItem] = useState<WardrobeItem | null>(null);
 	const [isEditMode, setIsEditMode] = useState(false);
 	const pendingDeleteAssignmentCount = useMemo(() => {
 		if (!pendingDelete) return 0;
@@ -308,6 +310,24 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 
 	const handleDeleteCancel = useCallback(() => {
 		setPendingDelete(null);
+	}, []);
+
+	const handleEditCategoryBadgePress = useCallback((item: WardrobeItem) => {
+		hapticLight();
+		setEditingItem(item);
+	}, []);
+
+	const handleEditCategoryConfirm = useCallback(
+		(category: WardrobeCategory) => {
+			if (editingItem === null) return;
+			useMisLooksStore.getState().updateItemCategory(editingItem.id, category);
+			setEditingItem(null);
+		},
+		[editingItem],
+	);
+
+	const handleEditCategoryCancel = useCallback(() => {
+		setEditingItem(null);
 	}, []);
 
 	const panGesture = Gesture.Pan()
@@ -547,6 +567,14 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 										).toLowerCase(),
 									},
 								);
+								const editCategoryA11yLabel = t(
+									"armario.s3.editMode.editCategoryA11yLabel",
+									{
+										category: t(
+											`unifiedCamera.categorySheet.${categoryLabelKey[item.category]}`,
+										).toLowerCase(),
+									},
+								);
 								return (
 									<Pressable
 										testID={`s3-item-${item.id}`}
@@ -595,7 +623,6 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 												</Text>
 											</View>
 										)}
-										{/* Story 14.12b: pencil icon sibling added here (top-right) */}
 										{isEditMode && (
 											<Animated.View
 												style={[
@@ -627,6 +654,48 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 												>
 													<SymbolView
 														name="minus"
+														size={14}
+														tintColor={wadaTokens.textPrimary}
+														type="hierarchical"
+														resizeMode="scaleAspectFit"
+													/>
+												</Pressable>
+											</Animated.View>
+										)}
+										{isEditMode && (
+											<Animated.View
+												style={[
+													editBadgeAnimStyle,
+													{
+														position: "absolute",
+														top: 4,
+														right: 4,
+														zIndex: 2,
+													},
+												]}
+											>
+												<Pressable
+													testID={`armario-edit-category-${item.id}`}
+													onPress={() => handleEditCategoryBadgePress(item)}
+													hitSlop={10}
+													accessibilityRole="button"
+													accessibilityLabel={editCategoryA11yLabel}
+													accessibilityHint={t(
+														"armario.s3.editMode.editCategoryA11yHint",
+													)}
+													style={{
+														width: 24,
+														height: 24,
+														borderRadius: 12,
+														backgroundColor: wadaTokens.bgPaper,
+														borderWidth: 1,
+														borderColor: wadaTokens.textSecondary,
+														alignItems: "center",
+														justifyContent: "center",
+													}}
+												>
+													<SymbolView
+														name="pencil"
 														size={14}
 														tintColor={wadaTokens.textPrimary}
 														type="hierarchical"
@@ -789,6 +858,13 @@ export function ArmarioPickerScreen(_props: ArmarioPickerScreenProps) {
 					</View>
 				</View>
 			</Modal>
+
+			<CategoryPickerSheet
+				visible={editingItem !== null}
+				currentCategory={editingItem?.category}
+				onConfirm={handleEditCategoryConfirm}
+				onCancel={handleEditCategoryCancel}
+			/>
 		</View>
 	);
 }

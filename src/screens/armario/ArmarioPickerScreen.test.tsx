@@ -86,6 +86,7 @@ let mockItems: Array<{
 }> = [];
 let mockFavorites: Set<string> = new Set();
 const mockAddFavorite = jest.fn();
+const mockUpdateItemCategory = jest.fn();
 jest.mock("@/stores/misLooksStore", () => {
 	const state = () => ({
 		hydrated: true,
@@ -99,6 +100,7 @@ jest.mock("@/stores/misLooksStore", () => {
 			return mockFavorites;
 		},
 		addFavorite: mockAddFavorite,
+		updateItemCategory: (...args: unknown[]) => mockUpdateItemCategory(...args),
 	});
 	const hook = (selector: (s: ReturnType<typeof state>) => unknown) =>
 		selector(state());
@@ -837,5 +839,182 @@ describe("Story 14.12a — edit mode", () => {
 
 		expect(screen.getByTestId("armario-delete-u1")).toBeTruthy();
 		expect(screen.getByTestId("s3-item-u1-assigned-elsewhere")).toBeTruthy();
+	});
+});
+
+describe("Story 14.12b — edit category via pencil", () => {
+	beforeEach(() => {
+		mockGoBack.mockClear();
+		mockNavigate.mockClear();
+		(hapticLight as jest.Mock).mockClear();
+		(hapticMedium as jest.Mock).mockClear();
+		(hapticRigid as jest.Mock).mockClear();
+		(assign as jest.Mock).mockClear();
+		(unassign as jest.Mock).mockClear();
+		(removeItem as jest.Mock).mockClear();
+		(cascadeDeleteAssignmentsForItem as jest.Mock).mockClear();
+		(deleteItemFiles as jest.Mock).mockClear();
+		mockAddFavorite.mockReset();
+		mockUpdateItemCategory.mockClear();
+		mockAnnounce.mockClear();
+		mockCombination = threeColorCombo;
+		mockRouteParams = { combinationId: "combo-3", colorIndex: 0 };
+		mockAssignments = [];
+		mockItems = [];
+		mockFavorites = new Set();
+	});
+
+	it("pencil badge renders on every tile in edit mode", async () => {
+		mockItems = [sampleItem("u1", "top"), sampleItem("u2", "bottom")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+
+		expect(screen.getByTestId("armario-edit-category-u1")).toBeTruthy();
+		expect(screen.getByTestId("armario-edit-category-u2")).toBeTruthy();
+	});
+
+	it("pencil badge does NOT render in normal mode", () => {
+		mockItems = [sampleItem("u1", "top")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		expect(screen.queryByTestId("armario-edit-category-u1")).toBeNull();
+	});
+
+	it("pencil tap fires hapticLight and opens CategoryPickerSheet with current category pre-selected", async () => {
+		mockItems = [sampleItem("u1", "bottom")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		(hapticLight as jest.Mock).mockClear();
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-edit-category-u1"));
+		});
+
+		expect(hapticLight).toHaveBeenCalledTimes(1);
+		expect(
+			screen.getByTestId("category-picker-sheet", {
+				includeHiddenElements: true,
+			}),
+		).toBeTruthy();
+		// Pre-selection: the `bottom` row reports accessibilityState.selected=true.
+		const bottomRow = screen.getByTestId("category-picker-row-bottom", {
+			includeHiddenElements: true,
+		});
+		expect(bottomRow.props.accessibilityState).toEqual(
+			expect.objectContaining({ selected: true }),
+		);
+	});
+
+	it("selecting a new category in the sheet calls updateItemCategory with the new value and dismisses the sheet", async () => {
+		mockItems = [sampleItem("u1", "top")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-edit-category-u1"));
+		});
+		await act(async () => {
+			fireEvent.press(
+				screen.getByTestId("category-picker-row-accessory", {
+					includeHiddenElements: true,
+				}),
+			);
+		});
+		await act(async () => {
+			fireEvent.press(
+				screen.getByTestId("category-picker-sheet-confirm", {
+					includeHiddenElements: true,
+				}),
+			);
+		});
+
+		expect(mockUpdateItemCategory).toHaveBeenCalledWith("u1", "accessory");
+		// Sheet dismissed — Modal hides, internal nodes drop from tree.
+		expect(
+			screen.queryByTestId("category-picker-sheet-title", {
+				includeHiddenElements: true,
+			}),
+		).toBeNull();
+		// Still in edit mode (multi-edit retention).
+		expect(screen.getByTestId("s3-edit-title")).toBeTruthy();
+		expect(screen.getByTestId("armario-delete-u1")).toBeTruthy();
+	});
+
+	it("dismissing the sheet via backdrop tap does NOT call updateItemCategory", async () => {
+		mockItems = [sampleItem("u1", "top")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-edit-category-u1"));
+		});
+		await act(async () => {
+			fireEvent.press(
+				screen.getByTestId("category-picker-sheet-backdrop", {
+					includeHiddenElements: true,
+				}),
+			);
+		});
+
+		expect(mockUpdateItemCategory).not.toHaveBeenCalled();
+		expect(
+			screen.queryByTestId("category-picker-sheet-title", {
+				includeHiddenElements: true,
+			}),
+		).toBeNull();
+		expect(screen.getByTestId("s3-edit-title")).toBeTruthy();
+	});
+
+	it("pencil badge accessibilityLabel interpolates the item's category label and exposes a hint", async () => {
+		mockItems = [sampleItem("u1", "top")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+
+		const badge = screen.getByTestId("armario-edit-category-u1");
+		expect(badge.props.accessibilityLabel).toBe("Edit category of top");
+		expect(badge.props.accessibilityHint).toBe(
+			"Opens the category picker to change the garment type.",
+		);
+		expect(badge.props.accessibilityRole).toBe("button");
+	});
+
+	it("picking the same category still calls updateItemCategory (no short-circuit)", async () => {
+		mockItems = [sampleItem("u1", "top")];
+		const Screen = loadScreen();
+		render(<Screen />);
+
+		await act(async () => {
+			fireEvent(screen.getByTestId("s3-item-u1"), "longPress");
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-edit-category-u1"));
+		});
+		await act(async () => {
+			fireEvent.press(
+				screen.getByTestId("category-picker-sheet-confirm", {
+					includeHiddenElements: true,
+				}),
+			);
+		});
+
+		expect(mockUpdateItemCategory).toHaveBeenCalledWith("u1", "top");
 	});
 });

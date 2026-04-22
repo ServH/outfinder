@@ -306,7 +306,9 @@
 				"doneA11yLabel": "Done",
 				"enterAnnouncement": "Edit mode activated. Tap the delete button on a garment to remove it.",
 				"deleteA11yLabel": "Delete {{category}}",
-				"tileA11yInEditMode": "Garment in edit mode. Use the delete button in the corner to remove it."
+				"tileA11yInEditMode": "Garment in edit mode. Use the delete button in the corner to remove it.",
+				"editCategoryA11yLabel": "Edit category of {{category}}",
+				"editCategoryA11yHint": "Opens the category picker to change the garment type."
 			}
 		},
 		"unfavoriteCascade": {

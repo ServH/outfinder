@@ -306,7 +306,9 @@
 				"doneA11yLabel": "Listo",
 				"enterAnnouncement": "Modo edición activado. Toca el botón eliminar de una prenda para borrarla.",
 				"deleteA11yLabel": "Eliminar {{category}}",
-				"tileA11yInEditMode": "Prenda en modo edición. Usa el botón eliminar de la esquina para borrarla."
+				"tileA11yInEditMode": "Prenda en modo edición. Usa el botón eliminar de la esquina para borrarla.",
+				"editCategoryA11yLabel": "Editar categoría de {{category}}",
+				"editCategoryA11yHint": "Abre el selector de categoría para cambiar el tipo de prenda."
 			}
 		},
 		"unfavoriteCascade": {
