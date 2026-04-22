@@ -38,13 +38,12 @@
 		"gotIt": "Got it",
 		"previousGarment": "Previous garment",
 		"nextGarment": "Next garment",
-		"shareLabel": "Share outfit image",
-		"shareButton": "Share Outfit",
+		"makeMineButton": "Make this look mine",
+		"makeMineA11yLabel": "Make this look mine",
+		"makeMineA11yHint": "Opens this look in your wardrobe to assign garments",
 		"selectedForSwap": "Selected {{label}} for swap",
 		"swapResult": "{{selectedLabel}} is now {{newColorA}}, {{tappedLabel}} is now {{newColorB}}",
-		"changedTo": "Changed to {{label}}",
-		"shareError": "Unable to share",
-		"shareErrorBody": "Something went wrong generating the image. Please try again."
+		"changedTo": "Changed to {{label}}"
 	},
 	"favorites": {
 		"title": "Favorites",

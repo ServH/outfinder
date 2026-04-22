@@ -38,13 +38,12 @@
 		"gotIt": "Entendido",
 		"previousGarment": "Prenda anterior",
 		"nextGarment": "Prenda siguiente",
-		"shareLabel": "Compartir imagen del outfit",
-		"shareButton": "Compartir Outfit",
+		"makeMineButton": "Hacer este look m\u00edo",
+		"makeMineA11yLabel": "Hacer este look m\u00edo",
+		"makeMineA11yHint": "Abre este look en tu armario para asignarle prendas",
 		"selectedForSwap": "{{label}} seleccionada para intercambio",
 		"swapResult": "{{selectedLabel}} ahora es {{newColorA}}, {{tappedLabel}} ahora es {{newColorB}}",
-		"changedTo": "Cambiado a {{label}}",
-		"shareError": "No se puede compartir",
-		"shareErrorBody": "Algo sali\u00f3 mal al generar la imagen. Int\u00e9ntalo de nuevo."
+		"changedTo": "Cambiado a {{label}}"
 	},
 	"favorites": {
 		"title": "Favoritos",

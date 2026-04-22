@@ -1,11 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { RouteProp } from "@react-navigation/native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	AccessibilityInfo,
-	Alert,
 	Pressable,
 	ScrollView,
 	Text,
@@ -30,12 +30,21 @@ import { WarmBackground } from "@/components/WarmBackground";
 import { getColor, getCombination } from "@/data/colorIndex";
 import { getCycleForGarment, useOutfitState } from "@/hooks/useOutfitState";
 import { useStoreReviewPrompt } from "@/hooks/useStoreReviewPrompt";
+import { relativeLuminance } from "@/lib/color";
 import { useIsIPad } from "@/lib/device";
-import { hapticLight, hapticMedium, hapticRigid } from "@/lib/haptics";
-import { shareOutfit } from "@/lib/share";
+import { hapticLight, hapticMedium } from "@/lib/haptics";
 import { FAB_PROTRUSION } from "@/navigation/CustomTabBar";
-import type { ColorsStackParamList } from "@/navigation/types";
+import type {
+	ColorsStackParamList,
+	RootStackParamList,
+} from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
+
+// Shared with UnifiedCameraResultScreen (Story 14.4): Wada-hex CTA labels flip
+// from dark pergamino ink (> 0.40) to cream (≤ 0.40). Aesthetic threshold tuned
+// for the Wada palette, not a WCAG contrast rule.
+const LUMINANCE_DARK_TEXT_THRESHOLD = 0.4;
+const CTA_LABEL_CREAM = "#faf7f2";
 
 type OutfitVisualizerRoute = RouteProp<
 	ColorsStackParamList,
@@ -80,10 +89,6 @@ export function OutfitVisualizer() {
 	} else if (prevRoute?.name === "BrowseAllColors") {
 		backLabel = t("browseAll.backButton");
 	}
-
-	const shareViewRef = useRef<View>(null);
-
-	const [sharing, setSharing] = useState(false);
 
 	// Coach mark state: 0 = hidden, 1 = step 1, 2 = step 2
 	const [coachStep, setCoachStep] = useState(0);
@@ -182,16 +187,23 @@ export function OutfitVisualizer() {
 		}
 	}, [coachStep, cardOpacity, cardTranslateY, t]);
 
-	const handleShare = useCallback(async () => {
-		if (sharing) return;
-		hapticRigid();
-		setSharing(true);
-		const success = await shareOutfit(shareViewRef);
-		setSharing(false);
-		if (!success) {
-			Alert.alert(t("visualizer.shareError"), t("visualizer.shareErrorBody"));
-		}
-	}, [sharing, t]);
+	// Cross-stack nav to Ficha Wada via root. Must go through root because
+	// OutfitVisualizer is registered in BOTH ColorsStack and FavoritesStack, but
+	// ArmarioFichaWada only lives in FavoritesStack — a local push would fail
+	// when the user entered via ColorsTab. Trade-off: swipe-back from Ficha Wada
+	// lands on FavoritesList (not Visualizer). See Story 14.6 AC #3 rationale.
+	const handleMakeMine = useCallback(() => {
+		hapticMedium();
+		const rootNav =
+			navigation.getParent()?.getParent<NativeStackNavigationProp<RootStackParamList>>();
+		rootNav?.navigate("Main", {
+			screen: "FavoritesTab",
+			params: {
+				screen: "ArmarioFichaWada",
+				params: { combinationId },
+			},
+		} as never);
+	}, [navigation, combinationId]);
 
 	const handleSlotTap = useCallback(
 		(index: number) => {
@@ -286,6 +298,11 @@ export function OutfitVisualizer() {
 		);
 	}
 
+	const ctaLabelColor =
+		relativeLuminance(slots[0].color.hex) > LUMINANCE_DARK_TEXT_THRESHOLD
+			? wadaTokens.textPrimary
+			: CTA_LABEL_CREAM;
+
 	return (
 		<View
 			className="flex-1"
@@ -320,8 +337,7 @@ export function OutfitVisualizer() {
 				contentContainerStyle={{ flexGrow: 1 }}
 				showsVerticalScrollIndicator={false}
 			>
-				{/* Capturable area — everything the user sees minus the share button */}
-				<View ref={shareViewRef} collapsable={false} className="flex-1">
+				<View className="flex-1">
 					<WarmBackground />
 					<View className="flex-1 items-center justify-center py-4">
 						<Aureola
@@ -408,24 +424,41 @@ export function OutfitVisualizer() {
 					</View>
 				</View>
 			</ScrollView>
-			{/* Share button — paddingBottom clears the protruding camera FAB */}
+			{/* Primary CTA — bridge to Ficha Wada; replaces the Story 14.5 share button
+			    and uses the Aureola hex as background per UX-DR6 (visual parity with
+			    the halo already rendered behind the outfit card). */}
 			<View
-				className="items-center py-3"
-				style={{ paddingBottom: 12 + FAB_PROTRUSION }}
+				className="px-4"
+				style={{ paddingBottom: 12 + FAB_PROTRUSION, paddingTop: 8 }}
 			>
 				<Pressable
-					onPress={handleShare}
-					disabled={sharing}
-					accessibilityLabel={t("visualizer.shareLabel")}
+					onPress={handleMakeMine}
 					accessibilityRole="button"
-					className="min-h-[48px] items-center justify-center rounded-full bg-surface px-6 py-3"
-					style={{ opacity: sharing ? 0.5 : 1 }}
+					accessibilityLabel={t("visualizer.makeMineA11yLabel")}
+					accessibilityHint={t("visualizer.makeMineA11yHint")}
+					testID="visualizer-make-mine"
+					className="h-12 w-full flex-row items-center justify-center rounded-[14px]"
+					style={{ backgroundColor: slots[0].color.hex }}
 				>
 					<Text
 						allowFontScaling
-						className="font-sans text-sm font-medium text-primary"
+						style={{
+							fontFamily: "Inter_500Medium",
+							fontSize: 16,
+							color: ctaLabelColor,
+							marginRight: 8,
+						}}
 					>
-						{t("visualizer.shareButton")}
+						{t("visualizer.makeMineButton")}
+					</Text>
+					<Text
+						style={{
+							fontFamily: "Inter_500Medium",
+							fontSize: 16,
+							color: ctaLabelColor,
+						}}
+					>
+						{"→"}
 					</Text>
 				</Pressable>
 			</View>
