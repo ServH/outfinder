@@ -520,75 +520,58 @@ describe("FavoritesList", () => {
 		).toEqual({ selected: false });
 	});
 
-	// --- Story 13.4a: Armario intercept (AC #6) ---
+	// --- Story 13.4a / 14.11: Armario intercept (AC #6) ---
+	// Story 14.11 Epic 14 partition moves incomplete (partial/empty) favorites
+	// to the "En curso" strip; only COMPLETE combos remain in the grid, so the
+	// combo-card tap only hits FichaWada. The tile-tap routing is covered by
+	// the Story 14.11 integration block below.
 
-	it("iOS 17+ hydrated + 0 assignments + s0 not seen → taps route to ArmarioZeroState", async () => {
+	it("iOS 17+ hydrated + complete combo → combo-card tap routes to ArmarioFichaWada", async () => {
 		mockIsIOS17OrNewer.mockReturnValue(true);
 		mockHydrated = true;
-		mockAssignments = [];
-		mockFavorites = new Set(["p001"]);
-		render(<FavoritesList />);
-
-		await act(async () => {
-			fireEvent.press(screen.getByTestId(`combo-card-${realCombo1.id}`));
-		});
-		await waitFor(() => {
-			expect(mockPush).toHaveBeenCalledWith("ArmarioZeroState", {
-				combinationId: realCombo1.id,
-			});
-		});
-		expect(mockPush).not.toHaveBeenCalledWith(
-			"OutfitVisualizer",
-			expect.anything(),
-		);
-	});
-
-	it("iOS 17+ hydrated + existing assignment → taps route to ArmarioFichaWada", async () => {
-		mockIsIOS17OrNewer.mockReturnValue(true);
-		mockHydrated = true;
-		mockAssignments = [
+		mockItems = [
 			{
-				combinationId: realCombo1.id,
-				colorIndex: 0,
-				wardrobeItemId: "uuid-1",
-				assignedAt: 1_700_000_000_000,
+				id: "u1",
+				localImagePath: "file:///u1.webp",
+				thumbnailPath: "file:///u1.thumb.webp",
+				createdAt: 1,
+			},
+			{
+				id: "u2",
+				localImagePath: "file:///u2.webp",
+				thumbnailPath: "file:///u2.thumb.webp",
+				createdAt: 1,
 			},
 		];
-		mockFavorites = new Set(["p001"]);
+		mockAssignments = [
+			{
+				combinationId: realCombo2.id,
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 100,
+			},
+			{
+				combinationId: realCombo2.id,
+				colorIndex: 1,
+				wardrobeItemId: "u2",
+				assignedAt: 200,
+			},
+		];
+		mockFavorites = new Set([realCombo2.id]);
 		render(<FavoritesList />);
 
 		await act(async () => {
-			fireEvent.press(screen.getByTestId(`combo-card-${realCombo1.id}`));
+			fireEvent.press(screen.getByTestId(`combo-card-${realCombo2.id}`));
 		});
 		await waitFor(() => {
 			expect(mockPush).toHaveBeenCalledWith("ArmarioFichaWada", {
-				combinationId: realCombo1.id,
-			});
-		});
-	});
-
-	it("iOS 17+ hydrated + 0 assignments + s0 already seen → taps route to ArmarioFichaWada", async () => {
-		mockIsIOS17OrNewer.mockReturnValue(true);
-		mockHydrated = true;
-		mockAssignments = [];
-		mockFavorites = new Set(["p001"]);
-		const AsyncStorage = require("@react-native-async-storage/async-storage");
-		await AsyncStorage.setItem(`@wardrobe:s0_seen_for_${realCombo1.id}`, "1");
-		render(<FavoritesList />);
-
-		await act(async () => {
-			fireEvent.press(screen.getByTestId(`combo-card-${realCombo1.id}`));
-		});
-		await waitFor(() => {
-			expect(mockPush).toHaveBeenCalledWith("ArmarioFichaWada", {
-				combinationId: realCombo1.id,
+				combinationId: realCombo2.id,
 			});
 		});
 		expect(mockPush).not.toHaveBeenCalledWith(
 			"ArmarioZeroState",
 			expect.anything(),
 		);
-		await AsyncStorage.removeItem(`@wardrobe:s0_seen_for_${realCombo1.id}`);
 	});
 
 	it("iOS < 17 OR not hydrated → taps still route to OutfitVisualizer (NFR9 parity)", async () => {
@@ -672,42 +655,37 @@ describe("FavoritesList", () => {
 		};
 	}
 
-	it("iOS 17+ hydrated + ≥1 assignment → renders FavoriteComboEnrichedCard with badge + thumb strip", () => {
+	it("iOS 17+ hydrated + complete combo → renders FavoriteComboEnrichedCard with badge + thumb strip in grid", () => {
 		mockIsIOS17OrNewer.mockReturnValue(true);
 		mockHydrated = true;
-		mockItems = [makeItem("u1")];
+		mockItems = [makeItem("u1"), makeItem("u2")];
+		// p002 has 2 colors; 2 assignments = complete → stays in grid post-14.11.
 		mockAssignments = [
 			{
-				combinationId: "p001",
+				combinationId: "p002",
 				colorIndex: 0,
 				wardrobeItemId: "u1",
 				assignedAt: 100,
 			},
+			{
+				combinationId: "p002",
+				colorIndex: 1,
+				wardrobeItemId: "u2",
+				assignedAt: 200,
+			},
 		];
-		mockFavorites = new Set(["p001"]);
+		mockFavorites = new Set(["p002"]);
 		render(<FavoritesList />);
-		expect(screen.getByTestId("enriched-card-p001")).toBeTruthy();
+		expect(screen.getByTestId("enriched-card-p002")).toBeTruthy();
 		const badge = screen.getByTestId("combo-card-bottom-row-leading", {
 			includeHiddenElements: true,
 		});
-		expect(badge.props.children).toBe("1/3 garments");
+		expect(badge.props.children).toBe("2/2 garments");
 		expect(
-			screen.getByTestId("enriched-card-p001-thumbs", {
+			screen.getByTestId("enriched-card-p002-thumbs", {
 				includeHiddenElements: true,
 			}),
 		).toBeTruthy();
-	});
-
-	it("iOS 17+ hydrated + ZERO wardrobe state anywhere → falls back to plain ComboCard (pre-Epic-13 parity)", () => {
-		mockIsIOS17OrNewer.mockReturnValue(true);
-		mockHydrated = true;
-		mockItems = [];
-		mockAssignments = [];
-		mockFavorites = new Set(["p001"]);
-		render(<FavoritesList />);
-		// Enriched wrapper NOT rendered — plain ComboCard is.
-		expect(screen.queryByTestId("enriched-card-p001")).toBeNull();
-		expect(screen.getByTestId(`combo-card-${realCombo1.id}`)).toBeTruthy();
 	});
 
 	it("iOS < 17 → always uses plain ComboCard regardless of wardrobe state", () => {
@@ -746,25 +724,107 @@ describe("FavoritesList", () => {
 		expect(screen.getByTestId(`combo-card-${realCombo1.id}`)).toBeTruthy();
 	});
 
-	it("recent-mode sort partitions complete > partial > empty across favorites", () => {
+	it("complete combo renders ctaComplete override in enriched grid card", () => {
 		mockIsIOS17OrNewer.mockReturnValue(true);
 		mockHydrated = true;
-		mockItems = [
-			makeItem("u1"),
-			makeItem("u2"),
-			makeItem("u3"),
-			makeItem("u4"),
-			makeItem("u5"),
+		mockItems = [makeItem("u1"), makeItem("u2")];
+		mockAssignments = [
+			{
+				combinationId: "p002",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 1,
+			},
+			{
+				combinationId: "p002",
+				colorIndex: 1,
+				wardrobeItemId: "u2",
+				assignedAt: 2,
+			},
 		];
-		// p001 partial (1/3, most recent assignment 500)
-		// p002 complete (2/2, most recent assignment 300)
-		// p004 empty (0/4)
+		mockFavorites = new Set(["p002"]);
+		render(<FavoritesList />);
+		const cta = screen.getByTestId("combo-card-cta-override");
+		expect(cta.props.children).toBe("See your look \u2192");
+	});
+
+	// --- Story 14.11: "En curso" incomplete-looks retention surface (AC #11) ---
+
+	it("hides En curso section when all favorites are complete", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockItems = [makeItem("u1"), makeItem("u2")];
+		// p002 has 2 colors; 2 assignments = complete.
+		mockAssignments = [
+			{
+				combinationId: "p002",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 100,
+			},
+			{
+				combinationId: "p002",
+				colorIndex: 1,
+				wardrobeItemId: "u2",
+				assignedAt: 200,
+			},
+		];
+		mockFavorites = new Set(["p002"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-looks-section")).toBeNull();
+	});
+
+	it("renders 1 incomplete tile when 1 favorite is partial", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockItems = [makeItem("u1")];
 		mockAssignments = [
 			{
 				combinationId: "p001",
 				colorIndex: 0,
 				wardrobeItemId: "u1",
-				assignedAt: 500,
+				assignedAt: 1_000_000,
+			},
+		];
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-tile-p001")).toBeTruthy();
+	});
+
+	it("renders multiple tiles when multiple favorites are incomplete", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockAssignments = [];
+		mockFavorites = new Set(["p001", "p002", "p004"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-tile-p001")).toBeTruthy();
+		expect(screen.queryByTestId("incomplete-tile-p002")).toBeTruthy();
+		expect(screen.queryByTestId("incomplete-tile-p004")).toBeTruthy();
+	});
+
+	it("renders incomplete tile for favorite with zero assignments (Guardar-para-luego case)", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockAssignments = [];
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-tile-p001")).toBeTruthy();
+		// Badge renders "No garments yet" (EN) via CompletenessBadge none variant
+		const badge = screen.getByTestId("incomplete-tile-p001-badge-label");
+		expect(badge.props.children).toBe("No garments yet");
+	});
+
+	it("completed looks appear in main grid, not in En curso strip", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockItems = [makeItem("u1"), makeItem("u2"), makeItem("u3")];
+		// p001 partial (1/3), p002 complete (2/2)
+		mockAssignments = [
+			{
+				combinationId: "p001",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 100,
 			},
 			{
 				combinationId: "p002",
@@ -779,70 +839,98 @@ describe("FavoritesList", () => {
 				assignedAt: 300,
 			},
 		];
-		// Insertion order: p001, p004, p002
-		mockFavorites = new Set(["p001", "p004", "p002"]);
+		mockFavorites = new Set(["p001", "p002"]);
 		render(<FavoritesList />);
-
-		const cards = screen.getAllByTestId(/^enriched-card-p\d+$/);
-		// complete first (p002), then partial (p001), then empty (p004)
-		expect(cards.map((c) => c.props.testID)).toEqual([
-			"enriched-card-p002",
-			"enriched-card-p001",
-			"enriched-card-p004",
-		]);
+		expect(screen.queryByTestId("incomplete-tile-p001")).toBeTruthy();
+		expect(screen.queryByTestId("incomplete-tile-p002")).toBeNull();
+		expect(screen.queryByTestId("enriched-card-p002")).toBeTruthy();
 	});
 
-	it("a-z sort mode does NOT apply the completeness partition", () => {
+	it("renders Mis looks completos section header when both buckets are non-empty", () => {
 		mockIsIOS17OrNewer.mockReturnValue(true);
 		mockHydrated = true;
-		mockItems = [makeItem("u1"), makeItem("u2")];
-		mockAssignments = [
-			// p002 complete, should NOT jump to top when a-z active.
-			{
-				combinationId: "p002",
-				colorIndex: 0,
-				wardrobeItemId: "u1",
-				assignedAt: 1,
-			},
-			{
-				combinationId: "p002",
-				colorIndex: 1,
-				wardrobeItemId: "u2",
-				assignedAt: 2,
-			},
-		];
-		mockFavorites = new Set(["p004", "p001", "p002"]);
-		render(<FavoritesList />);
-
-		fireEvent.press(screen.getByTestId("sort-pill-a-z"));
-
-		// Alphabetical order: Autumn Garden (p004), Dawn Sky (p001), Spring
-		// Tidings (p002) — completeness-first partition NOT applied.
-		const cards = screen.getAllByTestId(/^enriched-card-p\d+$/);
-		expect(cards[0].props.testID).toBe("enriched-card-p004");
-		expect(cards[1].props.testID).toBe("enriched-card-p001");
-		expect(cards[2].props.testID).toBe("enriched-card-p002");
-	});
-
-	it("partial combo renders ctaOverrideKey = armario.favorites.ctaPartial ('Complete your look →')", () => {
-		mockIsIOS17OrNewer.mockReturnValue(true);
-		mockHydrated = true;
-		mockItems = [makeItem("u1")];
+		mockItems = [makeItem("u1"), makeItem("u2"), makeItem("u3")];
 		mockAssignments = [
 			{
 				combinationId: "p001",
 				colorIndex: 0,
 				wardrobeItemId: "u1",
-				assignedAt: 1,
+				assignedAt: 100,
+			},
+			{
+				combinationId: "p002",
+				colorIndex: 0,
+				wardrobeItemId: "u2",
+				assignedAt: 200,
+			},
+			{
+				combinationId: "p002",
+				colorIndex: 1,
+				wardrobeItemId: "u3",
+				assignedAt: 300,
+			},
+		];
+		mockFavorites = new Set(["p001", "p002"]);
+		render(<FavoritesList />);
+		expect(screen.getByTestId("complete-section-header")).toBeTruthy();
+	});
+
+	it("hides Mis looks completos header when only incomplete looks exist", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockAssignments = [];
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("complete-section-header")).toBeNull();
+	});
+
+	it("falls back to unified grid on iOS < 17 (no En curso, no completos header)", () => {
+		mockIsIOS17OrNewer.mockReturnValue(false);
+		mockHydrated = true;
+		mockAssignments = [];
+		mockFavorites = new Set(["p001", "p002"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-looks-section")).toBeNull();
+		expect(screen.queryByTestId("complete-section-header")).toBeNull();
+		expect(screen.getByTestId(`combo-card-${realCombo1.id}`)).toBeTruthy();
+		expect(screen.getByTestId(`combo-card-${realCombo2.id}`)).toBeTruthy();
+	});
+
+	it("tile tap pushes ArmarioFichaWada with combinationId (skips S0 per UX-DR5)", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockAssignments = [
+			{
+				combinationId: "p001",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 1_000_000,
 			},
 		];
 		mockFavorites = new Set(["p001"]);
 		render(<FavoritesList />);
-		const cta = screen.getByTestId("combo-card-cta-override");
-		expect(cta.props.children).toBe("Complete your look \u2192");
+		fireEvent.press(screen.getByTestId("incomplete-tile-p001"));
+		expect(mockPush).toHaveBeenCalledWith("ArmarioFichaWada", {
+			combinationId: "p001",
+		});
+		expect(mockPush).not.toHaveBeenCalledWith(
+			"ArmarioZeroState",
+			expect.anything(),
+		);
 	});
 
-	it("complete combo → ctaComplete; empty combo → ctaEmpty (enriched CTAs resolve by bucket)", () => {
+	it("tile tap fires hapticLight", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockAssignments = [];
+		mockFavorites = new Set(["p001"]);
+		(hapticLight as jest.Mock).mockClear();
+		render(<FavoritesList />);
+		fireEvent.press(screen.getByTestId("incomplete-tile-p001"));
+		expect(hapticLight).toHaveBeenCalledTimes(1);
+	});
+
+	it("re-render with completed assignments removes tile from En curso and adds card to Mis looks completos", () => {
 		mockIsIOS17OrNewer.mockReturnValue(true);
 		mockHydrated = true;
 		mockItems = [makeItem("u1"), makeItem("u2")];
@@ -851,21 +939,30 @@ describe("FavoritesList", () => {
 				combinationId: "p002",
 				colorIndex: 0,
 				wardrobeItemId: "u1",
-				assignedAt: 1,
+				assignedAt: 100,
+			},
+		];
+		mockFavorites = new Set(["p002"]);
+		const { rerender } = render(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-tile-p002")).toBeTruthy();
+
+		mockAssignments = [
+			{
+				combinationId: "p002",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 100,
 			},
 			{
 				combinationId: "p002",
 				colorIndex: 1,
 				wardrobeItemId: "u2",
-				assignedAt: 2,
+				assignedAt: 200,
 			},
 		];
-		mockFavorites = new Set(["p002", "p004"]);
-		render(<FavoritesList />);
-		const ctaEls = screen.getAllByTestId("combo-card-cta-override");
-		const texts = ctaEls.map((el) => el.props.children as string);
-		expect(texts).toContain("See your look \u2192");
-		expect(texts).toContain("Assign garments \u2192");
+		rerender(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-tile-p002")).toBeNull();
+		expect(screen.queryByTestId("enriched-card-p002")).toBeTruthy();
 	});
 
 	// --- Story 14.10: "+ Nuevo look" entry-point card ---

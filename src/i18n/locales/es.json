@@ -61,6 +61,18 @@
 			"subtitle": "Explora las paletas de Sanzo Wada y arma tu look",
 			"a11yLabel": "Empezar un look nuevo",
 			"a11yHint": "Explora paletas de Sanzo Wada para empezar un look"
+		},
+		"incompleteSection": {
+			"title": "En curso",
+			"a11yLabel": "En curso. Tus looks a medias."
+		},
+		"incompleteTile": {
+			"a11yLabel": "Look {{name}}. {{assigned}} de {{total}} prendas asignadas. Faltan {{remaining}}.",
+			"a11yHint": "Abre este look para asignar más prendas"
+		},
+		"completeSection": {
+			"title": "Mis looks completos",
+			"a11yLabel": "Mis looks completos"
 		}
 	},
 	"settings": {

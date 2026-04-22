@@ -61,6 +61,18 @@
 			"subtitle": "Explore Sanzo Wada palettes and build your look",
 			"a11yLabel": "Start a new look",
 			"a11yHint": "Explore Sanzo Wada palettes to start a look"
+		},
+		"incompleteSection": {
+			"title": "In progress",
+			"a11yLabel": "In progress. Your unfinished looks."
+		},
+		"incompleteTile": {
+			"a11yLabel": "Look {{name}}. {{assigned}} of {{total}} garments assigned. {{remaining}} missing.",
+			"a11yHint": "Open this look to assign more garments"
+		},
+		"completeSection": {
+			"title": "My completed looks",
+			"a11yLabel": "My completed looks"
 		}
 	},
 	"settings": {
