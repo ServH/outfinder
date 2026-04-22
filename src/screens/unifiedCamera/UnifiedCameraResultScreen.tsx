@@ -4,7 +4,7 @@ import {
 	useRoute,
 } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	AccessibilityInfo,
@@ -15,16 +15,24 @@ import {
 	View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { CategoryPickerSheet } from "@/components/armario/CategoryPickerSheet";
+import { PremiumPaywall } from "@/components/PremiumPaywall";
+import { usePremium } from "@/contexts/PremiumContext";
 import { getCombinations } from "@/data/colorIndex";
 import type { Color } from "@/data/types";
+import { usePremiumGate } from "@/hooks/usePremiumGate";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { saveCutoutAsWardrobeItem } from "@/lib/armario/saveCutoutAsWardrobeItem";
+import { WardrobePersistenceError } from "@/lib/armario/wardrobeErrors";
 import { relativeLuminance } from "@/lib/color";
 import type { MatchResult } from "@/lib/colorTypes";
-import { hapticLight, hapticMedium } from "@/lib/haptics";
+import { hapticLight, hapticMedium, hapticRigid } from "@/lib/haptics";
+import type { WardrobeCategory } from "@/lib/wardrobeTypes";
 import type {
 	RootStackParamList,
 	UnifiedCameraStackParamList,
 } from "@/navigation/types";
+import { useMisLooksStore } from "@/stores/misLooksStore";
 import { wadaTokens } from "@/styles/theme";
 
 // Luminance threshold (Pencil frame EZ4EA): Wada-hex CTAs above 0.40 relative
@@ -63,10 +71,30 @@ export function UnifiedCameraResultScreen(
 	const insets = useSafeAreaInsets();
 	const reducedMotion = useReducedMotion();
 
-	const { cutoutUri, dominantHex, wadaMatch } = route.params;
+	const { cutoutUri, dominantHex, wadaMatch, sourceUri } = route.params;
+	const { isPremium } = usePremium();
+	const favorites = useMisLooksStore((s) => s.favorites);
+	const gate = usePremiumGate(favorites);
+
 	const [confirmedTone, setConfirmedTone] = useState<Color>(() =>
 		getInitialConfirmedTone(wadaMatch),
 	);
+	const [categorySheetVisible, setCategorySheetVisible] = useState(false);
+	const [paywallVisible, setPaywallVisible] = useState(false);
+	const [confirming, setConfirming] = useState(false);
+	const [errorCopy, setErrorCopy] = useState<string | null>(null);
+
+	// Pending category for the "silent re-trigger on purchase" flow per
+	// UX-DR1 line 252. Held across the paywall lifecycle; cleared on both
+	// success (inside handleCategoryConfirm) and dismiss-without-purchase.
+	const pendingCategoryRef = useRef<WardrobeCategory | null>(null);
+	const isMounted = useRef(true);
+
+	useEffect(() => {
+		return () => {
+			isMounted.current = false;
+		};
+	}, []);
 
 	const showToneCorrection =
 		wadaMatch.type === "confirm" &&
@@ -106,13 +134,101 @@ export function UnifiedCameraResultScreen(
 
 	function handlePrimaryCta() {
 		hapticMedium();
-		if (__DEV__) {
-			console.warn(
-				"[UnifiedCameraResultScreen] Primary CTA save flow will be implemented in Story 14.5 — routing to PostSave placeholder",
-			);
-		}
-		navigation.push("PostSave");
+		setCategorySheetVisible(true);
 	}
+
+	function handleSheetCancel() {
+		setCategorySheetVisible(false);
+		pendingCategoryRef.current = null;
+	}
+
+	const handleCategoryConfirm = useCallback(
+		async (category: WardrobeCategory) => {
+			pendingCategoryRef.current = category;
+			setConfirming(true);
+			try {
+				await saveCutoutAsWardrobeItem({
+					cutoutUri,
+					sourceUri,
+					isPremium,
+					category,
+				});
+				if (!isMounted.current) return;
+				hapticRigid();
+				pendingCategoryRef.current = null;
+				setCategorySheetVisible(false);
+				setConfirming(false);
+				navigation.replace("PostSave", {
+					wadaColorId: confirmedTone.id,
+					capturedHex: dominantHex,
+					categoryKey: category,
+				});
+			} catch (e) {
+				if (!isMounted.current) return;
+				if (e instanceof WardrobePersistenceError) {
+					if (e.kind === "paywall") {
+						setCategorySheetVisible(false);
+						setPaywallVisible(true);
+						setConfirming(false);
+						return;
+					}
+					if (e.kind === "diskFull") {
+						setErrorCopy(t("unifiedCamera.save.errorDiskFull"));
+						setConfirming(false);
+						return;
+					}
+					if (e.kind === "encode") {
+						setErrorCopy(t("unifiedCamera.save.errorEncode"));
+						setConfirming(false);
+						return;
+					}
+					if (e.kind === "move" || e.kind === "repoAdd") {
+						setErrorCopy(t("unifiedCamera.save.errorSaveFailed"));
+						setConfirming(false);
+						return;
+					}
+					// Catch-all for future WardrobePersistenceError kinds.
+					setErrorCopy(t("unifiedCamera.save.errorSaveFailed"));
+					setConfirming(false);
+					return;
+				}
+				if (__DEV__) {
+					console.warn("[UnifiedCameraResultScreen] save failed:", e);
+				}
+				setErrorCopy(t("unifiedCamera.save.errorSaveFailed"));
+				setConfirming(false);
+			}
+		},
+		[
+			cutoutUri,
+			sourceUri,
+			isPremium,
+			confirmedTone.id,
+			dominantHex,
+			navigation,
+			t,
+		],
+	);
+
+	// Paywall aftermath (UX-DR1 line 251-252). When the paywall closes and the
+	// save flow is idle:
+	//   - isPremium=true + pending ref → silent re-trigger with the original
+	//     category selection (purchase succeeded).
+	//   - isPremium=false → clear the pending ref so a future isPremium flip
+	//     outside this flow cannot silently re-trigger a stale save.
+	// Ref is cleared BEFORE the re-call to guard against reentry.
+	useEffect(() => {
+		if (paywallVisible || confirming) return;
+		if (isPremium && pendingCategoryRef.current !== null) {
+			const cat = pendingCategoryRef.current;
+			pendingCategoryRef.current = null;
+			void handleCategoryConfirm(cat);
+			return;
+		}
+		if (!isPremium) {
+			pendingCategoryRef.current = null;
+		}
+	}, [isPremium, paywallVisible, confirming, handleCategoryConfirm]);
 
 	function handleSecondaryLink() {
 		hapticLight();
@@ -126,6 +242,19 @@ export function UnifiedCameraResultScreen(
 			},
 		} as never);
 	}
+
+	const handlePaywallDismiss = useCallback(() => {
+		setPaywallVisible(false);
+		gate.handleDismiss();
+	}, [gate]);
+
+	const handlePurchase = useCallback(() => {
+		gate.handlePurchase(() => {});
+	}, [gate]);
+
+	const handleErrorDismiss = useCallback(() => {
+		setErrorCopy(null);
+	}, []);
 
 	const ctaLabelColor =
 		relativeLuminance(confirmedTone.hex) > LUMINANCE_DARK_TEXT_THRESHOLD
@@ -359,6 +488,71 @@ export function UnifiedCameraResultScreen(
 					</Text>
 				</Pressable>
 			</View>
+
+			{errorCopy !== null && (
+				<View
+					testID="unified-camera-result-error-sheet"
+					accessibilityRole="alert"
+					accessibilityLiveRegion="assertive"
+					className="absolute left-4 right-4 rounded-[14px]"
+					style={{
+						bottom: 200,
+						backgroundColor: "rgba(0,0,0,0.82)",
+						paddingHorizontal: 16,
+						paddingVertical: 16,
+					}}
+				>
+					<Text
+						style={{
+							fontFamily: "Inter_400Regular",
+							fontSize: 14,
+							color: "white",
+							textAlign: "center",
+							lineHeight: 20,
+						}}
+					>
+						{errorCopy}
+					</Text>
+					<View className="flex-row justify-center mt-3">
+						<Pressable
+							testID="unified-camera-result-error-dismiss-button"
+							onPress={handleErrorDismiss}
+							accessibilityRole="button"
+							accessibilityLabel={t("unifiedCamera.save.errorDismiss")}
+							className="min-h-[44px] min-w-[44px] items-center justify-center px-4"
+						>
+							<Text
+								style={{
+									fontFamily: "Inter_500Medium",
+									fontSize: 14,
+									color: "white",
+								}}
+							>
+								{t("unifiedCamera.save.errorDismiss")}
+							</Text>
+						</Pressable>
+					</View>
+				</View>
+			)}
+
+			<CategoryPickerSheet
+				visible={categorySheetVisible}
+				onConfirm={handleCategoryConfirm}
+				onCancel={handleSheetCancel}
+				confirming={confirming}
+			/>
+
+			<PremiumPaywall
+				visible={paywallVisible}
+				blockedCombination={undefined}
+				favoriteCombinationIds={[...favorites]}
+				priceString={gate.priceString}
+				purchaseState={gate.purchaseState}
+				errorMessage={gate.errorMessage}
+				onPurchase={handlePurchase}
+				onRestore={gate.handleRestore}
+				onDismiss={handlePaywallDismiss}
+			/>
 		</View>
 	);
 }

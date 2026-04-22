@@ -107,7 +107,12 @@ export function UnifiedCameraCaptureScreen(
 			const wadaMatch = classifyMatch(matches);
 			setProcessing(false);
 			hapticLight();
-			navigation.push("Result", { cutoutUri, dominantHex, wadaMatch });
+			navigation.push("Result", {
+				cutoutUri,
+				dominantHex,
+				wadaMatch,
+				sourceUri,
+			});
 		} catch (e) {
 			if (!isMounted.current) return;
 			setProcessing(false);

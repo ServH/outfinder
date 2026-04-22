@@ -130,6 +130,7 @@ describe("UnifiedCameraCaptureScreen", () => {
 		expect(routeName).toBe("Result");
 		expect(params.cutoutUri).toBe("file:///cutout.png");
 		expect(params.dominantHex).toBe("#7A3F2B");
+		expect(params.sourceUri).toBe("file:///mock-photo.jpg");
 		expect(params.wadaMatch).toBeDefined();
 		expect(["direct", "confirm", "out-of-coverage"]).toContain(
 			params.wadaMatch.type,

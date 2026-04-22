@@ -1,8 +1,15 @@
-import { fireEvent, render, screen } from "@testing-library/react-native";
+import {
+	act,
+	fireEvent,
+	render,
+	screen,
+	waitFor,
+} from "@testing-library/react-native";
 import { AccessibilityInfo } from "react-native";
 import type { Color } from "@/data/types";
+import { WardrobePersistenceError } from "@/lib/armario/wardrobeErrors";
 import type { MatchResult } from "@/lib/colorTypes";
-import { hapticLight, hapticMedium } from "@/lib/haptics";
+import { hapticLight, hapticMedium, hapticRigid } from "@/lib/haptics";
 
 // Synthetic Wada-shaped colors keep the test independent of real data.
 // Brick Red (#7a3f2b) is the luminance mockup canon (cream label, < 0.40).
@@ -56,24 +63,28 @@ type MockRouteParams = {
 	cutoutUri: string;
 	dominantHex: string;
 	wadaMatch: MatchResult;
+	sourceUri: string;
 };
 
 const mockRouteHolder: { current: MockRouteParams } = {
 	current: {
 		cutoutUri: "file:///cutout.png",
 		dominantHex: "#7a3f2b",
+		sourceUri: "file:///source.jpg",
 		wadaMatch: { type: "direct", match: { color: BRICK_RED, deltaE: 2 } },
 	},
 };
 
 const mockRootNavigate = jest.fn();
 const mockLocalPush = jest.fn();
+const mockLocalReplace = jest.fn();
 const mockGetParent = jest.fn(() => ({ navigate: mockRootNavigate }));
 
 jest.mock("@react-navigation/native", () => ({
 	useRoute: () => ({ params: mockRouteHolder.current }),
 	useNavigation: () => ({
 		push: mockLocalPush,
+		replace: mockLocalReplace,
 		getParent: mockGetParent,
 	}),
 }));
@@ -85,10 +96,113 @@ jest.mock("react-native-safe-area-context", () => ({
 jest.mock("@/lib/haptics", () => ({
 	hapticLight: jest.fn(),
 	hapticMedium: jest.fn(),
+	hapticRigid: jest.fn(),
 }));
 
 jest.mock("@/hooks/useReducedMotion", () => ({
 	useReducedMotion: () => true,
+}));
+
+// Premium flags are mutable so the "silent re-trigger" test can flip
+// `isPremium` mid-flight without re-mounting the component.
+const mockPremiumState: { isPremium: boolean } = { isPremium: false };
+jest.mock("@/contexts/PremiumContext", () => ({
+	usePremium: () => ({
+		isPremium: mockPremiumState.isPremium,
+		loading: false,
+		paywallDismissedThisSession: false,
+		setPaywallDismissedThisSession: jest.fn(),
+		priceString: "€0.99",
+		purchase: jest.fn(),
+		restore: jest.fn(),
+	}),
+}));
+
+jest.mock("@/stores/misLooksStore", () => ({
+	useMisLooksStore: (selector: (s: { favorites: Set<string> }) => unknown) =>
+		selector({ favorites: new Set<string>() }),
+}));
+
+const mockGateDismiss = jest.fn();
+const mockGatePurchase = jest.fn();
+jest.mock("@/hooks/usePremiumGate", () => ({
+	usePremiumGate: () => ({
+		isPremium: mockPremiumState.isPremium,
+		paywallVisible: false,
+		blockedCombination: undefined,
+		toastVisible: false,
+		toastOpacity: { setValue: jest.fn() },
+		favoriteCombinationIds: [],
+		priceString: "€0.99",
+		purchaseState: "idle",
+		errorMessage: null,
+		handlePremiumGate: jest.fn(),
+		handleDismiss: mockGateDismiss,
+		handlePurchase: mockGatePurchase,
+		handleRestore: jest.fn(),
+		openPaywall: jest.fn(),
+	}),
+}));
+
+jest.mock("@/lib/armario/saveCutoutAsWardrobeItem", () => ({
+	saveCutoutAsWardrobeItem: jest.fn(),
+}));
+
+import { saveCutoutAsWardrobeItem } from "@/lib/armario/saveCutoutAsWardrobeItem";
+
+// Mock PremiumPaywall as a minimal visible sentinel + dismiss triggerer.
+jest.mock("@/components/PremiumPaywall", () => ({
+	PremiumPaywall: ({
+		visible,
+		onDismiss,
+	}: {
+		visible: boolean;
+		onDismiss: () => void;
+	}) => {
+		const { Pressable, View } = require("react-native");
+		if (!visible) return null;
+		return (
+			<View testID="paywall-mock">
+				<Pressable testID="paywall-mock-dismiss" onPress={onDismiss} />
+			</View>
+		);
+	},
+}));
+
+// CategoryPickerSheet is mocked to expose its confirm/cancel callbacks via
+// testIDs so tests can exercise the Result screen's save flow without
+// reaching into the real sheet's internal state machine.
+jest.mock("@/components/armario/CategoryPickerSheet", () => ({
+	CategoryPickerSheet: ({
+		visible,
+		onConfirm,
+		onCancel,
+		confirming,
+	}: {
+		visible: boolean;
+		onConfirm: (category: string) => void;
+		onCancel: () => void;
+		confirming?: boolean;
+	}) => {
+		const { Pressable, View } = require("react-native");
+		if (!visible) return null;
+		return (
+			<View
+				testID="category-sheet-mock"
+				accessibilityState={{ busy: confirming === true }}
+			>
+				<Pressable
+					testID="category-sheet-mock-confirm-top"
+					onPress={() => onConfirm("top")}
+				/>
+				<Pressable
+					testID="category-sheet-mock-confirm-bottom"
+					onPress={() => onConfirm("bottom")}
+				/>
+				<Pressable testID="category-sheet-mock-cancel" onPress={onCancel} />
+			</View>
+		);
+	},
 }));
 
 // Mocking getCombinations by confirmedTone.id keeps count-plural assertions
@@ -115,12 +229,22 @@ jest.mock("@/data/colorIndex", () => ({
 
 import { UnifiedCameraResultScreen } from "./UnifiedCameraResultScreen";
 
+const saveMock = saveCutoutAsWardrobeItem as jest.Mock;
+
 function setRoute(partial: Partial<MockRouteParams>) {
 	mockRouteHolder.current = {
 		cutoutUri: partial.cutoutUri ?? mockRouteHolder.current.cutoutUri,
 		dominantHex: partial.dominantHex ?? mockRouteHolder.current.dominantHex,
+		sourceUri: partial.sourceUri ?? mockRouteHolder.current.sourceUri,
 		wadaMatch: partial.wadaMatch ?? mockRouteHolder.current.wadaMatch,
 	};
+}
+
+async function flushMicrotasks() {
+	await act(async () => {
+		await Promise.resolve();
+		await Promise.resolve();
+	});
 }
 
 describe("UnifiedCameraResultScreen", () => {
@@ -128,13 +252,20 @@ describe("UnifiedCameraResultScreen", () => {
 		mockRouteHolder.current = {
 			cutoutUri: "file:///cutout.png",
 			dominantHex: "#7a3f2b",
+			sourceUri: "file:///source.jpg",
 			wadaMatch: { type: "direct", match: { color: BRICK_RED, deltaE: 2 } },
 		};
 		mockRootNavigate.mockClear();
 		mockLocalPush.mockClear();
+		mockLocalReplace.mockClear();
 		mockGetParent.mockClear();
+		mockGateDismiss.mockClear();
+		mockGatePurchase.mockClear();
+		mockPremiumState.isPremium = false;
+		saveMock.mockReset();
 		(hapticLight as jest.Mock).mockClear();
 		(hapticMedium as jest.Mock).mockClear();
+		(hapticRigid as jest.Mock).mockClear();
 	});
 
 	it("renders the cutout image with an accessibility label for the confirmed tone", () => {
@@ -278,16 +409,153 @@ describe("UnifiedCameraResultScreen", () => {
 		announceSpy.mockRestore();
 	});
 
-	it("primary CTA tap fires hapticMedium and navigation.push('PostSave')", () => {
-		const consoleWarn = jest
-			.spyOn(console, "warn")
-			.mockImplementation(() => {});
+	it("primary CTA tap fires hapticMedium and opens the category sheet (no navigation.push to PostSave)", () => {
 		render(<UnifiedCameraResultScreen />);
+		expect(screen.queryByTestId("category-sheet-mock")).toBeNull();
 		fireEvent.press(screen.getByTestId("unified-camera-result-primary-cta"));
 		expect(hapticMedium).toHaveBeenCalledTimes(1);
-		expect(mockLocalPush).toHaveBeenCalledTimes(1);
-		expect(mockLocalPush).toHaveBeenCalledWith("PostSave");
-		consoleWarn.mockRestore();
+		expect(screen.getByTestId("category-sheet-mock")).toBeTruthy();
+		expect(mockLocalPush).not.toHaveBeenCalledWith(
+			"PostSave",
+			expect.anything(),
+		);
+		expect(mockLocalPush).not.toHaveBeenCalledWith("PostSave");
+	});
+
+	it("sheet cancel closes the sheet and does not call saveCutoutAsWardrobeItem", () => {
+		render(<UnifiedCameraResultScreen />);
+		fireEvent.press(screen.getByTestId("unified-camera-result-primary-cta"));
+		fireEvent.press(screen.getByTestId("category-sheet-mock-cancel"));
+		expect(screen.queryByTestId("category-sheet-mock")).toBeNull();
+		expect(saveMock).not.toHaveBeenCalled();
+	});
+
+	it("sheet confirm on success calls save with exact args and navigates via replace to PostSave", async () => {
+		saveMock.mockResolvedValueOnce({ id: "new-item-1" });
+		render(<UnifiedCameraResultScreen />);
+		fireEvent.press(screen.getByTestId("unified-camera-result-primary-cta"));
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-confirm-top"));
+		});
+		await flushMicrotasks();
+
+		await waitFor(() => {
+			expect(saveMock).toHaveBeenCalledTimes(1);
+		});
+		expect(saveMock).toHaveBeenCalledWith({
+			cutoutUri: "file:///cutout.png",
+			sourceUri: "file:///source.jpg",
+			isPremium: false,
+			category: "top",
+		});
+		expect(hapticRigid).toHaveBeenCalledTimes(1);
+		expect(mockLocalReplace).toHaveBeenCalledWith("PostSave", {
+			wadaColorId: BRICK_RED.id,
+			capturedHex: "#7a3f2b",
+			categoryKey: "top",
+		});
+	});
+
+	it("sheet confirm on paywall error closes the sheet and shows the paywall mock", async () => {
+		saveMock.mockRejectedValueOnce(
+			new WardrobePersistenceError("paywall", "limit reached"),
+		);
+		render(<UnifiedCameraResultScreen />);
+		fireEvent.press(screen.getByTestId("unified-camera-result-primary-cta"));
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-confirm-top"));
+		});
+		await flushMicrotasks();
+
+		await waitFor(() => {
+			expect(screen.queryByTestId("category-sheet-mock")).toBeNull();
+			expect(screen.getByTestId("paywall-mock")).toBeTruthy();
+		});
+		expect(mockLocalReplace).not.toHaveBeenCalled();
+	});
+
+	it("sheet confirm on diskFull error shows the error banner with 'out of space' copy", async () => {
+		saveMock.mockRejectedValueOnce(
+			new WardrobePersistenceError("diskFull", "no space"),
+		);
+		render(<UnifiedCameraResultScreen />);
+		fireEvent.press(screen.getByTestId("unified-camera-result-primary-cta"));
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-confirm-top"));
+		});
+		await flushMicrotasks();
+
+		await waitFor(() => {
+			expect(
+				screen.getByTestId("unified-camera-result-error-sheet"),
+			).toBeTruthy();
+		});
+		expect(screen.getByText("Your device is out of space")).toBeTruthy();
+		expect(mockLocalReplace).not.toHaveBeenCalled();
+	});
+
+	it("sheet confirm on encode error shows the error banner with encode copy", async () => {
+		saveMock.mockRejectedValueOnce(
+			new WardrobePersistenceError("encode", "encode failed"),
+		);
+		render(<UnifiedCameraResultScreen />);
+		fireEvent.press(screen.getByTestId("unified-camera-result-primary-cta"));
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-confirm-top"));
+		});
+		await flushMicrotasks();
+
+		await waitFor(() => {
+			expect(
+				screen.getByTestId("unified-camera-result-error-sheet"),
+			).toBeTruthy();
+		});
+		expect(
+			screen.getByText("Couldn't process the photo. Please try again."),
+		).toBeTruthy();
+		expect(mockLocalReplace).not.toHaveBeenCalled();
+	});
+
+	it("silent re-trigger: after paywall dismiss with isPremium=true, save is re-invoked once with the pending category", async () => {
+		// First save → paywall. Second save (silent re-trigger) → success.
+		saveMock
+			.mockRejectedValueOnce(
+				new WardrobePersistenceError("paywall", "limit reached"),
+			)
+			.mockResolvedValueOnce({ id: "new-item-2" });
+
+		render(<UnifiedCameraResultScreen />);
+		fireEvent.press(screen.getByTestId("unified-camera-result-primary-cta"));
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-confirm-bottom"));
+		});
+		await flushMicrotasks();
+
+		await waitFor(() => {
+			expect(screen.getByTestId("paywall-mock")).toBeTruthy();
+		});
+
+		// Simulate IAP success: premium flips to true, user dismisses paywall.
+		mockPremiumState.isPremium = true;
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("paywall-mock-dismiss"));
+		});
+		await flushMicrotasks();
+
+		await waitFor(() => {
+			expect(saveMock).toHaveBeenCalledTimes(2);
+		});
+		expect(saveMock.mock.calls[1][0]).toEqual({
+			cutoutUri: "file:///cutout.png",
+			sourceUri: "file:///source.jpg",
+			isPremium: true,
+			category: "bottom",
+		});
+		expect(mockLocalReplace).toHaveBeenCalledWith("PostSave", {
+			wadaColorId: BRICK_RED.id,
+			capturedHex: "#7a3f2b",
+			categoryKey: "bottom",
+		});
 	});
 
 	it("secondary link tap fires hapticLight and a cross-navigator navigation to Combinations with the confirmed tone params", () => {
