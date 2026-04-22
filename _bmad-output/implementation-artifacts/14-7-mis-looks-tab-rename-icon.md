@@ -81,9 +81,9 @@ so that **users perceive the tab as *their workspace* (where their Mis Looks ent
 - [x] **Task 4** — Validate toolchain + simulator smoke (AC: #12, #13, #15)
     - [x] Run `npx tsc --noEmit` → zero errors ✅
     - [x] Run `pnpm lint` → 1 pre-existing Biome formatting note in `src/screens/OutfitVisualizer.tsx` (`handleMakeMine` rootNav formatting) confirmed unrelated to this story (verified by stashing changes; error reproduces). Not introduced by 14.7. Flag as D-14.7-4.
-    - [ ] Kill Metro + restart with `expo start --clear` per `feedback_simulator_reset.md` (do NOT erase simulator)  ← deferred to Alejandro's smoke
-    - [ ] On iPhone 15 Pro simulator: verify AC #13 sub-bullets (a)–(e)  ← deferred to Alejandro's smoke
-    - [ ] On iPad simulator (trigger via `useIsIPad()` branch): re-verify (a)  ← deferred to Alejandro's smoke
+    - [x] Kill Metro + restart with `expo start --clear` per `feedback_simulator_reset.md` (do NOT erase simulator)
+    - [x] On iPhone 15 Pro simulator: verify AC #13 sub-bullets (a)–(e) ✅ validated by Alejandro 2026-04-22
+    - [x] On iPad simulator (trigger via `useIsIPad()` branch): re-verify (a) ✅ validated by Alejandro 2026-04-22
     - [x] Flag for Alejandro's visual sign-off per `feedback_visual_review.md`
 
 - [x] **Task 5** — AC verification + deferred-list + sprint-status handoff (AC: #1–#15)
@@ -200,7 +200,7 @@ claude-opus-4-7 (1M context) — bmad-dev-story workflow
 10. ✅ FavoritesList layout unchanged — only i18n values + 2 SF Symbol attribute strings mutated.
 11. ✅ `pnpm test`: **863 passing / 3 pre-existing (detectLanguage Intl mocking) / 0 new failures / 0 new skips** vs 14.6 baseline → net 0 delta.
 12. ✅ `npx tsc --noEmit` clean. `pnpm lint` shows 1 pre-existing OutfitVisualizer.tsx formatting note from 14.6 (verified pre-existing via `git stash` baseline test — not a 14.7 regression). Filed as D-14.7-4.
-13. ⏸️ Visual smoke deferred to Alejandro's hand-review per `feedback_visual_review.md`.
+13. ✅ Visual smoke validated by Alejandro on 2026-04-22 (iPhone 15 Pro + iPad simulators).
 14. ✅ Branch `story/14-7-mis-looks-tab-rename-icon` created off `epic-14` HEAD `f00f304`. No rebase needed (disjoint diff vs 14.6).
 15. ✅ Pure JS/TSX/JSON edits — no native module touched. `expo start --clear` (Metro cache reset) is sufficient for visual smoke.
 
@@ -231,5 +231,5 @@ claude-opus-4-7 (1M context) — bmad-dev-story workflow
 
 ### Change Log
 
-- 2026-04-22 — Renamed Favorites tab user-visible surface to "Mis Looks" / "My looks" across both locales; swapped tab `heart` SF Symbol for `archivebox` (iPad + iPhone branches); updated 2 locale-parity test assertions and 4 FavoritesList empty-state assertions to match new copy. Net 0 test delta vs 14.6 baseline (863 passing / 3 pre-existing). Visual smoke deferred to Alejandro's hand-review.
+- 2026-04-22 — Renamed Favorites tab user-visible surface to "Mis Looks" / "My looks" across both locales; swapped tab `heart` SF Symbol for `archivebox` (iPad + iPhone branches); updated 2 locale-parity test assertions and 4 FavoritesList empty-state assertions to match new copy. Net 0 test delta vs 14.6 baseline (863 passing / 3 pre-existing). Visual smoke validated by Alejandro on iPhone 15 Pro + iPad simulators ✅.
 - 2026-04-22 — Code review: 0 patches applied; 4 deferred (D-14.7-1→4, all pre-existing); 8 dismissed. Clean review → status: done.
