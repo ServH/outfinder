@@ -267,3 +267,35 @@
     - ¿Qué pasa si el combo tiene 2 slots del mismo color Wada y el usuario solo ha fotografiado una prenda? Auto-rellena uno, el otro queda vacío.
     - ¿Qué pasa si el tipo de prenda detectado por la app es distinto al del slot del combo? Probablemente NO auto-rellenar (evita matches raros).
   - Relacionado con BUG-001 y BUG-006: los tres están en la misma secuencia de hand-offs cámara → combo → Visualizer → Mis Looks. Al espec-ar conviene mirar el flow end-to-end como unidad, no cada bug aislado.
+
+### BUG-010 — Outfit Visualizer asigna la prenda al slot equivocado según posición del color en el combo
+- **Fecha:** 2026-04-22
+- **Pantalla / Área:** Outfit Visualizer tras elegir combinación derivada de una prenda guardada desde cámara
+- **Qué observo:** Flow:
+  1. Foto a una camiseta blanca → la app detecta **White Mouse** (sin variación).
+  2. Guardo la prenda en el Armario **declarando tipo = camiseta**.
+  3. La app me propone 2 combinaciones con White Mouse (ej. White Mouse + Pure White Snow + Misty Morning).
+  4. Elijo una y entro al Outfit Visualizer.
+  5. **White Mouse aparece en la tercera posición del combo (slot de zapatilla) y el Visualizer renderiza la prenda del usuario como zapatilla**, no como camiseta.
+- **Esperado:** El Visualizer debe respetar el **tipo de prenda declarado por el usuario** (camiseta) como anchor. Al presentar el combo, White Mouse (= la camiseta del usuario) se sitúa en el slot de camiseta del Visualizer; los otros dos colores del combo (Pure White Snow + Misty Morning) se asignan a los slots restantes sin imponer semántica incorrecta (o quedan como sugerencia para que el usuario elija qué prenda ponerles).
+- **Pasos para reproducir:**
+  1. Cámara → foto de camiseta blanca.
+  2. Aceptar detección "White Mouse".
+  3. Guardar como camiseta.
+  4. Pulsar "ver combinaciones".
+  5. Elegir cualquier combo donde White Mouse aparezca en la posición 3.
+  6. Entrar al Visualizer → observar que la camiseta blanca del usuario se muestra como zapatilla.
+- **Dispositivo / build:** iPhone 14 físico de Alejandro
+- **Severidad:** `high` _(rompe el modelo mental: la app ignora una declaración explícita del usuario; además es contraintuitivo a nivel visual — una camiseta representada como zapato)_
+- **Estado:** new
+- **Notas:**
+  - **Root cause probable:** el Visualizer está derivando el garment type del **índice de posición del color en el combo Wada** (slot 0 = top, slot 1 = bottom, slot 2 = shoes) en vez de usar el tipo declarado por el usuario en la prenda guardada.
+  - El mapeo "posición → tipo de prenda" funciona para combos abstractos de Wada donde no hay prenda real asociada. Pero cuando el combo se instancia **desde una prenda real del usuario**, el tipo de esa prenda debe sobrescribir la posición.
+  - **Relación con BUG-009:** son dos caras de la misma moneda. BUG-009 = "no rellena el slot con la prenda". BUG-010 = "rellena, pero en el slot equivocado porque ignora el tipo". Al espec-ar conviene tratarlos como una sola story: **"el Visualizer debe usar la prenda guardada (color + tipo) como anchor al instanciar un look desde combo post-cámara"**.
+  - Posible solución de diseño:
+    - Al construir el look visualizado, reordenar los 3 colores del combo para que el color de la prenda real del usuario ocupe el slot correspondiente a su tipo declarado (camiseta → top).
+    - Los otros colores se muestran en los slots restantes sin forzar "esto es pantalón" o "esto es zapato" si no hay prenda real que lo respalde — pueden quedar como *placeholders de color sin tipo específico* o como *sugerencia abierta*.
+  - Casos edge al especar:
+    - Combo con 2 colores iguales al tipo de la prenda (ej. dos tonos blancos y el usuario tiene una camiseta blanca): usar el más cercano al declarado.
+    - Si el combo solo tiene 2 posiciones (ej. top + bottom sin calzado), el mismo principio aplica.
+  - Relacionado con BUG-001, BUG-006 y BUG-009: toda la secuencia cámara → combo → Visualizer → Mis Looks tiene varios agujeros. Conviene spec-arlos como bloque coherente.
