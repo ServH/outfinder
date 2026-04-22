@@ -52,7 +52,7 @@ describe("i18n", () => {
 			expect(tEN("home.subtitle")).toBe("What color are you wearing?");
 			expect(tEN("home.browseAll")).toBe("Browse all 159 colors");
 			expect(tEN("tabs.colors")).toBe("Colors");
-			expect(tEN("tabs.favorites")).toBe("Favorites");
+			expect(tEN("tabs.favorites")).toBe("My looks");
 		});
 
 		it("Spanish strings available via getFixedT('es') — AC #1", () => {
@@ -61,7 +61,7 @@ describe("i18n", () => {
 			expect(tES("home.subtitle")).toContain("color es tu ropa");
 			expect(tES("home.browseAll")).toBeTruthy();
 			expect(tES("tabs.colors")).toBe("Colores");
-			expect(tES("tabs.favorites")).toBe("Favoritos");
+			expect(tES("tabs.favorites")).toBe("Mis Looks");
 		});
 
 		it("Spanish locale → Spanish strings — AC #1 (es)", () => {

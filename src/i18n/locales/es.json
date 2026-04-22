@@ -2,11 +2,11 @@
 	"tabs": {
 		"colors": "Colores",
 		"favs": "Favs",
-		"favorites": "Favoritos",
+		"favorites": "Mis Looks",
 		"settings": "Ajustes",
 		"camera": "Cámara",
 		"colorsTab": "Pestaña de colores",
-		"favoritesTab": "Pestaña de favoritos",
+		"favoritesTab": "Pestaña Mis Looks",
 		"settingsTab": "Pestaña Ajustes",
 		"cameraTab": "Abrir escáner de cámara"
 	},
@@ -46,16 +46,16 @@
 		"changedTo": "Cambiado a {{label}}"
 	},
 	"favorites": {
-		"title": "Favoritos",
-		"screenLabel": "Pantalla de Favoritos",
+		"title": "Mis Looks",
+		"screenLabel": "Pantalla Mis Looks",
 		"sortRecent": "Reciente",
 		"sortAZ": "A-Z",
 		"sortSize": "Por tama\u00f1o",
 		"sortRecentLabel": "Ordenar por reciente",
 		"sortAZLabel": "Ordenar alfab\u00e9ticamente",
 		"sortSizeLabel": "Ordenar por tama\u00f1o",
-		"emptyTitle": "Sin favoritos a\u00fan",
-		"emptySubtitle": "Elige un color, explora combinaciones y toca \u2661 para guardar las que te gusten"
+		"emptyTitle": "Aún no tienes looks guardados",
+		"emptySubtitle": "Fotografía una prenda o escoge una paleta para empezar."
 	},
 	"settings": {
 		"title": "Ajustes",
