@@ -1,5 +1,6 @@
 import type { NavigatorScreenParams } from "@react-navigation/native";
 import type { MatchResult } from "@/lib/colorTypes";
+import type { WardrobeCategory } from "@/lib/wardrobeTypes";
 
 export type ColorsStackParamList = {
 	ColorHome: undefined;
@@ -38,17 +39,22 @@ export type ArmarioStackParamList = {
 };
 
 // Unified camera flow (Epic 14). `Capture` requires no params (camera-only
-// entry). `Result` carries the Swift-pipeline output: the cutout file URI, the
-// weighted dominant hex (TD-1), and the classified Wada match. `PostSave`
-// remains a placeholder until Story 14.5 lands the "¿Ahora qué?" screen.
+// entry). `Result` carries the Swift-pipeline output plus the original photo
+// URI (`sourceUri`) which `saveCutoutAsWardrobeItem` needs as the re-encode
+// source. `PostSave` carries the save outcome for the "¿Ahora qué?" screen.
 export type UnifiedCameraStackParamList = {
 	Capture: undefined;
 	Result: {
 		cutoutUri: string;
 		dominantHex: string;
 		wadaMatch: MatchResult;
+		sourceUri: string;
 	};
-	PostSave: undefined;
+	PostSave: {
+		wadaColorId: string;
+		capturedHex: string;
+		categoryKey: WardrobeCategory;
+	};
 };
 
 export type RootStackParamList = {

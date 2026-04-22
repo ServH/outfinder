@@ -330,6 +330,31 @@
 			"primaryCtaA11yLabel": "Guardar en mi armario. Tono Wada {{nameEn}}. {{count}} combinaciones disponibles.",
 			"secondaryLink": "ver combinaciones sin guardar",
 			"secondaryLinkA11yLabel": "Ver combinaciones sin guardar"
+		},
+		"categorySheet": {
+			"title": "¿Qué tipo de prenda es?",
+			"rowTop": "Parte de arriba",
+			"rowBottom": "Parte de abajo",
+			"rowFootwear": "Calzado",
+			"rowAccessory": "Accesorio",
+			"confirm": "Confirmar",
+			"confirmA11yLabel": "Confirmar",
+			"closeSheetA11y": "Cerrar hoja",
+			"rowA11yHint": "Tócalo dos veces para seleccionar esta categoría"
+		},
+		"save": {
+			"errorDiskFull": "Tu dispositivo se quedó sin espacio",
+			"errorEncode": "No pudimos procesar la foto. Inténtalo de nuevo.",
+			"errorSaveFailed": "No pudimos guardar la prenda. Inténtalo de nuevo.",
+			"errorDismiss": "Entendido"
+		},
+		"postSave": {
+			"title": "Guardado en tu armario",
+			"subtitle": "como {{categoryLabel}}",
+			"primaryCta": "Ver combinaciones con {{wadaName}}",
+			"primaryCtaA11y": "Ver combinaciones con {{wadaName}}",
+			"secondaryCta": "Volver a Mis Looks",
+			"secondaryCtaA11y": "Volver a Mis Looks"
 		}
 	}
 }

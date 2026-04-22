@@ -330,6 +330,31 @@
 			"primaryCtaA11yLabel": "Save to my armario. Wada tone {{nameEn}}. {{count}} combinations available.",
 			"secondaryLink": "view combinations without saving",
 			"secondaryLinkA11yLabel": "View combinations without saving"
+		},
+		"categorySheet": {
+			"title": "What type of garment is it?",
+			"rowTop": "Top",
+			"rowBottom": "Bottom",
+			"rowFootwear": "Footwear",
+			"rowAccessory": "Accessory",
+			"confirm": "Confirm",
+			"confirmA11yLabel": "Confirm",
+			"closeSheetA11y": "Close sheet",
+			"rowA11yHint": "Double-tap to select this category"
+		},
+		"save": {
+			"errorDiskFull": "Your device is out of space",
+			"errorEncode": "Couldn't process the photo. Please try again.",
+			"errorSaveFailed": "Couldn't save the garment. Please try again.",
+			"errorDismiss": "Got it"
+		},
+		"postSave": {
+			"title": "Saved to your armario",
+			"subtitle": "as {{categoryLabel}}",
+			"primaryCta": "See combinations with {{wadaName}}",
+			"primaryCtaA11y": "See combinations with {{wadaName}}",
+			"secondaryCta": "Back to Mis Looks",
+			"secondaryCtaA11y": "Back to Mis Looks"
 		}
 	}
 }
