@@ -1,6 +1,6 @@
 # Story 14.10: "+ Nuevo look" entry point card in Mis Looks
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -427,6 +427,17 @@ Branch: `story/14-10-nuevo-look-entry-point-mis-looks` off `epic-14` HEAD `a222c
 **Visual smoke (2026-04-22):** ✅ Validado por Alejandro en simulador Expo. Checklist (a)–(o) confirmado: card renderiza arriba en EMPTY entre header y EmptyState, arriba en POPULATED sobre sort-pills (scrollea con contenido, no sticky), glifos sparkles + chevron.right correctos, tipografía Noto Serif JP + Inter, `bg-elevated` + hairline sin shadow, tap dispara hapticLight + cross-nav a ColorHome, estado Mis Looks inalterado al volver, copias ES/EN correctas, VoiceOver lee label + hint con rol botón.
 
 **Awaiting:** Adversarial code-review gate before merge into `epic-14`.
+
+### Review Findings
+
+- [x] [Review][Patch] Order assertions missing in CTA integration tests — AC #9.1 and AC #9.2 require verifying the CTA renders **before** empty-state/sort-pills in the tree, not just that both testIDs exist. Current tests assert existence only. Add `within()`-based or index-comparison assertions for document order. [`src/screens/FavoritesList.test.tsx:873–887`]
+
+- [x] [Review][Defer] Silent navigation failure when rootNav is undefined [`src/screens/FavoritesList.tsx:77–87`] — deferred, pre-existing pattern from Story 14.6 OutfitVisualizer.handleMakeMine; `?.` chains prevent crashes; identical risk exists at 14.6 and was accepted
+- [x] [Review][Defer] `as never` cast + ColorsTab nested params not in type system [`src/screens/FavoritesList.tsx:81–86`] — deferred, pre-existing type debt from Story 14.6; documented in Dev Notes; React Navigation 7 documented idiom
+- [x] [Review][Defer] CTA tap + ComboCard tap race via isNavigating.current reset on focus [`src/screens/FavoritesList.tsx:107–112`] — deferred, pre-existing issue in handleComboPress; not introduced by this story
+- [x] [Review][Defer] SymbolView sparkles test via toJSON traversal less robust than testID approach [`src/screens/FavoritesList.test.tsx:936–956`] — deferred, test works correctly with the string mock; cosmetic improvement only
+- [x] [Review][Defer] handleSettingsPress not wrapped in useCallback unlike new handleNewLookPress [`src/screens/FavoritesList.tsx:72–75`] — deferred, pre-existing inconsistency; not introduced by this story
+- [x] [Review][Defer] Dual `testID="favorites-list"` brittle under async hydration in tests [`src/screens/FavoritesList.tsx:285, 307`] — deferred, latent/pre-existing; current test setup uses synchronous mocks; no test currently triggers this
 
 ### Change Log
 

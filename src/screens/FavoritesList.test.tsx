@@ -870,20 +870,40 @@ describe("FavoritesList", () => {
 
 	// --- Story 14.10: "+ Nuevo look" entry-point card ---
 
+	// DFS helper: collects testIDs in document order for order assertions
+	function collectTestIDs(node: unknown): string[] {
+		if (!node || typeof node !== "object") return [];
+		const n = node as { props?: { testID?: string }; children?: unknown };
+		const ids: string[] = n.props?.testID ? [n.props.testID] : [];
+		if (Array.isArray(n.children))
+			ids.push(...n.children.flatMap(collectTestIDs));
+		return ids;
+	}
+
 	it("renders the Nuevo look CTA in empty state", () => {
 		mockFavorites = new Set<string>();
-		render(<FavoritesList />);
+		const { toJSON } = render(<FavoritesList />);
 
 		expect(screen.getByTestId("mis-looks-new-look-cta")).toBeTruthy();
 		expect(screen.getByTestId("empty-state")).toBeTruthy();
+		// AC #9.1: CTA must appear before empty-state in the tree
+		const ids = collectTestIDs(toJSON());
+		expect(ids.indexOf("mis-looks-new-look-cta")).toBeLessThan(
+			ids.indexOf("empty-state"),
+		);
 	});
 
 	it("renders the Nuevo look CTA as first ListHeader item when list is populated", () => {
 		mockFavorites = new Set(["p001"]);
-		render(<FavoritesList />);
+		const { toJSON } = render(<FavoritesList />);
 
 		expect(screen.getByTestId("mis-looks-new-look-cta")).toBeTruthy();
 		expect(screen.getByTestId("sort-pills-row")).toBeTruthy();
+		// AC #9.2: CTA must appear before sort-pills-row in the ListHeader
+		const ids = collectTestIDs(toJSON());
+		expect(ids.indexOf("mis-looks-new-look-cta")).toBeLessThan(
+			ids.indexOf("sort-pills-row"),
+		);
 	});
 
 	it("tapping the CTA navigates to Main → ColorsTab → ColorHome via root", () => {
