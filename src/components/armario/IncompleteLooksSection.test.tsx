@@ -97,6 +97,18 @@ describe("IncompleteLooksSection", () => {
 		expect(onTilePress).toHaveBeenCalledWith("p001");
 	});
 
+	it("tile renders mini color swatches matching combination.colors.length", () => {
+		render(
+			<IncompleteLooksSection
+				incompleteLooks={[makeCombo("p004", 4)]}
+				assignments={[]}
+				onTilePress={jest.fn()}
+			/>,
+		);
+		const swatches = screen.getAllByTestId(/^incomplete-tile-p004-swatch-\d+$/);
+		expect(swatches).toHaveLength(4);
+	});
+
 	it("tile renders CompletenessBadge with correct assigned/total", () => {
 		render(
 			<IncompleteLooksSection

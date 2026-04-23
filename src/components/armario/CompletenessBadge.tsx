@@ -13,6 +13,12 @@ export interface CompletenessBadgeProps {
 	 * `FavoriteComboEnrichedCard`.
 	 */
 	variant?: "short" | "long";
+	/**
+	 * When `true`, drops the pill background tint so the label reads as
+	 * plain text on the parent surface. Foreground color stays intact.
+	 * Used in `IncompleteLooksSection` "En curso" tiles.
+	 */
+	transparent?: boolean;
 }
 
 type Variant = "none" | "complete" | "partial";
@@ -35,6 +41,7 @@ export function CompletenessBadge({
 	total,
 	testID,
 	variant: copyVariant = "short",
+	transparent = false,
 }: CompletenessBadgeProps) {
 	const { t } = useTranslation();
 	const variant = resolveVariant(assigned, total);
@@ -60,10 +67,10 @@ export function CompletenessBadge({
 			testID={testID}
 			accessibilityLabel={a11y}
 			style={{
-				backgroundColor: bg,
+				backgroundColor: transparent ? "transparent" : bg,
 				borderRadius: 10,
-				paddingHorizontal: isLong ? 12 : 10,
-				paddingVertical: 4,
+				paddingHorizontal: transparent ? 0 : isLong ? 12 : 10,
+				paddingVertical: transparent ? 0 : 4,
 				flexDirection: "row",
 				alignItems: "center",
 				alignSelf: "flex-start",
