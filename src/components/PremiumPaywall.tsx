@@ -18,6 +18,7 @@ import Animated, {
 	withSpring,
 	withTiming,
 } from "react-native-reanimated";
+import { PREMIUM_CONFIG } from "@/config/premium";
 import { getAllCombinations, getCombination } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
 import type { PurchaseState } from "@/hooks/usePremiumGate";
@@ -28,28 +29,55 @@ import { wadaTokens } from "@/styles/theme";
 const DISMISS_THRESHOLD = 100;
 const VELOCITY_THRESHOLD = 500;
 
+/**
+ * Gating context. `"favorites"` drives the combo-collection framing (saved
+ * palette previews, optional blocked strip, combination count in body copy)
+ * used when the user hits `FREE_FAVORITES_LIMIT`. `"wardrobe"` drives the
+ * garment-capture framing used when `FREE_WARDROBE_LIMIT` blocks a save —
+ * no palette preview, wardrobe-specific copy + limit badge.
+ */
+export type PaywallContext = "favorites" | "wardrobe";
+
 export interface PremiumPaywallProps {
 	visible: boolean;
-	blockedCombination?: Combination;
-	favoriteCombinationIds: string[];
+	context: PaywallContext;
+	/**
+	 * Current count toward the free-tier limit. For favorites this is the
+	 * number of saved combinations; for wardrobe, the number of wardrobe
+	 * items. The limit itself is derived from `PREMIUM_CONFIG` via context.
+	 */
+	currentCount: number;
 	priceString: string;
 	purchaseState?: PurchaseState;
 	errorMessage?: string | null;
 	onPurchase: () => void;
 	onRestore: () => void;
 	onDismiss: () => void;
+	/**
+	 * Favorites-only. The combination the user just tried to favorite that
+	 * triggered the paywall; rendered as a faded "locked" strip below the
+	 * saved palette previews.
+	 */
+	blockedCombination?: Combination;
+	/**
+	 * Favorites-only. IDs of the user's already-saved favorite combinations;
+	 * drives the palette preview strip. In wardrobe context this is ignored.
+	 */
+	savedCombinationIds?: string[];
 }
 
 export function PremiumPaywall({
 	visible,
-	blockedCombination,
-	favoriteCombinationIds,
+	context,
+	currentCount,
 	priceString,
 	purchaseState = "idle",
 	errorMessage = null,
 	onPurchase,
 	onRestore,
 	onDismiss,
+	blockedCombination,
+	savedCombinationIds = [],
 }: PremiumPaywallProps) {
 	const { t } = useTranslation();
 	const { height: screenHeight } = useWindowDimensions();
@@ -61,7 +89,10 @@ export function PremiumPaywall({
 	const ctaScale = useSharedValue(1);
 
 	const totalCombinations = getAllCombinations().length;
-	const favCount = favoriteCombinationIds.length;
+	const limit =
+		context === "favorites"
+			? PREMIUM_CONFIG.FREE_FAVORITES_LIMIT
+			: PREMIUM_CONFIG.FREE_WARDROBE_LIMIT;
 
 	useEffect(() => {
 		if (visible) {
@@ -151,16 +182,35 @@ export function PremiumPaywall({
 		transform: [{ scale: ctaScale.value }],
 	}));
 
-	// Resolve favorite combinations to their actual data
-	const savedCombinations = favoriteCombinationIds
+	// Resolve saved favorite combinations to their actual data. In wardrobe
+	// context `savedCombinationIds` is unused (preview is hidden below).
+	const savedCombinations = savedCombinationIds
 		.map((id) => getCombination(id))
 		.filter((c): c is Combination => c !== undefined);
 
-	// Settings entry point: no blocked combination
-	const isSettingsEntry = !blockedCombination;
-	const showPalettePreview = favCount > 0 || !isSettingsEntry;
+	// Palette preview (saved combos + optional blocked strip) belongs to the
+	// favorites framing. In wardrobe context we skip it entirely — the user
+	// is trying to save a garment, not a palette, so showing palettes would
+	// miscommunicate the gate.
+	const showPalettePreview =
+		context === "favorites" &&
+		(currentCount > 0 || blockedCombination !== undefined);
 
-	const badgeText = t("paywall.limitBadge", { count: favCount, limit: 5 });
+	const badgeText = t(`paywall.${context}.limitBadge`, {
+		count: currentCount,
+		limit,
+	});
+	const headlineText = t(`paywall.${context}.headline`);
+	const bodyText =
+		context === "favorites"
+			? t("paywall.favorites.body", {
+					count: currentCount,
+					remaining: totalCombinations - currentCount,
+				})
+			: t("paywall.wardrobe.body", { count: currentCount });
+	const unlockLabel = t(`paywall.${context}.unlockLabel`, {
+		price: priceString,
+	});
 
 	if (!visible) {
 		return null;
@@ -227,19 +277,21 @@ export function PremiumPaywall({
 									<View
 										className="flex-row justify-between"
 										accessible
-										accessibilityLabel={`${t("paywall.yourCollection")}. ${t("paywall.savedCount", { count: favCount })}`}
+										accessibilityLabel={`${t("paywall.favorites.yourCollection")}. ${t("paywall.favorites.savedCount", { count: currentCount })}`}
 									>
 										<Text
 											allowFontScaling
 											className="font-sans text-[11px] text-tertiary"
 										>
-											{t("paywall.yourCollection")}
+											{t("paywall.favorites.yourCollection")}
 										</Text>
 										<Text
 											allowFontScaling
 											className="font-sans text-[11px] text-favorite-red"
 										>
-											{t("paywall.savedCount", { count: favCount })}
+											{t("paywall.favorites.savedCount", {
+												count: currentCount,
+											})}
 										</Text>
 									</View>
 
@@ -313,7 +365,7 @@ export function PremiumPaywall({
 								className="font-serif-jp text-[20px] text-center mb-[10px] text-primary"
 								style={{ lineHeight: 28 }}
 							>
-								{t("paywall.headline")}
+								{headlineText}
 							</Text>
 
 							{/* Body text */}
@@ -323,10 +375,7 @@ export function PremiumPaywall({
 								className="font-sans text-[13px] font-light text-center px-2 mb-6 text-secondary"
 								style={{ lineHeight: 21 }}
 							>
-								{t("paywall.body", {
-									count: favCount,
-									remaining: totalCombinations - favCount,
-								})}
+								{bodyText}
 							</Text>
 
 							{/* Price + CTA row */}
@@ -365,7 +414,7 @@ export function PremiumPaywall({
 									accessibilityLabel={
 										purchaseState === "purchasing"
 											? t("paywall.purchasing")
-											: t("paywall.unlockLabel", { price: priceString })
+											: unlockLabel
 									}
 									disabled={isLoading}
 									onPressIn={() => {

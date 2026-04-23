@@ -94,21 +94,29 @@
 	},
 	"paywall": {
 		"dismiss": "Dismiss paywall",
-		"yourCollection": "Your collection",
-		"savedCount": "\u2665 {{count}} saved",
-		"limitBadge": "{{count}} of {{limit}} free favorites used",
 		"lockedLabel": "Locked combination. Upgrade to save",
-		"headline": "Don't stop\ncollecting",
-		"body_one": "You've found {{count}} harmony worth keeping. There are {{remaining}} more combinations waiting to be discovered.",
-		"body_other": "You've found {{count}} harmonies worth keeping. There are {{remaining}} more combinations waiting to be discovered.",
 		"priceLabel": "{{price}}, one-time purchase",
 		"oneTime": "one time",
 		"purchasing": "Purchasing, please wait",
-		"unlockLabel": "Unlock unlimited favorites for {{price}}",
 		"unlockButton": "Unlock Unlimited",
 		"restoreButton": "Restore Purchase",
 		"restoring": "Restoring purchase, please wait",
-		"notNow": "Not now"
+		"notNow": "Not now",
+		"favorites": {
+			"yourCollection": "Your collection",
+			"savedCount": "\u2665 {{count}} saved",
+			"limitBadge": "{{count}} of {{limit}} free favorites used",
+			"headline": "Don't stop\ncollecting",
+			"body_one": "You've found {{count}} harmony worth keeping. There are {{remaining}} more combinations waiting to be discovered.",
+			"body_other": "You've found {{count}} harmonies worth keeping. There are {{remaining}} more combinations waiting to be discovered.",
+			"unlockLabel": "Unlock unlimited favorites for {{price}}"
+		},
+		"wardrobe": {
+			"limitBadge": "{{count}} of {{limit}} free wardrobe items used",
+			"headline": "Your wardrobe\nunlimited",
+			"body": "You already have {{count}} garments saved. With Outfinder Premium, capture every piece of your real wardrobe — no limit.",
+			"unlockLabel": "Unlock unlimited wardrobe for {{price}}"
+		}
 	},
 	"comboCard": {
 		"combinationLabel": "{{name}} combination: {{colors}}",

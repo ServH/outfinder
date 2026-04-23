@@ -527,7 +527,9 @@ export function Settings(_props: SettingsProps) {
 			{/* PremiumPaywall rendered at bottom */}
 			<PremiumPaywall
 				visible={gate.paywallVisible}
-				favoriteCombinationIds={gate.favoriteCombinationIds}
+				context="favorites"
+				currentCount={gate.favoriteCombinationIds.length}
+				savedCombinationIds={gate.favoriteCombinationIds}
 				priceString={gate.priceString}
 				purchaseState={gate.purchaseState}
 				errorMessage={gate.errorMessage}

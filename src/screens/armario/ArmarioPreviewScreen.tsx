@@ -60,6 +60,7 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 	const { cutoutUri, sourceUri, onCutoutSaved } = route.params;
 	const { isPremium } = usePremium();
 	const favorites = useMisLooksStore((s) => s.favorites);
+	const wardrobeItemCount = useMisLooksStore((s) => s.items.length);
 	const gate = usePremiumGate(favorites);
 
 	const [submitting, setSubmitting] = useState(false);
@@ -345,8 +346,8 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 
 			<PremiumPaywall
 				visible={paywallVisible}
-				blockedCombination={undefined}
-				favoriteCombinationIds={[...favorites]}
+				context="wardrobe"
+				currentCount={wardrobeItemCount}
 				priceString={gate.priceString}
 				purchaseState={gate.purchaseState}
 				errorMessage={gate.errorMessage}

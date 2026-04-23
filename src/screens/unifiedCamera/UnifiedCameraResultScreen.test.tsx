@@ -119,8 +119,9 @@ jest.mock("@/contexts/PremiumContext", () => ({
 }));
 
 jest.mock("@/stores/misLooksStore", () => ({
-	useMisLooksStore: (selector: (s: { favorites: Set<string> }) => unknown) =>
-		selector({ favorites: new Set<string>() }),
+	useMisLooksStore: (
+		selector: (s: { favorites: Set<string>; items: unknown[] }) => unknown,
+	) => selector({ favorites: new Set<string>(), items: [] }),
 }));
 
 const mockGateDismiss = jest.fn();

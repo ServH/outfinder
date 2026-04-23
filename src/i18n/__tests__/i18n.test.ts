@@ -83,7 +83,7 @@ describe("i18n", () => {
 		it("Spanish paywall strings — AC #9", () => {
 			const { i18n } = require("../index");
 			const tES = i18n.getFixedT("es");
-			expect(tES("paywall.headline")).toContain("coleccionar");
+			expect(tES("paywall.favorites.headline")).toContain("coleccionar");
 			expect(tES("paywall.unlockButton")).toBeTruthy();
 			expect(tES("paywall.notNow")).toBeTruthy();
 		});

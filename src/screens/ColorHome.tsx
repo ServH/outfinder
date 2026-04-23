@@ -647,8 +647,10 @@ export function ColorHome() {
 			{/* Premium paywall modal */}
 			<PremiumPaywall
 				visible={premiumGate.paywallVisible}
+				context="favorites"
+				currentCount={premiumGate.favoriteCombinationIds.length}
 				blockedCombination={premiumGate.blockedCombination}
-				favoriteCombinationIds={premiumGate.favoriteCombinationIds}
+				savedCombinationIds={premiumGate.favoriteCombinationIds}
 				priceString={premiumGate.priceString}
 				purchaseState={premiumGate.purchaseState}
 				errorMessage={premiumGate.errorMessage}

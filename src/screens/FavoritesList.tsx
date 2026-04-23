@@ -376,8 +376,10 @@ export function FavoritesList(_props: FavoritesListProps) {
 
 			<PremiumPaywall
 				visible={gate.paywallVisible}
+				context="favorites"
+				currentCount={gate.favoriteCombinationIds.length}
 				blockedCombination={gate.blockedCombination}
-				favoriteCombinationIds={gate.favoriteCombinationIds}
+				savedCombinationIds={gate.favoriteCombinationIds}
 				priceString={gate.priceString}
 				purchaseState={gate.purchaseState}
 				errorMessage={gate.errorMessage}

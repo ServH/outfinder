@@ -98,8 +98,10 @@ const blockedCombo: Combination = {
 
 const defaultProps = {
 	visible: true,
+	context: "favorites" as const,
+	currentCount: 2,
 	blockedCombination: blockedCombo,
-	favoriteCombinationIds: ["combo-1", "combo-2"],
+	savedCombinationIds: ["combo-1", "combo-2"],
 	priceString: "€0.99",
 	onPurchase: jest.fn(),
 	onRestore: jest.fn(),
@@ -274,7 +276,8 @@ describe("PremiumPaywall", () => {
 	it("hides palette preview when 0 favorites and no blocked combination", () => {
 		renderPaywall({
 			blockedCombination: undefined,
-			favoriteCombinationIds: [],
+			savedCombinationIds: [],
+			currentCount: 0,
 		});
 		expect(screen.queryByText("Your collection")).toBeNull();
 	});
@@ -418,5 +421,66 @@ describe("PremiumPaywall", () => {
 		expect(screen.queryByTestId("restore-loading")).toBeNull();
 		expect(screen.queryByTestId("error-banner")).toBeNull();
 		expect(screen.getByText("Unlock Unlimited")).toBeTruthy();
+	});
+
+	// BUG-011 — context-aware copy & limits.
+	describe("context: wardrobe", () => {
+		const wardrobeProps = {
+			context: "wardrobe" as const,
+			currentCount: 10,
+			blockedCombination: undefined,
+			savedCombinationIds: undefined,
+		};
+
+		it("renders wardrobe headline instead of favorites headline", () => {
+			renderPaywall(wardrobeProps);
+			expect(screen.getByText("Your wardrobe\nunlimited")).toBeTruthy();
+			expect(screen.queryByText("Don't stop\ncollecting")).toBeNull();
+		});
+
+		it("renders wardrobe limitBadge with FREE_WARDROBE_LIMIT (10)", () => {
+			renderPaywall(wardrobeProps);
+			expect(
+				screen.getByText("10 of 10 free wardrobe items used"),
+			).toBeTruthy();
+		});
+
+		it("renders wardrobe body copy without combinations remaining count", () => {
+			renderPaywall(wardrobeProps);
+			// Wardrobe body mentions garments, not combinations
+			const body = screen.getByTestId("paywall-body");
+			expect(body).toBeTruthy();
+			// The favorites body referenced "combinations waiting to be
+			// discovered" — must be absent in wardrobe context.
+			expect(
+				screen.queryByText(/combinations waiting to be discovered/),
+			).toBeNull();
+		});
+
+		it("hides palette preview entirely in wardrobe context", () => {
+			renderPaywall(wardrobeProps);
+			expect(screen.queryByText("Your collection")).toBeNull();
+			expect(screen.queryByTestId("blocked-palette-strip")).toBeNull();
+			// No saved-palette-* testIDs rendered either.
+			expect(screen.queryByTestId("saved-palette-combo-1")).toBeNull();
+		});
+
+		it("ignores blockedCombination + savedCombinationIds if passed in wardrobe context", () => {
+			renderPaywall({
+				...wardrobeProps,
+				blockedCombination: blockedCombo,
+				savedCombinationIds: ["combo-1", "combo-2"],
+			});
+			// Even when passed, wardrobe context never renders the preview.
+			expect(screen.queryByTestId("blocked-palette-strip")).toBeNull();
+			expect(screen.queryByTestId("saved-palette-combo-1")).toBeNull();
+		});
+
+		it("renders wardrobe-specific unlock accessibility label", () => {
+			renderPaywall(wardrobeProps);
+			expect(
+				screen.getByLabelText("Unlock unlimited wardrobe for €0.99"),
+			).toBeTruthy();
+		});
 	});
 });
