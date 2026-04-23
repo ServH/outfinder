@@ -4,7 +4,7 @@ import {
 	useRoute,
 } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	AccessibilityInfo,
@@ -76,10 +76,14 @@ export function UnifiedCameraResultScreen(
 	const favorites = useMisLooksStore((s) => s.favorites);
 	const wardrobeItems = useMisLooksStore((s) => s.items);
 	const wardrobeItemCount = wardrobeItems.length;
-	const wardrobeItemThumbnails = wardrobeItems
-		.slice(-5)
-		.reverse()
-		.map((i) => i.thumbnailPath);
+	const wardrobeItemThumbnails = useMemo(
+		() =>
+			wardrobeItems
+				.slice(-5)
+				.reverse()
+				.map((i) => i.thumbnailPath),
+		[wardrobeItems],
+	);
 	const gate = usePremiumGate(favorites);
 
 	const [confirmedTone, setConfirmedTone] = useState<Color>(() =>

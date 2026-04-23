@@ -5,7 +5,7 @@ import type {
 } from "@react-navigation/native-stack";
 import { File } from "expo-file-system";
 import { SymbolView } from "expo-symbols";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	AccessibilityInfo,
@@ -62,10 +62,14 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 	const favorites = useMisLooksStore((s) => s.favorites);
 	const wardrobeItems = useMisLooksStore((s) => s.items);
 	const wardrobeItemCount = wardrobeItems.length;
-	const wardrobeItemThumbnails = wardrobeItems
-		.slice(-5)
-		.reverse()
-		.map((i) => i.thumbnailPath);
+	const wardrobeItemThumbnails = useMemo(
+		() =>
+			wardrobeItems
+				.slice(-5)
+				.reverse()
+				.map((i) => i.thumbnailPath),
+		[wardrobeItems],
+	);
 	const gate = usePremiumGate(favorites);
 
 	const [submitting, setSubmitting] = useState(false);

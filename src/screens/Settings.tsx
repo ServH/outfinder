@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Constants from "expo-constants";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	ActivityIndicator,
@@ -46,14 +46,19 @@ export function Settings(_props: SettingsProps) {
 	const isTablet = useIsIPad();
 	// Reactive read for the dev-menu wardrobe item count badge.
 	// useMisLooksStore.getState() inside JSX is a stale snapshot — hook selector keeps it live.
-	const wardrobeDevItemCount = useMisLooksStore((s) => s.items.length);
+	const wardrobeDevItems = useMisLooksStore((s) => s.items);
+	const wardrobeDevItemCount = wardrobeDevItems.length;
 	// Live slice of the 5 most-recent wardrobe item thumbnails, reused by
 	// the wardrobe-paywall dev preview row to mirror the production variant.
-	const wardrobeDevItemThumbnails = useMisLooksStore((s) =>
-		s.items
-			.slice(-5)
-			.reverse()
-			.map((i) => i.thumbnailPath),
+	// MUST be memoized: deriving inside the Zustand selector returns a fresh
+	// array ref every render → infinite re-render loop via Object.is diff.
+	const wardrobeDevItemThumbnails = useMemo(
+		() =>
+			wardrobeDevItems
+				.slice(-5)
+				.reverse()
+				.map((i) => i.thumbnailPath),
+		[wardrobeDevItems],
 	);
 	const [lastMigrationRun, setLastMigrationRun] = useState<{
 		at: string;
