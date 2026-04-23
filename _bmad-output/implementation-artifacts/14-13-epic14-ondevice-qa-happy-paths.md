@@ -1,6 +1,6 @@
 # Story 14.13: Epic 14 on-device QA + happy paths verification
 
-Status: in-progress
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -342,6 +342,8 @@ N/A — no debugging cycle required at checklist-production phase.
 
 ### Completion Notes List
 
+**Status flipped 2026-04-23: `in-progress → review`.** Ver §10 abajo para instrucciones al reviewer (apunta a `docs/planning/epic-14-bugs-handoff-2026-04-23.md` como fuente de verdad actualizada).
+
 **Checklist-production phase completed 2026-04-22 on branch `story/14-13-epic14-ondevice-qa-happy-paths` (off `epic-14` HEAD `21534e0`).**
 
 Tasks actionable in the dev session (Task 1 + Task 4) are complete:
@@ -375,3 +377,19 @@ No source-code files modified — pure-QA success path at checklist-production p
 ### Change Log
 
 - **2026-04-22** — Story 14.13 checklist-production phase. Branch `story/14-13-epic14-ondevice-qa-happy-paths` created off `epic-14` HEAD `21534e0`. Task 1 (checklist authored) + Task 4 (CI gates verified 942/3/945 tsc clean lint-baseline-only) complete. Tasks 2/3/5 pending Alejandro's iPhone 16 Pro execution. Status: in-progress.
+- **2026-04-22 + 2026-04-23** — Post-release bugs capturados + fixed on-branch. 7 bugs cerrados (BUG-001/002/003/004/007/008/011) + 2 polish post-validación (badge En curso sin fondo · badge S4 sin fondo) + 2 utilidades dev-only (reset premium + wardrobe paywall preview). Fix-in-14.13 total: 16 commits. CI baseline sube a 948 passing / 3 pre-existing / 951 total (+9 vs baseline 14.12b — casos wardrobe context del paywall). BUG-005/006/009/010 quedan pendientes como follow-up propuesto v1.4.1. Detalle completo en `docs/planning/epic-14-bugs-handoff-2026-04-23.md`.
+- **2026-04-23** — Status flip `in-progress → review`. Rama lista para code-review adversarial en fresh LLM context per CLAUDE.md "Mandatory Code Review". NO merged aún a `epic-14` — reviewer valida + aprueba + mergea.
+
+## Reviewer handoff — 2026-04-23
+
+**Fuente de verdad del estado actual:** `docs/planning/epic-14-bugs-handoff-2026-04-23.md`.
+
+**Antes de abrir el review:**
+1. `git checkout story/14-13-epic14-ondevice-qa-happy-paths`
+2. `git log --oneline epic-14..HEAD` → 16 commits listados.
+3. Leer el handoff de 2026-04-23 — cubre: resumen ejecutivo, bugs cerrados, bugs pendientes con rationale, cambios arquitectónicos (paywall refactor · popTo fix · CompletenessBadge.transparent · Zustand useMemo pattern · dev utilities), qué validar, archivos modificados, comandos rápidos.
+4. Bug log completo (con root cause + solución + tests por cada BUG) en `docs/planning/epic-14-post-release-bugs.md`.
+
+**Gates CI al cierre:** tsc clean · lint 2 pre-existing errores heredados · pnpm test 948/3/951.
+
+**Merge target:** `epic-14` (NO `epic-1` — `release-manager` hará ese merge después de Outcome A del checklist QA).
