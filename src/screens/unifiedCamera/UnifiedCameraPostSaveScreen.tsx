@@ -48,32 +48,30 @@ export function UnifiedCameraPostSaveScreen(
 	const wadaName = wadaColor?.nameEn ?? "";
 	const categoryLabel = t(categoryLabelKey(categoryKey));
 
-	// BUG-001: both CTAs must DISMISS the UnifiedCameraRoot modal after
-	// updating the Main tab state — otherwise the modal stays mounted over
-	// Main and the user sees layered screens (color page + camera + combos).
-	// Order matters: navigate first (updates the nested state under the
-	// modal), then goBack (slides the modal down over an already-correct
-	// destination). Reverse order would flash the pre-save state briefly.
+	// BUG-001 (second pass): the previous `navigate + goBack` combo broke
+	// both CTAs on device — goBack was routed to the nested focused nav
+	// after navigate changed focus, popping the just-pushed Combinations
+	// instead of dismissing the UnifiedCameraRoot modal. popTo is the
+	// idiomatic RN7 API for "pop back to this root screen applying these
+	// nested params" in a single atomic dispatch, no focus race.
 	function handlePrimary() {
 		hapticLight();
 		const rootNav =
 			navigation.getParent<NativeStackNavigationProp<RootStackParamList>>();
-		rootNav?.navigate("Main", {
+		rootNav?.popTo("Main", {
 			screen: "ColorsTab",
 			params: {
 				screen: "Combinations",
 				params: { colorId: wadaColorId, capturedHex },
 			},
 		} as never);
-		rootNav?.goBack();
 	}
 
 	function handleSecondary() {
 		hapticLight();
 		const rootNav =
 			navigation.getParent<NativeStackNavigationProp<RootStackParamList>>();
-		rootNav?.navigate("Main", { screen: "FavoritesTab" } as never);
-		rootNav?.goBack();
+		rootNav?.popTo("Main", { screen: "FavoritesTab" } as never);
 	}
 
 	return (

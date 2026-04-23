@@ -75,14 +75,10 @@ const mockRouteHolder: { current: MockRouteParams } = {
 	},
 };
 
-const mockRootNavigate = jest.fn();
-const mockRootGoBack = jest.fn();
+const mockRootPopTo = jest.fn();
 const mockLocalPush = jest.fn();
 const mockLocalReplace = jest.fn();
-const mockGetParent = jest.fn(() => ({
-	navigate: mockRootNavigate,
-	goBack: mockRootGoBack,
-}));
+const mockGetParent = jest.fn(() => ({ popTo: mockRootPopTo }));
 
 jest.mock("@react-navigation/native", () => ({
 	useRoute: () => ({ params: mockRouteHolder.current }),
@@ -259,8 +255,7 @@ describe("UnifiedCameraResultScreen", () => {
 			sourceUri: "file:///source.jpg",
 			wadaMatch: { type: "direct", match: { color: BRICK_RED, deltaE: 2 } },
 		};
-		mockRootNavigate.mockClear();
-		mockRootGoBack.mockClear();
+		mockRootPopTo.mockClear();
 		mockLocalPush.mockClear();
 		mockLocalReplace.mockClear();
 		mockGetParent.mockClear();
@@ -563,30 +558,21 @@ describe("UnifiedCameraResultScreen", () => {
 		});
 	});
 
-	it("secondary link tap fires hapticLight and a cross-navigator navigation to Combinations with the confirmed tone params", () => {
+	// BUG-001 (second pass): secondary link uses popTo for atomic
+	// modal-dismiss + nested-navigate. See screen file for rationale.
+	it("secondary link tap fires hapticLight and popTo('Main') with Combinations nested params", () => {
 		render(<UnifiedCameraResultScreen />);
 		fireEvent.press(screen.getByTestId("unified-camera-result-secondary-link"));
 		expect(hapticLight).toHaveBeenCalledTimes(1);
 		expect(mockGetParent).toHaveBeenCalled();
-		expect(mockRootNavigate).toHaveBeenCalledTimes(1);
-		expect(mockRootNavigate).toHaveBeenCalledWith("Main", {
+		expect(mockRootPopTo).toHaveBeenCalledTimes(1);
+		expect(mockRootPopTo).toHaveBeenCalledWith("Main", {
 			screen: "ColorsTab",
 			params: {
 				screen: "Combinations",
 				params: { colorId: BRICK_RED.id, capturedHex: "#7a3f2b" },
 			},
 		});
-	});
-
-	// BUG-001: secondary link also dismisses the UnifiedCameraRoot modal
-	// after updating Main (navigate first, then goBack).
-	it("secondary link dismisses the UnifiedCameraRoot modal via rootNav.goBack() after navigate", () => {
-		render(<UnifiedCameraResultScreen />);
-		fireEvent.press(screen.getByTestId("unified-camera-result-secondary-link"));
-		expect(mockRootGoBack).toHaveBeenCalledTimes(1);
-		const navigateOrder = mockRootNavigate.mock.invocationCallOrder[0];
-		const goBackOrder = mockRootGoBack.mock.invocationCallOrder[0];
-		expect(navigateOrder).toBeLessThan(goBackOrder);
 	});
 
 	it("out-of-coverage match falls back to bestMatch.color in the name stack, primary CTA tint, and hides tone-correction", () => {

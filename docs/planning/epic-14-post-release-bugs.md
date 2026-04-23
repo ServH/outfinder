@@ -45,19 +45,22 @@
   6. Ir a Mis Looks y notar que tampoco está a pantalla completa hasta retroceder.
 - **Dispositivo / build:** iPhone físico de Alejandro (build instalada — presumiblemente TestFlight v1.3.0 o build local de Epic 14; confirmar build exacta si hace falta)
 - **Severidad:** `high` _(propuesta: rompe sensación de flow lineal en camino crítico post-Epic 14; confirmar)_
-- **Estado:** fixed — 2026-04-22 · fix-in-14.13
+- **Estado:** fixed — 2026-04-23 · fix-in-14.13 (segundo intento — el primer fix `navigate+goBack` rompió los CTAs en device, reemplazado por `popTo`)
 - **Notas:**
   - Huele al mismo patrón ya resuelto en Epic 12 (`replace` nav sin `fullScreenModal`) — revisar rutas implicadas: pantallas de resultado de cámara, detalle de prenda post-guardado, navegación a Combos y a Mis Looks.
   - Posible causa: uso de `navigation.navigate` (push) donde debería ser `navigation.replace` en los hand-offs post-guardado.
-- **Solución:**
+- **Solución (primer intento — NO TOCAR ESTA HISTORIA, documentada para aprender del error):**
   - **Root cause confirmado:** no era `push` vs `replace` dentro del stack; era que los CTAs de cross-nav del `UnifiedCameraRoot` (modal sobre RootStack) llamaban `rootNav.navigate("Main", {...})` para actualizar el tab destino, pero **nunca cerraban el modal**. React Navigation mantenía el `UnifiedCameraStack` montado encima de `Main`, así que el usuario veía Combinations (o Mis Looks) detrás de las capas apiladas del camera flow.
-  - Fix: añadir `rootNav?.goBack()` JUSTO DESPUÉS del `rootNav?.navigate(...)` — el orden es crítico. Navigate primero actualiza el nested state bajo el modal (invisible al user), goBack después dispara la animación de dismiss del modal con el destino ya correcto debajo. Invertir el orden daría flash del estado pre-save.
-  - Archivos tocados (3 sitios, 1 patrón):
-    - `src/screens/unifiedCamera/UnifiedCameraPostSaveScreen.tsx:51–69`: primary CTA ("Ver combinaciones con {{wadaName}}") + secondary CTA ("Mis Looks") — ambos ahora `navigate + goBack`.
-    - `src/screens/unifiedCamera/UnifiedCameraResultScreen.tsx:233–244`: `handleSecondaryLink` ("ver combinaciones de este tono" antes de guardar) — mismo fix. Mismo root cause; mismo modal stacking si el user salta directo a Combinations sin guardar.
-  - Comentarios añadidos en cada callsite para que futuros refactors no inviertan el orden.
-  - Tests: **cero borrados**; extendidos los mocks de `getParent()` en `UnifiedCameraPostSaveScreen.test.tsx` + `UnifiedCameraResultScreen.test.tsx` con `mockRootGoBack: jest.fn()`. +3 casos nuevos (uno por callsite) que asertan `mockRootGoBack` fue llamado 1× y que su `invocationCallOrder` es posterior al de `mockRootNavigate`. Baseline: **942 passing / 3 pre-existing / 945 total** — exactamente la baseline 14.12b done recuperada (+3 tests vs. commit de BUG-004).
-  - **Validación on-device pendiente** (tú): flow cámara → guardar prenda → tap "Ver combinaciones" → Combinations debe renderizar limpia sin capas + swipe-back desde Combinations debe llevarte al ColorHome anterior (no al Camera). Ídem con "Mis Looks" como secondary CTA.
+  - Primer parche intentado: añadir `rootNav?.goBack()` JUSTO DESPUÉS del `rootNav?.navigate(...)`. En tests unitarios pasaba (mocks de navigate + goBack correctos en orden), pero **en device los CTAs dispararon haptic y nada más** — sin destino visible. Alejandro lo reportó 2026-04-23.
+  - **Por qué falló:** `rootNav.navigate("Main", { screen: "ColorsTab", params: { screen: "Combinations", ... } })` cambia el **focused navigator** al nested (Combinations dentro de ColorsStack). Cuando después se llama `rootNav?.goBack()`, React Navigation routea el `GO_BACK` al navigator focalizado actual (el nested), NO al que captura la referencia. Resultado: el goBack pop-a la Combinations recién pusheada en vez de dismissar el modal — efectivamente cancelando el navigate. User ve "nada" porque ambas acciones se neutralizan. Gotcha clásico de nested navigators: referencia capturada ≠ navigator que procesa el dispatch después de un navigate que cambia focus.
+- **Solución real (segundo intento, aplicada 2026-04-23):**
+  - Cambio de `navigate + goBack` a **`popTo("Main", nested)`** en un solo dispatch atómico. `popTo` es la API idiomática RN7 para "pop back hasta esta pantalla del stack actual aplicando estos params nested" — maneja atómicamente el modal-dismiss Y el nested-navigate, sin race de focus.
+  - Archivos tocados (3 callsites, 1 patrón):
+    - `src/screens/unifiedCamera/UnifiedCameraPostSaveScreen.tsx`: primary CTA ("Ver combinaciones con {{wadaName}}") + secondary CTA ("Mis Looks") — ambos `popTo("Main", {...})`.
+    - `src/screens/unifiedCamera/UnifiedCameraResultScreen.tsx`: `handleSecondaryLink` ("ver combinaciones sin guardar" antes de guardar) — mismo patrón.
+  - Comentarios en cada callsite explicando por qué popTo y no navigate+goBack (para futuros refactors).
+  - Tests: actualizados los mocks de `getParent()` — `mockRootPopTo` en vez de `mockRootNavigate + mockRootGoBack`. 3 tests reescritos asertan `popTo("Main", {...nested correcto})` (1 en Result, 2 en PostSave). Baseline: **939 passing / 3 pre-existing / 942 total** (net −3 vs. 942 porque eliminé los tests duplicados que testeaban `navigate` separado del `goBack` — ahora un solo test por callsite cubre el comportamiento completo).
+  - **Validación on-device pendiente** (tú): flow cámara → guardar prenda → tap "Ver combinaciones con {{nameEn}}" → modal se dismissa limpio, Combinations renderiza en primer plano sin capas, swipe-back lleva al ColorHome anterior (no al Camera). Ídem con "Mis Looks" secondary + con el link "ver combinaciones sin guardar" del Result screen.
 
 <!-- Formato solución por bug cerrado (añadir al final del bug, NO editar el cuerpo original):
 

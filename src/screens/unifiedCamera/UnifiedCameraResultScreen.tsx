@@ -230,21 +230,21 @@ export function UnifiedCameraResultScreen(
 		}
 	}, [isPremium, paywallVisible, confirming, handleCategoryConfirm]);
 
-	// BUG-001: dismiss the UnifiedCameraRoot modal after pointing Main at
-	// Combinations — otherwise the modal stays mounted and combos renders
-	// with the camera/result screens visible as layers behind it.
+	// BUG-001 (second pass): popTo is the idiomatic RN7 API for "pop back to
+	// Main applying these nested params" in a single atomic dispatch. The
+	// previous `navigate + goBack` combo broke this CTA on device — goBack
+	// was routed to the nested focused nav after navigate changed focus.
 	function handleSecondaryLink() {
 		hapticLight();
 		const rootNav =
 			navigation.getParent<NativeStackNavigationProp<RootStackParamList>>();
-		rootNav?.navigate("Main", {
+		rootNav?.popTo("Main", {
 			screen: "ColorsTab",
 			params: {
 				screen: "Combinations",
 				params: { colorId: confirmedTone.id, capturedHex: dominantHex },
 			},
 		} as never);
-		rootNav?.goBack();
 	}
 
 	const handlePaywallDismiss = useCallback(() => {
