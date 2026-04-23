@@ -1,6 +1,6 @@
 # Story 14.13: Epic 14 on-device QA + happy paths verification
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -379,6 +379,17 @@ No source-code files modified — pure-QA success path at checklist-production p
 - **2026-04-22** — Story 14.13 checklist-production phase. Branch `story/14-13-epic14-ondevice-qa-happy-paths` created off `epic-14` HEAD `21534e0`. Task 1 (checklist authored) + Task 4 (CI gates verified 942/3/945 tsc clean lint-baseline-only) complete. Tasks 2/3/5 pending Alejandro's iPhone 16 Pro execution. Status: in-progress.
 - **2026-04-22 + 2026-04-23** — Post-release bugs capturados + fixed on-branch. 7 bugs cerrados (BUG-001/002/003/004/007/008/011) + 2 polish post-validación (badge En curso sin fondo · badge S4 sin fondo) + 2 utilidades dev-only (reset premium + wardrobe paywall preview). Fix-in-14.13 total: 16 commits. CI baseline sube a 948 passing / 3 pre-existing / 951 total (+9 vs baseline 14.12b — casos wardrobe context del paywall). BUG-005/006/009/010 quedan pendientes como follow-up propuesto v1.4.1. Detalle completo en `docs/planning/epic-14-bugs-handoff-2026-04-23.md`.
 - **2026-04-23** — Status flip `in-progress → review`. Rama lista para code-review adversarial en fresh LLM context per CLAUDE.md "Mandatory Code Review". NO merged aún a `epic-14` — reviewer valida + aprueba + mergea.
+- **2026-04-23** — Code review adversarial completado (bmad-code-review). 0 patches · 0 decision-needed · 5 deferred · 6 dismissed. Review APROBADO — story pasa a `done`. Merge `story/14-13-* → epic-14` autorizado.
+
+### Review Findings — 2026-04-23
+
+0 `decision-needed` · 0 `patch` · 5 `defer` · 6 dismissed.
+
+- [x] [Review][Defer] D-14.13-1: `savedCombinationIds` + `currentCount` two-source-of-truth — `PremiumPaywall` now derives palette visibility from `currentCount` and rendered palettes from `savedCombinationIds`; a future callsite could pass inconsistent values (header says "♥ 3 saved" but palette strip is empty). All current callsites are in sync. Not a bug today, latent API design weakness. [src/components/PremiumPaywall.tsx:256–259] — deferred, not introduced by this diff
+- [x] [Review][Defer] D-14.13-2: `__dev_resetPremium` present in production context value shape — function is a no-op in prod (`if (!__DEV__) return`) but the ref lives in `useMemo` deps + context shape; micro-optimization (dead slot) not actionable without bigger refactor. [src/contexts/PremiumContext.tsx:171–181] — deferred, acceptable tradeoff
+- [x] [Review][Defer] D-14.13-3: `ArmarioPreviewScreen` dual paywall-visibility state — `gate.paywallVisible` (favorites-gate) and local `paywallVisible` (wardrobe error-gate) are separate; intentional design (wardrobe paywall triggered by `WardrobePersistenceError`, not favorites gate), but future maintainers could confuse the two paths. [src/screens/armario/ArmarioPreviewScreen.tsx] — deferred, design-intent comment recommended
+- [x] [Review][Defer] D-14.13-4: `CompletenessBadge.transparent=true` retains `borderRadius:10` + `minHeight:24` as dead styles — no visible artifact (transparent bg = nothing to clip; 24pt minimum height with `alignSelf: flex-start` still occupied but text drives actual height); purely cosmetic polish. [src/components/armario/CompletenessBadge.tsx:67–74] — deferred, future polish pass
+- [x] [Review][Defer] D-14.13-5: `__dev_resetPremium` doesn't call RevenueCat `Purchases.logOut()` — after reset, next Metro reload re-runs `init()` → RevenueCat re-hydrates `isPremium=true` from sandbox entitlement; reset only survives until next cold launch. Developer ergonomics limitation, not a user-facing bug. [src/contexts/PremiumContext.tsx:151–163] — deferred, documented dev limitation
 
 ## Reviewer handoff — 2026-04-23
 
