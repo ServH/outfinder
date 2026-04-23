@@ -215,7 +215,7 @@
 | BUG-005 | Layout Mis Looks "En curso" vs filtros confuso       | medium    | new    | —                 |
 | BUG-006 | Flash Mis Looks antes del selector desde Visualizer  | medium    | triaged | follow-up propuesto |
 | BUG-007 | "Sin prendas" redundante en asignación               | polish    | fixed  | fix-in-14.13      |
-| BUG-008 | Falta feedback visual tras "Usar esta foto" (~1s)    | medium    | new    | —                 |
+| BUG-008 | Falta feedback visual tras "Usar esta foto" (~1s)    | medium    | fixed  | fix-in-14.13      |
 | BUG-009 | Prenda fotografiada no auto-rellena slot del combo   | high      | new    | —                 |
 
 ### BUG-008 — Falta feedback visual tras pulsar "Usar esta foto" al añadir prenda a combo
@@ -231,7 +231,7 @@
   5. Observar que durante ~1s no hay ninguna señal visual de que se esté procesando.
 - **Dispositivo / build:** iPhone 14 físico de Alejandro (misma build que bugs previos)
 - **Severidad:** `medium` _(afecta percepción de calidad/respuesta en un camino crítico; no rompe pero invita a pulsar de nuevo o dudar)_
-- **Estado:** new
+- **Estado:** fixed — 2026-04-23 · fix-in-14.13 (opción A · spinner en botón)
 - **Notas:**
   - Durante ese segundo se están ejecutando probablemente: recorte (Vision / Swift), extracción de color dominante (`react-native-image-colors`), y persistencia. Todo síncrono desde la UI aunque haya pasos async por debajo.
   - Posibles soluciones (elegir según arquitectura):
@@ -239,6 +239,20 @@
     - **Overlay full-screen** con mensaje breve ("Procesando…" / "Extrayendo color…") si queremos aprovechar para comunicar valor (opción más rica).
     - **Navegación inmediata** a la siguiente pantalla con skeleton loader para el preview de la prenda mientras se completa el procesamiento en background (óptimo pero más invasivo).
   - Revisar si este mismo gap existe en el flow equivalente de **cámara desde Home** (post-guardado de prenda inicial); si sí, aplicar el mismo patrón de feedback para mantener consistencia.
+- **Solución:**
+  - Scope confirmado solo a **Flow A (ArmarioPreviewScreen)** tras auditar ambos flows de cámara:
+    - Flow A (Armario: FichaWada slot → Nueva foto → ArmarioPreview → "Usar esta foto") → botón `armario-preview-use-button` invoca `handleUse` que `await saveCutoutAsWardrobeItem(...)` (~1s gap). Ya existía estado `submitting` con disabled + opacity 0.6 en los 3 CTAs del screen, pero SIN feedback visual de procesamiento. **Aquí se aplicó el fix.**
+    - Flow B (FAB → UnifiedCameraResult → "Guardar en mi armario") abre un `CategoryPickerSheet`, NO hace save directo. El save async real vive dentro del sheet (`handleCategoryConfirm` disparado desde el botón "Confirmar" del sheet), y el `CategoryPickerSheet` **YA renderiza un `ActivityIndicator`** cuando su prop `confirming` es true — línea 257–262 del componente. Flow B ya tenía el patrón correcto. Zero cambios en flow B.
+  - `src/screens/armario/ArmarioPreviewScreen.tsx`:
+    - Import extendido: `ActivityIndicator` añadido al import destructurado de `react-native`.
+    - Render prop del `<Pressable testID="armario-preview-use-button">` cambiado: cuando `submitting=true` muestra `<ActivityIndicator testID="armario-preview-use-button-spinner" size="small" color={wadaTokens.bgPaper} />` en lugar del `<Text>` con el label. Cuando `submitting=false` (default) muestra el label como antes. Ningún otro botón del screen (Retake, Back) cambia.
+    - `accessibilityState` del Use CTA ampliado de `{ disabled: submitting }` a `{ disabled: submitting, busy: submitting }` — VoiceOver ahora anuncia estado "busy" durante el procesamiento (AX consistente con el patrón de CategoryPickerSheet).
+  - `src/screens/armario/ArmarioPreviewScreen.test.tsx`:
+    - Test #2 "Usar happy path" extendido con 2 aserciones BUG-008: (a) in-flight el spinner se renderiza por testID (`armario-preview-use-button-spinner`), (b) el `accessibilityState` del use CTA ahora incluye `{ disabled: true, busy: true }`.
+    - Tests #3 (paywall path) + #6 (diskFull path) actualizados: las aserciones sobre `useBtn.props.accessibilityState` tras reset pasan de `{ disabled: false }` a `{ disabled: false, busy: false }`. Los `retakeBtn` assertions se mantienen en `{ disabled: false }` — solo el use CTA cambia su accessibilityState.
+    - Cero tests borrados; cero tests nuevos necesarios como casos aislados (el spinner se valida dentro del happy-path existente).
+  - Baseline tests: **939 passing / 3 pre-existing / 942 total** — idéntica a la baseline de `e39e899`. tsc clean. lint 2 pre-existentes.
+  - **Validación on-device PENDIENTE:** flow FichaWada slot vacío → Nueva foto → snap → ArmarioPreview → tap "Usar esta foto" → durante ~1s botón muestra spinner blanco sobre fondo negro + botones Back/Retake deshabilitados con opacity 0.6 → al completar, back automático al slot del FichaWada con la prenda persistida.
 
 ### BUG-009 — La prenda recién fotografiada no auto-rellena el slot al hacer look desde combo
 - **Fecha:** 2026-04-22

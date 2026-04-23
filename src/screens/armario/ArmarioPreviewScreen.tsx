@@ -7,7 +7,14 @@ import { File } from "expo-file-system";
 import { SymbolView } from "expo-symbols";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AccessibilityInfo, Image, Pressable, Text, View } from "react-native";
+import {
+	AccessibilityInfo,
+	ActivityIndicator,
+	Image,
+	Pressable,
+	Text,
+	View,
+} from "react-native";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
 import { usePremium } from "@/contexts/PremiumContext";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
@@ -264,21 +271,29 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 					}}
 					testID="armario-preview-use-button"
 					disabled={submitting}
-					accessibilityState={{ disabled: submitting }}
+					accessibilityState={{ disabled: submitting, busy: submitting }}
 				>
-					{({ pressed }) => (
-						<Text
-							style={{
-								fontFamily: "Inter_500Medium",
-								fontSize: 15,
-								color: wadaTokens.bgPaper,
-								letterSpacing: 0.3,
-								opacity: pressed ? 0.7 : 1,
-							}}
-						>
-							{t("armario.preview.useButton")}
-						</Text>
-					)}
+					{({ pressed }) =>
+						submitting ? (
+							<ActivityIndicator
+								testID="armario-preview-use-button-spinner"
+								size="small"
+								color={wadaTokens.bgPaper}
+							/>
+						) : (
+							<Text
+								style={{
+									fontFamily: "Inter_500Medium",
+									fontSize: 15,
+									color: wadaTokens.bgPaper,
+									letterSpacing: 0.3,
+									opacity: pressed ? 0.7 : 1,
+								}}
+							>
+								{t("armario.preview.useButton")}
+							</Text>
+						)
+					}
 				</Pressable>
 			</View>
 
