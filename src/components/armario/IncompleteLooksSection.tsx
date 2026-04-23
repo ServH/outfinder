@@ -76,40 +76,21 @@ export function IncompleteLooksSection(props: IncompleteLooksSectionProps) {
 							onPress={() => onTilePress(item.id)}
 							style={{
 								width: 160,
-								height: 112,
+								height: 100,
 								backgroundColor: wadaTokens.bgElevated,
 								borderRadius: 12,
 								borderWidth: 1,
 								borderColor: wadaTokens.hairline,
-								padding: 10,
+								padding: 12,
 								justifyContent: "space-between",
 							}}
 						>
-							<View style={{ flexDirection: "row", gap: 4 }}>
-								{item.colors.map((color, idx) => (
-									<View
-										key={color.id}
-										testID={`incomplete-tile-${item.id}-swatch-${idx}`}
-										style={{
-											width: 20,
-											height: 20,
-											borderRadius: 10,
-											backgroundColor: color.hex,
-										}}
-									/>
-								))}
-							</View>
-							<CompletenessBadge
-								assigned={assigned}
-								total={total}
-								testID={`incomplete-tile-${item.id}-badge`}
-							/>
 							<View>
 								<Text
 									numberOfLines={1}
 									style={{
 										fontFamily: "NotoSerifJP_500Medium",
-										fontSize: 12,
+										fontSize: 14,
 										color: wadaTokens.textPrimary,
 									}}
 								>
@@ -119,12 +100,20 @@ export function IncompleteLooksSection(props: IncompleteLooksSectionProps) {
 									numberOfLines={1}
 									style={{
 										fontFamily: "Inter_400Regular",
-										fontSize: 10,
+										fontSize: 11,
 										color: wadaTokens.textSecondary,
+										marginTop: 2,
 									}}
 								>
 									{item.nameEn}
 								</Text>
+							</View>
+							<View style={{ alignItems: "flex-start" }}>
+								<CompletenessBadge
+									assigned={assigned}
+									total={total}
+									testID={`incomplete-tile-${item.id}-badge`}
+								/>
 							</View>
 						</Pressable>
 					);

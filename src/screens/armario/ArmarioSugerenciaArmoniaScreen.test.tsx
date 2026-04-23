@@ -170,7 +170,6 @@ describe("ArmarioSugerenciaArmoniaScreen", () => {
 		expect(screen.getByTestId("s5-combo-name").props.children).toBe(
 			"Coral Triad",
 		);
-		expect(screen.getByTestId("s5-completeness-badge")).toBeTruthy();
 		expect(screen.getByTestId("s5-subtitle")).toBeTruthy();
 		expect(screen.getByTestId("s5-canvas")).toBeTruthy();
 		expect(screen.getByTestId("s5-suggestion-card")).toBeTruthy();

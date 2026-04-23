@@ -16,7 +16,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { type LayoutChangeEvent, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { CompletenessBadge } from "@/components/armario/CompletenessBadge";
 import { getCombination } from "@/data/colorIndex";
 import {
 	drawPolaroidStack,
@@ -397,11 +396,6 @@ export function ArmarioSugerenciaArmoniaScreen(
 				>
 					{combination.nameEn}
 				</Text>
-				<CompletenessBadge
-					assigned={assignedCount}
-					total={totalColors}
-					testID="s5-completeness-badge"
-				/>
 			</View>
 
 			<Text
