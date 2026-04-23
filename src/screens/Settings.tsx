@@ -47,6 +47,14 @@ export function Settings(_props: SettingsProps) {
 	// Reactive read for the dev-menu wardrobe item count badge.
 	// useMisLooksStore.getState() inside JSX is a stale snapshot — hook selector keeps it live.
 	const wardrobeDevItemCount = useMisLooksStore((s) => s.items.length);
+	// Live slice of the 5 most-recent wardrobe item thumbnails, reused by
+	// the wardrobe-paywall dev preview row to mirror the production variant.
+	const wardrobeDevItemThumbnails = useMisLooksStore((s) =>
+		s.items
+			.slice(-5)
+			.reverse()
+			.map((i) => i.thumbnailPath),
+	);
 	const [lastMigrationRun, setLastMigrationRun] = useState<{
 		at: string;
 		status: MigrationResult["status"];
@@ -571,6 +579,7 @@ export function Settings(_props: SettingsProps) {
 					visible={devWardrobePaywallVisible}
 					context="wardrobe"
 					currentCount={wardrobeDevItemCount}
+					wardrobeItemThumbnails={wardrobeDevItemThumbnails}
 					priceString={gate.priceString}
 					onPurchase={() => setDevWardrobePaywallVisible(false)}
 					onRestore={() => setDevWardrobePaywallVisible(false)}

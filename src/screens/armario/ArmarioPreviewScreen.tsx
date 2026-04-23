@@ -60,7 +60,12 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 	const { cutoutUri, sourceUri, onCutoutSaved } = route.params;
 	const { isPremium } = usePremium();
 	const favorites = useMisLooksStore((s) => s.favorites);
-	const wardrobeItemCount = useMisLooksStore((s) => s.items.length);
+	const wardrobeItems = useMisLooksStore((s) => s.items);
+	const wardrobeItemCount = wardrobeItems.length;
+	const wardrobeItemThumbnails = wardrobeItems
+		.slice(-5)
+		.reverse()
+		.map((i) => i.thumbnailPath);
 	const gate = usePremiumGate(favorites);
 
 	const [submitting, setSubmitting] = useState(false);
@@ -348,6 +353,7 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 				visible={paywallVisible}
 				context="wardrobe"
 				currentCount={wardrobeItemCount}
+				wardrobeItemThumbnails={wardrobeItemThumbnails}
 				priceString={gate.priceString}
 				purchaseState={gate.purchaseState}
 				errorMessage={gate.errorMessage}

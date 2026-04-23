@@ -471,9 +471,52 @@ describe("PremiumPaywall", () => {
 				blockedCombination: blockedCombo,
 				savedCombinationIds: ["combo-1", "combo-2"],
 			});
-			// Even when passed, wardrobe context never renders the preview.
+			// Even when passed, wardrobe context never renders the palette
+			// preview.
 			expect(screen.queryByTestId("blocked-palette-strip")).toBeNull();
 			expect(screen.queryByTestId("saved-palette-combo-1")).toBeNull();
+		});
+
+		it("renders wardrobe thumb row when wardrobeItemThumbnails has items", () => {
+			renderPaywall({
+				...wardrobeProps,
+				wardrobeItemThumbnails: [
+					"file:///a.png",
+					"file:///b.png",
+					"file:///c.png",
+				],
+			});
+			expect(screen.getByTestId("wardrobe-thumbs-preview")).toBeTruthy();
+			expect(screen.getByTestId("wardrobe-thumb-preview-0")).toBeTruthy();
+			expect(screen.getByTestId("wardrobe-thumb-preview-1")).toBeTruthy();
+			expect(screen.getByTestId("wardrobe-thumb-preview-2")).toBeTruthy();
+			// Header mirror of favorites variant: "Your wardrobe" + count.
+			expect(screen.getByText("Your wardrobe")).toBeTruthy();
+			expect(screen.getByText("10 garments")).toBeTruthy();
+		});
+
+		it("caps wardrobe thumbs at 5 even when more are provided", () => {
+			renderPaywall({
+				...wardrobeProps,
+				wardrobeItemThumbnails: [
+					"file:///a.png",
+					"file:///b.png",
+					"file:///c.png",
+					"file:///d.png",
+					"file:///e.png",
+					"file:///f.png",
+					"file:///g.png",
+				],
+			});
+			expect(screen.getByTestId("wardrobe-thumb-preview-4")).toBeTruthy();
+			expect(screen.queryByTestId("wardrobe-thumb-preview-5")).toBeNull();
+			expect(screen.queryByTestId("wardrobe-thumb-preview-6")).toBeNull();
+		});
+
+		it("hides wardrobe thumb row when wardrobeItemThumbnails is empty or omitted", () => {
+			renderPaywall(wardrobeProps);
+			expect(screen.queryByTestId("wardrobe-thumbs-preview")).toBeNull();
+			expect(screen.queryByText("Your wardrobe")).toBeNull();
 		});
 
 		it("renders wardrobe-specific unlock accessibility label", () => {

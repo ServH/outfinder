@@ -112,6 +112,8 @@
 			"unlockLabel": "Unlock unlimited favorites for {{price}}"
 		},
 		"wardrobe": {
+			"yourCollection": "Your wardrobe",
+			"savedCount": "{{count}} garments",
 			"limitBadge": "{{count}} of {{limit}} free wardrobe items used",
 			"headline": "Your wardrobe\nunlimited",
 			"body": "You already have {{count}} garments saved. With Outfinder Premium, capture every piece of your real wardrobe — no limit.",

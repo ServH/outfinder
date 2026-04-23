@@ -74,7 +74,12 @@ export function UnifiedCameraResultScreen(
 	const { cutoutUri, dominantHex, wadaMatch, sourceUri } = route.params;
 	const { isPremium } = usePremium();
 	const favorites = useMisLooksStore((s) => s.favorites);
-	const wardrobeItemCount = useMisLooksStore((s) => s.items.length);
+	const wardrobeItems = useMisLooksStore((s) => s.items);
+	const wardrobeItemCount = wardrobeItems.length;
+	const wardrobeItemThumbnails = wardrobeItems
+		.slice(-5)
+		.reverse()
+		.map((i) => i.thumbnailPath);
 	const gate = usePremiumGate(favorites);
 
 	const [confirmedTone, setConfirmedTone] = useState<Color>(() =>
@@ -551,6 +556,7 @@ export function UnifiedCameraResultScreen(
 				visible={paywallVisible}
 				context="wardrobe"
 				currentCount={wardrobeItemCount}
+				wardrobeItemThumbnails={wardrobeItemThumbnails}
 				priceString={gate.priceString}
 				purchaseState={gate.purchaseState}
 				errorMessage={gate.errorMessage}

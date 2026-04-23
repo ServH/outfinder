@@ -112,6 +112,8 @@
 			"unlockLabel": "Desbloquea favoritos ilimitados por {{price}}"
 		},
 		"wardrobe": {
+			"yourCollection": "Tu armario",
+			"savedCount": "{{count}} prendas",
 			"limitBadge": "{{count}} de {{limit}} prendas gratuitas usadas",
 			"headline": "Tu armario\nsin l\u00edmite",
 			"body": "Ya tienes {{count}} prendas guardadas. Con Outfinder Premium captura todas las prendas de tu armario real sin l\u00edmite.",

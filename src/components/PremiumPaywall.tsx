@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	ActivityIndicator,
+	Image,
 	Modal,
 	Pressable,
 	ScrollView,
@@ -64,6 +65,13 @@ export interface PremiumPaywallProps {
 	 * drives the palette preview strip. In wardrobe context this is ignored.
 	 */
 	savedCombinationIds?: string[];
+	/**
+	 * Wardrobe-only. Up to ~5 thumbnail URIs of the user's most recent
+	 * wardrobe items; drives the horizontal thumb row shown in place of the
+	 * palette preview. Ignored in favorites context. If empty, the header +
+	 * thumb row is hidden (same as favorites with 0 saved).
+	 */
+	wardrobeItemThumbnails?: string[];
 }
 
 export function PremiumPaywall({
@@ -78,6 +86,7 @@ export function PremiumPaywall({
 	onDismiss,
 	blockedCombination,
 	savedCombinationIds = [],
+	wardrobeItemThumbnails = [],
 }: PremiumPaywallProps) {
 	const { t } = useTranslation();
 	const { height: screenHeight } = useWindowDimensions();
@@ -189,12 +198,14 @@ export function PremiumPaywall({
 		.filter((c): c is Combination => c !== undefined);
 
 	// Palette preview (saved combos + optional blocked strip) belongs to the
-	// favorites framing. In wardrobe context we skip it entirely — the user
-	// is trying to save a garment, not a palette, so showing palettes would
-	// miscommunicate the gate.
+	// favorites framing. In wardrobe context we swap it for a thumb row of
+	// the user's most recent garments — keeps the sheet at a consistent
+	// vertical rhythm with the favorites variant instead of leaving a gap.
 	const showPalettePreview =
 		context === "favorites" &&
 		(currentCount > 0 || blockedCombination !== undefined);
+	const showWardrobeThumbs =
+		context === "wardrobe" && wardrobeItemThumbnails.length > 0;
 
 	const badgeText = t(`paywall.${context}.limitBadge`, {
 		count: currentCount,
@@ -335,6 +346,62 @@ export function PremiumPaywall({
 												))}
 											</Animated.View>
 										)}
+									</View>
+								</View>
+							)}
+
+							{/* Wardrobe thumbs preview — parallels the palette preview
+							    above for vertical-rhythm parity. Rendered only when
+							    context is wardrobe AND at least one thumbnail is
+							    provided. */}
+							{showWardrobeThumbs && (
+								<View className="mt-6" testID="wardrobe-thumbs-preview">
+									{/* Header row mirrors the favorites variant. */}
+									<View
+										className="flex-row justify-between"
+										accessible
+										accessibilityLabel={`${t("paywall.wardrobe.yourCollection")}. ${t("paywall.wardrobe.savedCount", { count: currentCount })}`}
+									>
+										<Text
+											allowFontScaling
+											className="font-sans text-[11px] text-tertiary"
+										>
+											{t("paywall.wardrobe.yourCollection")}
+										</Text>
+										<Text
+											allowFontScaling
+											className="font-sans text-[11px] text-premium-accent"
+										>
+											{t("paywall.wardrobe.savedCount", {
+												count: currentCount,
+											})}
+										</Text>
+									</View>
+
+									{/* Horizontal thumb row — up to 5 most recent items.
+									    Decorative: the header row above already announces
+									    the count for VoiceOver. Individual thumbs are
+									    plain <Image> without a11y labels — VoiceOver
+									    naturally skips unlabeled images, so no explicit
+									    elements-hidden is needed (and using it would
+									    also block testing-library from querying by
+									    testID). */}
+									<View className="mt-2 flex-row" style={{ gap: 6 }}>
+										{wardrobeItemThumbnails.slice(0, 5).map((uri, idx) => (
+											<Image
+												// biome-ignore lint/suspicious/noArrayIndexKey: thumbnails are a stable slice of a store-ordered list; index is effectively the identity here.
+												key={`wardrobe-thumb-${idx}`}
+												source={{ uri }}
+												resizeMode="contain"
+												testID={`wardrobe-thumb-preview-${idx}`}
+												style={{
+													width: 48,
+													height: 48,
+													borderRadius: 8,
+													backgroundColor: wadaTokens.bgElevated,
+												}}
+											/>
+										))}
 									</View>
 								</View>
 							)}
