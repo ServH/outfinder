@@ -316,6 +316,7 @@ export function ArmarioTuLookScreen(_props: ArmarioTuLookScreenProps) {
 				<CompletenessBadge
 					assigned={assignedCount}
 					total={totalColors}
+					transparent
 					testID="s4-completeness-badge"
 				/>
 			</View>
