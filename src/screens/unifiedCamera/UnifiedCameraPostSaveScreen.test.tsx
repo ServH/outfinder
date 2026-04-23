@@ -26,8 +26,8 @@ const mockRouteHolder: { current: MockRouteParams } = {
 	},
 };
 
-const mockRootNavigate = jest.fn();
-const mockGetParent = jest.fn(() => ({ navigate: mockRootNavigate }));
+const mockRootPopTo = jest.fn();
+const mockGetParent = jest.fn(() => ({ popTo: mockRootPopTo }));
 
 jest.mock("@react-navigation/native", () => ({
 	useRoute: () => ({ params: mockRouteHolder.current }),
@@ -66,7 +66,7 @@ describe("UnifiedCameraPostSaveScreen", () => {
 			capturedHex: "#7a3f2b",
 			categoryKey: "top",
 		};
-		mockRootNavigate.mockClear();
+		mockRootPopTo.mockClear();
 		mockGetParent.mockClear();
 		(hapticLight as jest.Mock).mockClear();
 	});
@@ -94,12 +94,16 @@ describe("UnifiedCameraPostSaveScreen", () => {
 		).toHaveTextContent("See combinations with Brick Red");
 	});
 
-	it("primary CTA tap fires hapticLight and cross-navigates to Combinations with the exact params", () => {
+	// BUG-001 (second pass): both CTAs use popTo to atomically pop the
+	// UnifiedCameraRoot modal AND apply nested params on Main. Single
+	// dispatch — no navigate/goBack race that would pop the wrong screen.
+	it("primary CTA tap fires hapticLight and popTo('Main') with ColorsTab → Combinations nested params", () => {
 		render(<UnifiedCameraPostSaveScreen />);
 		fireEvent.press(screen.getByTestId("unified-camera-postsave-primary-cta"));
 		expect(hapticLight).toHaveBeenCalledTimes(1);
 		expect(mockGetParent).toHaveBeenCalled();
-		expect(mockRootNavigate).toHaveBeenCalledWith("Main", {
+		expect(mockRootPopTo).toHaveBeenCalledTimes(1);
+		expect(mockRootPopTo).toHaveBeenCalledWith("Main", {
 			screen: "ColorsTab",
 			params: {
 				screen: "Combinations",
@@ -108,13 +112,14 @@ describe("UnifiedCameraPostSaveScreen", () => {
 		});
 	});
 
-	it("secondary CTA tap fires hapticLight and cross-navigates to FavoritesTab", () => {
+	it("secondary CTA tap fires hapticLight and popTo('Main') with FavoritesTab nested param", () => {
 		render(<UnifiedCameraPostSaveScreen />);
 		fireEvent.press(
 			screen.getByTestId("unified-camera-postsave-secondary-cta"),
 		);
 		expect(hapticLight).toHaveBeenCalledTimes(1);
-		expect(mockRootNavigate).toHaveBeenCalledWith("Main", {
+		expect(mockRootPopTo).toHaveBeenCalledTimes(1);
+		expect(mockRootPopTo).toHaveBeenCalledWith("Main", {
 			screen: "FavoritesTab",
 		});
 	});

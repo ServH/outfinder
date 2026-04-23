@@ -8,7 +8,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AccessibilityInfo, Modal, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { CompletenessBadge } from "@/components/armario/CompletenessBadge";
 import { MisLooksLimitStrip } from "@/components/armario/MisLooksLimitStrip";
 import { WardrobeItemThumb } from "@/components/armario/WardrobeItemThumb";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
@@ -225,11 +224,6 @@ export function ArmarioFichaWadaScreen({
 				>
 					{combination.nameEn}
 				</Text>
-				<CompletenessBadge
-					assigned={assignedCount}
-					total={totalColors}
-					testID="s2-completeness-badge"
-				/>
 			</View>
 
 			<Text
@@ -616,8 +610,10 @@ export function ArmarioFichaWadaScreen({
 
 			<PremiumPaywall
 				visible={gate.paywallVisible}
+				context="favorites"
+				currentCount={gate.favoriteCombinationIds.length}
 				blockedCombination={gate.blockedCombination}
-				favoriteCombinationIds={gate.favoriteCombinationIds}
+				savedCombinationIds={gate.favoriteCombinationIds}
 				priceString={gate.priceString}
 				purchaseState={gate.purchaseState}
 				errorMessage={gate.errorMessage}

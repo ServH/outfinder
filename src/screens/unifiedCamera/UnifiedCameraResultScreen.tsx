@@ -4,7 +4,7 @@ import {
 	useRoute,
 } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	AccessibilityInfo,
@@ -74,6 +74,16 @@ export function UnifiedCameraResultScreen(
 	const { cutoutUri, dominantHex, wadaMatch, sourceUri } = route.params;
 	const { isPremium } = usePremium();
 	const favorites = useMisLooksStore((s) => s.favorites);
+	const wardrobeItems = useMisLooksStore((s) => s.items);
+	const wardrobeItemCount = wardrobeItems.length;
+	const wardrobeItemThumbnails = useMemo(
+		() =>
+			wardrobeItems
+				.slice(-5)
+				.reverse()
+				.map((i) => i.thumbnailPath),
+		[wardrobeItems],
+	);
 	const gate = usePremiumGate(favorites);
 
 	const [confirmedTone, setConfirmedTone] = useState<Color>(() =>
@@ -230,11 +240,15 @@ export function UnifiedCameraResultScreen(
 		}
 	}, [isPremium, paywallVisible, confirming, handleCategoryConfirm]);
 
+	// BUG-001 (second pass): popTo is the idiomatic RN7 API for "pop back to
+	// Main applying these nested params" in a single atomic dispatch. The
+	// previous `navigate + goBack` combo broke this CTA on device — goBack
+	// was routed to the nested focused nav after navigate changed focus.
 	function handleSecondaryLink() {
 		hapticLight();
 		const rootNav =
 			navigation.getParent<NativeStackNavigationProp<RootStackParamList>>();
-		rootNav?.navigate("Main", {
+		rootNav?.popTo("Main", {
 			screen: "ColorsTab",
 			params: {
 				screen: "Combinations",
@@ -544,8 +558,9 @@ export function UnifiedCameraResultScreen(
 
 			<PremiumPaywall
 				visible={paywallVisible}
-				blockedCombination={undefined}
-				favoriteCombinationIds={[...favorites]}
+				context="wardrobe"
+				currentCount={wardrobeItemCount}
+				wardrobeItemThumbnails={wardrobeItemThumbnails}
 				priceString={gate.priceString}
 				purchaseState={gate.purchaseState}
 				errorMessage={gate.errorMessage}

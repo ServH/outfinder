@@ -102,6 +102,7 @@ export function IncompleteLooksSection(props: IncompleteLooksSectionProps) {
 							<CompletenessBadge
 								assigned={assigned}
 								total={total}
+								transparent
 								testID={`incomplete-tile-${item.id}-badge`}
 							/>
 							<View>

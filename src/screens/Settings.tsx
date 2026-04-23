@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Constants from "expo-constants";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	ActivityIndicator,
@@ -38,7 +38,7 @@ export function Settings(_props: SettingsProps) {
 	const { t } = useTranslation();
 	const navigation =
 		useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-	const { isPremium, restore } = usePremium();
+	const { isPremium, restore, __dev_resetPremium } = usePremium();
 	const favorites = useMisLooksStore((s) => s.favorites);
 	const toggleFavorite = useMisLooksStore((s) => s.toggleFavorite);
 	const count = useMisLooksStore((s) => s.favorites.size);
@@ -46,11 +46,26 @@ export function Settings(_props: SettingsProps) {
 	const isTablet = useIsIPad();
 	// Reactive read for the dev-menu wardrobe item count badge.
 	// useMisLooksStore.getState() inside JSX is a stale snapshot — hook selector keeps it live.
-	const wardrobeDevItemCount = useMisLooksStore((s) => s.items.length);
+	const wardrobeDevItems = useMisLooksStore((s) => s.items);
+	const wardrobeDevItemCount = wardrobeDevItems.length;
+	// Live slice of the 5 most-recent wardrobe item thumbnails, reused by
+	// the wardrobe-paywall dev preview row to mirror the production variant.
+	// MUST be memoized: deriving inside the Zustand selector returns a fresh
+	// array ref every render → infinite re-render loop via Object.is diff.
+	const wardrobeDevItemThumbnails = useMemo(
+		() =>
+			wardrobeDevItems
+				.slice(-5)
+				.reverse()
+				.map((i) => i.thumbnailPath),
+		[wardrobeDevItems],
+	);
 	const [lastMigrationRun, setLastMigrationRun] = useState<{
 		at: string;
 		status: MigrationResult["status"];
 	} | null>(null);
+	const [devWardrobePaywallVisible, setDevWardrobePaywallVisible] =
+		useState(false);
 
 	const handleRerunMigration = useCallback(async () => {
 		try {
@@ -364,6 +379,52 @@ export function Settings(_props: SettingsProps) {
 										</Text>
 									) : null}
 								</Pressable>
+
+								<View className="h-[1px] bg-divider mx-4" />
+
+								<Pressable
+									testID="dev-preview-wardrobe-paywall-row"
+									className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+									accessibilityRole="button"
+									accessibilityLabel="Preview wardrobe paywall (dev)"
+									onPress={() => setDevWardrobePaywallVisible(true)}
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[14px] text-primary"
+									>
+										Preview wardrobe paywall
+									</Text>
+									<Text
+										allowFontScaling
+										className="font-sans text-[12px] text-tertiary"
+									>
+										context: wardrobe
+									</Text>
+								</Pressable>
+
+								<View className="h-[1px] bg-divider mx-4" />
+
+								<Pressable
+									testID="dev-reset-premium-row"
+									className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+									accessibilityRole="button"
+									accessibilityLabel="Reset premium status (dev)"
+									onPress={__dev_resetPremium}
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[14px] text-primary"
+									>
+										Reset premium (dev)
+									</Text>
+									<Text
+										allowFontScaling
+										className="font-sans text-[12px] text-tertiary"
+									>
+										{isPremium ? "ON" : "OFF"}
+									</Text>
+								</Pressable>
 							</View>
 						</View>
 					)}
@@ -504,7 +565,9 @@ export function Settings(_props: SettingsProps) {
 			{/* PremiumPaywall rendered at bottom */}
 			<PremiumPaywall
 				visible={gate.paywallVisible}
-				favoriteCombinationIds={gate.favoriteCombinationIds}
+				context="favorites"
+				currentCount={gate.favoriteCombinationIds.length}
+				savedCombinationIds={gate.favoriteCombinationIds}
 				priceString={gate.priceString}
 				purchaseState={gate.purchaseState}
 				errorMessage={gate.errorMessage}
@@ -512,6 +575,22 @@ export function Settings(_props: SettingsProps) {
 				onRestore={gate.handleRestore}
 				onDismiss={gate.handleDismiss}
 			/>
+
+			{/* Dev-only: render the wardrobe-context paywall as a preview
+			    triggered by the `dev-preview-wardrobe-paywall-row` button. No
+			    real purchase — dismiss closes. */}
+			{__DEV__ && (
+				<PremiumPaywall
+					visible={devWardrobePaywallVisible}
+					context="wardrobe"
+					currentCount={wardrobeDevItemCount}
+					wardrobeItemThumbnails={wardrobeDevItemThumbnails}
+					priceString={gate.priceString}
+					onPurchase={() => setDevWardrobePaywallVisible(false)}
+					onRestore={() => setDevWardrobePaywallVisible(false)}
+					onDismiss={() => setDevWardrobePaywallVisible(false)}
+				/>
+			)}
 		</View>
 	);
 }

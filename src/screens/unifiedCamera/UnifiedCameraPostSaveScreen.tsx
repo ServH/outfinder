@@ -48,11 +48,17 @@ export function UnifiedCameraPostSaveScreen(
 	const wadaName = wadaColor?.nameEn ?? "";
 	const categoryLabel = t(categoryLabelKey(categoryKey));
 
+	// BUG-001 (second pass): the previous `navigate + goBack` combo broke
+	// both CTAs on device — goBack was routed to the nested focused nav
+	// after navigate changed focus, popping the just-pushed Combinations
+	// instead of dismissing the UnifiedCameraRoot modal. popTo is the
+	// idiomatic RN7 API for "pop back to this root screen applying these
+	// nested params" in a single atomic dispatch, no focus race.
 	function handlePrimary() {
 		hapticLight();
 		const rootNav =
 			navigation.getParent<NativeStackNavigationProp<RootStackParamList>>();
-		rootNav?.navigate("Main", {
+		rootNav?.popTo("Main", {
 			screen: "ColorsTab",
 			params: {
 				screen: "Combinations",
@@ -65,7 +71,7 @@ export function UnifiedCameraPostSaveScreen(
 		hapticLight();
 		const rootNav =
 			navigation.getParent<NativeStackNavigationProp<RootStackParamList>>();
-		rootNav?.navigate("Main", { screen: "FavoritesTab" } as never);
+		rootNav?.popTo("Main", { screen: "FavoritesTab" } as never);
 	}
 
 	return (

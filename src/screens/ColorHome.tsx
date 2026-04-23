@@ -582,8 +582,8 @@ export function ColorHome() {
 					testID="state-2"
 					pointerEvents={isAnimating ? "none" : "auto"}
 				>
-					{/* State 2 header: ← Family + combo count */}
-					<View className="flex-row items-center justify-between px-4 pt-4 pb-2">
+					{/* State 2 header: ← Family */}
+					<View className="flex-row items-center px-4 pt-4 pb-2">
 						<Pressable
 							onPress={handleBackPress}
 							accessibilityRole="button"
@@ -604,17 +604,6 @@ export function ColorHome() {
 								← {familyLabel}
 							</Text>
 						</Pressable>
-						<Text
-							style={{
-								fontFamily: "Inter_400Regular",
-								fontSize: 15,
-								color: wadaTokens.textSecondary,
-								flexShrink: 0,
-							}}
-							testID="combo-count"
-						>
-							{combos.length} {t("home.combo", { count: combos.length })}
-						</Text>
 					</View>
 
 					{/* ShadePicker — fixed above scroll */}
@@ -658,8 +647,10 @@ export function ColorHome() {
 			{/* Premium paywall modal */}
 			<PremiumPaywall
 				visible={premiumGate.paywallVisible}
+				context="favorites"
+				currentCount={premiumGate.favoriteCombinationIds.length}
 				blockedCombination={premiumGate.blockedCombination}
-				favoriteCombinationIds={premiumGate.favoriteCombinationIds}
+				savedCombinationIds={premiumGate.favoriteCombinationIds}
 				priceString={premiumGate.priceString}
 				purchaseState={premiumGate.purchaseState}
 				errorMessage={premiumGate.errorMessage}

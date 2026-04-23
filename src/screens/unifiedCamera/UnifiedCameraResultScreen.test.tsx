@@ -75,10 +75,10 @@ const mockRouteHolder: { current: MockRouteParams } = {
 	},
 };
 
-const mockRootNavigate = jest.fn();
+const mockRootPopTo = jest.fn();
 const mockLocalPush = jest.fn();
 const mockLocalReplace = jest.fn();
-const mockGetParent = jest.fn(() => ({ navigate: mockRootNavigate }));
+const mockGetParent = jest.fn(() => ({ popTo: mockRootPopTo }));
 
 jest.mock("@react-navigation/native", () => ({
 	useRoute: () => ({ params: mockRouteHolder.current }),
@@ -119,8 +119,9 @@ jest.mock("@/contexts/PremiumContext", () => ({
 }));
 
 jest.mock("@/stores/misLooksStore", () => ({
-	useMisLooksStore: (selector: (s: { favorites: Set<string> }) => unknown) =>
-		selector({ favorites: new Set<string>() }),
+	useMisLooksStore: (
+		selector: (s: { favorites: Set<string>; items: unknown[] }) => unknown,
+	) => selector({ favorites: new Set<string>(), items: [] }),
 }));
 
 const mockGateDismiss = jest.fn();
@@ -255,7 +256,7 @@ describe("UnifiedCameraResultScreen", () => {
 			sourceUri: "file:///source.jpg",
 			wadaMatch: { type: "direct", match: { color: BRICK_RED, deltaE: 2 } },
 		};
-		mockRootNavigate.mockClear();
+		mockRootPopTo.mockClear();
 		mockLocalPush.mockClear();
 		mockLocalReplace.mockClear();
 		mockGetParent.mockClear();
@@ -558,13 +559,15 @@ describe("UnifiedCameraResultScreen", () => {
 		});
 	});
 
-	it("secondary link tap fires hapticLight and a cross-navigator navigation to Combinations with the confirmed tone params", () => {
+	// BUG-001 (second pass): secondary link uses popTo for atomic
+	// modal-dismiss + nested-navigate. See screen file for rationale.
+	it("secondary link tap fires hapticLight and popTo('Main') with Combinations nested params", () => {
 		render(<UnifiedCameraResultScreen />);
 		fireEvent.press(screen.getByTestId("unified-camera-result-secondary-link"));
 		expect(hapticLight).toHaveBeenCalledTimes(1);
 		expect(mockGetParent).toHaveBeenCalled();
-		expect(mockRootNavigate).toHaveBeenCalledTimes(1);
-		expect(mockRootNavigate).toHaveBeenCalledWith("Main", {
+		expect(mockRootPopTo).toHaveBeenCalledTimes(1);
+		expect(mockRootPopTo).toHaveBeenCalledWith("Main", {
 			screen: "ColorsTab",
 			params: {
 				screen: "Combinations",

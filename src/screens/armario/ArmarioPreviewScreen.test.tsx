@@ -99,8 +99,9 @@ jest.mock("@/hooks/usePremiumGate", () => ({
 }));
 
 jest.mock("@/stores/misLooksStore", () => ({
-	useMisLooksStore: (selector: (s: { favorites: Set<string> }) => unknown) =>
-		selector({ favorites: new Set<string>() }),
+	useMisLooksStore: (
+		selector: (s: { favorites: Set<string>; items: unknown[] }) => unknown,
+	) => selector({ favorites: new Set<string>(), items: [] }),
 }));
 
 jest.mock("@/contexts/PremiumContext", () => ({
@@ -174,7 +175,7 @@ describe("ArmarioPreviewScreen", () => {
 		unmount();
 	});
 
-	it("2. Usar happy path: save resolves → hapticRigid → goBack, submitting disables CTAs in-flight", async () => {
+	it("2. Usar happy path: save resolves → hapticRigid → goBack, submitting disables CTAs in-flight + use CTA shows spinner (BUG-008)", async () => {
 		let resolveSave: ((value: { id: string }) => void) | undefined;
 		saveMock.mockImplementationOnce(
 			() =>
@@ -192,10 +193,21 @@ describe("ArmarioPreviewScreen", () => {
 			fireEvent.press(useBtn);
 		});
 
-		// In-flight: accessibilityState disabled on all three controls.
-		expect(useBtn.props.accessibilityState).toEqual({ disabled: true });
+		// In-flight: accessibilityState disabled + busy on the use CTA; the
+		// other two CTAs stay `disabled` without `busy` (they aren't the
+		// source of the async work).
+		expect(useBtn.props.accessibilityState).toEqual({
+			disabled: true,
+			busy: true,
+		});
 		expect(retakeBtn.props.accessibilityState).toEqual({ disabled: true });
 		expect(backBtn.props.accessibilityState).toEqual({ disabled: true });
+
+		// BUG-008: visual feedback — the use CTA renders an ActivityIndicator
+		// in place of its label while the async save is in-flight.
+		expect(
+			screen.getByTestId("armario-preview-use-button-spinner"),
+		).toBeTruthy();
 
 		await act(async () => {
 			resolveSave?.({ id: "__stub__" });
@@ -226,7 +238,10 @@ describe("ArmarioPreviewScreen", () => {
 
 		const useBtn = screen.getByTestId("armario-preview-use-button");
 		const retakeBtn = screen.getByTestId("armario-preview-retake-button");
-		expect(useBtn.props.accessibilityState).toEqual({ disabled: false });
+		expect(useBtn.props.accessibilityState).toEqual({
+			disabled: false,
+			busy: false,
+		});
 		expect(retakeBtn.props.accessibilityState).toEqual({ disabled: false });
 		expect(mockGoBack).not.toHaveBeenCalled();
 	});
@@ -308,7 +323,10 @@ describe("ArmarioPreviewScreen", () => {
 
 		const useBtn = screen.getByTestId("armario-preview-use-button");
 		const retakeBtn = screen.getByTestId("armario-preview-retake-button");
-		expect(useBtn.props.accessibilityState).toEqual({ disabled: false });
+		expect(useBtn.props.accessibilityState).toEqual({
+			disabled: false,
+			busy: false,
+		});
 		expect(retakeBtn.props.accessibilityState).toEqual({ disabled: false });
 	});
 

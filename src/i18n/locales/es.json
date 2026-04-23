@@ -94,21 +94,31 @@
 	},
 	"paywall": {
 		"dismiss": "Cerrar paywall",
-		"yourCollection": "Tu colecci\u00f3n",
-		"savedCount": "\u2665 {{count}} guardados",
-		"limitBadge": "{{count}} de {{limit}} favoritos gratuitos usados",
 		"lockedLabel": "Combinaci\u00f3n bloqueada. Actualiza para guardar",
-		"headline": "No pares\nde coleccionar",
-		"body_one": "Encontraste {{count}} armon\u00eda que vale la pena guardar. Hay {{remaining}} combinaciones m\u00e1s esperando ser descubiertas.",
-		"body_other": "Encontraste {{count}} armon\u00edas que vale la pena guardar. Hay {{remaining}} combinaciones m\u00e1s esperando ser descubiertas.",
 		"priceLabel": "{{price}}, compra \u00fanica",
 		"oneTime": "una vez",
 		"purchasing": "Comprando, por favor espera",
-		"unlockLabel": "Desbloquea favoritos ilimitados por {{price}}",
 		"unlockButton": "Desbloquear Todo",
 		"restoreButton": "Restaurar Compra",
 		"restoring": "Restaurando compra, por favor espera",
-		"notNow": "Ahora no"
+		"notNow": "Ahora no",
+		"favorites": {
+			"yourCollection": "Tu colecci\u00f3n",
+			"savedCount": "\u2665 {{count}} guardados",
+			"limitBadge": "{{count}} de {{limit}} favoritos gratuitos usados",
+			"headline": "No pares\nde coleccionar",
+			"body_one": "Encontraste {{count}} armon\u00eda que vale la pena guardar. Hay {{remaining}} combinaciones m\u00e1s esperando ser descubiertas.",
+			"body_other": "Encontraste {{count}} armon\u00edas que vale la pena guardar. Hay {{remaining}} combinaciones m\u00e1s esperando ser descubiertas.",
+			"unlockLabel": "Desbloquea favoritos ilimitados por {{price}}"
+		},
+		"wardrobe": {
+			"yourCollection": "Tu armario",
+			"savedCount": "{{count}} prendas",
+			"limitBadge": "{{count}} de {{limit}} prendas gratuitas usadas",
+			"headline": "Tu armario\nsin l\u00edmite",
+			"body": "Ya tienes {{count}} prendas guardadas. Con Outfinder Premium captura todas las prendas de tu armario real sin l\u00edmite.",
+			"unlockLabel": "Desbloquea armario ilimitado por {{price}}"
+		}
 	},
 	"comboCard": {
 		"combinationLabel": "Combinaci\u00f3n {{name}}: {{colors}}",

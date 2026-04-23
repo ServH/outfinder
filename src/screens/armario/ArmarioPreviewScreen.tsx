@@ -5,9 +5,16 @@ import type {
 } from "@react-navigation/native-stack";
 import { File } from "expo-file-system";
 import { SymbolView } from "expo-symbols";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AccessibilityInfo, Image, Pressable, Text, View } from "react-native";
+import {
+	AccessibilityInfo,
+	ActivityIndicator,
+	Image,
+	Pressable,
+	Text,
+	View,
+} from "react-native";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
 import { usePremium } from "@/contexts/PremiumContext";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
@@ -53,6 +60,16 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 	const { cutoutUri, sourceUri, onCutoutSaved } = route.params;
 	const { isPremium } = usePremium();
 	const favorites = useMisLooksStore((s) => s.favorites);
+	const wardrobeItems = useMisLooksStore((s) => s.items);
+	const wardrobeItemCount = wardrobeItems.length;
+	const wardrobeItemThumbnails = useMemo(
+		() =>
+			wardrobeItems
+				.slice(-5)
+				.reverse()
+				.map((i) => i.thumbnailPath),
+		[wardrobeItems],
+	);
 	const gate = usePremiumGate(favorites);
 
 	const [submitting, setSubmitting] = useState(false);
@@ -264,21 +281,29 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 					}}
 					testID="armario-preview-use-button"
 					disabled={submitting}
-					accessibilityState={{ disabled: submitting }}
+					accessibilityState={{ disabled: submitting, busy: submitting }}
 				>
-					{({ pressed }) => (
-						<Text
-							style={{
-								fontFamily: "Inter_500Medium",
-								fontSize: 15,
-								color: wadaTokens.bgPaper,
-								letterSpacing: 0.3,
-								opacity: pressed ? 0.7 : 1,
-							}}
-						>
-							{t("armario.preview.useButton")}
-						</Text>
-					)}
+					{({ pressed }) =>
+						submitting ? (
+							<ActivityIndicator
+								testID="armario-preview-use-button-spinner"
+								size="small"
+								color={wadaTokens.bgPaper}
+							/>
+						) : (
+							<Text
+								style={{
+									fontFamily: "Inter_500Medium",
+									fontSize: 15,
+									color: wadaTokens.bgPaper,
+									letterSpacing: 0.3,
+									opacity: pressed ? 0.7 : 1,
+								}}
+							>
+								{t("armario.preview.useButton")}
+							</Text>
+						)
+					}
 				</Pressable>
 			</View>
 
@@ -330,8 +355,9 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 
 			<PremiumPaywall
 				visible={paywallVisible}
-				blockedCombination={undefined}
-				favoriteCombinationIds={[...favorites]}
+				context="wardrobe"
+				currentCount={wardrobeItemCount}
+				wardrobeItemThumbnails={wardrobeItemThumbnails}
 				priceString={gate.priceString}
 				purchaseState={gate.purchaseState}
 				errorMessage={gate.errorMessage}
