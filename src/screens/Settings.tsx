@@ -51,6 +51,8 @@ export function Settings(_props: SettingsProps) {
 		at: string;
 		status: MigrationResult["status"];
 	} | null>(null);
+	const [devWardrobePaywallVisible, setDevWardrobePaywallVisible] =
+		useState(false);
 
 	const handleRerunMigration = useCallback(async () => {
 		try {
@@ -368,6 +370,29 @@ export function Settings(_props: SettingsProps) {
 								<View className="h-[1px] bg-divider mx-4" />
 
 								<Pressable
+									testID="dev-preview-wardrobe-paywall-row"
+									className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+									accessibilityRole="button"
+									accessibilityLabel="Preview wardrobe paywall (dev)"
+									onPress={() => setDevWardrobePaywallVisible(true)}
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[14px] text-primary"
+									>
+										Preview wardrobe paywall
+									</Text>
+									<Text
+										allowFontScaling
+										className="font-sans text-[12px] text-tertiary"
+									>
+										context: wardrobe
+									</Text>
+								</Pressable>
+
+								<View className="h-[1px] bg-divider mx-4" />
+
+								<Pressable
 									testID="dev-reset-premium-row"
 									className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
 									accessibilityRole="button"
@@ -537,6 +562,21 @@ export function Settings(_props: SettingsProps) {
 				onRestore={gate.handleRestore}
 				onDismiss={gate.handleDismiss}
 			/>
+
+			{/* Dev-only: render the wardrobe-context paywall as a preview
+			    triggered by the `dev-preview-wardrobe-paywall-row` button. No
+			    real purchase — dismiss closes. */}
+			{__DEV__ && (
+				<PremiumPaywall
+					visible={devWardrobePaywallVisible}
+					context="wardrobe"
+					currentCount={wardrobeDevItemCount}
+					priceString={gate.priceString}
+					onPurchase={() => setDevWardrobePaywallVisible(false)}
+					onRestore={() => setDevWardrobePaywallVisible(false)}
+					onDismiss={() => setDevWardrobePaywallVisible(false)}
+				/>
+			)}
 		</View>
 	);
 }
