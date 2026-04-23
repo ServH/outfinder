@@ -21,6 +21,13 @@ interface PremiumContextValue {
 	priceString: string;
 	purchase: () => Promise<void>;
 	restore: () => Promise<void>;
+	/**
+	 * Dev-only reset. No-op outside `__DEV__`. Clears the SecureStore cache
+	 * and forces `isPremium=false` so local testing of paywall gates is not
+	 * blocked by stale sandbox entitlements. Use it from the Settings dev
+	 * menu row `dev-reset-premium-row`.
+	 */
+	__dev_resetPremium: () => Promise<void>;
 }
 
 const PremiumContext = createContext<PremiumContextValue | null>(null);
@@ -144,6 +151,17 @@ export function PremiumProvider({ children }: PremiumProviderProps) {
 		}
 	}, []);
 
+	const __dev_resetPremium = useCallback(async () => {
+		if (!__DEV__) return;
+		try {
+			await SecureStore.deleteItemAsync(SECURE_STORE_KEY);
+		} catch (error) {
+			console.warn("Failed to delete premium status from SecureStore:", error);
+		}
+		setIsPremium(false);
+		setPaywallDismissedThisSession(false);
+	}, []);
+
 	const value = useMemo(
 		() => ({
 			isPremium,
@@ -153,6 +171,7 @@ export function PremiumProvider({ children }: PremiumProviderProps) {
 			priceString,
 			purchase,
 			restore,
+			__dev_resetPremium,
 		}),
 		[
 			isPremium,
@@ -161,6 +180,7 @@ export function PremiumProvider({ children }: PremiumProviderProps) {
 			priceString,
 			purchase,
 			restore,
+			__dev_resetPremium,
 		],
 	);
 

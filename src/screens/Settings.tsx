@@ -38,7 +38,7 @@ export function Settings(_props: SettingsProps) {
 	const { t } = useTranslation();
 	const navigation =
 		useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-	const { isPremium, restore } = usePremium();
+	const { isPremium, restore, __dev_resetPremium } = usePremium();
 	const favorites = useMisLooksStore((s) => s.favorites);
 	const toggleFavorite = useMisLooksStore((s) => s.toggleFavorite);
 	const count = useMisLooksStore((s) => s.favorites.size);
@@ -363,6 +363,29 @@ export function Settings(_props: SettingsProps) {
 											{lastMigrationRun.status}
 										</Text>
 									) : null}
+								</Pressable>
+
+								<View className="h-[1px] bg-divider mx-4" />
+
+								<Pressable
+									testID="dev-reset-premium-row"
+									className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+									accessibilityRole="button"
+									accessibilityLabel="Reset premium status (dev)"
+									onPress={__dev_resetPremium}
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[14px] text-primary"
+									>
+										Reset premium (dev)
+									</Text>
+									<Text
+										allowFontScaling
+										className="font-sans text-[12px] text-tertiary"
+									>
+										{isPremium ? "ON" : "OFF"}
+									</Text>
 								</Pressable>
 							</View>
 						</View>
