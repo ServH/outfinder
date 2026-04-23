@@ -264,6 +264,7 @@ export function PremiumPaywall({
 					>
 						<ScrollView
 							contentContainerStyle={{
+								flexGrow: 1,
 								paddingHorizontal: 24,
 								paddingBottom: 40,
 							}}
@@ -444,6 +445,13 @@ export function PremiumPaywall({
 							>
 								{bodyText}
 							</Text>
+
+							{/* Spacer — with flexGrow on contentContainer, this View
+							    absorbs any leftover vertical room so the CTAs always
+							    anchor to the bottom of the sheet regardless of how
+							    much space the preview section occupies (favorites
+							    with N palette strips vs wardrobe with 1 thumb row). */}
+							<View style={{ flex: 1, minHeight: 0 }} />
 
 							{/* Price + CTA row */}
 							<View className="flex-row gap-3 items-center mb-4">
