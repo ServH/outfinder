@@ -216,7 +216,10 @@
 | BUG-006 | Flash Mis Looks antes del selector desde Visualizer  | medium    | triaged | follow-up propuesto |
 | BUG-007 | "Sin prendas" redundante en asignación               | polish    | fixed  | fix-in-14.13      |
 | BUG-008 | Falta feedback visual tras "Usar esta foto" (~1s)    | medium    | fixed  | fix-in-14.13      |
-| BUG-009 | Prenda fotografiada no auto-rellena slot del combo   | high      | new    | —                 |
+| BUG-009 | Prenda fotografiada no auto-rellena slot del combo   | high      | new    | follow-up v1.4.1 (conjunta 010) |
+| BUG-010 | Visualizer asigna prenda al slot equivocado por posición | high  | new    | follow-up v1.4.1 (conjunta 009) |
+| BUG-011 | Paywall no contextualizado wardrobe vs favorites     | medium    | fixed  | fix-in-14.13      |
+| BUG-012 | Crash Visualizer con combos de 5 colores (p346/p348) | high      | triaged | retomar después (root cause + opciones documentadas) |
 
 ### BUG-008 — Falta feedback visual tras pulsar "Usar esta foto" al añadir prenda a combo
 - **Fecha:** 2026-04-22
@@ -316,3 +319,48 @@
     - Combo con 2 colores iguales al tipo de la prenda (ej. dos tonos blancos y el usuario tiene una camiseta blanca): usar el más cercano al declarado.
     - Si el combo solo tiene 2 posiciones (ej. top + bottom sin calzado), el mismo principio aplica.
   - Relacionado con BUG-001, BUG-006 y BUG-009: toda la secuencia cámara → combo → Visualizer → Mis Looks tiene varios agujeros. Conviene spec-arlos como bloque coherente.
+
+### BUG-012 — Crash al abrir Visualizer con combos de 5 colores
+- **Fecha:** 2026-04-25 (descubierto on-device por Alejandro)
+- **Pantalla / Área:** Outfit Visualizer instanciado desde un combo de 5 colores. Solo afecta a **2 combos del dataset**: `p346 "Madder and Ink"` y `p348 "Stone Garden"`.
+- **Qué observo:** Al entrar al Visualizer con uno de esos 2 combos la app crashea (TypeError). El resto del flow (ColorHome → Combinations → ComboCard) funciona — los 5 colores se renderizan en la card del listado, pero al tap → Visualizer → boom.
+- **Esperado:** El Visualizer debería renderizar 5 slots (uno por color) sin crashear, igual que hace con 2/3/4 colores.
+- **Pasos para reproducir:**
+  1. Desde ColorHome, encontrar una familia que contenga uno de los colores de p346 o p348 (Madder, Ink, Stone, etc.).
+  2. Entrar a Combinations de ese color.
+  3. Localizar el combo de 5 colores en la lista (Combinations los ordena por `colors.length` ascendente, así que aparecen al final).
+  4. Tap → Visualizer → crash.
+- **Dispositivo / build:** iPhone físico de Alejandro (build local de la rama `story/14-13-*`).
+- **Severidad:** `high` _(la app rompe en un camino alcanzable, aunque sean solo 2 combos de 348 = 0.6%; el crash es duro, no degradación)_
+- **Estado:** triaged — diferido para arreglar después
+- **Análisis técnico (root cause confirmado):**
+  - **Archivo:** `src/hooks/useOutfitState.ts:11–15`
+  - El mapa `SLOT_CONFIGS: Record<number, GarmentType[]>` solo tiene entradas para `2`, `3`, `4`. NO para `5`.
+  - `buildInitialSlots(colors)` (líneas 59–68): cuando `colors.length === 5`, `SLOT_CONFIGS[5]` es `undefined` → return `[]` defensivo.
+  - El consumer (`OutfitVisualizer.tsx:302`) accede `slots[0].color.hex` para la aureola sin guard — con `slots = []`, `slots[0]` es `undefined`, `.color` rompe.
+- **Verificación de scope (otros archivos NO rompen con N=5, ya auditados):**
+  - `OutfitVisualizer` slots map iteration → OK (N-agnóstico).
+  - `ArmarioFichaWadaScreen` renderiza N columnas → OK.
+  - `drawPolaroidStack` math `N` + rotaciones cíclicas `i % POLAROID_ROTATIONS.length` → OK escala hasta cualquier N.
+  - `ArmarioSugerenciaArmoniaScreen`, `getSuggestionCopy`, `exportLookImage`, `IncompleteLooksSection`, `ComboCard`, `FavoriteComboEnrichedCard`, `data/types.ts` → todos N-agnósticos.
+  - **Solo `useOutfitState.SLOT_CONFIGS` es el cuello rígido.**
+- **Distribución del dataset Wada (`combinations.json`, 348 combos totales):**
+  - 38 combos de 2 colores
+  - 225 combos de 3 colores (mayoría)
+  - 83 combos de 4 colores
+  - **2 combos de 5 colores** — `p346 "Madder and Ink"` + `p348 "Stone Garden"`
+  - 0 combos con 6+ colores (no existen en el dataset)
+- **Garments disponibles** (`src/components/garments/index.ts` — 8 tipos, NO hay accessory):
+  - `top-tshirt`, `top-shirt`, `bottom-pants`, `bottom-skirt`, `layer-jacket`, `layer-hoodie`, `shoes-sneakers`, `shoes-formal`
+- **Opciones de fix evaluadas (decisión pendiente al retomar):**
+  - **A · Double-layer (recomendado):** `["layer-jacket", "layer-hoodie", "top-tshirt", "bottom-pants", "shoes-sneakers"]` — chaqueta sobre hoodie sobre tshirt + pants + zapas. Look layered invernal, coherente con los tonos terrosos/oscuros de "Madder and Ink" + "Stone Garden".
+  - **B · Double-top:** `["layer-jacket", "top-shirt", "top-tshirt", "bottom-pants", "shoes-sneakers"]` — chaqueta + camisa + tshirt + pants + zapas. Más mix formal-casual.
+  - **C · Defensive guard sin nuevo slot config:** filtrar combos de 5c del catálogo visible (Combinations.tsx + ColorHome) hasta v1.4.1. Más rápido pero pierde 2 combos del catálogo Wada — anti-craft.
+- **Edge case adicional (a discutir al especar):** dataset máximo es 5c hoy, pero el mapa rígido `SLOT_CONFIGS` reaparecería si Wada (o un dataset futuro) trae 6+. Considerar fallback genérico tipo `garments.length === N ? padCycle(N) : SLOT_CONFIGS[N]` para futuro-proof, o documentar que SLOT_CONFIGS se extiende manualmente cuando crece el dataset.
+- **Tests requeridos al arreglar:**
+  - `useOutfitState.test.ts` — caso `N=5` que asserta `slots.length === 5` y orden de garments.
+  - Smoke test que abre Visualizer con `p346` y `p348` sin throw.
+  - Cycle test: `cycleVariant` con prev.length === 5 invoca `cycleGarment(g, dir, 5)` — verificar que la rama `slotCount < 4` (UPPER_FULL) no se activa erróneamente para 5c (debería caer en `UPPER_LAYER` / `UPPER_TOP` separados como en 4c).
+- **Scope estimado spec + dev:** 30-45 min con cualquiera de A/B (incluye test + on-device smoke en p346 y p348).
+- **No requiere native rebuild** — pure JS/TSX.
+- **Decisión de Alejandro 2026-04-25:** guardar para retomar después; NO bloquea v1.4.0 ship (severity high pero affecta 2/348 = 0.6% del catálogo, y los users pueden evitarlos hasta hot-fix v1.4.1).
