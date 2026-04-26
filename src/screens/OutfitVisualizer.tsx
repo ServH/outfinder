@@ -1,8 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { RouteProp } from "@react-navigation/native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	AccessibilityInfo,
@@ -12,12 +11,6 @@ import {
 	useWindowDimensions,
 	View,
 } from "react-native";
-import ReanimatedAnimated, {
-	runOnJS,
-	useAnimatedStyle,
-	useSharedValue,
-	withTiming,
-} from "react-native-reanimated";
 import { Aureola } from "@/components/Aureola";
 import {
 	GARMENT_REGISTRY,
@@ -90,102 +83,9 @@ export function OutfitVisualizer() {
 		backLabel = t("browseAll.backButton");
 	}
 
-	// Coach mark state: 0 = hidden, 1 = step 1, 2 = step 2
-	const [coachStep, setCoachStep] = useState(0);
-	const reduceMotionRef = useRef(false);
-
-	// Card animation values
-	const cardOpacity = useSharedValue(0);
-	const cardTranslateY = useSharedValue(20);
-
-	const cardAnimStyle = useAnimatedStyle(() => ({
-		opacity: cardOpacity.value,
-		transform: [{ translateY: cardTranslateY.value }],
-	}));
-
 	const { slots, selectedSlotIndex, selectSlot, cycleVariant } = useOutfitState(
 		combination?.colors ?? [],
 	);
-
-	// Read reduce motion preference once on mount
-	useEffect(() => {
-		AccessibilityInfo.isReduceMotionEnabled().then((enabled) => {
-			reduceMotionRef.current = enabled;
-		});
-	}, []);
-
-	// Animate card in whenever a step becomes active
-	useEffect(() => {
-		if (coachStep > 0) {
-			if (reduceMotionRef.current) {
-				cardOpacity.value = 1;
-				cardTranslateY.value = 0;
-			} else {
-				cardOpacity.value = withTiming(1, { duration: 260 });
-				cardTranslateY.value = withTiming(0, { duration: 280 });
-			}
-		}
-	}, [coachStep, cardOpacity, cardTranslateY]);
-
-	// Read visualizer-introduced flag on mount
-	useEffect(() => {
-		(async () => {
-			try {
-				const value = await AsyncStorage.getItem(
-					"@outfinder/visualizer-introduced",
-				);
-				if (value !== "true") {
-					setCoachStep(1);
-					AccessibilityInfo.announceForAccessibility(
-						t("visualizer.coachStep1Announce"),
-					);
-				}
-			} catch {
-				setCoachStep(1);
-				AccessibilityInfo.announceForAccessibility(
-					t("visualizer.coachStep1Announce"),
-				);
-			}
-		})();
-	}, [t]);
-
-	const handleCoachOk = useCallback(() => {
-		hapticLight();
-		if (coachStep === 1) {
-			const goToStep2 = () => {
-				cardTranslateY.value = 18;
-				setCoachStep(2);
-				AccessibilityInfo.announceForAccessibility(
-					t("visualizer.coachStep2Announce"),
-				);
-			};
-			if (reduceMotionRef.current) {
-				goToStep2();
-			} else {
-				// Animate card out upward, then swap to step 2 and animate back in
-				cardOpacity.value = withTiming(0, { duration: 150 }, () => {
-					runOnJS(goToStep2)();
-				});
-				cardTranslateY.value = withTiming(-10, { duration: 150 });
-			}
-		} else {
-			const dismiss = () => {
-				setCoachStep(0);
-				AsyncStorage.setItem("@outfinder/visualizer-introduced", "true").catch(
-					() => {},
-				);
-			};
-			if (reduceMotionRef.current) {
-				dismiss();
-			} else {
-				// Animate card out and dismiss overlay
-				cardOpacity.value = withTiming(0, { duration: 200 }, () => {
-					runOnJS(dismiss)();
-				});
-				cardTranslateY.value = withTiming(10, { duration: 200 });
-			}
-		}
-	}, [coachStep, cardOpacity, cardTranslateY, t]);
 
 	// Cross-stack nav to Ficha Wada via root. Must go through root because
 	// OutfitVisualizer is registered in BOTH ColorsStack and FavoritesStack, but
@@ -462,61 +362,6 @@ export function OutfitVisualizer() {
 					</Text>
 				</Pressable>
 			</View>
-			{/* 2-step coach mark overlay — outside ScrollView, zIndex 999 */}
-			{coachStep > 0 && (
-				<View
-					className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center"
-					style={{ zIndex: 999, backgroundColor: "rgba(0,0,0,0.5)" }}
-					accessibilityRole="alert"
-					testID="coach-mark-overlay"
-				>
-					<ReanimatedAnimated.View
-						style={[
-							{
-								borderRadius: 16,
-								paddingHorizontal: 28,
-								paddingVertical: 28,
-								marginHorizontal: isTablet ? 80 : 40,
-								maxWidth: isTablet ? 480 : 300,
-								alignItems: "center",
-								backgroundColor: wadaTokens.bgPaper,
-							},
-							cardAnimStyle,
-						]}
-					>
-						<Text
-							className="text-base text-center mb-5"
-							style={{
-								fontFamily: "NotoSerifJP_400Regular",
-								color: wadaTokens.textPrimary,
-							}}
-							testID="coach-mark-text"
-						>
-							{coachStep === 1
-								? t("visualizer.coachStep1")
-								: t("visualizer.coachStep2")}
-						</Text>
-						<Pressable
-							onPress={handleCoachOk}
-							accessibilityRole="button"
-							accessibilityLabel={t("visualizer.gotIt")}
-							testID="coach-mark-ok"
-							className="rounded-lg px-8 py-3 min-w-[44px] min-h-[44px] justify-center items-center"
-							style={{ backgroundColor: wadaTokens.textPrimary }}
-						>
-							<Text
-								className="text-sm"
-								style={{
-									color: wadaTokens.bgPaper,
-									fontFamily: "Inter_500Medium",
-								}}
-							>
-								{t("visualizer.gotIt")}
-							</Text>
-						</Pressable>
-					</ReanimatedAnimated.View>
-				</View>
-			)}
 		</View>
 	);
 }
