@@ -194,7 +194,9 @@ describe("ColorHome", () => {
 	it("renders the Outfinder header", () => {
 		render(<ColorHome />);
 		expect(screen.getByText("Outfinder")).toBeTruthy();
-		expect(screen.getByText("What color are you wearing?")).toBeTruthy();
+		expect(
+			screen.getByText("What color would you like to combine?"),
+		).toBeTruthy();
 	});
 
 	it("renders 6 basic fabric swatches on Page 1", () => {

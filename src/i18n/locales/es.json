@@ -12,7 +12,7 @@
 	},
 	"home": {
 		"title": "Outfinder",
-		"subtitle": "\u00bfDe qu\u00e9 color es tu ropa hoy?",
+		"subtitle": "\u00bfQu\u00e9 color de ropa quieres combinar?",
 		"browseAll": "Ver catálogo",
 		"allColors": "Ver\ncatálogo",
 		"backToFamilies": "Volver a las familias",
@@ -52,7 +52,7 @@
 		"emptyTitle": "Aún no tienes looks guardados",
 		"emptySubtitle": "Fotografía una prenda o escoge una paleta para empezar.",
 		"newLookCta": {
-			"title": "Empieza un look nuevo",
+			"title": "Monta tu look",
 			"subtitle": "Explora las paletas de Sanzo Wada y arma tu look",
 			"a11yLabel": "Empezar un look nuevo",
 			"a11yHint": "Explora paletas de Sanzo Wada para empezar un look"
