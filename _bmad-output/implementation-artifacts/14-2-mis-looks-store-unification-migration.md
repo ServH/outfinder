@@ -105,7 +105,7 @@ so that **I don't lose the palettes I already saved, future features (FR12 auto-
 
 ### Critical: TD-5 migration ordering — why the strict sequence matters
 
-From Winston's tech review (Finding 5, `docs/planning/epic-14-tech-review.md` lines 258–312): the safety property of this migration is "legacy source is preserved until the destination is fully written AND the idempotency flag is written." Any deviation — e.g. clearing legacy before writing the flag, or using `Promise.all` on phases 5+6+7 — creates a failure window where a crash produces data loss. The strict sequence is:
+From Winston's tech review (Finding 5, `docs/planning/epic-14/epic-14-tech-review.md` lines 258–312): the safety property of this migration is "legacy source is preserved until the destination is fully written AND the idempotency flag is written." Any deviation — e.g. clearing legacy before writing the flag, or using `Promise.all` on phases 5+6+7 — creates a failure window where a crash produces data loss. The strict sequence is:
 
 ```
 Phase 1 (read):        multiGet([LEGACY_FAVORITES, LEGACY_ITEMS, LEGACY_ASSIGNMENTS])
@@ -228,10 +228,10 @@ No new navigation routes, no new components, no new dependencies, no native rebu
 
 ### References
 
-- Epic source of truth — [docs/planning/epic-14.md §Story 14.2](../../docs/planning/epic-14.md#story-142-favorites-v130--mis-looks-store-unification--data-migration)
+- Epic source of truth — [docs/planning/epic-14/epic-14.md §Story 14.2](../../docs/planning/epic-14/epic-14.md#story-142-favorites-v130--mis-looks-store-unification--data-migration)
 - ADR-005 (unified store decision + resulting architecture) — [docs/adrs/ADR-005-unified-mis-looks-store.md](../../docs/adrs/ADR-005-unified-mis-looks-store.md) — §"Resulting architecture" enumerates the exact store surface this story must expose
-- Technical decisions TD-3 (store unification) + TD-5 (migration idempotency pattern) + TD-7 (legacy category default) — [docs/planning/epic-14.md §Technical Decisions](../../docs/planning/epic-14.md#technical-decisions-post-review--read-before-implementing-any-story) (lines 33–43)
-- Technical review Finding 3 (data-model coupling gap → Option C chosen) + Finding 5 (migration idempotency pattern) — [docs/planning/epic-14-tech-review.md](../../docs/planning/epic-14-tech-review.md#finding-3--data-model-coupling-gap-assign--favorites)
+- Technical decisions TD-3 (store unification) + TD-5 (migration idempotency pattern) + TD-7 (legacy category default) — [docs/planning/epic-14/epic-14.md §Technical Decisions](../../docs/planning/epic-14/epic-14.md#technical-decisions-post-review--read-before-implementing-any-story) (lines 33–43)
+- Technical review Finding 3 (data-model coupling gap → Option C chosen) + Finding 5 (migration idempotency pattern) — [docs/planning/epic-14/epic-14-tech-review.md](../../docs/planning/epic-14/epic-14-tech-review.md#finding-3--data-model-coupling-gap-assign--favorites)
 - Prior Story 14.1 (category field + TD-7 backfill; dev notes on test-helper fanout + `isWardrobeItem` subtlety) — [./14-1-wardrobe-item-category-field.md](./14-1-wardrobe-item-category-field.md)
 - Current store + context that this story consolidates — [src/stores/wardrobeStore.ts](../../src/stores/wardrobeStore.ts) + [src/contexts/FavoritesContext.tsx](../../src/contexts/FavoritesContext.tsx)
 - Paywall gate hook (signature preserved) — [src/hooks/usePremiumGate.ts:58](../../src/hooks/usePremiumGate.ts)

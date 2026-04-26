@@ -18,7 +18,7 @@ export interface BackgroundRemovalResult {
 	 * alpha exceeds `0.5` (on the [0,1] scale) in the full-resolution mask
 	 * buffer. Computed in the same Vision pass that produced the cutout, so
 	 * the sample is never polluted by transparent padding. See Finding 1 in
-	 * `docs/planning/epic-14-tech-review.md#finding-1` for the transparency-
+	 * `docs/planning/epic-14/epic-14-tech-review.md#finding-1` for the transparency-
 	 * trap problem this fixes (TD-1 of Epic 14).
 	 */
 	dominantHex: string;

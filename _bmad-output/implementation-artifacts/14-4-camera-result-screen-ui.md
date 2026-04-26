@@ -291,7 +291,7 @@ No `tsconfig.json`, `jest.config.js`, `babel.config.js`, `metro.config.js`, `pac
 
 ### References
 
-- Epic source of truth — [docs/planning/epic-14.md §Story 14.4](../../docs/planning/epic-14.md#story-144-camera-result-screen-ui--cutout--wada-tone--combinations-preview--two-ctas) (lines 421–468)
+- Epic source of truth — [docs/planning/epic-14/epic-14.md §Story 14.4](../../docs/planning/epic-14/epic-14.md#story-144-camera-result-screen-ui--cutout--wada-tone--combinations-preview--two-ctas) (lines 421–468)
 - UX-DR1 Capture + Result — [docs/planning/ux-design-epic-14.md §UX-DR1](../../docs/planning/ux-design-epic-14.md#ux-dr1--unified-camera-flow-capture--result) (lines 77–277, especially Screen 2 Result at lines 128–201)
 - Pencil frames — `6nPEq` (220pt cutout height), `EZ4EA` (tint rule), `KY9jv` (tone-correction conditional) in `designs/Epic14.pen`
 - Pencil TODOs consolidation — [docs/planning/ux-design-epic-14.md §Pencil TODOs](../../docs/planning/ux-design-epic-14.md#pencil-todos-consolidated) (lines 828–851)

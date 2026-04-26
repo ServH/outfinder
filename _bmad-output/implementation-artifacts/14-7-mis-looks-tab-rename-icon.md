@@ -163,7 +163,7 @@ Per CLAUDE.md "Testing Discipline":
 
 ### References
 
-- **Epic spec**: [epic-14.md §Story 14.7](docs/planning/epic-14.md#story-147-mis-looks-tab--rename--icon-swap) lines 560–593 — covers FR11; depends on 14.2 (DONE per sprint-status 2026-04-21).
+- **Epic spec**: [epic-14.md §Story 14.7](docs/planning/epic-14/epic-14.md#story-147-mis-looks-tab--rename--icon-swap) lines 560–593 — covers FR11; depends on 14.2 (DONE per sprint-status 2026-04-21).
 - **UX spec**: [ux-design-epic-14.md §UX-DR4](docs/planning/ux-design-epic-14.md#ux-dr4--mis-looks-tab-rename--icon---nuevo-look) lines 446–537 — Tab Bar string + icon decisions; "+ Nuevo look" card / sections deferred to 14.10 + 14.11.
 - **UX-DR4 approved copy table**: lines 726–770 — tab label "Mis Looks" / "My looks"; icon `archivebox` recommended.
 - **Previous story (14.6)**: `_bmad-output/implementation-artifacts/14-6-visualizer-bridge-cta-swap-share-removal.md` — same-namespace i18n patterns (visualizer.*), 863/3 test baseline.

@@ -79,7 +79,7 @@ so that **the unified camera save flow (Story 14.5), the Mis Looks store unifica
 
 ### TD-7 default = "top" — why not "unknown"
 
-From the epic (lines 37–45 of `docs/planning/epic-14.md`): the initial instinct was a fifth sentinel value `"unknown"` to mark un-tagged legacy items. Alejandro explicitly rejected it: (a) it pollutes the taxonomy — every downstream filter (Story 14.5's selector, 14.12b's edit sheet, any v1.5.0 category-aware feature) would need special-case logic for `"unknown"`, (b) "top" is the most common garment type by a wide margin (camiseta / jersey / top account for the plurality of first-saved items in Epic 13 TestFlight dogfooding), (c) users can correct a wrong "top" default via Story 14.12b's pencil-icon edit affordance — pragmatic over purist. Encode the rationale as a JSDoc comment on the `category` field AND as the dev warn message so a future engineer reading the code understands the decision.
+From the epic (lines 37–45 of `docs/planning/epic-14/epic-14.md`): the initial instinct was a fifth sentinel value `"unknown"` to mark un-tagged legacy items. Alejandro explicitly rejected it: (a) it pollutes the taxonomy — every downstream filter (Story 14.5's selector, 14.12b's edit sheet, any v1.5.0 category-aware feature) would need special-case logic for `"unknown"`, (b) "top" is the most common garment type by a wide margin (camiseta / jersey / top account for the plurality of first-saved items in Epic 13 TestFlight dogfooding), (c) users can correct a wrong "top" default via Story 14.12b's pencil-icon edit affordance — pragmatic over purist. Encode the rationale as a JSDoc comment on the `category` field AND as the dev warn message so a future engineer reading the code understands the decision.
 
 ### Store rename coming in Story 14.2 — do NOT pre-empt
 
@@ -179,12 +179,12 @@ No new files created. No navigation changes, no new dependencies, no native rebu
 
 ### References
 
-- Epic source of truth — [docs/planning/epic-14.md](../../docs/planning/epic-14.md#story-141) (Story 14.1 section)
-- Technical decisions TD-6 (edit category in v1.4.0) + TD-7 (legacy default "top") — [docs/planning/epic-14.md](../../docs/planning/epic-14.md#technical-decisions-post-review--read-before-implementing-any-story) (lines 42–43)
+- Epic source of truth — [docs/planning/epic-14/epic-14.md](../../docs/planning/epic-14/epic-14.md#story-141) (Story 14.1 section)
+- Technical decisions TD-6 (edit category in v1.4.0) + TD-7 (legacy default "top") — [docs/planning/epic-14/epic-14.md](../../docs/planning/epic-14/epic-14.md#technical-decisions-post-review--read-before-implementing-any-story) (lines 42–43)
 - ADR-005 store unification (landing in Story 14.2, not here) — [docs/adrs/ADR-005-unified-mis-looks-store.md](../../docs/adrs/ADR-005-unified-mis-looks-store.md)
 - Prior `WardrobeItem` definition + type-guard pattern to extend — [src/lib/wardrobeTypes.ts](../../src/lib/wardrobeTypes.ts) + [src/stores/wardrobeStore.ts](../../src/stores/wardrobeStore.ts) (Story 13.1 provenance)
 - Epic-13 caller that needs the compile-gate fix — [src/lib/armario/saveCutoutAsWardrobeItem.ts:96](../../src/lib/armario/saveCutoutAsWardrobeItem.ts) + [src/screens/armario/ArmarioPreviewScreen.tsx:88](../../src/screens/armario/ArmarioPreviewScreen.tsx)
-- Story 13.1 review decision F1 (items parse is all-or-nothing on corrupt payload) — [_bmad-output/implementation-artifacts/13-1-wardrobe-data-model-repository-zustand-store.md#review-findings](./13-1-wardrobe-data-model-repository-zustand-store.md) — this story preserves that semantics for invalid-value records
+- Story 13.1 review decision F1 (items parse is all-or-nothing on corrupt payload) — [_bmad-output/implementation-artifacts/archive/epic-13/13-1-wardrobe-data-model-repository-zustand-store.md#review-findings](./13-1-wardrobe-data-model-repository-zustand-store.md) — this story preserves that semantics for invalid-value records
 - CLAUDE.md — §Story Scope (4–5 task cap), §React Native Specifics, §Testing Discipline
 
 ### Project Structure Notes

@@ -22,4 +22,4 @@ Archivos adicionales bienvenidos pero no requeridos.
 
 - **No se sube .DS_Store** ni ficheros auto-generados por macOS.
 - Los vídeos en `.mov` pueden comprimirse con `ffmpeg -i in.mov -crf 28 out.mov` si exceden 25 MB para que GitHub acepte el push.
-- Una vez firmado Outcome A en `docs/planning/epic-14-qa-checklist.md §8`, este folder queda como artefacto permanente del release v1.4.0.
+- Una vez firmado Outcome A en `docs/planning/epic-14/epic-14-qa-checklist.md §8`, este folder queda como artefacto permanente del release v1.4.0.

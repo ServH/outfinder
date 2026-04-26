@@ -36,7 +36,7 @@ public class BackgroundRemovalModule: Module {
     // Alpha byte threshold equivalent to `alpha > 0.5` on the [0,1] scale.
     // Pixels at or below this are treated as transparent padding and excluded
     // from the dominant-color average — this is the root-cause fix for the
-    // transparency trap (see docs/planning/epic-14-tech-review.md#finding-1
+    // transparency trap (see docs/planning/epic-14/epic-14-tech-review.md#finding-1
     // and feedback_js_swift_constant_sync.md).
     private static let minOpaqueAlphaByte: UInt8 = 127
 

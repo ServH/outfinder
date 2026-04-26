@@ -23,6 +23,7 @@ planning/
 ├── epic-13-armario-virtual.md          ← Epic 13 Armario Virtual (feature-complete)
 ├── epic-15-ideas-pre-launch.md         ← ideas + análisis pre-Epic 15 (input para epic-15.md)
 ├── v2-strategy-brief.md                ← estrategia v2 (Paleta Objetivo, Zero-Cost, Botón Mágico)
+├── aso-v140-spec.md                    ← spec ASO v1.4 (capturas A/B EN+ES, icono v2, narrativa camera-first)
 ├── epic-15/                            ← Epic 15 Pre-launch polish (activo, v1.4.0 launch blocker)
 │   └── epic-15.md                      ← spec canónico Epic 15 (6 stories: foundation, B1, C1, A2, A1, copy)
 ├── epic-14/                            ← Epic 14 workstream (activo)

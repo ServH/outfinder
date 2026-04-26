@@ -255,9 +255,9 @@ No `tsconfig.json`, `jest.config.js`, `babel.config.js`, `metro.config.js`, nati
 
 ### References
 
-- Epic source of truth — [docs/planning/epic-14.md §Story 14.3a](../../docs/planning/epic-14.md#story-143a-unified-camera-navigation-setup--capturescreen-deprecation) (lines 320–365)
-- TD-2 (narrow deprecation — `ArmarioCaptureScreen` PRESERVED) — [docs/planning/epic-14.md §Technical Decisions](../../docs/planning/epic-14.md#technical-decisions-post-review--read-before-implementing-any-story) (line 56)
-- Technical review Finding 2 (original deprecation scope, later revised) — [docs/planning/epic-14-tech-review.md §Finding 2](../../docs/planning/epic-14-tech-review.md#finding-2--navigation-restructure-unified-camera-must-sit-in-rootstack--deprecate-armarioroot) (lines 89–139)
+- Epic source of truth — [docs/planning/epic-14/epic-14.md §Story 14.3a](../../docs/planning/epic-14/epic-14.md#story-143a-unified-camera-navigation-setup--capturescreen-deprecation) (lines 320–365)
+- TD-2 (narrow deprecation — `ArmarioCaptureScreen` PRESERVED) — [docs/planning/epic-14/epic-14.md §Technical Decisions](../../docs/planning/epic-14/epic-14.md#technical-decisions-post-review--read-before-implementing-any-story) (line 56)
+- Technical review Finding 2 (original deprecation scope, later revised) — [docs/planning/epic-14/epic-14-tech-review.md §Finding 2](../../docs/planning/epic-14/epic-14-tech-review.md#finding-2--navigation-restructure-unified-camera-must-sit-in-rootstack--deprecate-armarioroot) (lines 89–139)
 - UX spec UX-DR1 — Capture + Result screens (Result UI lands in Story 14.4, NOT this story) — [docs/planning/ux-design-epic-14.md §UX-DR1](../../docs/planning/ux-design-epic-14.md#ux-dr1--unified-camera-flow-capture--result) (lines 77–205)
 - Prior Story 14.2 (store unification — useMisLooksStore; this story's screens may eventually consume it in 14.3b+14.4 but do NOT here) — [./14-2-mis-looks-store-unification-migration.md](./14-2-mis-looks-store-unification-migration.md)
 - Prior Story 14.1 (WardrobeItem.category — consumed by 14.5's save flow, not by this story) — [./14-1-wardrobe-item-category-field.md](./14-1-wardrobe-item-category-field.md)

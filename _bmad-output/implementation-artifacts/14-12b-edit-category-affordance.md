@@ -226,7 +226,7 @@ Story 14.12a's Dev Notes flagged this as a future decision: *"Two consumers is b
 
 ### References
 
-- **Epic spec**: `docs/planning/epic-14.md:834–881` (Story 14.12b definition).
+- **Epic spec**: `docs/planning/epic-14/epic-14.md:834–881` (Story 14.12b definition).
 - **UX spec**: `docs/planning/ux-design-epic-14.md:355–444` (UX-DR3 — covers the edit-mode shell; does NOT explicitly spell out the pencil treatment, which is inferred from epic-14.md:830 + :842 "clean style matching the `(−)` aesthetic, top-right corner"). Pencil document `designs/Epic14.pen` may contain pixel-level treatment — if dev finds ambiguity during implementation, flag via `## Open Questions` and use the symmetric mirror-of-`(−)` treatment as the fallback (which is what this spec mandates).
 - **Screen to modify**: `src/screens/armario/ArmarioPickerScreen.tsx` (794 lines).
 - **Test file to extend**: `src/screens/armario/ArmarioPickerScreen.test.tsx` (841 lines) — append new `describe("Story 14.12b — edit category via pencil", ...)` block AFTER the Story 14.12a block.

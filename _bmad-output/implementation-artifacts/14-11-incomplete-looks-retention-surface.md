@@ -398,8 +398,8 @@ Per CLAUDE.md "Testing Discipline":
 
 ### References
 
-- **Epic spec**: [epic-14.md §Story 14.11](../../docs/planning/epic-14.md) lines 742–779 — covers FR16, depends on 14.8 + 14.9 + UX-DR5.
-- **Epic functional requirement FR16**: [epic-14.md:99–100](../../docs/planning/epic-14.md) — "*Lightweight retention: Mis Looks surfaces incomplete looks (X < N garments assigned) in a prominent section at the top of the tab, using Epic 13 S5 badges to signal progress ratio. The section hides gracefully if no incomplete looks exist.*"
+- **Epic spec**: [epic-14.md §Story 14.11](../../docs/planning/epic-14/epic-14.md) lines 742–779 — covers FR16, depends on 14.8 + 14.9 + UX-DR5.
+- **Epic functional requirement FR16**: [epic-14.md:99–100](../../docs/planning/epic-14/epic-14.md) — "*Lightweight retention: Mis Looks surfaces incomplete looks (X < N garments assigned) in a prominent section at the top of the tab, using Epic 13 S5 badges to signal progress ratio. The section hides gracefully if no incomplete looks exist.*"
 - **UX-DR5**: `docs/planning/ux-design-epic-14.md:540–594` — Full surface spec: top-of-Mis-Looks placement, horizontal scroll, 160×112 tile dimensions, CompletenessBadge reuse, JP+EN name stack, bg-elevated + hairline + 12pt radius, hapticLight on tap, section header a11y ("En curso. Tus looks a medias."), tile a11y ("Look {name}. {X} de {N} prendas asignadas. Faltan {N-X}." + hint), sorted by maxAssignedAt DESC, transition fade deferred.
 - **UX-DR4 full-screen wireframes**: `docs/planning/ux-design-epic-14.md:452–484` — shows the En curso section placement between "+ Nuevo look" card and "Mis looks completos" grid in both populated-state layouts.
 - **UX-DR5 haptic contract**: `docs/planning/ux-design-epic-14.md:801` — "*Incomplete look tile tap | hapticLight | Navigation.*"

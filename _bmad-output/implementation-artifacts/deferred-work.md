@@ -122,7 +122,7 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ## Deferred from: Epic 12 code review (2026-04-15)
 
-Scope: Stories 12.1 + 12.2 + 12.3 + 12.4 (Color Capture feature). Full review in `_bmad-output/implementation-artifacts/epic-12-code-review.md`.
+Scope: Stories 12.1 + 12.2 + 12.3 + 12.4 (Color Capture feature). Full review in `_bmad-output/implementation-artifacts/archive/epic-12/epic-12-code-review.md`.
 
 ### Cluster A — Native-module typing hygiene (4 patches, ~1h + native rebuild)
 

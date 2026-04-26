@@ -4,8 +4,8 @@ author: Sally (UX) with Alejandro
 date: 2026-04-21
 status: pencil-reviewed-ready-for-dev
 inputDocuments:
-  - docs/epic-14-scope.md
-  - docs/planning/epic-14.md
+  - docs/planning/epic-14/epic-14-scope.md
+  - docs/planning/epic-14/epic-14.md
   - docs/ideas.md
   - docs/planning/ux-design-specification-ios.md
   - docs/project-context.md

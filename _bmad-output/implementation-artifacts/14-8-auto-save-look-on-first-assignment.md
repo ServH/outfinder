@@ -229,8 +229,8 @@ Per CLAUDE.md "Testing Discipline":
 
 ### References
 
-- **Epic spec**: [epic-14.md §Story 14.8](../../docs/planning/epic-14.md#story-148-auto-save-look-to-mis-looks-on-first-garment-assignment) lines 596–651 — covers FR12, FR14; implements TD-3 (auto-save is primary trigger into unified store's favorites slice) + TD-4 (paywall-limbo disabled state).
-- **Epic TD-4** (paywall-limbo resolution — disabled state + explanatory strip): [epic-14.md §Technical Decisions TD-4](../../docs/planning/epic-14.md#technical-decisions-post-review--read-before-implementing-any-story) line 58 — exact copy for the strip.
+- **Epic spec**: [epic-14.md §Story 14.8](../../docs/planning/epic-14/epic-14.md#story-148-auto-save-look-to-mis-looks-on-first-garment-assignment) lines 596–651 — covers FR12, FR14; implements TD-3 (auto-save is primary trigger into unified store's favorites slice) + TD-4 (paywall-limbo disabled state).
+- **Epic TD-4** (paywall-limbo resolution — disabled state + explanatory strip): [epic-14.md §Technical Decisions TD-4](../../docs/planning/epic-14/epic-14.md#technical-decisions-post-review--read-before-implementing-any-story) line 58 — exact copy for the strip.
 - **ADR-005** (unified store): `docs/adrs/ADR-005-unified-mis-looks-store.md` — `useMisLooksStore.addFavorite` action is part of the committed store surface.
 - **UX-DR2** (Ficha Wada working mode + "Guardar para luego"): `docs/planning/ux-design-epic-14.md` lines 280–351 — NOT a precondition for THIS story (UX-DR2 unblocks 14.9), but the parent screen's working-mode entry copy and "Guardar para luego" affordance context live there. Read for mental model of how 14.8 and 14.9 interleave.
 - **Previous story (14.7)**: `_bmad-output/implementation-artifacts/14-7-mis-looks-tab-rename-icon.md` — Mis Looks tab user-visible rename (DONE); confirms `archivebox` icon + "Mis Looks" / "My looks" copy is the live label users see after auto-save.

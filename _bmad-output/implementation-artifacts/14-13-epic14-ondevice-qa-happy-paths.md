@@ -12,7 +12,7 @@ so that **we do not submit v1.4.0 to App Store review with a broken happy path, 
 
 ## Acceptance Criteria
 
-1. **Given** the full Epic 14 changeset is merged onto `epic-14` (HEAD `21534e0` "merge: Story 14.12b — edit-category pencil affordance" — verify with `git log -1 epic-14`), **When** an on-device QA checklist markdown file is produced at `docs/planning/epic-14-qa-checklist.md`, **Then** the file contains all SIX required sections in this exact order with the exact markdown section headings listed below (so the checklist reads as a pre-flight gate from top to bottom without jumping around):
+1. **Given** the full Epic 14 changeset is merged onto `epic-14` (HEAD `21534e0` "merge: Story 14.12b — edit-category pencil affordance" — verify with `git log -1 epic-14`), **When** an on-device QA checklist markdown file is produced at `docs/planning/epic-14/epic-14-qa-checklist.md`, **Then** the file contains all SIX required sections in this exact order with the exact markdown section headings listed below (so the checklist reads as a pre-flight gate from top to bottom without jumping around):
     1. **`## 1. Build & environment preflight`** — device model (iPhone 16 Pro), iOS version, Expo build channel/version, `pnpm` version, build command used (e.g., `eas build --profile preview --platform ios` OR `npx expo run:ios --device "iPhone 16 Pro"`), app version surfaced in Settings → Acerca de (must read `1.4.0` or the chosen v1.4.0 build number — NOT `1.3.x`).
     2. **`## 2. Epic 13 functionality (first release to production)`** — exercises the Armario Virtual features that ship to production for the first time in v1.4.0 (Epic 13 was complete in code but never released). See AC #3.
     3. **`## 3. Epic 14 golden paths (FR coverage)`** — exercises the two activation doors (photo-first + color-first) and the Mis Looks retention loop. See AC #4.
@@ -156,7 +156,7 @@ so that **we do not submit v1.4.0 to App Store review with a broken happy path, 
     - `- [ ] \`pnpm test\` on \`epic-14\` HEAD → 942 passing / 3 pre-existing / 945 total (baseline from 14.12b done per \`project_v140_epic14_progress.md\`)`
     - `- [ ] If any CI gate fails after 14.12b merge, pause sign-off and investigate — these gates are non-negotiable per NFR6`
 
-7. **Given** the tester executes the full checklist on iPhone 16 Pro, **When** issues are observed, **Then** for each issue the tester records in a new `## 7. Issues & triage` section of the same file: (a) a short title, (b) severity using the `epic-14-post-release-bugs.md` leyenda (`blocker` · `high` · `medium` · `low` · `polish`), (c) reproduction steps, (d) status (`new` · `triaged` · `spec'd` · `in-dev` · `fixed` · `wontfix`), and (e) a disposition tag — either `fix-in-14.13` (if ≤30 min of code fix, bundled into this story's branch) OR `follow-up` (filed as a new backlog story via `feature-spec` skill; cross-link the new story key here). **And** any `blocker` or `high`-severity issue found BLOCKS v1.4.0 App Store submit until resolved OR explicitly accepted by Alejandro with a written rationale. **And** BUG-001 ("Navegación apilada tras guardar prenda y abrir combinaciones" at `docs/planning/epic-14-post-release-bugs.md:34–50`) MUST be re-tested as part of AC #2 "Post-save navigation shows combinations (replace nav per BUG-001 fix status)" — if unresolved at merge time of 14.13, flag it as a BLOCKER for v1.4.0 submit unless Alejandro accepts it; this is one of the primary reasons 14.13 runs on real hardware.
+7. **Given** the tester executes the full checklist on iPhone 16 Pro, **When** issues are observed, **Then** for each issue the tester records in a new `## 7. Issues & triage` section of the same file: (a) a short title, (b) severity using the `epic-14-post-release-bugs.md` leyenda (`blocker` · `high` · `medium` · `low` · `polish`), (c) reproduction steps, (d) status (`new` · `triaged` · `spec'd` · `in-dev` · `fixed` · `wontfix`), and (e) a disposition tag — either `fix-in-14.13` (if ≤30 min of code fix, bundled into this story's branch) OR `follow-up` (filed as a new backlog story via `feature-spec` skill; cross-link the new story key here). **And** any `blocker` or `high`-severity issue found BLOCKS v1.4.0 App Store submit until resolved OR explicitly accepted by Alejandro with a written rationale. **And** BUG-001 ("Navegación apilada tras guardar prenda y abrir combinaciones" at `docs/planning/epic-14/epic-14-post-release-bugs.md:34–50`) MUST be re-tested as part of AC #2 "Post-save navigation shows combinations (replace nav per BUG-001 fix status)" — if unresolved at merge time of 14.13, flag it as a BLOCKER for v1.4.0 submit unless Alejandro accepts it; this is one of the primary reasons 14.13 runs on real hardware.
 
 8. **Given** evidence capture per `epic-14.md:923` ("Execute checklist on iPhone 16 Pro; capture screenshots / screen recordings for evidence"), **When** executing the checklist, **Then** the tester captures at minimum: (a) 1 screenshot of Mis Looks post-upgrade for each of N=0, N=3, N=5 (3 screenshots — proves FR17 zero data loss), (b) 1 screen recording of the full photo-first happy path from app open → Mis Looks auto-save (proves NFR7 ≤2min wall-clock), (c) 1 screen recording of the color-first happy path from ColorHome → "Guardar para luego" → close → reopen → complete (proves FR13 + FR16 + NFR4 S4 share), (d) 1 screenshot of the TD-4 paywall-limbo state (proves opacity:40% + explanatory strip + swipe-back works), and (e) 1 screenshot of the S4 polaroid share sheet open (proves NFR4). **Evidence is stored in a new folder `docs/img_screenshot/qa-14.13/`** (mirror of the existing `docs/img_screenshot/appstore/` pattern) with filenames prefixed by the AC number they verify (e.g., `ac4-n3-mis-looks.png`, `ac3-color-first.mov`, `ac5-td4-paywall-limbo.png`, `ac6-s4-share.png`). **The QA checklist file references these artifacts inline via relative links** (`![AC4 N=3](../img_screenshot/qa-14.13/ac4-n3-mis-looks.png)`) so the checklist self-documents.
 
@@ -165,7 +165,7 @@ so that **we do not submit v1.4.0 to App Store review with a broken happy path, 
     - **Outcome B (return to dev):** `- [ ] v1.4.0 is NOT READY. Blocking issues: {numbered list with links to Issues & triage section entries + follow-up story keys}. Tester: Alejandro. Date: YYYY-MM-DD.`
     **And** if Outcome B, all `fix-in-14.13`-tagged issues are fixed within this story's branch and the checklist is re-run for those specific rows only (partial re-run acceptable — no need to re-execute green rows). **And** if any `follow-up`-tagged issues exist, they are filed as new backlog story entries in `sprint-status.yaml` BEFORE sign-off (via manual edit or the `feature-spec` skill). **And** Outcome A is the only state that unblocks the \`release-manager\` workflow / EAS submit command.
 
-10. **Given** this story's deliverables are (1) the QA checklist markdown file, (2) on-device execution + evidence, (3) any fix-in-14.13 code changes, (4) sign-off outcome, **When** this story completes, **Then** the "File List" and "Completion Notes" in the Dev Agent Record accurately reflect what shipped, and specifically: (a) `docs/planning/epic-14-qa-checklist.md` (NEW file, the exhaustive 6+2-section checklist populated per AC #1–#9), (b) `docs/img_screenshot/qa-14.13/` (NEW folder with ≥4 screenshots + ≥2 screen recordings per AC #8), (c) any code files touched by `fix-in-14.13` patches (list each with 1-line rationale — MUST be ≤30 min of code work per AC #7; anything larger becomes a follow-up story), (d) zero modifications to existing production source files if no `fix-in-14.13` issues were needed (pure-QA outcome is the default success path — this story is primarily a verification gate, not a development story). **And** the Completion Notes include a one-paragraph exec summary suitable for the Epic 14 retro input ("Epic 14 QA verdict: {GO | RETURN} — {N} issues found, {M} fixed in-story, {P} filed as follow-ups. Photo-first path: X:YY minutes. Color-first path: X:YY minutes. Migration: all 3 N values PASS | FAIL details. Accessibility audit: PASS | regressions: {list}. CI gates: green at HEAD {sha}.").
+10. **Given** this story's deliverables are (1) the QA checklist markdown file, (2) on-device execution + evidence, (3) any fix-in-14.13 code changes, (4) sign-off outcome, **When** this story completes, **Then** the "File List" and "Completion Notes" in the Dev Agent Record accurately reflect what shipped, and specifically: (a) `docs/planning/epic-14/epic-14-qa-checklist.md` (NEW file, the exhaustive 6+2-section checklist populated per AC #1–#9), (b) `docs/img_screenshot/qa-14.13/` (NEW folder with ≥4 screenshots + ≥2 screen recordings per AC #8), (c) any code files touched by `fix-in-14.13` patches (list each with 1-line rationale — MUST be ≤30 min of code work per AC #7; anything larger becomes a follow-up story), (d) zero modifications to existing production source files if no `fix-in-14.13` issues were needed (pure-QA outcome is the default success path — this story is primarily a verification gate, not a development story). **And** the Completion Notes include a one-paragraph exec summary suitable for the Epic 14 retro input ("Epic 14 QA verdict: {GO | RETURN} — {N} issues found, {M} fixed in-story, {P} filed as follow-ups. Photo-first path: X:YY minutes. Color-first path: X:YY minutes. Migration: all 3 N values PASS | FAIL details. Accessibility audit: PASS | regressions: {list}. CI gates: green at HEAD {sha}.").
 
 11. **Given** this is a QA story (not a feature-implementation story), **When** the Tasks / Subtasks list is populated, **Then** the list enumerates 5 tasks corresponding exactly to `epic-14.md:916–926` Tasks 1–5: (1) Produce on-device QA checklist, (2) Execute checklist on iPhone 16 Pro + capture evidence, (3) File bug entries or follow-up stories for any issues found, (4) Verify tsc/lint/test green, (5) Sign off or return to dev. **No additional tasks** — the 4–5 tasks-per-story cap (CLAUDE.md "Story Scope") is respected at exactly 5. **Checkboxes start unchecked** (`- [ ] Task N ...`) — the dev/QA agent ticks them as each is completed.
 
@@ -176,7 +176,7 @@ so that **we do not submit v1.4.0 to App Store review with a broken happy path, 
 ## Tasks / Subtasks
 
 - [x] **Task 1** — Produce on-device QA checklist (AC: #1, #2, #3, #4, #5, #6, #7, #8, #9, #13)
-  - [x] Create new file `docs/planning/epic-14-qa-checklist.md` with the H1, version line, device line, build-commit line (`git rev-parse epic-14` to fill the sha), tester line.
+  - [x] Create new file `docs/planning/epic-14/epic-14-qa-checklist.md` with the H1, version line, device line, build-commit line (`git rev-parse epic-14` to fill the sha), tester line.
   - [x] Populate Section 1 "Build & environment preflight" per AC #1.
   - [x] Populate Section 2 "Epic 13 functionality (first release to production)" — exercise the cutout pipeline for slot-assignment from Ficha Wada, `ArmarioCaptureScreen` preserved per TD-2, `cascadeDeleteAssignmentsForItem` works, wardrobe paywall at 10 items — per `epic-14.md:917`.
   - [x] Populate Section 3 "Epic 14 golden paths (FR coverage)" with the photo-first checkboxes (AC #2) + color-first checkboxes (AC #3).
@@ -202,7 +202,7 @@ so that **we do not submit v1.4.0 to App Store review with a broken happy path, 
   - [ ] For each observed issue, append a new entry to Section 7 "Issues & triage" with title + severity + reproduction steps + status + disposition (`fix-in-14.13` | `follow-up`).
   - [ ] For `fix-in-14.13` issues (≤30 min code per fix): implement the fix on this story's branch; verify; tick the corresponding checkbox green.
   - [ ] For `follow-up` issues: run `feature-spec` skill OR manually file a new backlog entry in `sprint-status.yaml` BEFORE sign-off; cross-link the new story key in Section 7.
-  - [ ] Cross-reference any issues against `docs/planning/epic-14-post-release-bugs.md` (specifically BUG-001); update that file's status if the bug is verified / fixed / accepted during this QA run.
+  - [ ] Cross-reference any issues against `docs/planning/epic-14/epic-14-post-release-bugs.md` (specifically BUG-001); update that file's status if the bug is verified / fixed / accepted during this QA run.
   - [ ] If any `blocker` or `high`-severity issue is found, do NOT proceed to Task 5 sign-off Outcome A — return to dev.
 
 - [x] **Task 4** — Verify CI gates green (AC: #6, #10)
@@ -247,7 +247,7 @@ All 7 TDs MUST have explicit QA test cases in Section 5 of the checklist. Any TD
 
 ### BUG-001 cross-reference
 
-`docs/planning/epic-14-post-release-bugs.md:34–50` logs BUG-001 "Navegación apilada tras guardar prenda y abrir combinaciones" (2026-04-22, severity `high`, status `new`). This bug was observed during Alejandro's own post-14.12b usage. The fix pattern (per the notes: "Huele al mismo patrón ya resuelto en Epic 12 (`replace` nav sin `fullScreenModal`)") would affect the photo-first happy path in AC #2. Section 3 of the checklist MUST explicitly re-test this path and surface the outcome:
+`docs/planning/epic-14/epic-14-post-release-bugs.md:34–50` logs BUG-001 "Navegación apilada tras guardar prenda y abrir combinaciones" (2026-04-22, severity `high`, status `new`). This bug was observed during Alejandro's own post-14.12b usage. The fix pattern (per the notes: "Huele al mismo patrón ya resuelto en Epic 12 (`replace` nav sin `fullScreenModal`)") would affect the photo-first happy path in AC #2. Section 3 of the checklist MUST explicitly re-test this path and surface the outcome:
 - If BUG-001 is **resolved** before 14.13 execution → tick the "Post-save navigation" checkbox green + note "BUG-001 verified fixed" inline.
 - If BUG-001 is **unresolved** at 14.13 execution → it is a BLOCKER for Outcome A unless Alejandro accepts it with a written rationale in Section 7.
 - If BUG-001 surfaces as **fix-in-14.13** scope (likely: navigation `replace` swap in the post-save flow — a Metro-cacheable JS-only change), bundle the fix into this story's branch per AC #7 disposition.
@@ -288,12 +288,12 @@ This story is the ONLY Epic 14 story that REQUIRES real hardware (iPhone 16 Pro 
 
 ### References
 
-- **Epic story definition**: `docs/planning/epic-14.md:885–929` (Story 14.13).
-- **Release context note**: `docs/planning/epic-14.md:33–49` (v1.4.0 is first release with Epic 13+14; migration blocker is `@outfinder/favorites` only; N ∈ {0, 3, 5}).
-- **Technical Decisions (TD-1 → TD-7)**: `docs/planning/epic-14.md:51–63`.
+- **Epic story definition**: `docs/planning/epic-14/epic-14.md:885–929` (Story 14.13).
+- **Release context note**: `docs/planning/epic-14/epic-14.md:33–49` (v1.4.0 is first release with Epic 13+14; migration blocker is `@outfinder/favorites` only; N ∈ {0, 3, 5}).
+- **Technical Decisions (TD-1 → TD-7)**: `docs/planning/epic-14/epic-14.md:51–63`.
 - **ADR-005 (unified store)**: `docs/adrs/ADR-005-unified-mis-looks-store.md`.
 - **Migration idempotency contract**: `src/stores/misLooksStore.ts:63–161` (flag key `@outfinder/migration:favorites-to-mis-looks:v1`).
-- **Epic 14 bug log**: `docs/planning/epic-14-post-release-bugs.md` (BUG-001 at lines 34–50).
+- **Epic 14 bug log**: `docs/planning/epic-14/epic-14-post-release-bugs.md` (BUG-001 at lines 34–50).
 - **UX spec**: `docs/planning/ux-design-epic-14.md` (S4 non-regression at :601, :649; edit-mode at :355–444).
 - **Prior QA narrative cues**: `epic-14.md:44–47` (QA narrative implications), `:929` (TD failure = hard blocker).
 - **CLAUDE.md "Accessibility First"**: 44pt minimum, VoiceOver, Reduce Motion via `AccessibilityInfo.isReduceMotionEnabled`.
@@ -305,16 +305,16 @@ This story is the ONLY Epic 14 story that REQUIRES real hardware (iPhone 16 Pro 
 
 ### Project Structure Notes
 
-- New file: `docs/planning/epic-14-qa-checklist.md` (a living artifact — re-run partially if Outcome B happens).
+- New file: `docs/planning/epic-14/epic-14-qa-checklist.md` (a living artifact — re-run partially if Outcome B happens).
 - New folder: `docs/img_screenshot/qa-14.13/` (evidence bundle — screenshots + screen recordings).
-- Updated file: `docs/planning/epic-14-post-release-bugs.md` (BUG-001 status update only if the bug's state changes during 14.13 execution).
+- Updated file: `docs/planning/epic-14/epic-14-post-release-bugs.md` (BUG-001 status update only if the bug's state changes during 14.13 execution).
 - Updated file: `_bmad-output/implementation-artifacts/sprint-status.yaml` (story status transitions).
 - **No source-code files modified by default.** If `fix-in-14.13` patches are needed, list them explicitly in Completion Notes + File List with 1-line rationale each.
 
 ### Not-touched list (any edit = scope creep)
 
 - Any of 14.1–14.12b source files (those stories are DONE; do not refactor their outputs during QA).
-- `docs/planning/epic-14.md` (the story spec itself — the checklist references it; do not edit the epic doc).
+- `docs/planning/epic-14/epic-14.md` (the story spec itself — the checklist references it; do not edit the epic doc).
 - `docs/adrs/ADR-005-unified-mis-looks-store.md`.
 - `CLAUDE.md`.
 - `_bmad/bmm/config.yaml`.
@@ -342,13 +342,13 @@ N/A — no debugging cycle required at checklist-production phase.
 
 ### Completion Notes List
 
-**Status flipped 2026-04-23: `in-progress → review`.** Ver §10 abajo para instrucciones al reviewer (apunta a `docs/planning/epic-14-bugs-handoff-2026-04-23.md` como fuente de verdad actualizada).
+**Status flipped 2026-04-23: `in-progress → review`.** Ver §10 abajo para instrucciones al reviewer (apunta a `docs/planning/epic-14/epic-14-bugs-handoff-2026-04-23.md` como fuente de verdad actualizada).
 
 **Checklist-production phase completed 2026-04-22 on branch `story/14-13-epic14-ondevice-qa-happy-paths` (off `epic-14` HEAD `21534e0`).**
 
 Tasks actionable in the dev session (Task 1 + Task 4) are complete:
 
-- **Task 1 · Checklist authored.** `docs/planning/epic-14-qa-checklist.md` created with all 6 mandated sections in exact order per AC #1, plus §7 Issues & triage template (with BUG-001 pre-registered per AC #7) and §8 Sign-off two-outcome template per AC #9. Every sub-check is a GitHub-flavored `- [ ]` checkbox per AC #1; no free-prose paragraphs. Build-commit line fixed at `21534e09cc3b8d4400e21a33976c6758145d4e61` (current epic-14 HEAD). Evidence placeholder folder `docs/img_screenshot/qa-14.13/README.md` created per AC #8 (filenames + conventions documented; actual screenshots/recordings land on-device).
+- **Task 1 · Checklist authored.** `docs/planning/epic-14/epic-14-qa-checklist.md` created with all 6 mandated sections in exact order per AC #1, plus §7 Issues & triage template (with BUG-001 pre-registered per AC #7) and §8 Sign-off two-outcome template per AC #9. Every sub-check is a GitHub-flavored `- [ ]` checkbox per AC #1; no free-prose paragraphs. Build-commit line fixed at `21534e09cc3b8d4400e21a33976c6758145d4e61` (current epic-14 HEAD). Evidence placeholder folder `docs/img_screenshot/qa-14.13/README.md` created per AC #8 (filenames + conventions documented; actual screenshots/recordings land on-device).
 
 - **Task 4 · CI gates verified green at checklist-production phase.**
   - `npx tsc --noEmit` → 0 errors.
@@ -367,7 +367,7 @@ Tasks actionable in the dev session (Task 1 + Task 4) are complete:
 
 ### File List
 
-- `docs/planning/epic-14-qa-checklist.md` — NEW — full 6-section on-device QA checklist + §7 Issues & triage template + §8 Sign-off template (AC #1–#10).
+- `docs/planning/epic-14/epic-14-qa-checklist.md` — NEW — full 6-section on-device QA checklist + §7 Issues & triage template + §8 Sign-off template (AC #1–#10).
 - `docs/img_screenshot/qa-14.13/README.md` — NEW — evidence folder placeholder documenting required filenames + conventions per AC #8.
 - `_bmad-output/implementation-artifacts/sprint-status.yaml` — MODIFIED — story status flip `ready-for-dev → in-progress` + dated log entry per Task 5 workflow contract.
 - `_bmad-output/implementation-artifacts/14-13-epic14-ondevice-qa-happy-paths.md` — MODIFIED — Status, Tasks/Subtasks (Task 1 + Task 4 ticked), Dev Agent Record, File List, Change Log populated.
@@ -377,7 +377,7 @@ No source-code files modified — pure-QA success path at checklist-production p
 ### Change Log
 
 - **2026-04-22** — Story 14.13 checklist-production phase. Branch `story/14-13-epic14-ondevice-qa-happy-paths` created off `epic-14` HEAD `21534e0`. Task 1 (checklist authored) + Task 4 (CI gates verified 942/3/945 tsc clean lint-baseline-only) complete. Tasks 2/3/5 pending Alejandro's iPhone 16 Pro execution. Status: in-progress.
-- **2026-04-22 + 2026-04-23** — Post-release bugs capturados + fixed on-branch. 7 bugs cerrados (BUG-001/002/003/004/007/008/011) + 2 polish post-validación (badge En curso sin fondo · badge S4 sin fondo) + 2 utilidades dev-only (reset premium + wardrobe paywall preview). Fix-in-14.13 total: 16 commits. CI baseline sube a 948 passing / 3 pre-existing / 951 total (+9 vs baseline 14.12b — casos wardrobe context del paywall). BUG-005/006/009/010 quedan pendientes como follow-up propuesto v1.4.1. Detalle completo en `docs/planning/epic-14-bugs-handoff-2026-04-23.md`.
+- **2026-04-22 + 2026-04-23** — Post-release bugs capturados + fixed on-branch. 7 bugs cerrados (BUG-001/002/003/004/007/008/011) + 2 polish post-validación (badge En curso sin fondo · badge S4 sin fondo) + 2 utilidades dev-only (reset premium + wardrobe paywall preview). Fix-in-14.13 total: 16 commits. CI baseline sube a 948 passing / 3 pre-existing / 951 total (+9 vs baseline 14.12b — casos wardrobe context del paywall). BUG-005/006/009/010 quedan pendientes como follow-up propuesto v1.4.1. Detalle completo en `docs/planning/epic-14/epic-14-bugs-handoff-2026-04-23.md`.
 - **2026-04-23** — Status flip `in-progress → review`. Rama lista para code-review adversarial en fresh LLM context per CLAUDE.md "Mandatory Code Review". NO merged aún a `epic-14` — reviewer valida + aprueba + mergea.
 - **2026-04-23** — Code review adversarial completado (bmad-code-review). 0 patches · 0 decision-needed · 5 deferred · 6 dismissed. Review APROBADO — story pasa a `done`. Merge `story/14-13-* → epic-14` autorizado.
 
@@ -393,13 +393,13 @@ No source-code files modified — pure-QA success path at checklist-production p
 
 ## Reviewer handoff — 2026-04-23
 
-**Fuente de verdad del estado actual:** `docs/planning/epic-14-bugs-handoff-2026-04-23.md`.
+**Fuente de verdad del estado actual:** `docs/planning/epic-14/epic-14-bugs-handoff-2026-04-23.md`.
 
 **Antes de abrir el review:**
 1. `git checkout story/14-13-epic14-ondevice-qa-happy-paths`
 2. `git log --oneline epic-14..HEAD` → 16 commits listados.
 3. Leer el handoff de 2026-04-23 — cubre: resumen ejecutivo, bugs cerrados, bugs pendientes con rationale, cambios arquitectónicos (paywall refactor · popTo fix · CompletenessBadge.transparent · Zustand useMemo pattern · dev utilities), qué validar, archivos modificados, comandos rápidos.
-4. Bug log completo (con root cause + solución + tests por cada BUG) en `docs/planning/epic-14-post-release-bugs.md`.
+4. Bug log completo (con root cause + solución + tests por cada BUG) en `docs/planning/epic-14/epic-14-post-release-bugs.md`.
 
 **Gates CI al cierre:** tsc clean · lint 2 pre-existing errores heredados · pnpm test 948/3/951.
 

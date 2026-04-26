@@ -208,7 +208,7 @@ so that **the Visualizer becomes the bridge into Ficha Wada (FR8 + FR9) that Epi
 
 - **Branch:** create `story/14-6-visualizer-bridge-cta-swap-share-removal` off `epic-14` at HEAD=`b156430` (Story 14.5 merge commit per sprint-status line 38).
 - **Target version:** v1.4.0 (launch blocker). This story implements FR8 + FR9 + FR10 — the final surgical touches that close the "Visualizer as bridge" theme (Epic 14 §C).
-- **Dependencies:** none beyond UX-DR6 (approved — see `docs/planning/ux-design-epic-14.md` lines 597-672; status at `_bmad-output` is `pencil-reviewed-ready-for-dev` per epic metadata). This story does NOT depend on any other Epic 14 story code-wise. It can land in parallel with 14.8/14.9/14.10/14.11 per the epic's dev order (`docs/planning/epic-14.md:206`).
+- **Dependencies:** none beyond UX-DR6 (approved — see `docs/planning/ux-design-epic-14.md` lines 597-672; status at `_bmad-output` is `pencil-reviewed-ready-for-dev` per epic metadata). This story does NOT depend on any other Epic 14 story code-wise. It can land in parallel with 14.8/14.9/14.10/14.11 per the epic's dev order (`docs/planning/epic-14/epic-14.md:206`).
 - **Consumer of this story's outputs:** Story 14.11 (incomplete-looks retention surface) will eventually surface Ficha Wada entries on Home — but that's orthogonal. No downstream story specifically imports or references this Visualizer change.
 - **Risk surface:** very low. Pure JS/TSX + i18n + test edits. Zero native changes. Zero data-model changes. Zero store mutations. The one architectural nuance is the cross-navigator nav from dual-stack Visualizer (see §Cross-navigator nav mechanics below).
 
@@ -323,7 +323,7 @@ No `tsconfig.json`, `jest.config.js`, `babel.config.js`, `metro.config.js`, or `
 
 ### References
 
-- Epic source of truth — [docs/planning/epic-14.md §Story 14.6](../../docs/planning/epic-14.md#story-146-visualizer-bridge-cta-swap--share-removal) (lines 517-557)
+- Epic source of truth — [docs/planning/epic-14/epic-14.md §Story 14.6](../../docs/planning/epic-14/epic-14.md#story-146-visualizer-bridge-cta-swap--share-removal) (lines 517-557)
 - UX-DR6 full spec — [docs/planning/ux-design-epic-14.md §UX-DR6](../../docs/planning/ux-design-epic-14.md#ux-dr6--visualizer-bridge-primary-cta-hacer-este-look-mío) (lines 597-672)
 - Haptics contract — [docs/planning/ux-design-epic-14.md §Haptics contract](../../docs/planning/ux-design-epic-14.md#haptics-contract-epic-14-surfaces) (around line 787)
 - Prior Story 14.5 (pattern precedent for cross-navigator + `relativeLuminance` CTA tinting) — [./14-5-camera-save-flow-category-selector-paywall.md](./14-5-camera-save-flow-category-selector-paywall.md)

@@ -421,7 +421,7 @@ No `tsconfig.json`, `jest.config.js`, `babel.config.js`, `metro.config.js`, `pac
 
 ### References
 
-- Epic source of truth — [docs/planning/epic-14.md §Story 14.5](../../docs/planning/epic-14.md#story-145-camera-save-flow-with-category-selector--paywall-gate) (lines 472-513)
+- Epic source of truth — [docs/planning/epic-14/epic-14.md §Story 14.5](../../docs/planning/epic-14/epic-14.md#story-145-camera-save-flow-with-category-selector--paywall-gate) (lines 472-513)
 - UX-DR1 Category Sheet — [docs/planning/ux-design-epic-14.md §UX-DR1 Screen 2B](../../docs/planning/ux-design-epic-14.md#screen-2b--category-sheet-modal-opens-on-tap-guardar) (lines 202-277)
 - UX-DR1 Post-save screen — same doc lines 254-271
 - Haptics contract — [docs/planning/ux-design-epic-14.md §Haptics contract](../../docs/planning/ux-design-epic-14.md#haptics-contract-epic-14-surfaces) (lines 787-803)

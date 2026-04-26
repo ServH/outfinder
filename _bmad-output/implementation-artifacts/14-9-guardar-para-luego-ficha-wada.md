@@ -339,7 +339,7 @@ Per CLAUDE.md "Testing Discipline":
 
 ### References
 
-- **Epic spec**: [epic-14.md §Story 14.9](../../docs/planning/epic-14.md#story-149-guardar-para-luego-explicit-bookmark-in-ficha-wada) lines 654–700 — covers FR13, implements TD-4 mirror.
+- **Epic spec**: [epic-14.md §Story 14.9](../../docs/planning/epic-14/epic-14.md#story-149-guardar-para-luego-explicit-bookmark-in-ficha-wada) lines 654–700 — covers FR13, implements TD-4 mirror.
 - **Epic TD-4** (paywall-limbo — disabled state + explanatory strip): [epic-14.md:58] — shared between 14.8 (slot-tap) and 14.9 (this story, CTA-tap). Behavior contract identical.
 - **UX-DR2** (Ficha Wada working mode + "Guardar para luego"): `docs/planning/ux-design-epic-14.md:280–351` — CTA placement (ghost button, above FAB_PROTRUSION, below divider), state-variants table, interaction (hapticMedium + no-navigation + vanish), a11y contract, copy (ES+EN), trade-offs (no FAB/sticky, hide-when-saved), Pencil TODOs (star vs bookmark resolved to bookmark; toast-vs-vanish resolved to vanish).
 - **UX-DR2 haptic contract**: `docs/planning/ux-design-epic-14.md:796` — "*Ficha Wada 'Guardar para luego' | hapticMedium | Commit.*"

@@ -347,8 +347,8 @@ Per CLAUDE.md "Testing Discipline":
 
 ### References
 
-- **Epic spec**: [epic-14.md §Story 14.10](../../docs/planning/epic-14.md#story-1410--nuevo-look-entry-point-in-mis-looks) lines 704–738 — covers FR15, depends on UX-DR4.
-- **Epic functional requirement**: [epic-14.md:97](../../docs/planning/epic-14.md#functional-requirements) — "*The Mis Looks tab exposes a '+ Nuevo look' entry point (button or card) that navigates to the Wada palette catalog, allowing experienced users to start a new look without going through the camera.*"
+- **Epic spec**: [epic-14.md §Story 14.10](../../docs/planning/epic-14/epic-14.md#story-1410--nuevo-look-entry-point-in-mis-looks) lines 704–738 — covers FR15, depends on UX-DR4.
+- **Epic functional requirement**: [epic-14.md:97](../../docs/planning/epic-14/epic-14.md#functional-requirements) — "*The Mis Looks tab exposes a '+ Nuevo look' entry point (button or card) that navigates to the Wada palette catalog, allowing experienced users to start a new look without going through the camera.*"
 - **UX-DR4**: `docs/planning/ux-design-epic-14.md:446–535` — Mis Looks tab layout (empty + populated wireframes), card visual contract (`bg-elevated`, hairline, 48pt min, 12pt radius), sparkles SF Symbol, Noto Serif JP + Inter typography, a11y (`accessibilityLabel="Empezar un look nuevo"`, `accessibilityHint="Explora paletas de Sanzo Wada para empezar un look"`), haptic (`hapticLight`), interaction (tap → ColorHome, scroll with content not sticky), Pencil TODOs resolved to sparkles + flat.
 - **UX-DR4 haptic contract**: `docs/planning/ux-design-epic-14.md:800` — "*Mis Looks '+ Nuevo look' card tap | hapticLight | Navigation.*"
 - **UX-DR4 canonical copy table**: `docs/planning/ux-design-epic-14.md:765–766` — "Empieza un look nuevo" / "Start a new look" + "Explora las paletas de Sanzo Wada y arma tu look" / "Explore Sanzo Wada palettes and build your look".
