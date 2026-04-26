@@ -49,7 +49,9 @@ describe("i18n", () => {
 		it("English strings available via getFixedT('en') — AC #2", () => {
 			const { i18n } = require("../index");
 			const tEN = i18n.getFixedT("en");
-			expect(tEN("home.subtitle")).toBe("What color are you wearing?");
+			expect(tEN("home.subtitle")).toBe(
+				"What color would you like to combine?",
+			);
 			expect(tEN("home.browseAll")).toBe("Browse all 159 colors");
 			expect(tEN("tabs.colors")).toBe("Colors");
 			expect(tEN("tabs.favorites")).toBe("My looks");
@@ -58,7 +60,7 @@ describe("i18n", () => {
 		it("Spanish strings available via getFixedT('es') — AC #1", () => {
 			const { i18n } = require("../index");
 			const tES = i18n.getFixedT("es");
-			expect(tES("home.subtitle")).toContain("color es tu ropa");
+			expect(tES("home.subtitle")).toContain("color de ropa");
 			expect(tES("home.browseAll")).toBeTruthy();
 			expect(tES("tabs.colors")).toBe("Colores");
 			expect(tES("tabs.favorites")).toBe("Mis Looks");
@@ -67,8 +69,8 @@ describe("i18n", () => {
 		it("Spanish locale → Spanish strings — AC #1 (es)", () => {
 			const { i18n } = require("../index");
 			const tES = i18n.getFixedT("es");
-			// AC #6 exact strings
-			expect(tES("home.subtitle")).toContain("tu ropa hoy");
+			// AC #6 exact strings (D1 home subtitle Epic 15 — "Qué color de ropa quieres combinar")
+			expect(tES("home.subtitle")).toContain("quieres combinar");
 			expect(tES("home.browseAll")).toBe("Ver catálogo");
 		});
 

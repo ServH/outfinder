@@ -4,6 +4,12 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 15-6-copy-changes-d1-d2 (2026-04-26)
+
+- **D-15.6-1** — `en.json:58` + `es.json:58` — `newLookCta.a11yHint` still uses "start"/"empezar" verb after the visible title changed to "Build your look" / "Monta tu look". EN: "Explore Sanzo Wada palettes to start a look". ES: "Explora paletas de Sanzo Wada para empezar un look". Minor copy drift, non-blocking. Update in the same follow-up pass as the `a11yLabel` parity decision (already tracked as open follow-up in story Dev Notes).
+- **D-15.6-2** — `en.json:56` — `newLookCta.subtitle` now ends with "build your look" which is identical to the new title "Build your look". Before the change, title was "Start a new look" and subtitle had "build your look" — differing verbs. Now both are "build." Minor copy redundancy, no functional impact.
+- **D-15.6-3** — Doc/design drift: `designs/pencil-new.pen` (7 occurrences of old `home.subtitle` "What color are you wearing?"), `designs/home-redesign-spec.md` lines 27/62/158 (same string), `docs/planning/prd.md:106` (quotes old ES subtitle "¿De qué color es tu ropa hoy?" in user persona narrative). No runtime impact. Update when doing the next design/doc sync pass.
+
 ## Deferred from: code review of 15-1-coach-mark-foundation-and-legacy-removal (2026-04-26)
 
 - **D-15.1-1** — `CoachMarkOverlay.tsx` — `useSharedValue(reducedMotion ? 1 : 0)` initializes from `useReducedMotion()` which resolves async; on first render `reducedMotion = false`, so the shared values start at animation-entry state and `withTiming` fires even for Reduce Motion users — the animation is cancelled ~50ms later when the hook resolves, causing a brief flash. Pre-existing pattern used in `FavoriteButton` (same hook, already accepted). Fix when `useReducedMotion` gains a synchronous initial value (requires native read or stored preference).

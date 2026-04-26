@@ -12,7 +12,7 @@
 	},
 	"home": {
 		"title": "Outfinder",
-		"subtitle": "What color are you wearing?",
+		"subtitle": "What color would you like to combine?",
 		"browseAll": "Browse all 159 colors",
 		"allColors": "All 159\ncolors",
 		"backToFamilies": "Back to color families",
@@ -52,7 +52,7 @@
 		"emptyTitle": "No saved looks yet",
 		"emptySubtitle": "Photograph a garment or pick a palette to begin.",
 		"newLookCta": {
-			"title": "Start a new look",
+			"title": "Build your look",
 			"subtitle": "Explore Sanzo Wada palettes and build your look",
 			"a11yLabel": "Start a new look",
 			"a11yHint": "Explore Sanzo Wada palettes to start a look"
