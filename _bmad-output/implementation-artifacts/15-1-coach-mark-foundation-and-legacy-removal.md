@@ -1,6 +1,6 @@
 # Story 15.1: Reusable coach-mark foundation + remove legacy Visualizer onboarding
 
-Status: review
+Status: done
 
 ## Story
 
@@ -220,7 +220,13 @@ claude-opus-4-7 (Opus 4.7, 1M context) — bmad-dev-story workflow, 2026-04-26.
 - `_bmad-output/implementation-artifacts/15-1-coach-mark-foundation-and-legacy-removal.md` — MODIFIED (status flipped to `review`, tasks checked off, Dev Agent Record populated)
 - `_bmad-output/implementation-artifacts/sprint-status.yaml` — MODIFIED (`15-1-coach-mark-foundation-and-legacy-removal` flipped `ready-for-dev` → `review`)
 
+### Review Findings
+
+- [x] [Review][Defer] D-15.1-1: `CoachMarkOverlay` shared values initialized from `useReducedMotion()` snapshot at hook call time — async resolve means Reduce Motion users may see a ~50ms animation flash before the hook updates [src/components/CoachMarkOverlay.tsx] — deferred, pre-existing pattern already used in FavoriteButton (same hook, same timing), non-blocking
+- [x] [Review][Defer] D-15.1-2: `ALL_COACH_MARK_KEYS = Object.values(COACH_MARK_KEYS)` loses `as const` literal type narrowing — typed as `string[]` not `("@outfinder/coachmark:camera-fab-firstuse" | "...")[]`; no runtime impact [src/lib/coachMarkKeys.ts] — deferred, cosmetic type aesthetic
+
 ### Change Log
 
+- **2026-04-26 (Sonnet 4.6, bmad-code-review)** — Code review passed. 0 patches, 2 deferred (D-15.1-1 async Reduce Motion flash pre-existing pattern; D-15.1-2 type narrowing cosmetic). ~12 dismissed (false positives from wrong branch check + by-design behaviors: optimistic markSeen flip, single-shot re-show animation, dev row gating). Status: `done`.
 - **2026-04-26 (Opus 4.7, bmad-dev-story)** — Story 15.1 implemented on branch `story/15-1-coach-mark-foundation` off `epic-15` HEAD `aac6c93`. Reusable `CoachMarkOverlay` + `useCoachMark` foundation shipped (15 new tests). Legacy 2-step Visualizer onboarding (Story 11.1) fully removed: state/effects/JSX/imports stripped from `OutfitVisualizer.tsx`, 10 legacy test cases deleted, 5 i18n keys retired in both locales, new shared key `common.coachMark.gotIt` introduced. CI parity with baseline (lint/tsc unchanged, +6 net tests, 0 new skips). Status: `review` — awaiting code review + on-device smoke (Visualizer renders without overlay, no missing-i18n warnings).
 - **2026-04-26 (Opus 4.7, post-implementation request)** — Added intentional dev utility per Alejandro's request: `src/lib/coachMarkKeys.ts` (namespace registry) + `src/screens/Settings.tsx` `__DEV__`-gated `dev-reset-coach-marks-row` that calls `AsyncStorage.multiRemove(ALL_COACH_MARK_KEYS)`. Lets Alejandro QA 15.3/15.4 coach marks on-device "as a fresh user" without re-installing the app. NO user-facing behavior change in production. CI: lint/tsc/tests unchanged from prior commit (954/3/957, 2 lint baseline, 2 tsc baseline). Documented in "Dev utility added in this story" subsection above so reviewer does NOT flag as scope creep.
