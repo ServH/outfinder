@@ -16,6 +16,7 @@ import { PremiumPaywall } from "@/components/PremiumPaywall";
 import { PREMIUM_CONFIG } from "@/config/premium";
 import { usePremium } from "@/contexts/PremiumContext";
 import { getRestoreErrorMessage, usePremiumGate } from "@/hooks/usePremiumGate";
+import { ALL_COACH_MARK_KEYS } from "@/lib/coachMarkKeys";
 import { useIsIPad } from "@/lib/device";
 import { openAppStoreReview } from "@/lib/storeReview";
 import type { RootStackParamList } from "@/navigation/types";
@@ -66,6 +67,19 @@ export function Settings(_props: SettingsProps) {
 	} | null>(null);
 	const [devWardrobePaywallVisible, setDevWardrobePaywallVisible] =
 		useState(false);
+
+	const [coachMarkResetAt, setCoachMarkResetAt] = useState<string | null>(null);
+
+	const handleResetCoachMarks = useCallback(async () => {
+		try {
+			await AsyncStorage.multiRemove(ALL_COACH_MARK_KEYS);
+			setCoachMarkResetAt(new Date().toISOString());
+		} catch (error) {
+			if (__DEV__) {
+				console.warn("Settings: handleResetCoachMarks error", error);
+			}
+		}
+	}, []);
 
 	const handleRerunMigration = useCallback(async () => {
 		try {
@@ -423,6 +437,29 @@ export function Settings(_props: SettingsProps) {
 										className="font-sans text-[12px] text-tertiary"
 									>
 										{isPremium ? "ON" : "OFF"}
+									</Text>
+								</Pressable>
+
+								<View className="h-[1px] bg-divider mx-4" />
+
+								<Pressable
+									testID="dev-reset-coach-marks-row"
+									className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+									accessibilityRole="button"
+									accessibilityLabel="Reset coach marks (dev)"
+									onPress={handleResetCoachMarks}
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[14px] text-primary"
+									>
+										Reset coach marks (dev)
+									</Text>
+									<Text
+										allowFontScaling
+										className="font-sans text-[12px] text-tertiary"
+									>
+										{coachMarkResetAt ? "cleared" : "ready"}
 									</Text>
 								</Pressable>
 							</View>

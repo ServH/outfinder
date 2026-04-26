@@ -31,11 +31,6 @@
 		"goBack": "Go back",
 		"notFound": "Combination not found",
 		"screenLabel": "Outfit Visualizer screen",
-		"coachStep1": "Tap any garment to change its color",
-		"coachStep1Announce": "Tip: Tap any garment to change its color",
-		"coachStep2": "Use the arrows or swipe to change garments",
-		"coachStep2Announce": "Tip: Use the arrows or swipe to change garments",
-		"gotIt": "Got it",
 		"previousGarment": "Previous garment",
 		"nextGarment": "Next garment",
 		"makeMineButton": "Make this look mine",
@@ -198,7 +193,10 @@
 	"common": {
 		"goBack": "Go back",
 		"dismiss": "Dismiss",
-		"cancel": "Cancel"
+		"cancel": "Cancel",
+		"coachMark": {
+			"gotIt": "Got it"
+		}
 	},
 	"iap": {
 		"networkError": "Check your internet connection and try again.",

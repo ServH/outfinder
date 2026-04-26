@@ -31,11 +31,6 @@
 		"goBack": "Volver",
 		"notFound": "Combinaci\u00f3n no encontrada",
 		"screenLabel": "Pantalla del Visualizador",
-		"coachStep1": "Toca cualquier prenda para cambiar su color",
-		"coachStep1Announce": "Consejo: Toca cualquier prenda para cambiar su color",
-		"coachStep2": "Usa las flechas o desliza para cambiar las prendas",
-		"coachStep2Announce": "Consejo: Usa las flechas o desliza para cambiar las prendas",
-		"gotIt": "Entendido",
 		"previousGarment": "Prenda anterior",
 		"nextGarment": "Prenda siguiente",
 		"makeMineButton": "Hacer este look m\u00edo",
@@ -198,7 +193,10 @@
 	"common": {
 		"goBack": "Volver",
 		"dismiss": "Cerrar",
-		"cancel": "Cancelar"
+		"cancel": "Cancelar",
+		"coachMark": {
+			"gotIt": "Entendido"
+		}
 	},
 	"iap": {
 		"networkError": "Comprueba tu conexión a internet e inténtalo de nuevo.",

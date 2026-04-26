@@ -34,7 +34,8 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-12
-last_updated: 2026-04-26 (15.1 review — implementation complete on story/15-1-coach-mark-foundation)
+last_updated: 2026-04-26 (15.1 done — code review passed, 0 patches, 2 deferred D-15.1-1+2)
+# 2026-04-26 — Story 15.1 moved review → done (code review: 0 patches applied; 2 deferred D-15.1-1 async Reduce Motion flash pre-existing pattern + D-15.1-2 ALL_COACH_MARK_KEYS type narrowing cosmetic; ~12 dismissed false positives + by-design behaviors. tsc: 2 pre-existing errors unchanged. lint: 2 pre-existing errors unchanged. pnpm test: 954/3/957 baseline confirmed. Status: done).
 # 2026-04-26 — Story 15.1 moved backlog → review (bmad-dev-story Opus 4.7 on branch `story/15-1-coach-mark-foundation` off `epic-15` HEAD `aac6c93`). Foundation `CoachMarkOverlay` + `useCoachMark` shipped (2 src + 2 test files, 15 new tests). Legacy 2-step Visualizer onboarding (Story 11.1) fully removed: state/effects/JSX/imports stripped from `OutfitVisualizer.tsx`, 10 legacy test cases deleted from `OutfitVisualizer.test.tsx`, 5 i18n keys (`visualizer.coachStep1*`/`coachStep2*`/`gotIt`) retired in es+en, new shared key `common.coachMark.gotIt` introduced under existing `common` namespace. AsyncStorage namespace `@outfinder/coachmark:*` reserved for 15.3 + 15.4 (caller passes full key, no prefix prepended — explicit > magic). Legacy key `@outfinder/visualizer-introduced` retired NOT migrated (DEC-6). CI: tsc 2 errors (unchanged baseline, `ArmarioSugerenciaArmoniaScreen.test.tsx`+`ArmarioTuLookScreen.test.tsx` heredados — note: MEMORY.md said "tsc clean" but baseline shows 2 pre-existing errors out of scope), lint 2 errors (unchanged baseline `FavoritesList.test.tsx`+`OutfitVisualizer.tsx`), pnpm test **954/3/957 (delta +6 net vs 948/3/951 baseline, meets AC#4 ≥+6)**, 0 new skips. Pending: code review + Alejandro on-device smoke (Visualizer renders without overlay, no missing-i18n warnings). NO merge yet — reviewer gates entry to `epic-15`. Unblocks 15.3 (C1) + 15.4 (A2) — both wire in 1 line of `useCoachMark(...)` + 1 `<CoachMarkOverlay/>` each.
 # 2026-04-26 — Epic 15 (Pre-launch polish, v1.4.0 launch blocker) added to sprint-status; 6 stories in backlog; branch: epic-15 (off epic-14 HEAD post-merge 14.13). Source: docs/planning/epic-15/epic-15.md (PM session John + Alejandro). Decisions cerradas DEC-1..DEC-6 (Visualizer permanece, categoría obligatoria en "En curso", coach mark sobre interstitial, A2 doble affordance, foundation reutilizable, onboarding antiguo se borra). Outcome A: 6 stories done + on-device QA + marketing screenshots → release-manager.
 # 2026-04-23 — Story 14.13 moved review → done (code review: 0 patches applied; 5 deferred D-14.13-1→5 (two-source-of-truth savedCombinationIds+currentCount, __dev_resetPremium en prod context value, ArmarioPreview dual-paywall-state, CompletenessBadge transparent dead styles, dev reset no RevenueCat); 6 dismissed (i18n design-intent shared keys, index key con useMemo, concurrent stale count, dev thumbnails, copy-paste risk, speculative auditor pass). tsc clean. lint: 2 pre-existing. pnpm test: 948/3/951 — exact match. Status: done).
@@ -244,7 +245,7 @@ development_status:
   # Dev order: 15.1 → 15.6 (paralelo) → 15.3 → 15.4 → 15.5 → 15.2
   # Outcome A: 6 stories done + on-device QA + marketing screenshots → release-manager
   epic-15: in-progress
-  15-1-coach-mark-foundation-and-legacy-removal: review
+  15-1-coach-mark-foundation-and-legacy-removal: done
   15-2-en-curso-category-picker-mandatory: backlog
   15-3-camera-fab-firstuse-coach-mark: backlog
   15-4-visualizer-slot-discovery-onboarding: backlog

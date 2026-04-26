@@ -4,6 +4,13 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 15-1-coach-mark-foundation-and-legacy-removal (2026-04-26)
+
+- **D-15.1-1** — `CoachMarkOverlay.tsx` — `useSharedValue(reducedMotion ? 1 : 0)` initializes from `useReducedMotion()` which resolves async; on first render `reducedMotion = false`, so the shared values start at animation-entry state and `withTiming` fires even for Reduce Motion users — the animation is cancelled ~50ms later when the hook resolves, causing a brief flash. Pre-existing pattern used in `FavoriteButton` (same hook, already accepted). Fix when `useReducedMotion` gains a synchronous initial value (requires native read or stored preference).
+- **D-15.1-2** — `coachMarkKeys.ts` — `ALL_COACH_MARK_KEYS = Object.values(COACH_MARK_KEYS)` discards the `as const` literal type narrowing; typed as `string[]` rather than the literal union. No runtime impact today; would matter if a type-safe exhaustive lookup were added. Fix by typing explicitly: `const ALL_COACH_MARK_KEYS: readonly (typeof COACH_MARK_KEYS[keyof typeof COACH_MARK_KEYS])[] = Object.values(COACH_MARK_KEYS)` or use `satisfies`.
+
+---
+
 ## Deferred from: code review of 14-12a-delete-garment-discoverable-affordance (2026-04-22)
 
 - **D-14.12a-1** — `ArmarioPickerScreen.tsx` `exitEditMode` — `finished=false` cancellation branch never calls `runOnJS(setIsEditMode)(false)`, leaving `isEditMode` as stale `true` if animation is interrupted. Reanimated cancellation edge case; sheet navigates back on dismiss so stale state has no visible surface. Add `else { runOnJS(setIsEditMode)(false); }` or a mounted-ref guard when hardening the edit-mode state machine.
