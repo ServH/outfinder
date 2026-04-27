@@ -4,6 +4,14 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 15-3-camera-fab-firstuse-coach-mark (2026-04-27)
+
+- **D-15.3-1** — `UnifiedCameraCaptureScreen.test.tsx:239` — `COACH_KEY` hardcoded as literal string `"@outfinder/coachmark:camera-fab-firstuse"` in test file instead of importing `COACH_MARK_KEYS.cameraFabFirstUse`. If the registry key is ever renamed, tests silently pass with stale value. **Patch pending** — see story Review Findings.
+- **D-15.3-2** — `UnifiedCameraCaptureScreen.test.tsx` — No test for AC #2(e): error sheet visible → coach mark not shown. Gate is implemented in JSX (`error === null`) but has no automated regression guard. Spec intentionally scoped to 4 tests (a)–(d). Add a 5th test if regression risk increases.
+- **D-15.3-3** — `CoachMarkOverlay.tsx:88` — `zIndex:999` on the overlay means in a marginal race (processing starts before `shouldShow` resolves, then `shouldShow` flips true), the coach mark renders above the processing spinner. Foundation issue from 15.1; `!processing` could be added to the `visible` gate or foundation `zIndex` adjusted. Very low probability trigger.
+- **D-15.3-4** — `CoachMarkOverlay.tsx:48-77` — `announcedRef` resets on `visible=false`, so VoiceOver re-announces on every error→retry cycle if the coach mark was not dismissed. Foundation behavior inherited from 15.1; acceptable per current UX contract.
+- **D-15.3-5** — `UnifiedCameraCaptureScreen.test.tsx:276-278` — Test (c) uses two consecutive `await flushMicrotasks()` instead of `waitFor(...)`; may produce false green on slow CI if hook effect hasn't resolved. Works in practice but fragile.
+
 ## Deferred from: code review of 15-6-copy-changes-d1-d2 (2026-04-26)
 
 - **D-15.6-1** — `en.json:58` + `es.json:58` — `newLookCta.a11yHint` still uses "start"/"empezar" verb after the visible title changed to "Build your look" / "Monta tu look". EN: "Explore Sanzo Wada palettes to start a look". ES: "Explora paletas de Sanzo Wada para empezar un look". Minor copy drift, non-blocking. Update in the same follow-up pass as the `a11yLabel` parity decision (already tracked as open follow-up in story Dev Notes).

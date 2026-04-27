@@ -11,6 +11,9 @@ import {
 	View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { CoachMarkOverlay } from "@/components/CoachMarkOverlay";
+import { useCoachMark } from "@/hooks/useCoachMark";
+import { COACH_MARK_KEYS } from "@/lib/coachMarkKeys";
 import { hexToLab } from "@/lib/colorConversion";
 import { classifyMatch, matchWadaColor } from "@/lib/colorMatch";
 import { hapticLight, hapticMedium } from "@/lib/haptics";
@@ -52,6 +55,8 @@ export function UnifiedCameraCaptureScreen(
 	const { t } = useTranslation();
 	const navigation = useNavigation<UnifiedCameraNav>();
 	const insets = useSafeAreaInsets();
+	const { shouldShow: shouldShowCoachMark, markSeen: markCoachMarkSeen } =
+		useCoachMark(COACH_MARK_KEYS.cameraFabFirstUse);
 	const cameraRef = useRef<CameraView>(null);
 	const [permission, requestPermission] = useCameraPermissions();
 	const [processing, setProcessing] = useState(false);
@@ -94,6 +99,11 @@ export function UnifiedCameraCaptureScreen(
 
 	function handleRetry() {
 		setError(null);
+	}
+
+	async function handleDismissCoachMark() {
+		hapticLight();
+		await markCoachMarkSeen();
 	}
 
 	async function runPipeline(sourceUri: string) {
@@ -355,6 +365,18 @@ export function UnifiedCameraCaptureScreen(
 			</Pressable>
 
 			{renderErrorSheet()}
+
+			<CoachMarkOverlay
+				visible={
+					shouldShowCoachMark && permission?.granted === true && error === null
+				}
+				text={t("unifiedCamera.coachMark.text")}
+				accessibilityAnnouncement={t(
+					"unifiedCamera.coachMark.a11yAnnouncement",
+				)}
+				onDismiss={handleDismissCoachMark}
+				testID="unified-camera-coach-mark"
+			/>
 
 			{processing && (
 				<View
