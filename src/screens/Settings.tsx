@@ -36,7 +36,7 @@ type SettingsProps = Record<string, never>;
 type RestoreState = "idle" | "loading" | "success" | "error";
 
 export function Settings(_props: SettingsProps) {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const navigation =
 		useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 	const { isPremium, restore, __dev_resetPremium } = usePremium();
@@ -460,6 +460,32 @@ export function Settings(_props: SettingsProps) {
 										className="font-sans text-[12px] text-tertiary"
 									>
 										{coachMarkResetAt ? "cleared" : "ready"}
+									</Text>
+								</Pressable>
+
+								<View className="h-[1px] bg-divider mx-4" />
+
+								<Pressable
+									testID="dev-toggle-locale-row"
+									className="px-4 py-3 min-h-[44px] flex-row items-center justify-between"
+									accessibilityRole="button"
+									accessibilityLabel="Toggle app locale (dev)"
+									onPress={() => {
+										const next = i18n.language?.startsWith("es") ? "en" : "es";
+										void i18n.changeLanguage(next);
+									}}
+								>
+									<Text
+										allowFontScaling
+										className="font-sans text-[14px] text-primary"
+									>
+										Toggle locale (dev)
+									</Text>
+									<Text
+										allowFontScaling
+										className="font-sans text-[12px] text-tertiary"
+									>
+										{i18n.language?.startsWith("es") ? "ES" : "EN"}
 									</Text>
 								</Pressable>
 							</View>
