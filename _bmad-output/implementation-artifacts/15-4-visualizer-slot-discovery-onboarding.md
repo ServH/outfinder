@@ -99,7 +99,7 @@ so that **I discover that the silhouettes are tappable BEFORE I bounce off the s
   - [x] Pre-baselines captured on story branch: lint **2** (FavoritesList.test + OutfitVisualizer.tsx pre-existing format), tsc **0**, pnpm test **958/3/961**, skips **0**.
   - [x] Post-change: lint **2 (UNCHANGED)**, tsc **0 (UNCHANGED)**, pnpm test **964/3/967 (delta +6 — exactly the 6 new tests across both files)**, skips **0 (UNCHANGED)**.
   - [x] AC verification (point-by-point): AC #1 ✓ (3 imports + hook + handler + JSX render). AC #2 ✓ (5 behaviors mapped to tests a–e). AC #3 ✓ (pulse range 0.3↔0.7 / 0.5↔1.0, Reduce Motion midpoint, underline-bar testID intact). AC #4 ✓ (keys placed at end of `visualizer` object, JSON parses, grep count = 3 per locale). AC #5 ✓ (CI deltas exact, 6 new test cases, all pre-existing tests untouched).
-  - [ ] On-device smoke pending Alejandro on iPhone 16 Pro: Settings → "Reset coach marks" → Visualizer → confirm overlay appears, "Entendido" dismisses with light haptic, no re-show on reopen, all underlines pulse subtly, EN repeat.
+  - [x] On-device smoke approved by Alejandro 2026-04-27 (iPhone 16 Pro): Settings → "Reset coach marks" → Visualizer → overlay aparece sobre la card, "Entendido" descarta con haptic light, slots tap-ables, sin reaparición tras salir/entrar, todos los underlines pulsan sutilmente, EN OK.
 
 ## Dev Notes
 
