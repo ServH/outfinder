@@ -1,6 +1,6 @@
 # Story 15.5: A1 — Visualizer paper-cream background + Aureola tune
 
-Status: review
+Status: done
 
 ## Story
 
@@ -312,7 +312,19 @@ Claude Opus 4.7 (1M context) via `bmad-dev-story` skill — branch `story/15-5-v
 
 ### Review Findings
 
-(Pending `bmad-code-review` adversarial pass.)
+Code review completed 2026-04-27 via `bmad-code-review` (3 parallel layers: Blind Hunter, Edge Case Hunter, Acceptance Auditor).
+
+**Result: 0 patches · 0 decision-needed · 2 deferred · 5 dismissed**
+
+- [x] [Review][Defer] iPad branch hardcodes `"#fafaf8"` instead of `wadaTokens.bgPaper` [src/navigation/CustomTabBar.tsx:68] — deferred, pre-existing; explicitly noted as unchanged in spec Dev Note constraint; revisit in Epic 15 retro or dedicated token-consistency pass.
+- [x] [Review][Defer] `wadaTokens.warmBg` has no runtime consumer after this story (only `theme.test.ts` assertion remains) [src/styles/theme.ts:23] — deferred, deliberate spec decision documented in AC#3 ("Token NOT removed" section) with explicit rationale; revisit in Epic 15 retro `update-context`/refactor track.
+
+Dismissed (not actionable or false positive):
+- `wadaTokens.tabBarBg` dead-token claim — token does not exist in `theme.ts`; Blind Hunter hallucination.
+- Aureola alpha on dark colors — addressed by on-device smoke AC#5 (approved by Alejandro across luminance-spread combos including dark combinations).
+- `React` import retained in CustomTabBar — false positive based on illustrative diff; actual file has no `import React`.
+- No test for `bgPaper` backgroundColor — spec explicitly prohibits this assertion (Dev Notes "Testing standards").
+- Hex format `#RRGGBB` assumption — pre-existing contract, not introduced by this story; Skia accepts 9-char `#RRGGBBAA`.
 
 ### Change Log
 

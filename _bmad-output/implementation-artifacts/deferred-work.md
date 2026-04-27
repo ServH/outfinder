@@ -4,6 +4,13 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 15-5-visualizer-paper-cream-background (2026-04-27)
+
+- **D-15.5-1** — `CustomTabBar.tsx:68` — iPad branch uses hardcoded `"#fafaf8"` instead of `wadaTokens.bgPaper`. Pre-existing inconsistency (the iPhone path uses the token correctly). No functional divergence today since both resolve to the same hex, but the iPad path will silently diverge if the token value is ever updated. Fix in a dedicated token-consistency cleanup pass.
+- **D-15.5-2** — `theme.ts:23` — `wadaTokens.warmBg` (`"#ebe5da"`) has no runtime consumer after Story 15.5 (only `theme.test.ts` assertion remains). Deliberately preserved in this story per spec rationale (ripple scope, aesthetic token value). Remove the token + Tailwind alias + theme.test assertion in the Epic 15 retro `update-context`/refactor track.
+
+---
+
 ## Deferred from: code review of 15-4-visualizer-slot-discovery-onboarding (2026-04-27)
 
 - **D-15.4-1** — `OutfitCard.tsx > CardSlot` `useEffect` — `withRepeat(-1, …)` starts an infinite animation with no `cancelAnimation(underlineOpacity)` cleanup. Reanimated 3 frees worklets on node unmount automatically, so no observable leak; pre-existing pattern in the file. Add explicit cleanup if Reanimated upgrades change unmount behavior.
