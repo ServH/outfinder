@@ -1,6 +1,6 @@
 # Story 15.3: C1 — Camera FAB first-use coach mark
 
-Status: review
+Status: done
 
 ## Story
 
@@ -240,6 +240,14 @@ Claude Opus 4.7 (1M context) via `bmad-dev-story` workflow on branch `story/15-3
 - `_bmad-output/implementation-artifacts/15-3-camera-fab-firstuse-coach-mark.md` — task checkboxes, status, Dev Agent Record, File List, Change Log.
 
 NO new files created. NO native module changes. NO new packages. NO `app.config.ts` changes.
+
+### Review Findings
+
+- [x] [Review][Patch] `COACH_KEY` literal duplicates registry — test file hardcodes `"@outfinder/coachmark:camera-fab-firstuse"` instead of importing `COACH_MARK_KEYS.cameraFabFirstUse`; key drift would silently pass [src/screens/unifiedCamera/UnifiedCameraCaptureScreen.test.tsx:239]
+- [x] [Review][Defer] AC #2(e) error gate has no automated test — `error === null` gate is in the JSX `visible` prop but no `it` case exercises it; spec intentionally scoped to (a)–(d) [src/screens/unifiedCamera/UnifiedCameraCaptureScreen.test.tsx] — deferred, spec-scoped gap
+- [x] [Review][Defer] Processing + CoachMark z-order race — `CoachMarkOverlay` has `zIndex:999`; if `shouldShowCoachMark` resolves true after `processing` starts, coach mark renders above the processing spinner (foundation issue from 15.1) [src/components/CoachMarkOverlay.tsx:88] — deferred, pre-existing foundation issue
+- [x] [Review][Defer] VoiceOver re-announces on error→retry cycle — `announcedRef` resets when `visible` flips false, so `AccessibilityInfo.announceForAccessibility` re-fires when `error` is cleared and coach mark re-appears; foundation behavior from 15.1 [src/components/CoachMarkOverlay.tsx:48-77] — deferred, pre-existing foundation behavior
+- [x] [Review][Defer] Test (c) double `flushMicrotasks` without `waitFor` — two consecutive `await flushMicrotasks()` calls could produce a false green on slow CI if hook effect hasn't resolved; `waitFor` would be more robust [src/screens/unifiedCamera/UnifiedCameraCaptureScreen.test.tsx:276-278] — deferred, minor fragility not a bug
 
 ### Change Log
 

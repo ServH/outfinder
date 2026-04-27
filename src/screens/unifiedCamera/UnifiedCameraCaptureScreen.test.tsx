@@ -6,6 +6,7 @@ import {
 	screen,
 	waitFor,
 } from "@testing-library/react-native";
+import { COACH_MARK_KEYS } from "@/lib/coachMarkKeys";
 import { hapticLight, hapticMedium } from "@/lib/haptics";
 
 let mockPermission: {
@@ -239,7 +240,7 @@ describe("UnifiedCameraCaptureScreen", () => {
 	});
 
 	describe("camera FAB first-use coach mark (Story 15.3)", () => {
-		const COACH_KEY = "@outfinder/coachmark:camera-fab-firstuse";
+		const COACH_KEY = COACH_MARK_KEYS.cameraFabFirstUse;
 
 		it("first mount with no AsyncStorage flag → overlay visible with body copy", async () => {
 			render(<UnifiedCameraCaptureScreen />);
