@@ -216,9 +216,14 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 		if (!isMounted.current) return;
 		setPaywallVisible(false);
 		gate.handleDismiss();
-		// Tmp cleanup on paywall dismiss — if the user then taps Repetir, the
-		// second delete is a no-op under the SDK 55 class-based API.
-		deleteCutoutTmp(cutoutUri);
+		// Only delete the tmp when no aftermath retry is pending. If the user
+		// purchased premium, pendingCategoryRef holds the category for the silent
+		// re-save; deleting the file here would cause that retry to fail with a
+		// file-not-found error. The dismiss-without-purchase path clears the ref
+		// via the aftermath effect's !isPremium branch.
+		if (pendingCategoryRef.current === null) {
+			deleteCutoutTmp(cutoutUri);
+		}
 	}, [cutoutUri, gate]);
 
 	const handlePurchase = useCallback(() => {

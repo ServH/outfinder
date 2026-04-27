@@ -310,7 +310,7 @@ describe("ArmarioPreviewScreen", () => {
 		expect(mockGoBack).not.toHaveBeenCalled();
 	});
 
-	it("4. Paywall onDismiss unmounts paywall, calls File.delete for tmp cleanup, keeps Preview CTAs enabled", async () => {
+	it("4. Paywall onDismiss unmounts paywall, preserves cutout tmp for retry, keeps Preview CTAs enabled", async () => {
 		saveMock.mockRejectedValueOnce(
 			new WardrobePersistenceError("paywall", "limit reached"),
 		);
@@ -337,7 +337,10 @@ describe("ArmarioPreviewScreen", () => {
 		await waitFor(() => {
 			expect(screen.queryByTestId("paywall-mock")).toBeNull();
 		});
-		expect(mockFileDelete).toHaveBeenCalledTimes(1);
+		// File must NOT be deleted on dismiss-without-purchase: pendingCategoryRef
+		// is set, so the aftermath effect may still need the file for a retry.
+		// The user lands back on Preview with Use re-enabled and can retry.
+		expect(mockFileDelete).not.toHaveBeenCalled();
 
 		// Preview CTAs still enabled → user can tap Repetir or Usar again.
 		const retakeBtn = screen.getByTestId("armario-preview-retake-button");
@@ -590,6 +593,10 @@ describe("ArmarioPreviewScreen", () => {
 			fireEvent.press(screen.getByTestId("paywall-mock-dismiss"));
 		});
 		await flushMicrotasks();
+
+		// On the purchase path, dismissing the paywall must NOT delete the cutout
+		// tmp — the aftermath effect needs the file alive for the silent retry.
+		expect(mockFileDelete).not.toHaveBeenCalled();
 
 		await waitFor(() => {
 			expect(saveMock).toHaveBeenCalledTimes(2);

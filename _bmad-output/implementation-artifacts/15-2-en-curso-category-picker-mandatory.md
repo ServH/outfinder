@@ -1,6 +1,6 @@
 # Story 15.2: B1 — CategoryPicker mandatory in "En curso" flow (Foto nueva + Biblioteca)
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -385,7 +385,7 @@ Opus 4.7 (1M context) — `claude-opus-4-7[1m]`
 - **AC #11 ✓** — All a11y wiring lives inside `CategoryPickerSheet` (unchanged). VoiceOver announce on Preview mount (`armario.preview.cutoutReady`) preserved (asserted by the existing "announces cutoutReady" test).
 - **AC #12 ✓** — All 17 `ArmarioPreviewScreen.test.tsx` cases pass (12 pre-existing + 5 new). All 44 `ArmarioPickerScreen.test.tsx` cases pass UNCHANGED. The picker test file received zero edits.
 - **AC #13 ✓** — Post-CI: tsc **0 UNCHANGED**, lint **2 UNCHANGED** (pre-existing `FavoritesList.test.tsx` + `OutfitVisualizer.tsx > handleMakeMine` Biome format errors NOT auto-formatted, per `feedback_no_patches.md`), pnpm test **966 / 3 / 969** (delta **+5 net** vs `961 / 3 / 964` baseline — exactly the 5 new test cases). The 3 baseline i18n locale-detection test failures are pre-existing on `epic-15` HEAD `56579b5` (verified on a clean checkout); the story spec mislabelled them as "skips" — they are pre-existing failures, NOT introduced by 15.2.
-- **AC #14 ⏸** — On-device smoke pending Alejandro on iPhone 16 Pro across both ES and EN locales: (a) Foto nueva happy path → category selection → slot assignment via Story 14.12b edit-category badge; (b) Biblioteca happy path; (c) Cancel path (sheet backdrop tap → no save, Retake still functional); (d) Free-tier paywall path (10-item DEV-menu pre-fill → confirm category → paywall → dismiss-without-purchase → Use re-tappable → sheet reopens, NOT auto-confirmed).
+- **AC #14 ✓** — On-device smoke APPROVED by Alejandro on iPhone 16 Pro × ES+EN locales (2026-04-27): (a) Foto nueva happy path → category selection → slot assignment via Story 14.12b edit-category badge; (b) Biblioteca happy path; (c) Cancel path (sheet backdrop tap → no save, Retake still functional); (d) Free-tier paywall path (10-item DEV-menu pre-fill → confirm category → paywall → dismiss-without-purchase → Use re-tappable → sheet reopens, NOT auto-confirmed).
 
 **Self-checks (executed before review)**
 
@@ -404,7 +404,7 @@ Opus 4.7 (1M context) — `claude-opus-4-7[1m]`
 **Pending before merge**
 
 1. Adversarial code review (`bmad-code-review`) — recommended a different LLM than the implementation model.
-2. Alejandro on-device smoke (AC #14, 4 scenarios × 2 locales).
+2. ✓ Alejandro on-device smoke (AC #14, 4 scenarios × 2 locales) — APPROVED 2026-04-27.
 3. Visual review per `feedback_visual_review.md` (Expo simulator: confirm sheet animation feel, button label color in both locales, paywall layering when sheet was open).
 
 ### File List
@@ -413,6 +413,13 @@ Opus 4.7 (1M context) — `claude-opus-4-7[1m]`
 - `src/screens/armario/ArmarioPreviewScreen.test.tsx` (MOD) — added the `CategoryPickerSheet` mock (4 confirm rows + 1 cancel row, mirroring `UnifiedCameraResultScreen.test.tsx:176-207`) + `hapticMedium` mock + a `mockPremiumState` holder for flip-during-render of `isPremium`. 6 existing tests mechanically updated to interpose `category-sheet-mock-confirm-top` between the Use tap and the assertion. 5 new tests (Tests 11–15) covering: sheet-appears-no-save (DEC-2 invariant), sheet-cancel-no-save, confirm-footwear-NOT-top (regression-proof for TD-7 retirement), paywall pending-ref retry, paywall dismiss-without-purchase clears ref.
 - `_bmad-output/implementation-artifacts/sprint-status.yaml` (MOD) — `15-2-en-curso-category-picker-mandatory: ready-for-dev → in-progress → review` (single round-trip per workflow); `last_updated` annotated with the in-progress and post-implementation summaries.
 - `_bmad-output/implementation-artifacts/15-2-en-curso-category-picker-mandatory.md` (MOD) — Status: review, Tasks/Subtasks all checked, Dev Agent Record + File List + Change Log filled.
+
+### Review Findings
+
+- [x] [Review][Patch] `handlePaywallDismiss` calls `deleteCutoutTmp(cutoutUri)` unconditionally — on the purchase path (isPremium flips true then user taps dismiss), the cutout file is deleted before the aftermath effect can retry the save, causing a file-not-found error after a successful IAP. Fixed: gated `deleteCutoutTmp` behind `if (pendingCategoryRef.current === null)`. Added `expect(mockFileDelete).not.toHaveBeenCalled()` to Test 14. Updated Test 4 title + assertion to reflect new behavior (file preserved for retry). [ArmarioPreviewScreen.tsx — handlePaywallDismiss]
+- [x] [Review][Defer] Aftermath `useEffect` depends on `handleCategoryConfirm` identity — fires on every `isPremium`/`navigation` change, but guards prevent double-save. Same pattern as reference implementation. [ArmarioPreviewScreen.tsx — aftermath useEffect] — deferred, same pattern as UnifiedCameraResultScreen
+- [x] [Review][Defer] Aftermath ordering is load-bearing — `pendingCategoryRef.current = null` (line 132) must precede `setSubmitting(false)` (line 134) or a double-save is possible. Currently correct; a single-line swap would break it silently. [ArmarioPreviewScreen.tsx:132–134] — deferred, code is correct; comment in-code is sufficient
+- [x] [Review][Defer] Test 14 comment says "dismiss triggers retry" but `rerender(isPremium=true)` fires the aftermath effect (blocked by `paywallVisible=true`), and dismiss unblocks it — causation is reversed from what the comment implies. Behavior under test is correct. [ArmarioPreviewScreen.test.tsx — Test 14] — deferred, test verifies correct behavior regardless of comment
 
 ## Change Log
 
