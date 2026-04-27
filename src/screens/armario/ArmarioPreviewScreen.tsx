@@ -15,12 +15,14 @@ import {
 	Text,
 	View,
 } from "react-native";
+import { CategoryPickerSheet } from "@/components/armario/CategoryPickerSheet";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
 import { usePremium } from "@/contexts/PremiumContext";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
 import { saveCutoutAsWardrobeItem } from "@/lib/armario/saveCutoutAsWardrobeItem";
 import { WardrobePersistenceError } from "@/lib/armario/wardrobeErrors";
-import { hapticLight, hapticRigid } from "@/lib/haptics";
+import { hapticLight, hapticMedium, hapticRigid } from "@/lib/haptics";
+import type { WardrobeCategory } from "@/lib/wardrobeTypes";
 import type { ArmarioStackParamList } from "@/navigation/types";
 import { useMisLooksStore } from "@/stores/misLooksStore";
 import { wadaTokens } from "@/styles/theme";
@@ -75,7 +77,12 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 	const [submitting, setSubmitting] = useState(false);
 	const [paywallVisible, setPaywallVisible] = useState(false);
 	const [errorCopy, setErrorCopy] = useState<string | null>(null);
+	const [categorySheetVisible, setCategorySheetVisible] = useState(false);
 	const isMounted = useRef(true);
+	// Stash the user-selected category across a paywall round-trip. On a
+	// successful purchase, the aftermath effect re-invokes the save with this
+	// same category so the user is not asked to pick twice.
+	const pendingCategoryRef = useRef<WardrobeCategory | null>(null);
 
 	useEffect(() => {
 		return () => {
@@ -98,79 +105,107 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 		navigation.goBack();
 	}, [cutoutUri, navigation]);
 
-	const handleUse = useCallback(async () => {
-		if (submitting) return;
-		setSubmitting(true);
-		try {
-			const result = await saveCutoutAsWardrobeItem({
-				cutoutUri,
-				sourceUri,
-				isPremium,
-				// TD-7 temporary default — in-Ficha-Wada ArmarioCapture flow
-				// (preserved per TD-2); real user-selected category lands via
-				// Story 14.5 in the unified camera flow. User can correct via
-				// Story 14.12b edit-category affordance.
-				category: "top",
-			});
-			if (!isMounted.current) return;
-			hapticRigid();
-			// Invoke callback BEFORE dismissing so the caller's state lands
-			// before Preview unmounts. Safe to omit — callback is optional.
-			onCutoutSaved?.(result.id);
-			// When launched from S3 (callback present), the user's mental model
-			// is "done, return to the picker" — so dismiss the ArmarioRoot
-			// modal entirely instead of only popping Preview → Capture. The
-			// parent navigator is the RootStack; its goBack dismisses the modal.
-			if (onCutoutSaved) {
-				// Dismiss the ArmarioRoot modal entirely so the user lands back on
-				// the picker. Fall back to local goBack if the parent is unavailable
-				// (deep-link or isolated test harness — avoids a stuck screen).
-				const parent = navigation.getParent();
-				if (parent) {
-					parent.goBack();
+	const handleUse = useCallback(() => {
+		if (submitting || categorySheetVisible) return;
+		hapticMedium();
+		setCategorySheetVisible(true);
+	}, [submitting, categorySheetVisible]);
+
+	const handleSheetCancel = useCallback(() => {
+		setCategorySheetVisible(false);
+		pendingCategoryRef.current = null;
+	}, []);
+
+	const handleCategoryConfirm = useCallback(
+		async (category: WardrobeCategory) => {
+			pendingCategoryRef.current = category;
+			setSubmitting(true);
+			try {
+				const result = await saveCutoutAsWardrobeItem({
+					cutoutUri,
+					sourceUri,
+					isPremium,
+					category,
+				});
+				if (!isMounted.current) return;
+				hapticRigid();
+				pendingCategoryRef.current = null;
+				setCategorySheetVisible(false);
+				setSubmitting(false);
+				// Invoke callback BEFORE dismissing so the caller's state lands
+				// before Preview unmounts. Safe to omit — callback is optional.
+				onCutoutSaved?.(result.id);
+				if (onCutoutSaved) {
+					// Dismiss the ArmarioRoot modal entirely so the user lands back
+					// on the picker. Fall back to local goBack if the parent is
+					// unavailable (deep-link or isolated test harness).
+					const parent = navigation.getParent();
+					if (parent) {
+						parent.goBack();
+					} else {
+						navigation.goBack();
+					}
 				} else {
 					navigation.goBack();
 				}
-			} else {
-				navigation.goBack();
-			}
-		} catch (e) {
-			if (!isMounted.current) return;
-			setSubmitting(false);
-			if (e instanceof WardrobePersistenceError) {
-				if (e.kind === "paywall") {
-					setPaywallVisible(true);
-					return;
-				}
-				if (e.kind === "diskFull") {
-					setErrorCopy(t("armario.preview.errorDiskFull"));
-					return;
-				}
-				if (e.kind === "encode") {
-					setErrorCopy(t("armario.preview.errorEncode"));
-					return;
-				}
-				if (e.kind === "move" || e.kind === "repoAdd") {
+			} catch (e) {
+				if (!isMounted.current) return;
+				setSubmitting(false);
+				if (e instanceof WardrobePersistenceError) {
+					if (e.kind === "paywall") {
+						// Hide sheet behind paywall; KEEP pendingCategoryRef set so
+						// the aftermath effect can silently retry on isPremium=true.
+						setCategorySheetVisible(false);
+						setPaywallVisible(true);
+						return;
+					}
+					setCategorySheetVisible(false);
+					pendingCategoryRef.current = null;
+					if (e.kind === "diskFull") {
+						setErrorCopy(t("armario.preview.errorDiskFull"));
+						return;
+					}
+					if (e.kind === "encode") {
+						setErrorCopy(t("armario.preview.errorEncode"));
+						return;
+					}
+					if (e.kind === "move" || e.kind === "repoAdd") {
+						setErrorCopy(t("armario.preview.errorSaveFailed"));
+						return;
+					}
+					// Catch-all for future WardrobePersistenceError kinds.
 					setErrorCopy(t("armario.preview.errorSaveFailed"));
 					return;
 				}
-				// Catch-all for future WardrobePersistenceError kinds not yet handled.
+				if (__DEV__) {
+					console.warn("[ArmarioPreviewScreen] save failed:", e);
+				}
+				setCategorySheetVisible(false);
+				pendingCategoryRef.current = null;
 				setErrorCopy(t("armario.preview.errorSaveFailed"));
-				return;
 			}
-			if (__DEV__) {
-				console.warn("[ArmarioPreviewScreen] save failed:", e);
-			}
+		},
+		[cutoutUri, sourceUri, isPremium, navigation, onCutoutSaved, t],
+	);
+
+	// Paywall aftermath: when the paywall closes and the save flow is idle,
+	//   - isPremium=true + pending ref → silent retry with the original
+	//     selection (purchase succeeded; user shouldn't pick twice).
+	//   - isPremium=false → clear the ref so a future isPremium flip outside
+	//     this flow cannot silently re-trigger a stale save.
+	// The ref is cleared BEFORE the re-call to guard against reentry.
+	useEffect(() => {
+		if (paywallVisible || submitting) return;
+		if (isPremium && pendingCategoryRef.current !== null) {
+			const cat = pendingCategoryRef.current;
+			pendingCategoryRef.current = null;
+			void handleCategoryConfirm(cat);
+			return;
 		}
-	}, [
-		cutoutUri,
-		sourceUri,
-		isPremium,
-		navigation,
-		onCutoutSaved,
-		submitting,
-		t,
-	]);
+		if (!isPremium) {
+			pendingCategoryRef.current = null;
+		}
+	}, [isPremium, paywallVisible, submitting, handleCategoryConfirm]);
 
 	const handleErrorDismiss = useCallback(() => {
 		if (!isMounted.current) return;
@@ -181,9 +216,14 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 		if (!isMounted.current) return;
 		setPaywallVisible(false);
 		gate.handleDismiss();
-		// Tmp cleanup on paywall dismiss — if the user then taps Repetir, the
-		// second delete is a no-op under the SDK 55 class-based API.
-		deleteCutoutTmp(cutoutUri);
+		// Only delete the tmp when no aftermath retry is pending. If the user
+		// purchased premium, pendingCategoryRef holds the category for the silent
+		// re-save; deleting the file here would cause that retry to fail with a
+		// file-not-found error. The dismiss-without-purchase path clears the ref
+		// via the aftermath effect's !isPremium branch.
+		if (pendingCategoryRef.current === null) {
+			deleteCutoutTmp(cutoutUri);
+		}
 	}, [cutoutUri, gate]);
 
 	const handlePurchase = useCallback(() => {
@@ -352,6 +392,13 @@ export function ArmarioPreviewScreen(_props: ArmarioPreviewScreenProps) {
 					</View>
 				</View>
 			)}
+
+			<CategoryPickerSheet
+				visible={categorySheetVisible}
+				onConfirm={handleCategoryConfirm}
+				onCancel={handleSheetCancel}
+				confirming={submitting}
+			/>
 
 			<PremiumPaywall
 				visible={paywallVisible}

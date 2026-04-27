@@ -4,6 +4,14 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 15-2-en-curso-category-picker-mandatory (2026-04-27)
+
+- **D-15.2-1** — `ArmarioPreviewScreen.tsx — aftermath useEffect` — `handleCategoryConfirm` is in the effect's dependency array; any `isPremium`/`navigation` identity change re-runs the effect. Guards (`pendingCategoryRef=null`, `paywallVisible`, `submitting`) prevent double-save in practice. Same pattern as `UnifiedCameraResultScreen.tsx`. Monitor if navigation identity becomes unstable.
+- **D-15.2-2** — `ArmarioPreviewScreen.tsx:132–134` — Load-bearing line ordering: `pendingCategoryRef.current = null` MUST precede `setSubmitting(false)` to prevent aftermath effect double-fire on the success path. Currently correct; swapping the two lines would introduce a double-save. Add a code comment if this area is ever refactored.
+- **D-15.2-3** — `ArmarioPreviewScreen.test.tsx — Test 14 comment` — Comment states "flip premium → dismiss paywall → aftermath fires retry." Actually: `rerender(isPremium=true)` fires the effect (blocked by `paywallVisible=true`), then dismiss unblocks it. Behavior under test is correct; comment is misleading about causation. Clarify comment in next test-maintenance pass.
+
+---
+
 ## Deferred from: code review of 15-5-visualizer-paper-cream-background (2026-04-27)
 
 - **D-15.5-1** — `CustomTabBar.tsx:68` — iPad branch uses hardcoded `"#fafaf8"` instead of `wadaTokens.bgPaper`. Pre-existing inconsistency (the iPhone path uses the token correctly). No functional divergence today since both resolve to the same hex, but the iPad path will silently diverge if the token value is ever updated. Fix in a dedicated token-consistency cleanup pass.

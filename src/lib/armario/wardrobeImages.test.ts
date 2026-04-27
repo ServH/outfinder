@@ -114,11 +114,11 @@ describe("wardrobeImages", () => {
 	});
 
 	describe("encodeThumbnail", () => {
-		it("calls manipulateAsync with WebP q=0.75 + resize 300x360 and parks result at tmp/<uuid>-thumb.webp", async () => {
+		it("calls manipulateAsync with WebP q=0.75 + width-only resize (preserves aspect ratio) and parks result at tmp/<uuid>-thumb.webp", async () => {
 			manipulateAsync.mockResolvedValueOnce({
 				uri: "file:///cache/ExponentImageManipulator-thumb.webp",
 				width: 300,
-				height: 360,
+				height: 400,
 			});
 
 			const uri = await encodeThumbnail(
@@ -126,9 +126,11 @@ describe("wardrobeImages", () => {
 				"deadbeef-cafe",
 			);
 
+			// Width-only resize preserves the source aspect ratio. Passing both
+			// dimensions force-stretches the image (the bug fixed alongside 15.2).
 			expect(manipulateAsync).toHaveBeenCalledWith(
 				"file:///tmp/cutout.png",
-				[{ resize: { width: 300, height: 360 } }],
+				[{ resize: { width: 300 } }],
 				{ compress: 0.75, format: "webp" },
 			);
 			expect(fileMoveSpy).toHaveBeenCalledWith(

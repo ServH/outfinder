@@ -7,7 +7,7 @@ import {
 } from "@testing-library/react-native";
 import { saveCutoutAsWardrobeItem } from "@/lib/armario/saveCutoutAsWardrobeItem";
 import { WardrobePersistenceError } from "@/lib/armario/wardrobeErrors";
-import { hapticLight, hapticRigid } from "@/lib/haptics";
+import { hapticLight, hapticMedium, hapticRigid } from "@/lib/haptics";
 import { ArmarioPreviewScreen } from "./ArmarioPreviewScreen";
 
 // ---- Mocks -----------------------------------------------------------------
@@ -37,7 +37,53 @@ jest.mock("@/lib/armario/saveCutoutAsWardrobeItem", () => ({
 
 jest.mock("@/lib/haptics", () => ({
 	hapticLight: jest.fn(),
+	hapticMedium: jest.fn(),
 	hapticRigid: jest.fn(),
+}));
+
+// CategoryPickerSheet is mocked to expose its confirm/cancel callbacks via
+// testIDs so tests can exercise the Preview screen's save flow without
+// reaching into the real sheet's internal state machine. Mirrors the pattern
+// in `UnifiedCameraResultScreen.test.tsx:176-207` (Story 14.5).
+jest.mock("@/components/armario/CategoryPickerSheet", () => ({
+	CategoryPickerSheet: ({
+		visible,
+		onConfirm,
+		onCancel,
+		confirming,
+	}: {
+		visible: boolean;
+		onConfirm: (category: string) => void;
+		onCancel: () => void;
+		confirming?: boolean;
+	}) => {
+		const { Pressable, View } = require("react-native");
+		if (!visible) return null;
+		return (
+			<View
+				testID="category-sheet-mock"
+				accessibilityState={{ busy: confirming === true }}
+			>
+				<Pressable
+					testID="category-sheet-mock-confirm-top"
+					onPress={() => onConfirm("top")}
+				/>
+				<Pressable
+					testID="category-sheet-mock-confirm-bottom"
+					onPress={() => onConfirm("bottom")}
+				/>
+				<Pressable
+					testID="category-sheet-mock-confirm-footwear"
+					onPress={() => onConfirm("footwear")}
+				/>
+				<Pressable
+					testID="category-sheet-mock-confirm-accessory"
+					onPress={() => onConfirm("accessory")}
+				/>
+				<Pressable testID="category-sheet-mock-cancel" onPress={onCancel} />
+			</View>
+		);
+	},
 }));
 
 const mockGoBack = jest.fn();
@@ -104,9 +150,12 @@ jest.mock("@/stores/misLooksStore", () => ({
 	) => selector({ favorites: new Set<string>(), items: [] }),
 }));
 
+// Mutable holder so individual tests can flip isPremium between renders
+// (e.g. paywall pending-ref retry exercises isPremium=false → true).
+const mockPremiumState = { isPremium: false };
 jest.mock("@/contexts/PremiumContext", () => ({
 	usePremium: () => ({
-		isPremium: false,
+		isPremium: mockPremiumState.isPremium,
 		loading: false,
 		paywallDismissedThisSession: false,
 		setPaywallDismissedThisSession: jest.fn(),
@@ -144,12 +193,14 @@ describe("ArmarioPreviewScreen", () => {
 		mockFileDelete.mockReset();
 		saveMock.mockReset();
 		(hapticLight as jest.Mock).mockClear();
+		(hapticMedium as jest.Mock).mockClear();
 		(hapticRigid as jest.Mock).mockClear();
 		mockAnnounce.mockClear();
 		mockRouteParams = {
 			cutoutUri: "file:///tmp/cutout.png",
 			sourceUri: "file:///tmp/source.jpg",
 		};
+		mockPremiumState.isPremium = false;
 	});
 
 	it("1. Retake tap → File.delete called → navigation.goBack (delete failure still nav-safe)", async () => {
@@ -175,7 +226,7 @@ describe("ArmarioPreviewScreen", () => {
 		unmount();
 	});
 
-	it("2. Usar happy path: save resolves → hapticRigid → goBack, submitting disables CTAs in-flight + use CTA shows spinner (BUG-008)", async () => {
+	it("2. Usar happy path: tap Use → sheet appears (no save yet) → confirm category → submitting disables CTAs + sheet busy → resolve → hapticRigid → goBack", async () => {
 		let resolveSave: ((value: { id: string }) => void) | undefined;
 		saveMock.mockImplementationOnce(
 			() =>
@@ -189,25 +240,31 @@ describe("ArmarioPreviewScreen", () => {
 		const retakeBtn = screen.getByTestId("armario-preview-retake-button");
 		const backBtn = screen.getByTestId("armario-preview-back-button");
 
+		// Tap Use → sheet opens, save is NOT called yet (DEC-2 invariant).
 		await act(async () => {
 			fireEvent.press(useBtn);
 		});
+		expect(hapticMedium).toHaveBeenCalledTimes(1);
+		expect(saveMock).not.toHaveBeenCalled();
+		expect(screen.getByTestId("category-sheet-mock")).toBeTruthy();
+
+		// Confirm a category from the sheet → save kicks off.
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-confirm-top"));
+		});
 
 		// In-flight: accessibilityState disabled + busy on the use CTA; the
-		// other two CTAs stay `disabled` without `busy` (they aren't the
-		// source of the async work).
+		// other two CTAs stay `disabled` without `busy`. The sheet stays
+		// mounted with `busy: true` so the in-sheet spinner is visible.
 		expect(useBtn.props.accessibilityState).toEqual({
 			disabled: true,
 			busy: true,
 		});
 		expect(retakeBtn.props.accessibilityState).toEqual({ disabled: true });
 		expect(backBtn.props.accessibilityState).toEqual({ disabled: true });
-
-		// BUG-008: visual feedback — the use CTA renders an ActivityIndicator
-		// in place of its label while the async save is in-flight.
 		expect(
-			screen.getByTestId("armario-preview-use-button-spinner"),
-		).toBeTruthy();
+			screen.getByTestId("category-sheet-mock").props.accessibilityState,
+		).toEqual({ busy: true });
 
 		await act(async () => {
 			resolveSave?.({ id: "__stub__" });
@@ -219,9 +276,11 @@ describe("ArmarioPreviewScreen", () => {
 			expect(hapticRigid).toHaveBeenCalledTimes(1);
 			expect(mockGoBack).toHaveBeenCalledTimes(1);
 		});
+		// Sheet closes after success.
+		expect(screen.queryByTestId("category-sheet-mock")).toBeNull();
 	});
 
-	it("3. Usar paywall path: save rejects with WardrobePersistenceError kind=paywall → paywall appears → CTAs re-enabled", async () => {
+	it("3. Usar paywall path: confirm category → save rejects with kind=paywall → sheet hides + paywall appears → CTAs re-enabled", async () => {
 		saveMock.mockRejectedValueOnce(
 			new WardrobePersistenceError("paywall", "limit reached"),
 		);
@@ -230,11 +289,16 @@ describe("ArmarioPreviewScreen", () => {
 		await act(async () => {
 			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
 		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-confirm-top"));
+		});
 		await flushMicrotasks();
 
 		await waitFor(() => {
 			expect(screen.getByTestId("paywall-mock")).toBeTruthy();
 		});
+		// Sheet must be hidden behind the paywall.
+		expect(screen.queryByTestId("category-sheet-mock")).toBeNull();
 
 		const useBtn = screen.getByTestId("armario-preview-use-button");
 		const retakeBtn = screen.getByTestId("armario-preview-retake-button");
@@ -246,7 +310,7 @@ describe("ArmarioPreviewScreen", () => {
 		expect(mockGoBack).not.toHaveBeenCalled();
 	});
 
-	it("4. Paywall onDismiss unmounts paywall, calls File.delete for tmp cleanup, keeps Preview CTAs enabled", async () => {
+	it("4. Paywall onDismiss unmounts paywall, preserves cutout tmp for retry, keeps Preview CTAs enabled", async () => {
 		saveMock.mockRejectedValueOnce(
 			new WardrobePersistenceError("paywall", "limit reached"),
 		);
@@ -254,6 +318,9 @@ describe("ArmarioPreviewScreen", () => {
 
 		await act(async () => {
 			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-confirm-top"));
 		});
 		await flushMicrotasks();
 
@@ -270,7 +337,10 @@ describe("ArmarioPreviewScreen", () => {
 		await waitFor(() => {
 			expect(screen.queryByTestId("paywall-mock")).toBeNull();
 		});
-		expect(mockFileDelete).toHaveBeenCalledTimes(1);
+		// File must NOT be deleted on dismiss-without-purchase: pendingCategoryRef
+		// is set, so the aftermath effect may still need the file for a retry.
+		// The user lands back on Preview with Use re-enabled and can retry.
+		expect(mockFileDelete).not.toHaveBeenCalled();
 
 		// Preview CTAs still enabled → user can tap Repetir or Usar again.
 		const retakeBtn = screen.getByTestId("armario-preview-retake-button");
@@ -292,7 +362,7 @@ describe("ArmarioPreviewScreen", () => {
 		);
 	});
 
-	it("6. Usar diskFull path: save rejects with kind=diskFull → errorDiskFull sheet + Dismiss re-enables CTAs", async () => {
+	it("6. Usar diskFull path: save rejects with kind=diskFull → sheet closes + errorDiskFull sheet + Dismiss re-enables CTAs", async () => {
 		saveMock.mockRejectedValueOnce(
 			new WardrobePersistenceError("diskFull", "not enough space"),
 		);
@@ -300,6 +370,9 @@ describe("ArmarioPreviewScreen", () => {
 
 		await act(async () => {
 			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-confirm-top"));
 		});
 		await flushMicrotasks();
 
@@ -339,6 +412,9 @@ describe("ArmarioPreviewScreen", () => {
 		await act(async () => {
 			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
 		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-confirm-top"));
+		});
 		await flushMicrotasks();
 
 		await waitFor(() => {
@@ -362,6 +438,9 @@ describe("ArmarioPreviewScreen", () => {
 		await act(async () => {
 			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
 		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-confirm-top"));
+		});
 		await flushMicrotasks();
 
 		await waitFor(() => {
@@ -383,6 +462,9 @@ describe("ArmarioPreviewScreen", () => {
 
 		await act(async () => {
 			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-confirm-top"));
 		});
 		await flushMicrotasks();
 
@@ -406,6 +488,9 @@ describe("ArmarioPreviewScreen", () => {
 		await act(async () => {
 			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
 		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-confirm-top"));
+		});
 		await flushMicrotasks();
 
 		await waitFor(() => {
@@ -414,5 +499,149 @@ describe("ArmarioPreviewScreen", () => {
 		expect(
 			screen.getByText("Couldn't save the garment. Please try again."),
 		).toBeTruthy();
+	});
+
+	it("11. Tap Use → CategoryPickerSheet appears, save NOT yet called (DEC-2 invariant)", async () => {
+		render(<ArmarioPreviewScreen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
+		});
+
+		expect(screen.getByTestId("category-sheet-mock")).toBeTruthy();
+		expect(saveMock).not.toHaveBeenCalled();
+		expect(hapticMedium).toHaveBeenCalledTimes(1);
+	});
+
+	it("12. Sheet cancel → no save, no nav, no File.delete; Use button re-enabled", async () => {
+		render(<ArmarioPreviewScreen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
+		});
+		expect(screen.getByTestId("category-sheet-mock")).toBeTruthy();
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-cancel"));
+		});
+
+		expect(screen.queryByTestId("category-sheet-mock")).toBeNull();
+		expect(saveMock).not.toHaveBeenCalled();
+		expect(mockGoBack).not.toHaveBeenCalled();
+		expect(mockParentGoBack).not.toHaveBeenCalled();
+		expect(mockFileDelete).not.toHaveBeenCalled();
+
+		const useBtn = screen.getByTestId("armario-preview-use-button");
+		expect(useBtn.props.accessibilityState).toEqual({
+			disabled: false,
+			busy: false,
+		});
+	});
+
+	it("13. Confirm category=footwear → saveCutoutAsWardrobeItem called with category 'footwear' (NOT hardcoded 'top')", async () => {
+		saveMock.mockResolvedValueOnce({ id: "wardrobe-shoe-7" });
+		render(<ArmarioPreviewScreen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
+		});
+		await act(async () => {
+			fireEvent.press(
+				screen.getByTestId("category-sheet-mock-confirm-footwear"),
+			);
+		});
+		await flushMicrotasks();
+
+		await waitFor(() => {
+			expect(saveMock).toHaveBeenCalledTimes(1);
+		});
+		expect(saveMock).toHaveBeenCalledWith(
+			expect.objectContaining({ category: "footwear" }),
+		);
+	});
+
+	it("14. Paywall pending-category retry: free → confirm-bottom → paywall → flip premium → silent retry with same category, sheet does NOT reopen", async () => {
+		saveMock.mockRejectedValueOnce(
+			new WardrobePersistenceError("paywall", "limit reached"),
+		);
+		const { rerender } = render(<ArmarioPreviewScreen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
+		});
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("category-sheet-mock-confirm-bottom"));
+		});
+		await flushMicrotasks();
+
+		await waitFor(() => {
+			expect(screen.getByTestId("paywall-mock")).toBeTruthy();
+		});
+		expect(screen.queryByTestId("category-sheet-mock")).toBeNull();
+		expect(saveMock).toHaveBeenCalledTimes(1);
+		expect(saveMock).toHaveBeenLastCalledWith(
+			expect.objectContaining({ category: "bottom" }),
+		);
+
+		// Simulate purchase: flip premium BEFORE dismissing the paywall, then
+		// dismiss. The aftermath effect re-fires `handleCategoryConfirm` with
+		// the stashed category — no second sheet is shown.
+		saveMock.mockResolvedValueOnce({ id: "wardrobe-pants-9" });
+		mockPremiumState.isPremium = true;
+		rerender(<ArmarioPreviewScreen />);
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("paywall-mock-dismiss"));
+		});
+		await flushMicrotasks();
+
+		// On the purchase path, dismissing the paywall must NOT delete the cutout
+		// tmp — the aftermath effect needs the file alive for the silent retry.
+		expect(mockFileDelete).not.toHaveBeenCalled();
+
+		await waitFor(() => {
+			expect(saveMock).toHaveBeenCalledTimes(2);
+		});
+		expect(saveMock).toHaveBeenLastCalledWith(
+			expect.objectContaining({ category: "bottom" }),
+		);
+		// Category sheet must NOT reopen during silent retry.
+		expect(screen.queryByTestId("category-sheet-mock")).toBeNull();
+	});
+
+	it("15. Paywall dismissed without purchase: pending ref cleared, NO silent retry, Use re-enabled, sheet not reopened", async () => {
+		saveMock.mockRejectedValueOnce(
+			new WardrobePersistenceError("paywall", "limit reached"),
+		);
+		render(<ArmarioPreviewScreen />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("armario-preview-use-button"));
+		});
+		await act(async () => {
+			fireEvent.press(
+				screen.getByTestId("category-sheet-mock-confirm-accessory"),
+			);
+		});
+		await flushMicrotasks();
+
+		await waitFor(() => {
+			expect(screen.getByTestId("paywall-mock")).toBeTruthy();
+		});
+		expect(saveMock).toHaveBeenCalledTimes(1);
+
+		// Dismiss the paywall WITHOUT flipping premium → aftermath effect must
+		// clear the pending ref and NOT re-fire the save.
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("paywall-mock-dismiss"));
+		});
+		await flushMicrotasks();
+
+		expect(saveMock).toHaveBeenCalledTimes(1);
+		expect(screen.queryByTestId("category-sheet-mock")).toBeNull();
+		const useBtn = screen.getByTestId("armario-preview-use-button");
+		expect(useBtn.props.accessibilityState).toEqual({
+			disabled: false,
+			busy: false,
+		});
 	});
 });
