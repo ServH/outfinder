@@ -13,7 +13,6 @@ const TMP_SUBDIR = "wardrobe-tmp";
 const MASTER_COMPRESS = 0.9;
 const THUMB_COMPRESS = 0.75;
 const THUMB_WIDTH = 300;
-const THUMB_HEIGHT = 360;
 const DISK_FULL_REGEX =
 	/not enough space|insufficient storage|permission|not permitted/i;
 
@@ -62,14 +61,18 @@ export async function encodeMaster(
 }
 
 /**
- * Encodes a 300×360 WebP thumbnail (quality 0.75) from `cutoutUri` and
+ * Encodes a 300-wide WebP thumbnail (quality 0.75) from `cutoutUri` and
  * parks the result at `Paths.cache + /wardrobe-tmp/<uuid>-thumb.webp`.
+ *
+ * Only `width` is passed to `manipulateAsync.resize` so the source aspect
+ * ratio is preserved — passing both dimensions force-stretches the image
+ * and produces the squashed thumbnails seen pre-15.2 hotfix.
  */
 export async function encodeThumbnail(
 	cutoutUri: string,
 	uuid: string,
 ): Promise<string> {
 	return encodeAndPark(cutoutUri, `${uuid}-thumb.webp`, THUMB_COMPRESS, [
-		{ resize: { width: THUMB_WIDTH, height: THUMB_HEIGHT } },
+		{ resize: { width: THUMB_WIDTH } },
 	]);
 }
