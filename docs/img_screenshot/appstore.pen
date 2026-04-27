@@ -115,12 +115,7 @@
               "id": "yfGgz",
               "x": 0,
               "y": 33,
-              "fill": {
-                "type": "image",
-                "enabled": true,
-                "url": "appstore/new_v140/01-tu-look-rikyu-wabi.png",
-                "mode": "fill"
-              },
+              "fill": "#F5F2E9",
               "width": 988,
               "height": 2107
             }
@@ -158,7 +153,7 @@
     {
       "type": "frame",
       "id": "GrlNA",
-      "x": 0,
+      "x": -9028,
       "y": 6500,
       "name": "RETIRED — 02 Home v1.3",
       "clip": true,
@@ -554,12 +549,7 @@
               "id": "026h1",
               "x": 0,
               "y": 33,
-              "fill": {
-                "type": "image",
-                "enabled": true,
-                "url": "appstore/new_v140/04-mis-looks.png",
-                "mode": "fill"
-              },
+              "fill": "#F5F2E9",
               "width": 988,
               "height": 2107
             }
@@ -806,7 +796,7 @@
     {
       "type": "frame",
       "id": "tIZto",
-      "x": 1324,
+      "x": -7458,
       "y": 6500,
       "name": "RETIRED — 06 Color Pairs v1.3",
       "clip": true,
@@ -1008,7 +998,7 @@
     {
       "type": "frame",
       "id": "3g9OK",
-      "x": 2648,
+      "x": -5813,
       "y": 6500,
       "name": "RETIRED — 07 Curated v1.3",
       "clip": true,
@@ -1423,12 +1413,7 @@
               "x": 0,
               "y": 33,
               "name": "sc_sugerencia",
-              "fill": {
-                "type": "image",
-                "enabled": true,
-                "url": "appstore/new_v140/06-sugerencia-rikyu-wabi.png",
-                "mode": "fill"
-              },
+              "fill": "#F5F2E9",
               "width": 988,
               "height": 2107
             }
@@ -1722,12 +1707,7 @@
               "x": 0,
               "y": 33,
               "name": "sc_b1",
-              "fill": {
-                "type": "image",
-                "enabled": true,
-                "url": "appstore/new_v140/01-tu-look-rikyu-wabi.png",
-                "mode": "fill"
-              },
+              "fill": "#FFFFFF",
               "width": 988,
               "height": 2107
             }
@@ -2052,12 +2032,7 @@
               "x": 0,
               "y": 33,
               "name": "sc_b4",
-              "fill": {
-                "type": "image",
-                "enabled": true,
-                "url": "appstore/new_v140/04-mis-looks.png",
-                "mode": "fill"
-              },
+              "fill": "#FFFFFF",
               "width": 988,
               "height": 2107
             }
@@ -2272,12 +2247,7 @@
               "x": 0,
               "y": 33,
               "name": "sc_b6",
-              "fill": {
-                "type": "image",
-                "enabled": true,
-                "url": "appstore/new_v140/06-sugerencia-rikyu-wabi.png",
-                "mode": "fill"
-              },
+              "fill": "#FFFFFF",
               "width": 988,
               "height": 2107
             }
@@ -2398,8 +2368,8 @@
     {
       "type": "frame",
       "id": "SneAa",
-      "x": 5416,
-      "y": 6500,
+      "x": -7494,
+      "y": 9582,
       "name": "v1.4 — Camera #2 AI Composite (working)",
       "clip": true,
       "width": 1320,
@@ -2467,8 +2437,8 @@
     {
       "type": "frame",
       "id": "ct9e2",
-      "x": 3996,
-      "y": 6500,
+      "x": -9064,
+      "y": 9582,
       "name": "v1.4 — Camera #2b Result (Gray)",
       "clip": true,
       "width": 1320,
@@ -2812,12 +2782,7 @@
               "x": 0,
               "y": 33,
               "name": "sc05",
-              "fill": {
-                "type": "image",
-                "enabled": true,
-                "url": "appstore/new_v140/03-result-composite.png",
-                "mode": "fill"
-              },
+              "fill": "#1A1A1A",
               "width": 988,
               "height": 2107
             }
@@ -2950,12 +2915,2186 @@
               "x": 0,
               "y": 33,
               "name": "sc_b2",
+              "fill": "#FFFFFF",
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "KT6Ki",
+      "x": 0,
+      "y": 10000,
+      "name": "v1.4 ES #1 — Tu Look",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1C1814",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "YyP1w",
+          "x": 105,
+          "y": 184,
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "VGgbN",
+          "x": 105,
+          "y": 244,
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "Owyee",
+          "x": 105,
+          "y": 277,
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Tu ropa,\nen colores\nque casan.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "w0Wrcr",
+          "x": 105,
+          "y": 830,
+          "fill": "#8C7A5A",
+          "content": "Basado en la biblia del color de Sanzo Wada.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "tAFRi",
+          "x": -33,
+          "y": 856,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "fM4Z6",
+          "x": 148,
+          "y": 942,
+          "name": "pf1",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "O9jw5j",
+              "x": 0,
+              "y": 33,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/01-tu-look-rikyu-wabi.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "x3rpu",
+          "x": 0,
+          "y": 2450,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#1C181400",
+                "position": 0
+              },
+              {
+                "color": "#1C1814FF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "B0eR4",
+      "x": 1324,
+      "y": 10000,
+      "name": "v1.4 ES #2 — Camera Scan",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1C1814",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "CpTxr",
+          "x": 105,
+          "y": 184,
+          "name": "brand05",
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "z0zZqQ",
+          "x": 105,
+          "y": 244,
+          "name": "line05",
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "JEZp0",
+          "x": 105,
+          "y": 277,
+          "name": "h05",
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Apunta.\nDispara.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "Z34Tc6",
+          "x": 105,
+          "y": 830,
+          "name": "sub05",
+          "fill": "#8C7A5A",
+          "content": "Cualquier prenda. Cualquier momento.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "fbRRe",
+          "x": -33,
+          "y": 856,
+          "name": "glow05",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "MCHb0",
+          "x": 148,
+          "y": 942,
+          "name": "pf5",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#1A1A1A",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "Te1Wa",
+              "x": 0,
+              "y": 0,
+              "name": "bg_blr",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "new_feature_EN/fondo_camera.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140,
+              "effect": {
+                "type": "blur",
+                "radius": 50
+              }
+            },
+            {
+              "type": "frame",
+              "id": "j6Dr4A",
+              "x": 110,
+              "y": 500,
+              "name": "vf_clip",
+              "clip": true,
+              "width": 768,
+              "height": 1000,
+              "fill": "#00000000",
+              "layout": "none",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "CY1Xp",
+                  "x": -110,
+                  "y": -500,
+                  "name": "sharp_img",
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "new_feature_EN/fondo_camera.png",
+                    "mode": "fill"
+                  },
+                  "width": 988,
+                  "height": 2140
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "weBKS",
+              "x": 0,
+              "y": 33,
+              "name": "sc05",
+              "fill": "#1A1A1A",
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "Zd2sX",
+          "x": 0,
+          "y": 2450,
+          "name": "grad05",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#1C181400",
+                "position": 0
+              },
+              {
+                "color": "#1C1814FF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ejwRd",
+      "x": 2648,
+      "y": 10000,
+      "name": "v1.4 ES #3 — Camera Result",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1C1814",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "u3UL5",
+          "x": 105,
+          "y": 184,
+          "name": "brand05",
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "j9aLK",
+          "x": 105,
+          "y": 244,
+          "name": "line05",
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "U4mu6",
+          "x": 105,
+          "y": 277,
+          "name": "h05",
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Es el tono\nGray.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "JKzFq",
+          "x": 105,
+          "y": 830,
+          "name": "sub05",
+          "fill": "#8C7A5A",
+          "content": "Un nombre de hace un siglo para lo que acabas de fotografiar.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "WnmOw",
+          "x": -33,
+          "y": 856,
+          "name": "glow05",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "ceADd",
+          "x": 148,
+          "y": 942,
+          "name": "pf5",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#1A1A1A",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "A3OSIF",
+              "x": 0,
+              "y": 0,
+              "name": "bg_blr",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "new_feature_EN/fondo_camera.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140,
+              "effect": {
+                "type": "blur",
+                "radius": 50
+              }
+            },
+            {
+              "type": "frame",
+              "id": "KkePe",
+              "x": 110,
+              "y": 500,
+              "name": "vf_clip",
+              "clip": true,
+              "width": 768,
+              "height": 1000,
+              "fill": "#00000000",
+              "layout": "none",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "HB15O",
+                  "x": -110,
+                  "y": -500,
+                  "name": "sharp_img",
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "new_feature_EN/fondo_camera.png",
+                    "mode": "fill"
+                  },
+                  "width": 988,
+                  "height": 2140
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "dmvSw",
+              "x": 0,
+              "y": 33,
+              "name": "sc05",
               "fill": {
                 "type": "image",
                 "enabled": true,
                 "url": "appstore/new_v140/03-result-composite.png",
                 "mode": "fill"
               },
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "s73nTY",
+          "x": 0,
+          "y": 2450,
+          "name": "grad05",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#1C181400",
+                "position": 0
+              },
+              {
+                "color": "#1C1814FF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "S1sSox",
+      "x": 3972,
+      "y": 10000,
+      "name": "v1.4 ES #4 — Armario Virtual",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F5F2E9",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "Q4qI3",
+          "x": 105,
+          "y": 184,
+          "name": "arKick",
+          "fill": "#7D6B3D",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "ZTawD",
+          "x": 105,
+          "y": 244,
+          "name": "arLine",
+          "fill": "#7D6B3D",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "BBMZd",
+          "x": 105,
+          "y": 277,
+          "name": "arHead",
+          "fill": "#2D2926",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Tu armario,\nordenado por\ncolor.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "GQkpH",
+          "x": 105,
+          "y": 830,
+          "name": "arSub",
+          "fill": "#9A8668",
+          "content": "Prendas reales, recortadas. Sin siluetas.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "p0Gjod",
+          "x": 148,
+          "y": 942,
+          "name": "pf3",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "stroke": {
+            "align": "outside",
+            "thickness": 3,
+            "fill": "#D8D2C4"
+          },
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 66
+            },
+            "blur": 198
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "P8VlO",
+              "x": 0,
+              "y": 33,
+              "name": "sc_armario",
+              "fill": "#F5F2E9",
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "w9Y2v",
+          "x": 0,
+          "y": 2450,
+          "name": "grad_armario",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#F5F2E900",
+                "position": 0
+              },
+              {
+                "color": "#F5F2E9FF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "nEQrp",
+      "x": 5296,
+      "y": 10000,
+      "name": "v1.4 ES #5 — Mis Looks",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1E1C18",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "UFQiR",
+          "x": 105,
+          "y": 184,
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "FyEFr",
+          "x": 105,
+          "y": 244,
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "fotkX",
+          "x": 105,
+          "y": 277,
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Looks en\ncurso, no\nsolo guardados.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "DNeoU",
+          "x": 105,
+          "y": 830,
+          "fill": "#8C7A5A",
+          "content": "Sigue donde lo dejaste ayer.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "F1aWsa",
+          "x": -33,
+          "y": 856,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "rCa6k",
+          "x": 148,
+          "y": 942,
+          "name": "pf4",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "L6YZQ",
+              "x": 0,
+              "y": 33,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/04-mis-looks.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "K9SPt",
+          "x": 0,
+          "y": 2450,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#1E1C1800",
+                "position": 0
+              },
+              {
+                "color": "#1E1C18FF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "PeNxx",
+      "x": 6620,
+      "y": 10000,
+      "name": "v1.4 ES #6 — Combinations",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#4A3A18",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "HWFmi",
+          "x": 105,
+          "y": 184,
+          "fill": "#D4B882",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "LPp6Q",
+          "x": 105,
+          "y": 244,
+          "fill": "#D4B882",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "XbQOg",
+          "x": 105,
+          "y": 277,
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "348 combos.\nCero\nalgoritmo.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "KaW4C",
+          "x": 105,
+          "y": 830,
+          "fill": "#C4A87A",
+          "content": "Cien años de teoría del color, curados.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "JqcFy",
+          "x": -33,
+          "y": 856,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#D4B88228",
+                "position": 0
+              },
+              {
+                "color": "#D4B88200",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "wJ4oX",
+          "x": 148,
+          "y": 942,
+          "name": "pf3",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "Xp1zQ",
+              "x": 0,
+              "y": 33,
+              "fill": "#F5F2E9",
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "o4F1g",
+          "x": 0,
+          "y": 2450,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#4A3A1800",
+                "position": 0
+              },
+              {
+                "color": "#4A3A18FF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "wsgqo",
+      "x": 7944,
+      "y": 10000,
+      "name": "v1.4 ES #7 — Sugerencia Armonía",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1E1C18",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "eE0iY",
+          "x": 105,
+          "y": 184,
+          "name": "sgKick",
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "UwPh8",
+          "x": 105,
+          "y": 244,
+          "name": "sgLine",
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "Kh8EL",
+          "x": 105,
+          "y": 277,
+          "name": "sgHead",
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Te dice\nqué te\nfalta.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "OacwN",
+          "x": 105,
+          "y": 830,
+          "name": "sgSub",
+          "fill": "#8C7A5A",
+          "content": "El color que aún no tienes.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "xeyto",
+          "x": -33,
+          "y": 856,
+          "name": "sgGlow",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "j1eX7",
+          "x": 148,
+          "y": 942,
+          "name": "pf6",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "o08rVP",
+              "x": 0,
+              "y": 33,
+              "name": "sc_sugerencia",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/06-sugerencia-rikyu-wabi.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "uYx0j",
+          "x": 0,
+          "y": 2450,
+          "name": "sgGrad",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#1E1C1800",
+                "position": 0
+              },
+              {
+                "color": "#1E1C18FF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "UMQjJ",
+      "x": 9268,
+      "y": 10000,
+      "name": "v1.4 ES #8 — Visualizer relegado",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#2C1E0E",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "qpBeG",
+          "x": 105,
+          "y": 184,
+          "name": "vzKick",
+          "fill": "#D4B882",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "S1lKIR",
+          "x": 105,
+          "y": 244,
+          "name": "vzLine",
+          "fill": "#D4B882",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "XbCmT",
+          "x": 105,
+          "y": 277,
+          "name": "vzHead",
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Pruébalo\nantes de\nponértelo.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "j356Jy",
+          "x": 105,
+          "y": 830,
+          "name": "vzSub",
+          "fill": "#C4A87A",
+          "content": "Un probador en tu bolsillo.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "PEBUt",
+          "x": -33,
+          "y": 856,
+          "name": "vzGlow",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#D4B88228",
+                "position": 0
+              },
+              {
+                "color": "#D4B88200",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "mLHZ3",
+          "x": 148,
+          "y": 942,
+          "name": "pf7",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "g5Waz",
+              "x": 0,
+              "y": 33,
+              "name": "sc_visualizer_relegado",
+              "fill": "#F5F2E9",
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "Efb1a",
+          "x": 0,
+          "y": 2450,
+          "name": "vzGrad",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#2C1E0E00",
+                "position": 0
+              },
+              {
+                "color": "#2C1E0EFF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "UFXPi",
+      "x": 0,
+      "y": 12978,
+      "name": "v1.4 ES B-#1 — Tu Look",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#EFEDEC",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "SxT2b",
+          "x": 80,
+          "y": 140,
+          "name": "b1Chip",
+          "fill": "#9A9692",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "DcV2T",
+              "name": "b1ChipText",
+              "fill": "#FFFFFF",
+              "content": "Mouse Gray",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "rQXJk",
+          "x": 80,
+          "y": 280,
+          "name": "b1Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Monta\nel look.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "ZIvkP",
+          "x": 80,
+          "y": 760,
+          "name": "b1Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Tus prendas. Recortes reales.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "orYgi",
+          "x": 148,
+          "y": 940,
+          "name": "b1Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "sh68q",
+              "x": 0,
+              "y": 33,
+              "name": "sc_b1",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/01-tu-look-rikyu-wabi.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ithmd",
+      "x": 1324,
+      "y": 12978,
+      "name": "v1.4 ES B-#2 — Camera Scan",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F5E8E5",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "r8pZPi",
+          "x": 80,
+          "y": 140,
+          "name": "b2Chip",
+          "fill": "#1A1410",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "kcBLK",
+              "name": "b2ChipText",
+              "fill": "#FFFFFF",
+              "content": "En vivo",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "W2dIsc",
+          "x": 80,
+          "y": 280,
+          "name": "b2Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Apunta\ny dispara.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "MOWbV",
+          "x": 80,
+          "y": 760,
+          "name": "b2Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Sin filtros. Sin trucos.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "VUitx",
+          "x": 148,
+          "y": 940,
+          "name": "b2Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "Bj3TB",
+              "x": 0,
+              "y": 33,
+              "name": "sc_b2",
+              "fill": "#FFFFFF",
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "u0Otok",
+      "x": 2648,
+      "y": 12978,
+      "name": "v1.4 ES B-#3 — Camera Result",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F5E8E5",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "YHBpa",
+          "x": 80,
+          "y": 140,
+          "name": "b2Chip",
+          "fill": "#787870",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "nNvGt",
+              "name": "b2ChipText",
+              "fill": "#FFFFFF",
+              "content": "Gray",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "I6G1e",
+          "x": 80,
+          "y": 280,
+          "name": "b2Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Nombrado\nal instante.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "X4dCIR",
+          "x": 80,
+          "y": 760,
+          "name": "b2Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Vision detecta. Wada nombra.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "eFj6L",
+          "x": 148,
+          "y": 940,
+          "name": "b2Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "jb2VT",
+              "x": 0,
+              "y": 33,
+              "name": "sc_b2",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/03-result-composite.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "hCkcQ",
+      "x": 3972,
+      "y": 12978,
+      "name": "v1.4 ES B-#4 — Armario Virtual",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#E8ECF1",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "ThAI0",
+          "x": 80,
+          "y": 140,
+          "name": "b3Chip",
+          "fill": "#243140",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "T0KvkW",
+              "name": "b3ChipText",
+              "fill": "#FFFFFF",
+              "content": "Iron Navy",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "q6C136",
+          "x": 80,
+          "y": 280,
+          "name": "b3Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Armario,\nordenado.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "vxPsL",
+          "x": 80,
+          "y": 760,
+          "name": "b3Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Una foto por prenda.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "MRLMQ",
+          "x": 148,
+          "y": 940,
+          "name": "b3Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "oK9pl",
+              "x": 0,
+              "y": 33,
+              "name": "sc_b3",
+              "fill": "#FFFFFF",
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "whAEt",
+      "x": 5296,
+      "y": 12978,
+      "name": "v1.4 ES B-#5 — Mis Looks",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F4E5E2",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "biBm3",
+          "x": 80,
+          "y": 140,
+          "name": "b4Chip",
+          "fill": "#A52E2C",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "difeR",
+              "name": "b4ChipText",
+              "fill": "#FFFFFF",
+              "content": "Madder",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "Q0EhO",
+          "x": 80,
+          "y": 280,
+          "name": "b4Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Looks\nen curso.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "jgE90",
+          "x": 80,
+          "y": 760,
+          "name": "b4Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Empieza ayer, acaba hoy.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "cnyJz",
+          "x": 148,
+          "y": 940,
+          "name": "b4Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "ql2xl",
+              "x": 0,
+              "y": 33,
+              "name": "sc_b4",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/04-mis-looks.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "xDFDq",
+      "x": 6620,
+      "y": 12978,
+      "name": "v1.4 ES B-#6 — Combinations",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F1EDE0",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "wBC1c",
+          "x": 80,
+          "y": 140,
+          "name": "b5Chip",
+          "fill": "#7E6F48",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "QNKCy",
+              "name": "b5ChipText",
+              "fill": "#FFFFFF",
+              "content": "Old Temple Wall",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "K6ohA",
+          "x": 80,
+          "y": 280,
+          "name": "b5Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "348\ncombos.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "Dl3fl",
+          "x": 80,
+          "y": 760,
+          "name": "b5Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Curados, no generados. Sanzo Wada · 1933.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "H0lbtG",
+          "x": 148,
+          "y": 940,
+          "name": "b5Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "olLA9",
+              "x": 0,
+              "y": 33,
+              "name": "sc_b5",
+              "fill": "#FFFFFF",
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "a22cRu",
+      "x": 7944,
+      "y": 12978,
+      "name": "v1.4 ES B-#7 — Sugerencia Armonía",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F4F0DA",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "JkZIe",
+          "x": 80,
+          "y": 140,
+          "name": "b6Chip",
+          "fill": "#C9B95A",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "u3Lp6U",
+              "name": "b6ChipText",
+              "fill": "#1A1410",
+              "content": "Rapeseed",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "HfxlZ",
+          "x": 80,
+          "y": 280,
+          "name": "b6Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "¿Qué\nfalta?",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "s3E30a",
+          "x": 80,
+          "y": 760,
+          "name": "b6Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "El color que aún no tienes.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "VdlYv",
+          "x": 148,
+          "y": 940,
+          "name": "b6Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "w1e6aS",
+              "x": 0,
+              "y": 33,
+              "name": "sc_b6",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/06-sugerencia-rikyu-wabi.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "u3DSf",
+      "x": 9268,
+      "y": 12978,
+      "name": "v1.4 ES B-#8 — Visualizer relegado",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#EFEAE0",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "DLQKj",
+          "x": 80,
+          "y": 140,
+          "name": "b7Chip",
+          "fill": "#5B4F3A",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "BwPp0",
+              "name": "b7ChipText",
+              "fill": "#FFFFFF",
+              "content": "Smoked Bamboo",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "aJzPr",
+          "x": 80,
+          "y": 280,
+          "name": "b7Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Probador\nde bolsillo.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "XuPjV",
+          "x": 80,
+          "y": 760,
+          "name": "b7Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Un probador en tu bolsillo.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "FUSDy",
+          "x": 148,
+          "y": 940,
+          "name": "b7Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "xW7jH",
+              "x": 0,
+              "y": 33,
+              "name": "sc_b7",
+              "fill": "#FFFFFF",
               "width": 988,
               "height": 2107
             }
