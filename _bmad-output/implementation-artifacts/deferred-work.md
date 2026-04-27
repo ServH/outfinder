@@ -4,6 +4,20 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: paywall surface sweep + thumbnail hotfix (2026-04-27)
+
+Findings from a focused paywall surface mapping (Explore agent over `usePremium` / `usePremiumGate` / `<PremiumPaywall>` / `WardrobePersistenceError(kind:"paywall")` call-sites) plus the thumbnail aspect-ratio hotfix (`3c4024d`). Pre-launch v1.4.0; no production impact. Capture for Epic 15 retro / Epic 16 sweeps.
+
+- **D-paywall-1** — `paywallDismissedThisSession` is dead code. Set in `usePremiumGate.ts:148` via `handleDismiss`, exposed from `PremiumContext` (lines 169, 179), reset in `__dev_resetPremium` (line 162). **No screen ever reads it.** Either wire it into a duplicate-paywall suppression (good UX), or remove the field entirely. Recommended: remove during Epic 16 housekeeping.
+- **D-paywall-2** — `Settings.tsx:603` `<PremiumPaywall context="favorites">` does NOT pass `blockedCombination` (the other 4 favorites paywall instances all do: ColorHome, Combinations, FavoritesList, ArmarioFichaWadaScreen). Probably intentional (Settings is restore/manage, not add-flow), but visually inconsistent. Confirm intent in retro.
+- **D-paywall-3** — Naming divergence between `UnifiedCameraResultScreen.tsx:230-241` (uses `confirming`) and `ArmarioPreviewScreen.tsx:197-208` (uses `submitting`) for the same paywall-aftermath effect. Functionally identical, but the inconsistency is a maintenance trap if a future dev edits one and not the other. Consider extracting into a shared hook (`usePendingCategoryAftermath({ paywallVisible, busy, isPremium, onResume })`) in Epic 16.
+- **D-paywall-4** — Aftermath effect clears `pendingCategoryRef` BEFORE re-calling `handleCategoryConfirm` (correct reentry guard), but if the re-call throws a non-paywall error (encode/diskFull/move/repoAdd) the ref is already null → user must re-pick the category manually. By design, very low probability (purchase OK + immediate disk-full unlikely), but document the trade-off if the flow is ever revisited.
+- **D-paywall-5** — Dev-only `<PremiumPaywall context="wardrobe">` at `Settings.tsx:620-629` omits `purchaseState` and `errorMessage` props. Dev-only preview, no functional impact, but sets a bad template if anyone copies the JSX block.
+- **D-paywall-6** — No integration test asserting the two aftermath effects (14.5 + 15.2) stay behaviorally identical. Consider a shared snapshot/contract test once the shared hook lands.
+- **D-thumbnail-1** — Hotfix `3c4024d` only touched the encoder. The 7 test garments Alejandro saved on `epic-15` HEAD `5b1d0b1` keep their squashed `.webp` thumbs on disk. He plans to re-capture them manually before launch — no migration shipped. If real users had saved garments under the buggy encoder, a one-shot regeneration on hydration would be needed (logic: re-run `encodeThumbnail(item.localImagePath, item.id)` per item with `thumbnailVersion < 2`). Document for post-launch monitoring just in case.
+
+---
+
 ## Deferred from: code review of 15-2-en-curso-category-picker-mandatory (2026-04-27)
 
 - **D-15.2-1** — `ArmarioPreviewScreen.tsx — aftermath useEffect` — `handleCategoryConfirm` is in the effect's dependency array; any `isPremium`/`navigation` identity change re-runs the effect. Guards (`pendingCategoryRef=null`, `paywallVisible`, `submitting`) prevent double-save in practice. Same pattern as `UnifiedCameraResultScreen.tsx`. Monitor if navigation identity becomes unstable.
