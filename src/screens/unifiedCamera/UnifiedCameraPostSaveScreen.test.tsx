@@ -81,7 +81,7 @@ describe("UnifiedCameraPostSaveScreen", () => {
 		render(<UnifiedCameraPostSaveScreen />);
 		expect(
 			screen.getByTestId("unified-camera-postsave-title"),
-		).toHaveTextContent("Saved to your armario");
+		).toHaveTextContent("Saved to your wardrobe");
 		expect(
 			screen.getByTestId("unified-camera-postsave-subtitle"),
 		).toHaveTextContent(`as ${expectedLabel}`);

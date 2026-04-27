@@ -606,7 +606,7 @@ describe("UnifiedCameraResultScreen", () => {
 			},
 		});
 		const { unmount } = render(<UnifiedCameraResultScreen />);
-		const darkCtaLabels = screen.getAllByText("Save to my armario");
+		const darkCtaLabels = screen.getAllByText("Save to my wardrobe");
 		const darkLabel = darkCtaLabels[0];
 		const darkStyle = Array.isArray(darkLabel.props.style)
 			? Object.assign({}, ...darkLabel.props.style)
@@ -621,7 +621,7 @@ describe("UnifiedCameraResultScreen", () => {
 			},
 		});
 		render(<UnifiedCameraResultScreen />);
-		const paleCtaLabels = screen.getAllByText("Save to my armario");
+		const paleCtaLabels = screen.getAllByText("Save to my wardrobe");
 		const paleLabel = paleCtaLabels[0];
 		const paleStyle = Array.isArray(paleLabel.props.style)
 			? Object.assign({}, ...paleLabel.props.style)

@@ -295,7 +295,7 @@
 			"a11yHintEmpty": "No garments assigned yet. Double-tap to start assigning."
 		},
 		"s3": {
-			"screenLabel": "Armario picker",
+			"screenLabel": "Wardrobe picker",
 			"pickerTitle": "Choose for {{color}}",
 			"footerNewPhoto": "Take a new photo of a garment",
 			"emptyTitle": "Your wardrobe is empty",
@@ -379,8 +379,8 @@
 			"toneCorrectionPrompt": "Is this the right tone?",
 			"toneCorrectionSwatchA11y": "Choose tone {{nameEn}}",
 			"toneConfirmedA11yLive": "Tone changed to {{nameEn}}",
-			"primaryCta": "Save to my armario",
-			"primaryCtaA11yLabel": "Save to my armario. Wada tone {{nameEn}}. {{count}} combinations available.",
+			"primaryCta": "Save to my wardrobe",
+			"primaryCtaA11yLabel": "Save to my wardrobe. Wada tone {{nameEn}}. {{count}} combinations available.",
 			"secondaryLink": "view combinations without saving",
 			"secondaryLinkA11yLabel": "View combinations without saving"
 		},
@@ -402,7 +402,7 @@
 			"errorDismiss": "Got it"
 		},
 		"postSave": {
-			"title": "Saved to your armario",
+			"title": "Saved to your wardrobe",
 			"subtitle": "as {{categoryLabel}}",
 			"primaryCta": "See combinations with {{wadaName}}",
 			"primaryCtaA11y": "See combinations with {{wadaName}}",
