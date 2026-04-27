@@ -25,7 +25,7 @@ export function Aureola({ hex, width, height }: AureolaProps) {
 				<RadialGradient
 					c={vec(width / 2, height / 2)}
 					r={width * 0.5}
-					colors={[`${hex}18`, `${hex}08`, "transparent"]}
+					colors={[`${hex}40`, `${hex}1a`, "transparent"]}
 				/>
 			</Fill>
 		</Canvas>

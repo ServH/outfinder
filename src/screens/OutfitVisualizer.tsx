@@ -20,7 +20,6 @@ import {
 import { MiniPaletteStrip } from "@/components/MiniPaletteStrip";
 import { OutfitCard } from "@/components/OutfitCard";
 import { WadaHeader } from "@/components/WadaHeader";
-import { WarmBackground } from "@/components/WarmBackground";
 import { getColor, getCombination } from "@/data/colorIndex";
 import { useCoachMark } from "@/hooks/useCoachMark";
 import { getCycleForGarment, useOutfitState } from "@/hooks/useOutfitState";
@@ -217,7 +216,7 @@ export function OutfitVisualizer() {
 	return (
 		<View
 			className="flex-1"
-			style={{ backgroundColor: wadaTokens.warmBg }}
+			style={{ backgroundColor: wadaTokens.bgPaper }}
 			accessibilityLabel={t("visualizer.screenLabel")}
 		>
 			{/* Back button */}
@@ -249,7 +248,6 @@ export function OutfitVisualizer() {
 				showsVerticalScrollIndicator={false}
 			>
 				<View className="flex-1">
-					<WarmBackground />
 					<View className="flex-1 items-center justify-center py-4">
 						<Aureola
 							hex={slots[0].color.hex}

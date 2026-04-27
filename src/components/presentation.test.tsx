@@ -3,7 +3,6 @@ import { render, screen } from "@testing-library/react-native";
 import { Aureola } from "./Aureola";
 import { MiniPaletteStrip } from "./MiniPaletteStrip";
 import { WadaHeader } from "./WadaHeader";
-import { WarmBackground } from "./WarmBackground";
 
 describe("WadaHeader", () => {
 	it("renders nameJp text", () => {
@@ -103,21 +102,6 @@ describe("Aureola", () => {
 		const aureola = screen.getByLabelText("Color aureola");
 		expect(aureola.props.style).toEqual(
 			expect.objectContaining({ width: 200, height: 300 }),
-		);
-	});
-});
-
-describe("WarmBackground", () => {
-	it("renders without crashing", () => {
-		render(<WarmBackground />);
-		expect(screen.getByLabelText("Warm background")).toBeTruthy();
-	});
-
-	it("is positioned absolutely", () => {
-		render(<WarmBackground />);
-		const bg = screen.getByLabelText("Warm background");
-		expect(bg.props.style).toEqual(
-			expect.objectContaining({ position: "absolute" }),
 		);
 	});
 });

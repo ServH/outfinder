@@ -1,15 +1,8 @@
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { SymbolView } from "expo-symbols";
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
-import Animated, {
-	interpolateColor,
-	useAnimatedStyle,
-	useSharedValue,
-	withTiming,
-} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useIsIPad } from "@/lib/device";
 import { hapticLight } from "@/lib/haptics";
@@ -32,33 +25,6 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 	const favsIndex = state.routes.findIndex((r) => r.name === "FavoritesTab");
 	const isColorsActive = state.index === colorsIndex;
 	const isFavsActive = state.index === favsIndex;
-
-	// Detect the active screen inside the ColorsStack so the bar background
-	// matches each screen: OutfitVisualizer uses warmBg, all others use bgPaper.
-	// biome-ignore lint/suspicious/noExplicitAny: nested nav state has no shared typed interface
-	const colorsNestedState = (state.routes[colorsIndex] as any)?.state;
-	const activeColorsScreen: string | undefined =
-		colorsNestedState != null
-			? colorsNestedState.routes?.[colorsNestedState.index ?? 0]?.name
-			: undefined;
-	const isWarmScreen =
-		isColorsActive && activeColorsScreen === "OutfitVisualizer";
-
-	// Crossfade the tab bar background in sync with the stack's fade animation
-	// (React Navigation's default fade = ~250ms). Without this the bg snaps
-	// abruptly when `activeColorsScreen` flips, breaking the otherwise smooth
-	// Combinations ↔ OutfitVisualizer transition.
-	const bgProgress = useSharedValue(isWarmScreen ? 1 : 0);
-	useEffect(() => {
-		bgProgress.value = withTiming(isWarmScreen ? 1 : 0, { duration: 250 });
-	}, [isWarmScreen, bgProgress]);
-	const animatedBgStyle = useAnimatedStyle(() => ({
-		backgroundColor: interpolateColor(
-			bgProgress.value,
-			[0, 1],
-			[wadaTokens.bgPaper, wadaTokens.warmBg],
-		),
-	}));
 
 	function handleColorsPress() {
 		hapticLight();
@@ -185,11 +151,10 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 	// Container measures ONLY the visible bar zone (tabZone + safe area) so
 	// React Navigation reserves exactly that. Screens extend their real content
 	// right up to the cut line — no "fake extension strip" which would mismatch
-	// non-solid-bg content (Combinations white cards, Visualizer warmBg
-	// transition). The FAB protrudes above via negative top + overflow: visible
-	// and paints over the separator in the middle (cradle effect). Screens with
-	// content near their bottom edge must apply paddingBottom: FAB_PROTRUSION
-	// to stay clear of the FAB's upper half.
+	// non-solid-bg content (Combinations white cards). The FAB protrudes above
+	// via negative top + overflow: visible and paints over the separator in the
+	// middle (cradle effect). Screens with content near their bottom edge must
+	// apply paddingBottom: FAB_PROTRUSION to stay clear of the FAB's upper half.
 	// Total bar height = visible row + home-indicator inset. Use a smaller
 	// bottom pad than the full safe-area so the icons visually sit closer to
 	// the home indicator (iOS leaves too much empty room by default for our
@@ -198,17 +163,15 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 	const tabZoneHeight = 48;
 	const bottomPad = Math.max(8, insets.bottom - 12);
 	return (
-		<Animated.View
-			style={[
-				{
-					width: "100%",
-					height: tabZoneHeight + bottomPad,
-					borderTopWidth: 1,
-					borderTopColor: "rgba(0,0,0,0.08)",
-					overflow: "visible",
-				},
-				animatedBgStyle,
-			]}
+		<View
+			style={{
+				width: "100%",
+				height: tabZoneHeight + bottomPad,
+				borderTopWidth: 1,
+				borderTopColor: "rgba(0,0,0,0.08)",
+				overflow: "visible",
+				backgroundColor: wadaTokens.bgPaper,
+			}}
 		>
 			{/* Tab row — flex layout, adapts to any screen width */}
 			<View
@@ -338,6 +301,6 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 					)}
 				</Pressable>
 			</View>
-		</Animated.View>
+		</View>
 	);
 }

@@ -228,20 +228,6 @@ describe("OutfitVisualizer", () => {
 		expect(screen.getByLabelText("Outfit card")).toBeTruthy();
 	});
 
-	it("renders warm background", () => {
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-
-		render(<OutfitVisualizer />);
-
-		expect(screen.getByLabelText("Warm background")).toBeTruthy();
-	});
-
 	it("fires hapticMedium when tapping a garment to select", () => {
 		mockRouteParams.combinationId = "combo-2";
 		mockGetCombination.mockReturnValue({
@@ -682,7 +668,6 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		expect(screen.getByLabelText("Warm background")).toBeTruthy();
 		expect(screen.getByLabelText("Color aureola")).toBeTruthy();
 		expect(screen.getByLabelText("Outfit card")).toBeTruthy();
 		expect(screen.getByLabelText("Outfit color palette")).toBeTruthy();
