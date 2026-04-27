@@ -4,6 +4,13 @@ Items parked during code review. Not blocking current features; pick up when the
 
 ---
 
+## Deferred from: code review of 15-4-visualizer-slot-discovery-onboarding (2026-04-27)
+
+- **D-15.4-1** — `OutfitCard.tsx > CardSlot` `useEffect` — `withRepeat(-1, …)` starts an infinite animation with no `cancelAnimation(underlineOpacity)` cleanup. Reanimated 3 frees worklets on node unmount automatically, so no observable leak; pre-existing pattern in the file. Add explicit cleanup if Reanimated upgrades change unmount behavior.
+- **D-15.4-2** — `CoachMarkOverlay.tsx` — `accessibilityRole="alert"` causes VoiceOver to re-read the coach mark text on every parent re-render while `visible=true` (e.g., slot tap triggers `useOutfitState` update → OutfitVisualizer re-renders → CoachMarkOverlay re-renders). The `announcedRef` guard suppresses the programmatic `announceForAccessibility` call but not the system-level `alert` role announcement. Pre-existing foundation issue from 15.1; also logged as D-15.3-4.
+- **D-15.4-3** — `OutfitVisualizer.test.tsx` — New `describe("Slot-discovery coach mark")` `beforeEach` resets mocks but does not reset `mockRouteParams.combinationId`. Each test sets it inline; future tests added to this describe without an explicit ID assignment would inherit the prior test's value (Jest randomises order with `--randomize`). Add `mockRouteParams.combinationId = "";` to the beforeEach as a defensive reset.
+- **D-15.4-4** — `useCoachMark.ts` — `markSeen` calls `setShouldShow(false)` before `await AsyncStorage.setItem`. In a race where the user taps dismiss and simultaneously navigates away, the state update fires on an unmounted component. React 18 handles this silently (no crash, no warning in production). The `cancelled` guard in the read effect does not cover this path. Theoretical; resolve if React ever enforces strict unmount state update rules.
+
 ## Deferred from: code review of 15-3-camera-fab-firstuse-coach-mark (2026-04-27)
 
 - **D-15.3-1** — `UnifiedCameraCaptureScreen.test.tsx:239` — `COACH_KEY` hardcoded as literal string `"@outfinder/coachmark:camera-fab-firstuse"` in test file instead of importing `COACH_MARK_KEYS.cameraFabFirstUse`. If the registry key is ever renamed, tests silently pass with stale value. **Patch pending** — see story Review Findings.

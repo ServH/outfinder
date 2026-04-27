@@ -1,6 +1,6 @@
 # Story 15.4: A2 — Visualizer slot-discovery onboarding (coach mark + permanent pulse)
 
-Status: review
+Status: done
 
 ## Story
 
@@ -314,6 +314,13 @@ claude-opus-4-7 (Claude Opus 4.7, 1M context) via bmad-dev-story
 - MOD `src/components/OutfitCard.test.tsx` — renamed 1 test description; added 1 new structural test for AC #5 (f).
 - MOD `_bmad-output/implementation-artifacts/sprint-status.yaml` — `15-4-visualizer-slot-discovery-onboarding` ready-for-dev → in-progress → review; `last_updated` rewritten.
 - MOD `_bmad-output/implementation-artifacts/15-4-visualizer-slot-discovery-onboarding.md` — Status backlog→ready-for-dev→in-progress→review; tasks marked complete; Dev Agent Record filled.
+
+### Review Findings
+
+- [x] [Review][Defer] `withRepeat` animation not cancelled on unmount in `CardSlot` [src/components/OutfitCard.tsx] — deferred, pre-existing; Reanimated 3 manages worklet cleanup on unmount automatically
+- [x] [Review][Defer] `accessibilityRole="alert"` may re-announce coach mark on parent re-renders [src/components/CoachMarkOverlay.tsx] — deferred, pre-existing foundation issue inherited from Story 15.1; noted in 15.3 deferred items (D-15.3-4)
+- [x] [Review][Defer] `beforeEach` in new describe block does not reset `mockRouteParams.combinationId` [src/screens/OutfitVisualizer.test.tsx] — deferred, defensive concern for future tests only; all current tests set the ID explicitly
+- [x] [Review][Defer] `markSeen` theoretical setState-after-unmount race [src/hooks/useCoachMark.ts] — deferred, React 18 handles unmounted state updates safely; trigger requires near-simultaneous dismiss + navigation
 
 ### Change Log
 
