@@ -33,8 +33,8 @@
 		"screenLabel": "Pantalla del Visualizador",
 		"previousGarment": "Prenda anterior",
 		"nextGarment": "Prenda siguiente",
-		"makeMineButton": "Hacer este look m\u00edo",
-		"makeMineA11yLabel": "Hacer este look m\u00edo",
+		"makeMineButton": "Hacer m\u00edo este look",
+		"makeMineA11yLabel": "Hacer m\u00edo este look",
 		"makeMineA11yHint": "Abre este look en tu armario para asignarle prendas",
 		"selectedForSwap": "{{label}} seleccionada para intercambio",
 		"swapResult": "{{selectedLabel}} ahora es {{newColorA}}, {{tappedLabel}} ahora es {{newColorB}}",
@@ -57,7 +57,7 @@
 		"emptySubtitle": "Fotografía una prenda o escoge una paleta para empezar.",
 		"newLookCta": {
 			"title": "Monta tu look",
-			"subtitle": "Explora las paletas de Sanzo Wada y arma tu look",
+			"subtitle": "Explora las paletas de Sanzo Wada y monta tu look",
 			"a11yLabel": "Empezar un look nuevo",
 			"a11yHint": "Explora paletas de Sanzo Wada para empezar un look"
 		},
@@ -133,7 +133,7 @@
 	},
 	"error": {
 		"screenLabel": "Pantalla de error de la aplicaci\u00f3n",
-		"message": "Algo sali\u00f3 mal",
+		"message": "Algo ha ido mal",
 		"restart": "Reiniciar"
 	},
 	"swatchGroups": {
@@ -206,13 +206,13 @@
 		"networkError": "Comprueba tu conexión a internet e inténtalo de nuevo.",
 		"storeUnavailable": "La App Store no está disponible temporalmente. Inténtalo más tarde.",
 		"purchasesDisabled": "Las compras integradas están desactivadas en este dispositivo.",
-		"genericError": "Algo salió mal. Por favor inténtalo de nuevo.",
+		"genericError": "Algo ha ido mal. Por favor inténtalo de nuevo.",
 		"noPreviousPurchase": "No se encontró ninguna compra anterior para este Apple ID."
 	},
 	"armario": {
 		"capture": {
 			"guidanceHint": "Pon la prenda sobre fondo liso, buena luz",
-			"captureButtonLabel": "Tomar foto de la prenda",
+			"captureButtonLabel": "Hacer foto a la prenda",
 			"chooseLibraryButtonLabel": "Elegir de la Biblioteca",
 			"permissionDenied": "Se necesita acceso a la cámara para añadir prendas a tu Armario.",
 			"libraryPermissionDenied": "Se necesita acceso a la biblioteca de fotos para elegir una imagen de la prenda.",
@@ -338,7 +338,7 @@
 	"colorCapture": {
 		"cameraButtonLabel": "Cámara — captura una prenda",
 		"closeCameraLabel": "Cerrar cámara",
-		"captureButtonLabel": "Tomar foto",
+		"captureButtonLabel": "Hacer foto",
 		"overlayHint": "Busca luz natural · Centra la prenda",
 		"permissionDenied": "Se necesita acceso a la cámara para identificar colores de prendas.",
 		"wbSliderLabel": "Temperatura del balance de blancos",
@@ -360,7 +360,7 @@
 	"unifiedCamera": {
 		"capture": {
 			"hint": "Fotografía tu prenda completa",
-			"captureButtonLabel": "Tomar foto",
+			"captureButtonLabel": "Hacer foto",
 			"processing": "Analizando tu prenda...",
 			"errorNoSubject": "No pudimos encontrar la prenda. Prueba con fondo liso y buena luz.",
 			"errorVisionFailed": "No pudimos procesar la foto. Inténtalo de nuevo.",

@@ -810,7 +810,7 @@ describe("OutfitVisualizer", () => {
 	// --- Make Mine CTA (Story 14.6) ---
 
 	describe("Make Mine CTA (Story 14.6)", () => {
-		it("renders 'Hacer este look mío' CTA with testID and a11y label", () => {
+		it("renders 'Hacer mío este look' CTA with testID and a11y label", () => {
 			mockRouteParams.combinationId = "combo-2";
 			mockGetCombination.mockReturnValue({
 				id: "combo-2",
