@@ -38,7 +38,11 @@
 		"makeMineA11yHint": "Abre este look en tu armario para asignarle prendas",
 		"selectedForSwap": "{{label}} seleccionada para intercambio",
 		"swapResult": "{{selectedLabel}} ahora es {{newColorA}}, {{tappedLabel}} ahora es {{newColorB}}",
-		"changedTo": "Cambiado a {{label}}"
+		"changedTo": "Cambiado a {{label}}",
+		"coachMark": {
+			"text": "Toca cualquier prenda para cambiarla o conectarla con tu armario.",
+			"a11yAnnouncement": "Consejo del Visualizador. Toca cualquier prenda para cambiarla o conectarla con tu armario."
+		}
 	},
 	"favorites": {
 		"title": "Mis Looks",

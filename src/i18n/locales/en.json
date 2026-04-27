@@ -38,7 +38,11 @@
 		"makeMineA11yHint": "Opens this look in your wardrobe to assign garments",
 		"selectedForSwap": "Selected {{label}} for swap",
 		"swapResult": "{{selectedLabel}} is now {{newColorA}}, {{tappedLabel}} is now {{newColorB}}",
-		"changedTo": "Changed to {{label}}"
+		"changedTo": "Changed to {{label}}",
+		"coachMark": {
+			"text": "Tap any garment to swap it or connect it to your wardrobe.",
+			"a11yAnnouncement": "Visualizer tip. Tap any garment to swap it or connect it to your wardrobe."
+		}
 	},
 	"favorites": {
 		"title": "My looks",

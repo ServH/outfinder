@@ -925,6 +925,118 @@ describe("OutfitVisualizer", () => {
 	});
 });
 
+describe("Slot-discovery coach mark (Story 15.4)", () => {
+	beforeEach(() => {
+		mockGetCombination.mockReset();
+		mockHapticLight.mockReset();
+		mockHapticMedium.mockReset();
+		mockRootNavigate.mockReset();
+		mockGoBack.mockReset();
+		mockAnnounce.mockReset();
+		mockGetItem.mockReset();
+		mockSetItem.mockReset();
+		mockSetItem.mockResolvedValue(undefined);
+	});
+
+	it("(a) first mount with cleared flag → coach mark visible", async () => {
+		mockGetItem.mockResolvedValue(null);
+		mockRouteParams.combinationId = "combo-coach-a";
+		mockGetCombination.mockReturnValue({
+			id: "combo-coach-a",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		await waitFor(() =>
+			expect(screen.getByTestId("visualizer-coach-mark")).toBeTruthy(),
+		);
+		const text = screen.getByTestId("visualizer-coach-mark-text");
+		expect(text.props.children).toBe(
+			"Tap any garment to swap it or connect it to your wardrobe.",
+		);
+	});
+
+	it("(b) dismiss → AsyncStorage set + haptic + overlay leaves", async () => {
+		mockGetItem.mockResolvedValue(null);
+		mockRouteParams.combinationId = "combo-coach-b";
+		mockGetCombination.mockReturnValue({
+			id: "combo-coach-b",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		await waitFor(() =>
+			expect(screen.getByTestId("visualizer-coach-mark")).toBeTruthy(),
+		);
+
+		fireEvent.press(screen.getByTestId("visualizer-coach-mark-dismiss"));
+
+		await waitFor(() =>
+			expect(mockSetItem).toHaveBeenCalledWith(
+				"@outfinder/coachmark:visualizer-slots-firstuse",
+				"true",
+			),
+		);
+		expect(mockHapticLight).toHaveBeenCalledTimes(1);
+		await waitFor(() =>
+			expect(screen.queryByTestId("visualizer-coach-mark")).toBeNull(),
+		);
+	});
+
+	it("(c) remount with already-seen → no overlay", async () => {
+		mockGetItem.mockResolvedValue("true");
+		mockRouteParams.combinationId = "combo-coach-c";
+		mockGetCombination.mockReturnValue({
+			id: "combo-coach-c",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		await waitFor(() => expect(mockGetItem).toHaveBeenCalled());
+		expect(screen.queryByTestId("visualizer-coach-mark")).toBeNull();
+	});
+
+	it("(d) not-found combination → no overlay even with cleared flag", async () => {
+		mockGetItem.mockResolvedValue(null);
+		mockRouteParams.combinationId = "combo-not-found";
+		mockGetCombination.mockReturnValue(undefined);
+
+		render(<OutfitVisualizer />);
+
+		await waitFor(() =>
+			expect(screen.getByText("Combination not found")).toBeTruthy(),
+		);
+		expect(screen.queryByTestId("visualizer-coach-mark")).toBeNull();
+	});
+
+	it("(e) overlay does NOT block the back button", async () => {
+		mockGetItem.mockResolvedValue(null);
+		mockRouteParams.combinationId = "combo-coach-e";
+		mockGetCombination.mockReturnValue({
+			id: "combo-coach-e",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		await waitFor(() =>
+			expect(screen.getByTestId("visualizer-coach-mark")).toBeTruthy(),
+		);
+		expect(screen.getByTestId("visualizer-back-button")).toBeTruthy();
+	});
+});
+
 // --- iPad layout tests (AC: #3) ---
 
 describe("OutfitVisualizer iPad layout", () => {

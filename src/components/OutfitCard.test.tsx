@@ -346,7 +346,7 @@ describe("OutfitCard", () => {
 		expect(underlines.length).toBe(2);
 	});
 
-	it("non-selected slots have underline bar at opacity 0", () => {
+	it("non-selected slots have underline bar permanently visible (post-15.4)", () => {
 		const slots = makeSlots(["top-tshirt", red], ["bottom-pants", blue]);
 		render(
 			<OutfitCard
@@ -359,6 +359,36 @@ describe("OutfitCard", () => {
 
 		const underlines = screen.getAllByTestId("underline-bar");
 		expect(underlines).toHaveLength(2);
+	});
+
+	it("underline pulse runs for ALL slots regardless of selection (Story 15.4 / DEC-4)", () => {
+		const slots = makeSlots(
+			["top-tshirt", red],
+			["bottom-pants", blue],
+			["shoes-formal", green],
+		);
+
+		const { rerender } = render(
+			<OutfitCard
+				slots={slots}
+				selectedSlotIndex={null}
+				onSlotTap={mockOnSlotTap}
+				onVariantCycle={mockOnVariantCycle}
+			/>,
+		);
+
+		expect(screen.getAllByTestId("underline-bar")).toHaveLength(3);
+
+		rerender(
+			<OutfitCard
+				slots={slots}
+				selectedSlotIndex={0}
+				onSlotTap={mockOnSlotTap}
+				onVariantCycle={mockOnVariantCycle}
+			/>,
+		);
+
+		expect(screen.getAllByTestId("underline-bar")).toHaveLength(3);
 	});
 
 	it("renders correctly with layer-hoodie and shoes-formal", () => {

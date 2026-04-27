@@ -12,6 +12,7 @@ import {
 	View,
 } from "react-native";
 import { Aureola } from "@/components/Aureola";
+import { CoachMarkOverlay } from "@/components/CoachMarkOverlay";
 import {
 	GARMENT_REGISTRY,
 	type GarmentType,
@@ -21,8 +22,10 @@ import { OutfitCard } from "@/components/OutfitCard";
 import { WadaHeader } from "@/components/WadaHeader";
 import { WarmBackground } from "@/components/WarmBackground";
 import { getColor, getCombination } from "@/data/colorIndex";
+import { useCoachMark } from "@/hooks/useCoachMark";
 import { getCycleForGarment, useOutfitState } from "@/hooks/useOutfitState";
 import { useStoreReviewPrompt } from "@/hooks/useStoreReviewPrompt";
+import { COACH_MARK_KEYS } from "@/lib/coachMarkKeys";
 import { relativeLuminance } from "@/lib/color";
 import { useIsIPad } from "@/lib/device";
 import { hapticLight, hapticMedium } from "@/lib/haptics";
@@ -184,6 +187,14 @@ export function OutfitVisualizer() {
 
 	// Trigger in-app review sheet on 2nd Visualizer visit (must be before early return)
 	useStoreReviewPrompt();
+
+	const { shouldShow: shouldShowCoachMark, markSeen: markCoachMarkSeen } =
+		useCoachMark(COACH_MARK_KEYS.visualizerSlotsFirstUse);
+
+	async function handleDismissCoachMark() {
+		hapticLight();
+		await markCoachMarkSeen();
+	}
 
 	if (!combination) {
 		return (
@@ -362,6 +373,13 @@ export function OutfitVisualizer() {
 					</Text>
 				</Pressable>
 			</View>
+			<CoachMarkOverlay
+				visible={shouldShowCoachMark}
+				text={t("visualizer.coachMark.text")}
+				accessibilityAnnouncement={t("visualizer.coachMark.a11yAnnouncement")}
+				onDismiss={handleDismissCoachMark}
+				testID="visualizer-coach-mark"
+			/>
 		</View>
 	);
 }
