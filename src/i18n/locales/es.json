@@ -363,6 +363,10 @@
 			"errorIoFailed": "No se pudo leer o guardar la foto. Inténtalo de nuevo.",
 			"retry": "Reintentar"
 		},
+		"coachMark": {
+			"text": "Fotografía tu prenda. La recortamos automáticamente, detectamos su color Wada y te sugerimos combinaciones.",
+			"a11yAnnouncement": "Consejo de cámara. Fotografía tu prenda; la recortamos, detectamos su color Wada y te sugerimos combinaciones."
+		},
 		"result": {
 			"cutoutA11yLabel": "Recorte de tu prenda, tono {{nameEn}}",
 			"wadaNameStackA11y": "Tono {{nameEn}}, {{nameJp}}",

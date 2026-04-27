@@ -363,6 +363,10 @@
 			"errorIoFailed": "Couldn't read or save the photo. Try again.",
 			"retry": "Try again"
 		},
+		"coachMark": {
+			"text": "Snap your garment. We'll cut it out, detect its Wada color, and suggest combinations.",
+			"a11yAnnouncement": "Camera tip. Snap your garment; we'll cut it out, detect its Wada color, and suggest combinations."
+		},
 		"result": {
 			"cutoutA11yLabel": "Cutout of your garment, tone {{nameEn}}",
 			"wadaNameStackA11y": "Tone {{nameEn}}, {{nameJp}}",

@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
 	act,
 	fireEvent,
@@ -76,7 +77,8 @@ async function flushMicrotasks() {
 }
 
 describe("UnifiedCameraCaptureScreen", () => {
-	beforeEach(() => {
+	beforeEach(async () => {
+		await AsyncStorage.clear();
 		mockPermission = { granted: true, canAskAgain: true, status: "granted" };
 		mockGoBack.mockClear();
 		mockPush.mockClear();
@@ -234,5 +236,65 @@ describe("UnifiedCameraCaptureScreen", () => {
 
 		consoleError.mockRestore();
 		consoleWarn.mockRestore();
+	});
+
+	describe("camera FAB first-use coach mark (Story 15.3)", () => {
+		const COACH_KEY = "@outfinder/coachmark:camera-fab-firstuse";
+
+		it("first mount with no AsyncStorage flag → overlay visible with body copy", async () => {
+			render(<UnifiedCameraCaptureScreen />);
+			await flushMicrotasks();
+
+			await waitFor(() => {
+				expect(screen.getByTestId("unified-camera-coach-mark")).toBeTruthy();
+			});
+			expect(screen.getByText("unifiedCamera.coachMark.text")).toBeTruthy();
+		});
+
+		it("dismiss → AsyncStorage.setItem(key,'true') + hapticLight + overlay leaves the tree", async () => {
+			(AsyncStorage.setItem as jest.Mock).mockClear();
+			render(<UnifiedCameraCaptureScreen />);
+			await flushMicrotasks();
+
+			await waitFor(() => {
+				expect(screen.getByTestId("unified-camera-coach-mark")).toBeTruthy();
+			});
+
+			await act(async () => {
+				fireEvent.press(
+					screen.getByTestId("unified-camera-coach-mark-dismiss"),
+				);
+			});
+
+			await waitFor(() => {
+				expect(AsyncStorage.setItem).toHaveBeenCalledWith(COACH_KEY, "true");
+				expect(hapticLight).toHaveBeenCalledTimes(1);
+				expect(screen.queryByTestId("unified-camera-coach-mark")).toBeNull();
+			});
+		});
+
+		it("remount with already-seen flag → overlay never appears", async () => {
+			await AsyncStorage.setItem(COACH_KEY, "true");
+
+			render(<UnifiedCameraCaptureScreen />);
+			await flushMicrotasks();
+			await flushMicrotasks();
+
+			expect(screen.queryByTestId("unified-camera-coach-mark")).toBeNull();
+		});
+
+		it("permission denied → overlay never appears even with shouldShow true", async () => {
+			mockPermission = {
+				granted: false,
+				canAskAgain: true,
+				status: "denied",
+			};
+
+			render(<UnifiedCameraCaptureScreen />);
+			await flushMicrotasks();
+			await flushMicrotasks();
+
+			expect(screen.queryByTestId("unified-camera-coach-mark")).toBeNull();
+		});
 	});
 });
