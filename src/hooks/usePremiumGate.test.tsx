@@ -190,7 +190,7 @@ describe("usePremiumGate", () => {
 			});
 
 			expect(result.current.errorMessage).toBe(
-				"Something went wrong. Try again.",
+				"Something went wrong. Please try again.",
 			);
 		});
 

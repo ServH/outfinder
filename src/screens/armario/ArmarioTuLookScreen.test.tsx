@@ -273,7 +273,7 @@ describe("ArmarioTuLookScreen", () => {
 		await flushEffects();
 
 		expect(alertSpy).toHaveBeenCalledWith(
-			"Could not create share image. Try again.",
+			"Could not create share image. Please try again.",
 		);
 		expect(Sharing.shareAsync).not.toHaveBeenCalled();
 		expect(hapticLight).not.toHaveBeenCalled();
@@ -296,7 +296,7 @@ describe("ArmarioTuLookScreen", () => {
 		await flushEffects();
 
 		expect(alertSpy).toHaveBeenCalledWith(
-			"Could not create share image. Try again.",
+			"Could not create share image. Please try again.",
 		);
 		expect(exportLookImage).not.toHaveBeenCalled();
 		expect(Sharing.shareAsync).not.toHaveBeenCalled();

@@ -368,10 +368,12 @@ describe("PremiumPaywall", () => {
 		it("renders error banner with message when purchaseState is error", () => {
 			renderPaywall({
 				purchaseState: "error",
-				errorMessage: "Something went wrong. Try again.",
+				errorMessage: "Something went wrong. Please try again.",
 			});
 			expect(screen.getByTestId("error-banner")).toBeTruthy();
-			expect(screen.getByText("Something went wrong. Try again.")).toBeTruthy();
+			expect(
+				screen.getByText("Something went wrong. Please try again."),
+			).toBeTruthy();
 		});
 
 		it("error banner has accessibilityRole alert", () => {

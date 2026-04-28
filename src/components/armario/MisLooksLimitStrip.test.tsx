@@ -22,7 +22,7 @@ describe("MisLooksLimitStrip", () => {
 		const strip = getByTestId("mislooks-limit-strip");
 		expect(strip.props.accessibilityLabel).toContain("Aviso");
 		expect(strip).toHaveTextContent(
-			"Has alcanzado el límite de 5 looks guardados. Elimina uno para continuar.",
+			"Alcanzaste el límite de 5 looks guardados. Elimina uno para continuar.",
 		);
 	});
 

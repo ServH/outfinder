@@ -206,7 +206,7 @@
 		"networkError": "Check your internet connection and try again.",
 		"storeUnavailable": "The App Store is temporarily unavailable. Try again later.",
 		"purchasesDisabled": "In-app purchases are disabled on this device.",
-		"genericError": "Something went wrong. Try again.",
+		"genericError": "Something went wrong. Please try again.",
 		"noPreviousPurchase": "No previous purchase found for this Apple ID."
 	},
 	"armario": {
@@ -219,9 +219,9 @@
 			"openSettings": "Open Settings",
 			"removingBackground": "Removing background…",
 			"errorNoSubject": "We couldn't find the garment. Try a plain background with better light.",
-			"errorVisionFailed": "Background removal failed. Try again.",
-			"errorIoFailed": "Couldn't read or save the photo. Try again.",
-			"errorDismiss": "Got it",
+			"errorVisionFailed": "Background removal failed. Please try again.",
+			"errorIoFailed": "Couldn't read or save the photo. Please try again.",
+			"errorDismiss": "Dismiss",
 			"goBack": "Go back"
 		},
 		"preview": {
@@ -230,9 +230,9 @@
 			"useButton": "Use this photo",
 			"imageLabel": "Garment cutout preview",
 			"errorDiskFull": "Your device is out of space",
-			"errorEncode": "Couldn't process the photo. Try again.",
-			"errorSaveFailed": "Couldn't save the garment. Try again.",
-			"errorDismiss": "Got it"
+			"errorEncode": "Couldn't process the photo. Please try again.",
+			"errorSaveFailed": "Couldn't save the garment. Please try again.",
+			"errorDismiss": "Dismiss"
 		},
 		"s0": {
 			"screenLabel": "Zero state screen",
@@ -269,7 +269,7 @@
 			"headerPrefix": "Wada Palette \u00b7",
 			"shareCta": "Share your look",
 			"exploreCta": "Explore more palettes",
-			"shareError": "Could not create share image. Try again.",
+			"shareError": "Could not create share image. Please try again.",
 			"canvasA11y": "Outfit: {{combo}}, {{count}} garments assigned. Use the Share button to share your look."
 		},
 		"s5": {
@@ -344,16 +344,16 @@
 		"wbSliderLabel": "White balance temperature",
 		"wbTempLabel": "Scene light · {{temp}}K",
 		"analyzing0": "Finding your Wada combination...",
-		"analyzing1": "Calibrating color tones...",
+		"analyzing1": "Calibrating colour tones...",
 		"analyzing2": "Consulting the 1933 palette...",
 		"analyzing3": "Searching for your harmony...",
-		"analysisError": "Could not analyze the photo. Try again.",
-		"cameraNotReady": "Camera is not ready yet. Try again in a moment.",
+		"analysisError": "Could not analyse the photo. Please try again.",
+		"cameraNotReady": "Camera is not ready yet. Please try again in a moment.",
 		"openSettings": "Open Settings",
 		"matchSheetTitle": "Which is closest to your garment?",
 		"matchExcellent": "Excellent match",
 		"matchGood": "Good match",
-		"outOfCoverageMessage": "This color is too vibrant for Wada's palette — his combinations are based on natural pigments from 1930s Japan. The closest tone we found:",
+		"outOfCoverageMessage": "This colour is too vibrant for Wada's palette — his combinations are based on natural pigments from 1930s Japan. The closest tone we found:",
 		"outOfCoverageAction": "See {{name}}'s combinations",
 		"tryAgain": "Try again"
 	},
@@ -397,8 +397,8 @@
 		},
 		"save": {
 			"errorDiskFull": "Your device is out of space",
-			"errorEncode": "Couldn't process the photo. Try again.",
-			"errorSaveFailed": "Couldn't save the garment. Try again.",
+			"errorEncode": "Couldn't process the photo. Please try again.",
+			"errorSaveFailed": "Couldn't save the garment. Please try again.",
 			"errorDismiss": "Got it"
 		},
 		"postSave": {
