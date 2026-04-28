@@ -118,7 +118,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/en-pill-only.png",
+                "url": "appstore/new_v140/01-tu-look-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -403,7 +403,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/05-combinations-grey.png",
+                "url": "appstore/new_v140/06-combinations-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -557,7 +557,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/05-mis-looks-en-v5.png",
+                "url": "appstore/new_v140/05-mis-looks-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -765,7 +765,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/02-scan-composite.png",
+                "url": "appstore/new_v140/02-camera-scan-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -1181,7 +1181,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/03-armario-picker.png",
+                "url": "appstore/new_v140/04-armario-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -1314,7 +1314,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/07-sugerencia-en-v5.png",
+                "url": "appstore/new_v140/07-sugerencia-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -1447,7 +1447,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/07-visualizer-ink-dyed-robe-v5.png",
+                "url": "appstore/new_v140/08-visualizer-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -1557,7 +1557,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/en-pill-only.png",
+                "url": "appstore/new_v140/01-tu-look-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -1667,7 +1667,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/02-scan-composite.png",
+                "url": "appstore/new_v140/02-camera-scan-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -1777,7 +1777,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/03-armario-picker.png",
+                "url": "appstore/new_v140/04-armario-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -1887,7 +1887,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/05-mis-looks-en-v5.png",
+                "url": "appstore/new_v140/05-mis-looks-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -1997,7 +1997,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/05-combinations-grey.png",
+                "url": "appstore/new_v140/06-combinations-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -2107,7 +2107,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/07-sugerencia-en-v5.png",
+                "url": "appstore/new_v140/07-sugerencia-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -2217,7 +2217,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/07-visualizer-ink-dyed-robe-v5.png",
+                "url": "appstore/new_v140/08-visualizer-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -2599,7 +2599,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/03-result-composite-en-v10.png",
+                "url": "appstore/new_v140/03-camera-result-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -2709,7 +2709,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/03-result-composite-en-v10.png",
+                "url": "appstore/new_v140/03-camera-result-en.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -2836,7 +2836,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/es1-final2.png",
+                "url": "appstore/new_v140/01-tu-look-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -3044,7 +3044,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/02-camera-scan-composite-es.png",
+                "url": "appstore/new_v140/02-camera-scan-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -3177,7 +3177,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/03-result-composite-es-v10.png",
+                "url": "appstore/new_v140/03-camera-result-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -3286,7 +3286,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/04-armario-picker-es-v2.png",
+                "url": "appstore/new_v140/04-armario-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -3413,7 +3413,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/04-mis-looks-v5.png",
+                "url": "appstore/new_v140/05-mis-looks-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -3567,7 +3567,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/06-combinations-grey-es.png",
+                "url": "appstore/new_v140/06-combinations-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -3727,7 +3727,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/06-sugerencia-rikyu-wabi-v5.png",
+                "url": "appstore/new_v140/07-sugerencia-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -3860,7 +3860,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/08-visualizer-ink-dyed-robe-es-v5.png",
+                "url": "appstore/new_v140/08-visualizer-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -3970,7 +3970,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/es1-final2.png",
+                "url": "appstore/new_v140/01-tu-look-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -4080,7 +4080,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/02-camera-scan-composite-es.png",
+                "url": "appstore/new_v140/02-camera-scan-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -4190,7 +4190,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/03-result-composite-es-v10.png",
+                "url": "appstore/new_v140/03-camera-result-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -4300,7 +4300,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/04-armario-picker-es-v2.png",
+                "url": "appstore/new_v140/04-armario-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -4410,7 +4410,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/04-mis-looks-v5.png",
+                "url": "appstore/new_v140/05-mis-looks-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -4520,7 +4520,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/06-combinations-grey-es.png",
+                "url": "appstore/new_v140/06-combinations-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -4630,7 +4630,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/06-sugerencia-rikyu-wabi-v5.png",
+                "url": "appstore/new_v140/07-sugerencia-es.png",
                 "mode": "fill"
               },
               "width": 988,
@@ -4740,7 +4740,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/08-visualizer-ink-dyed-robe-es-v5.png",
+                "url": "appstore/new_v140/08-visualizer-es.png",
                 "mode": "fill"
               },
               "width": 988,
