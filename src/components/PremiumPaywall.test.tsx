@@ -170,7 +170,7 @@ describe("PremiumPaywall", () => {
 
 	it("renders CTA button", () => {
 		renderPaywall();
-		expect(screen.getByText("Unlock Unlimited")).toBeTruthy();
+		expect(screen.getByText("Unlock unlimited")).toBeTruthy();
 	});
 
 	it("calls onPurchase when CTA is pressed", () => {
@@ -311,7 +311,7 @@ describe("PremiumPaywall", () => {
 		it("shows ActivityIndicator on CTA when purchasing", () => {
 			renderPaywall({ purchaseState: "purchasing" });
 			expect(screen.getByTestId("cta-loading")).toBeTruthy();
-			expect(screen.queryByText("Unlock Unlimited")).toBeNull();
+			expect(screen.queryByText("Unlock unlimited")).toBeNull();
 		});
 
 		it("disables CTA during purchasing", () => {
@@ -368,12 +368,10 @@ describe("PremiumPaywall", () => {
 		it("renders error banner with message when purchaseState is error", () => {
 			renderPaywall({
 				purchaseState: "error",
-				errorMessage: "Something went wrong. Please try again.",
+				errorMessage: "Something went wrong. Try again.",
 			});
 			expect(screen.getByTestId("error-banner")).toBeTruthy();
-			expect(
-				screen.getByText("Something went wrong. Please try again."),
-			).toBeTruthy();
+			expect(screen.getByText("Something went wrong. Try again.")).toBeTruthy();
 		});
 
 		it("error banner has accessibilityRole alert", () => {
@@ -420,7 +418,7 @@ describe("PremiumPaywall", () => {
 		expect(screen.queryByTestId("cta-loading")).toBeNull();
 		expect(screen.queryByTestId("restore-loading")).toBeNull();
 		expect(screen.queryByTestId("error-banner")).toBeNull();
-		expect(screen.getByText("Unlock Unlimited")).toBeTruthy();
+		expect(screen.getByText("Unlock unlimited")).toBeTruthy();
 	});
 
 	// BUG-011 — context-aware copy & limits.

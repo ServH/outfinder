@@ -270,16 +270,16 @@ describe("ArmarioCaptureScreen", () => {
 		const cases = [
 			{
 				kind: "visionFailed",
-				copy: "Background removal failed. Please try again.",
+				copy: "Background removal failed. Try again.",
 			},
 			{
 				kind: "ioFailed",
-				copy: "Couldn't read or save the photo. Please try again.",
+				copy: "Couldn't read or save the photo. Try again.",
 			},
 			// Unknown kinds fall through to the visionFailed copy (defensive default).
 			{
 				kind: "unexpectedGarbage",
-				copy: "Background removal failed. Please try again.",
+				copy: "Background removal failed. Try again.",
 			},
 		];
 

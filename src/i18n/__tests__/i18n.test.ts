@@ -54,7 +54,7 @@ describe("i18n", () => {
 			);
 			expect(tEN("home.browseAll")).toBe("Browse all 159 colors");
 			expect(tEN("tabs.colors")).toBe("Colors");
-			expect(tEN("tabs.favorites")).toBe("My looks");
+			expect(tEN("tabs.favorites")).toBe("My Looks");
 		});
 
 		it("Spanish strings available via getFixedT('es') — AC #1", () => {

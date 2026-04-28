@@ -421,7 +421,7 @@ describe("ArmarioPreviewScreen", () => {
 			expect(screen.getByTestId("armario-preview-error-sheet")).toBeTruthy();
 		});
 		expect(
-			screen.getByText("Couldn't process the photo. Please try again."),
+			screen.getByText("Couldn't process the photo. Try again."),
 		).toBeTruthy();
 	});
 
@@ -497,7 +497,7 @@ describe("ArmarioPreviewScreen", () => {
 			expect(screen.getByTestId("armario-preview-error-sheet")).toBeTruthy();
 		});
 		expect(
-			screen.getByText("Couldn't save the garment. Please try again."),
+			screen.getByText("Couldn't save the garment. Try again."),
 		).toBeTruthy();
 	});
 

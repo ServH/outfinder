@@ -97,7 +97,7 @@
 		"priceLabel": "{{price}}, compra \u00fanica",
 		"oneTime": "una vez",
 		"purchasing": "Comprando, por favor espera",
-		"unlockButton": "Desbloquear Todo",
+		"unlockButton": "Desbloquear ilimitado",
 		"restoreButton": "Restaurar Compra",
 		"restoring": "Restaurando compra, por favor espera",
 		"notNow": "Ahora no",
@@ -106,8 +106,8 @@
 			"savedCount": "\u2665 {{count}} guardados",
 			"limitBadge": "{{count}} de {{limit}} favoritos gratuitos usados",
 			"headline": "No pares\nde coleccionar",
-			"body_one": "Encontraste {{count}} armon\u00eda que vale la pena guardar. Hay {{remaining}} combinaciones m\u00e1s esperando ser descubiertas.",
-			"body_other": "Encontraste {{count}} armon\u00edas que vale la pena guardar. Hay {{remaining}} combinaciones m\u00e1s esperando ser descubiertas.",
+			"body_one": "Has encontrado {{count}} armon\u00eda que vale la pena guardar. Hay {{remaining}} combinaciones m\u00e1s esperando ser descubiertas.",
+			"body_other": "Has encontrado {{count}} armon\u00edas que vale la pena guardar. Hay {{remaining}} combinaciones m\u00e1s esperando ser descubiertas.",
 			"unlockLabel": "Desbloquea favoritos ilimitados por {{price}}"
 		},
 		"wardrobe": {
@@ -206,7 +206,7 @@
 		"networkError": "Comprueba tu conexión a internet e inténtalo de nuevo.",
 		"storeUnavailable": "La App Store no está disponible temporalmente. Inténtalo más tarde.",
 		"purchasesDisabled": "Las compras integradas están desactivadas en este dispositivo.",
-		"genericError": "Algo ha ido mal. Por favor inténtalo de nuevo.",
+		"genericError": "Algo ha ido mal. Inténtalo de nuevo.",
 		"noPreviousPurchase": "No se encontró ninguna compra anterior para este Apple ID."
 	},
 	"armario": {
@@ -221,7 +221,7 @@
 			"errorNoSubject": "No pudimos encontrar la prenda. Prueba con fondo liso y buena luz.",
 			"errorVisionFailed": "No se pudo quitar el fondo. Inténtalo de nuevo.",
 			"errorIoFailed": "No se pudo leer o guardar la foto. Inténtalo de nuevo.",
-			"errorDismiss": "Cerrar",
+			"errorDismiss": "Entendido",
 			"goBack": "Volver"
 		},
 		"preview": {
@@ -232,7 +232,7 @@
 			"errorDiskFull": "No hay espacio en el dispositivo",
 			"errorEncode": "No pudimos procesar la foto. Inténtalo de nuevo.",
 			"errorSaveFailed": "No pudimos guardar la prenda. Inténtalo de nuevo.",
-			"errorDismiss": "Descartar"
+			"errorDismiss": "Entendido"
 		},
 		"s0": {
 			"screenLabel": "Pantalla de inicio",
@@ -261,7 +261,7 @@
 			"saveForLaterA11yHint": "Lo añade a Mis Looks sin prendas asignadas"
 		},
 		"misLooksLimit": {
-			"strip": "Alcanzaste el límite de 5 looks guardados. Elimina uno para continuar.",
+			"strip": "Has alcanzado el límite de 5 looks guardados. Elimina uno para continuar.",
 			"stripA11y": "Aviso: has alcanzado el límite de 5 looks guardados. Elimina uno desde Mis Looks para continuar."
 		},
 		"s4": {
@@ -307,7 +307,7 @@
 			"dragHint": "Arrastra para cerrar",
 			"deleteConfirmTitle": "¿Eliminar esta prenda?",
 			"deleteConfirmBodyNoAssignments": "La foto se eliminará de tu Armario.",
-			"deleteConfirmBodyWithAssignments_one": "También se eliminará de {{count}} paleta donde la has usado.",
+			"deleteConfirmBodyWithAssignments_one": "También se eliminará de la paleta donde la has usado.",
 			"deleteConfirmBodyWithAssignments_other": "También se eliminará de {{count}} paletas donde la has usado.",
 			"deleteConfirmYes": "Eliminar",
 			"editMode": {
@@ -324,7 +324,7 @@
 			}
 		},
 		"unfavoriteCascade": {
-			"body_one": "Se quitará la {{count}} prenda que habías asignado a esta paleta. Las fotos seguirán en tu Armario.",
+			"body_one": "Se quitará la prenda que habías asignado a esta paleta. Las fotos seguirán en tu Armario.",
 			"body_other": "Se quitarán las {{count}} prendas que habías asignado a esta paleta. Las fotos seguirán en tu Armario.",
 			"confirm": "Quitar de favoritos"
 		},
@@ -347,7 +347,7 @@
 		"analyzing1": "Calibrando los tonos de color...",
 		"analyzing2": "Consultando la paleta de 1933...",
 		"analyzing3": "Buscando tu armonía...",
-		"analysisError": "No se pudo analizar la foto. Por favor, inténtalo de nuevo.",
+		"analysisError": "No se pudo analizar la foto. Inténtalo de nuevo.",
 		"cameraNotReady": "La cámara aún no está lista. Inténtalo de nuevo en un momento.",
 		"openSettings": "Abrir Ajustes",
 		"matchSheetTitle": "¿Cuál se parece más a tu prenda?",

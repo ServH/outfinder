@@ -39,7 +39,7 @@ describe("CompletenessBadge", () => {
 		expect(container.props.accessibilityLabel).toBe("2 of 3 assigned");
 	});
 
-	it("renders grey none variant with 'No garments yet' when assigned is 0", () => {
+	it("renders grey none variant with 'No garments' when assigned is 0", () => {
 		const { getByTestId } = render(
 			<CompletenessBadge assigned={0} total={3} testID="badge" />,
 		);
@@ -48,7 +48,7 @@ describe("CompletenessBadge", () => {
 		expect(container.props.style).toMatchObject({
 			backgroundColor: COMPLETENESS_COLORS.none.bg,
 		});
-		expect(label.props.children).toBe("No garments yet");
+		expect(label.props.children).toBe("No garments");
 	});
 
 	it("variant='long' + complete 3/3 → renders '3/3 garments' via armario.favorites.badgeComplete", () => {
@@ -96,6 +96,6 @@ describe("CompletenessBadge", () => {
 		expect(container.props.style).toMatchObject({
 			backgroundColor: COMPLETENESS_COLORS.none.bg,
 		});
-		expect(label.props.children).toBe("No garments yet");
+		expect(label.props.children).toBe("No garments");
 	});
 });

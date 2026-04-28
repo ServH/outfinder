@@ -809,9 +809,9 @@ describe("FavoritesList", () => {
 		mockFavorites = new Set(["p001"]);
 		render(<FavoritesList />);
 		expect(screen.queryByTestId("incomplete-tile-p001")).toBeTruthy();
-		// Badge renders "No garments yet" (EN) via CompletenessBadge none variant
+		// Badge renders "No garments" (EN) via CompletenessBadge none variant
 		const badge = screen.getByTestId("incomplete-tile-p001-badge-label");
-		expect(badge.props.children).toBe("No garments yet");
+		expect(badge.props.children).toBe("No garments");
 	});
 
 	it("completed looks appear in main grid, not in En curso strip", () => {

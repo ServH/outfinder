@@ -512,7 +512,7 @@ describe("UnifiedCameraResultScreen", () => {
 			).toBeTruthy();
 		});
 		expect(
-			screen.getByText("Couldn't process the photo. Please try again."),
+			screen.getByText("Couldn't process the photo. Try again."),
 		).toBeTruthy();
 		expect(mockLocalReplace).not.toHaveBeenCalled();
 	});

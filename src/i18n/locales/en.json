@@ -2,11 +2,11 @@
 	"tabs": {
 		"colors": "Colors",
 		"favs": "Favs",
-		"favorites": "My looks",
+		"favorites": "My Looks",
 		"settings": "Settings",
 		"camera": "Camera",
 		"colorsTab": "Colors tab",
-		"favoritesTab": "My looks tab",
+		"favoritesTab": "My Looks tab",
 		"settingsTab": "Settings tab",
 		"cameraTab": "Open camera scanner"
 	},
@@ -45,8 +45,8 @@
 		}
 	},
 	"favorites": {
-		"title": "My looks",
-		"screenLabel": "My looks screen",
+		"title": "My Looks",
+		"screenLabel": "My Looks screen",
 		"sortRecent": "Recent",
 		"sortAZ": "A-Z",
 		"sortSize": "By size",
@@ -97,7 +97,7 @@
 		"priceLabel": "{{price}}, one-time purchase",
 		"oneTime": "one time",
 		"purchasing": "Purchasing, please wait",
-		"unlockButton": "Unlock Unlimited",
+		"unlockButton": "Unlock unlimited",
 		"restoreButton": "Restore Purchase",
 		"restoring": "Restoring purchase, please wait",
 		"notNow": "Not now",
@@ -122,7 +122,7 @@
 	"comboCard": {
 		"combinationLabel": "{{name}} combination: {{colors}}",
 		"openHint": "Opens outfit visualizer",
-		"yours": "yours",
+		"yours": "your tone",
 		"seeOutfit": "See outfit"
 	},
 	"favoriteButton": {
@@ -206,7 +206,7 @@
 		"networkError": "Check your internet connection and try again.",
 		"storeUnavailable": "The App Store is temporarily unavailable. Try again later.",
 		"purchasesDisabled": "In-app purchases are disabled on this device.",
-		"genericError": "Something went wrong. Please try again.",
+		"genericError": "Something went wrong. Try again.",
 		"noPreviousPurchase": "No previous purchase found for this Apple ID."
 	},
 	"armario": {
@@ -219,9 +219,9 @@
 			"openSettings": "Open Settings",
 			"removingBackground": "Removing background…",
 			"errorNoSubject": "We couldn't find the garment. Try a plain background with better light.",
-			"errorVisionFailed": "Background removal failed. Please try again.",
-			"errorIoFailed": "Couldn't read or save the photo. Please try again.",
-			"errorDismiss": "Dismiss",
+			"errorVisionFailed": "Background removal failed. Try again.",
+			"errorIoFailed": "Couldn't read or save the photo. Try again.",
+			"errorDismiss": "Got it",
 			"goBack": "Go back"
 		},
 		"preview": {
@@ -230,9 +230,9 @@
 			"useButton": "Use this photo",
 			"imageLabel": "Garment cutout preview",
 			"errorDiskFull": "Your device is out of space",
-			"errorEncode": "Couldn't process the photo. Please try again.",
-			"errorSaveFailed": "Couldn't save the garment. Please try again.",
-			"errorDismiss": "Dismiss"
+			"errorEncode": "Couldn't process the photo. Try again.",
+			"errorSaveFailed": "Couldn't save the garment. Try again.",
+			"errorDismiss": "Got it"
 		},
 		"s0": {
 			"screenLabel": "Zero state screen",
@@ -243,7 +243,7 @@
 			"polaroidA11y": "Placeholder for {{color}}. Double-tap to start assigning."
 		},
 		"s2": {
-			"screenLabel": "Wada fiche screen",
+			"screenLabel": "Wada card screen",
 			"instruction": "Assign your garments to each color of the palette",
 			"wardrobeLabel": "YOUR WARDROBE",
 			"linkAssign": "Assign",
@@ -269,7 +269,7 @@
 			"headerPrefix": "Wada Palette \u00b7",
 			"shareCta": "Share your look",
 			"exploreCta": "Explore more palettes",
-			"shareError": "Could not create share image. Please try again.",
+			"shareError": "Could not create share image. Try again.",
 			"canvasA11y": "Outfit: {{combo}}, {{count}} garments assigned. Use the Share button to share your look."
 		},
 		"s5": {
@@ -307,7 +307,7 @@
 			"dragHint": "Drag down to dismiss",
 			"deleteConfirmTitle": "Delete this garment?",
 			"deleteConfirmBodyNoAssignments": "The photo will be removed from your Wardrobe.",
-			"deleteConfirmBodyWithAssignments_one": "It will also be removed from {{count}} palette where you're using it.",
+			"deleteConfirmBodyWithAssignments_one": "It will also be removed from the palette where you're using it.",
 			"deleteConfirmBodyWithAssignments_other": "It will also be removed from {{count}} palettes where you're using it.",
 			"deleteConfirmYes": "Delete",
 			"editMode": {
@@ -324,14 +324,14 @@
 			}
 		},
 		"unfavoriteCascade": {
-			"body_one": "The {{count}} garment you assigned to this palette will be removed. Photos stay in your Wardrobe.",
+			"body_one": "The garment you assigned to this palette will be removed. Photos stay in your Wardrobe.",
 			"body_other": "The {{count}} garments you assigned to this palette will be removed. Photos stay in your Wardrobe.",
 			"confirm": "Remove from favorites"
 		},
 		"badge": {
 			"complete": "{{assigned}}/{{total}}",
 			"partial": "{{assigned}}/{{total}}",
-			"none": "No garments yet",
+			"none": "No garments",
 			"a11y": "{{assigned}} of {{total}} assigned"
 		}
 	},
@@ -344,16 +344,16 @@
 		"wbSliderLabel": "White balance temperature",
 		"wbTempLabel": "Scene light · {{temp}}K",
 		"analyzing0": "Finding your Wada combination...",
-		"analyzing1": "Calibrating colour tones...",
+		"analyzing1": "Calibrating color tones...",
 		"analyzing2": "Consulting the 1933 palette...",
 		"analyzing3": "Searching for your harmony...",
-		"analysisError": "Could not analyse the photo. Please try again.",
-		"cameraNotReady": "Camera is not ready yet. Please try again in a moment.",
+		"analysisError": "Could not analyze the photo. Try again.",
+		"cameraNotReady": "Camera is not ready yet. Try again in a moment.",
 		"openSettings": "Open Settings",
 		"matchSheetTitle": "Which is closest to your garment?",
 		"matchExcellent": "Excellent match",
 		"matchGood": "Good match",
-		"outOfCoverageMessage": "This colour is too vibrant for Wada's palette — his combinations are based on natural pigments from 1930s Japan. The closest tone we found:",
+		"outOfCoverageMessage": "This color is too vibrant for Wada's palette — his combinations are based on natural pigments from 1930s Japan. The closest tone we found:",
 		"outOfCoverageAction": "See {{name}}'s combinations",
 		"tryAgain": "Try again"
 	},
@@ -397,8 +397,8 @@
 		},
 		"save": {
 			"errorDiskFull": "Your device is out of space",
-			"errorEncode": "Couldn't process the photo. Please try again.",
-			"errorSaveFailed": "Couldn't save the garment. Please try again.",
+			"errorEncode": "Couldn't process the photo. Try again.",
+			"errorSaveFailed": "Couldn't save the garment. Try again.",
 			"errorDismiss": "Got it"
 		},
 		"postSave": {
@@ -406,8 +406,8 @@
 			"subtitle": "as {{categoryLabel}}",
 			"primaryCta": "See combinations with {{wadaName}}",
 			"primaryCtaA11y": "See combinations with {{wadaName}}",
-			"secondaryCta": "Back to Mis Looks",
-			"secondaryCtaA11y": "Back to Mis Looks"
+			"secondaryCta": "Back to My Looks",
+			"secondaryCtaA11y": "Back to My Looks"
 		}
 	}
 }
