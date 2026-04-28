@@ -4878,6 +4878,741 @@
           "fontWeight": "600"
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "pU2mX",
+      "x": -9064,
+      "y": 18156,
+      "name": "Icono v2 — Iteración Mosaico-O",
+      "clip": true,
+      "width": 5555,
+      "height": 2000,
+      "fill": "#1A1410",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "p2fvI",
+          "x": 80,
+          "y": 80,
+          "name": "header2",
+          "fill": "#C4A87A",
+          "content": "ICONO v2 — ITERACIÓN MOSAICO-O",
+          "fontFamily": "Inter",
+          "fontSize": 60,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "text",
+          "id": "qT49R",
+          "x": 80,
+          "y": 180,
+          "name": "sub2",
+          "fill": "#8C7A5A",
+          "content": "Basado en el icono original de Alejandro: paleta Wada formando una O implícita",
+          "fontFamily": "Inter",
+          "fontSize": 36,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "r8Xcrb",
+          "x": 120,
+          "y": 280,
+          "name": "Original",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "icon/Gemini_Generated_Image_28w4ib28w4ib28w4.png",
+            "mode": "fit"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "MTPJF",
+          "x": 120,
+          "y": 1820,
+          "name": "label0",
+          "fill": "#F5F2E9",
+          "content": "Original — Alejandro\n11 swatches navy/beige/gris formando O",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "Im1f4",
+          "x": 1450,
+          "y": 280,
+          "name": "V1 Sin lineas blancas",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370065513.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "UAIC8",
+          "x": 1450,
+          "y": 1820,
+          "name": "label1",
+          "fill": "#F5F2E9",
+          "content": "V1 — Sin líneas blancas\nSwatches contiguos, masas más sólidas",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "OnIVF",
+          "x": 2780,
+          "y": 280,
+          "name": "V2 Con Carmin",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370062584.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "m5o8B",
+          "x": 2780,
+          "y": 1820,
+          "name": "label2",
+          "fill": "#F5F2E9",
+          "content": "V2 — Con acento Carmín\n1 swatch rojo como punto focal",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "J5LmfY",
+          "x": 4110,
+          "y": 280,
+          "name": "V3 O asimetrica",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370062923.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "L07PS",
+          "x": 4110,
+          "y": 1820,
+          "name": "label3",
+          "fill": "#F5F2E9",
+          "content": "V3 — O asimétrica\nAgujero orgánico, no cuadrado perfecto",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "vLjqT",
+      "x": -9064,
+      "y": 20355,
+      "name": "Icono v2 — Refinamiento O-shape sin mosaico",
+      "clip": true,
+      "width": 5555,
+      "height": 2000,
+      "fill": "#1A1410",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "rUYcC",
+          "x": 80,
+          "y": 80,
+          "name": "header3",
+          "fill": "#9D2933",
+          "content": "REFINAMIENTO — O-SHAPE + CARMÍN, MENOS MOSAICO",
+          "fontFamily": "Inter",
+          "fontSize": 55,
+          "fontWeight": "700",
+          "letterSpacing": 6
+        },
+        {
+          "type": "text",
+          "id": "A9zKc",
+          "x": 80,
+          "y": 170,
+          "name": "sub3",
+          "fill": "#8C7A5A",
+          "content": "3 maneras distintas de resolver la O preservando el acento Carmín",
+          "fontFamily": "Inter",
+          "fontSize": 36,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "bEU5e",
+          "x": 120,
+          "y": 280,
+          "name": "V4 — O cuatro bloques",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370493237.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "WsDAd",
+          "x": 120,
+          "y": 1820,
+          "name": "labV4",
+          "fill": "#F5F2E9",
+          "content": "V4 — O en 4 bloques\n4 cuadrantes Wada, uno Carmín",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "wwMVe",
+          "x": 1450,
+          "y": 280,
+          "name": "V5 — O concéntrica",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370481646.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "owLgS",
+          "x": 1450,
+          "y": 1820,
+          "name": "labV5",
+          "fill": "#F5F2E9",
+          "content": "V5 — O concéntrica\nAnillos navy/beige/gris + ring Carmín",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "k09XW",
+          "x": 2780,
+          "y": 280,
+          "name": "V6 — O serif + sello",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370486477.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "cKuVM",
+          "x": 2780,
+          "y": 1820,
+          "name": "labV6",
+          "fill": "#F5F2E9",
+          "content": "V6 — O serif tipográfica\nNavy maciza + sello Carmín dentro",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "bxfXk",
+          "x": 4110,
+          "y": 280,
+          "name": "V7 — O caligráfica",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370482015.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "eWFMz",
+          "x": 4110,
+          "y": 1820,
+          "name": "labV7",
+          "fill": "#F5F2E9",
+          "content": "V7 — O caligráfica japonesa\nBrushstroke estilo Wada + tinta Carmín",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "j4red0",
+      "x": -9064,
+      "y": 22554,
+      "name": "Icono v2 — Refinamiento sobre V4",
+      "clip": true,
+      "width": 5452,
+      "height": 2000,
+      "fill": "#1A1410",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "BE9ed",
+          "x": 80,
+          "y": 80,
+          "name": "header4",
+          "fill": "#9D2933",
+          "content": "REFINAMIENTO SOBRE V4 — DETALLES QUE MARCAN DIFERENCIA",
+          "fontFamily": "Inter",
+          "fontSize": 50,
+          "fontWeight": "700",
+          "letterSpacing": 6
+        },
+        {
+          "type": "text",
+          "id": "d8XMH",
+          "x": 80,
+          "y": 160,
+          "name": "sub4",
+          "fill": "#8C7A5A",
+          "content": "4 ángulos: posición del carmín · hairlines · esquinas redondeadas · asimetría",
+          "fontFamily": "Inter",
+          "fontSize": 36,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "IMUJR",
+          "x": 120,
+          "y": 280,
+          "name": "V8 — Carmin top-right",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370678675.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "R0iRAs",
+          "x": 120,
+          "y": 1820,
+          "name": "labV8",
+          "fill": "#F5F2E9",
+          "content": "V8 — Carmín arriba-derecha\nMás eye-catching, focal alto",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "td0Ud",
+          "x": 1450,
+          "y": 280,
+          "name": "V9 — Hairline dividers",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370677891.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "F8TUtq",
+          "x": 1450,
+          "y": 1820,
+          "name": "labV9",
+          "fill": "#F5F2E9",
+          "content": "V9 — Líneas crema entre bloques\nFeel arquitectónico tipo vitral",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "nOfYJ",
+          "x": 2780,
+          "y": 280,
+          "name": "V10 — Inner rounded corners",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370687783.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "rC76o",
+          "x": 2780,
+          "y": 1820,
+          "name": "labV10",
+          "fill": "#F5F2E9",
+          "content": "V10 — Esquinas internas redondeadas\nMás suave, iOS-native",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "nJHZC",
+          "x": 4110,
+          "y": 280,
+          "name": "V11 — Asimetria con carmin pequeño",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370677582.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "ERNSn",
+          "x": 4110,
+          "y": 1820,
+          "name": "labV11",
+          "fill": "#F5F2E9",
+          "content": "V11 — Bloques asimétricos\nCarmín como acento pequeño, no cuadrante",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "FWEmj",
+      "x": -9064,
+      "y": 24754,
+      "name": "Icono v2 — Pivot O serif tipografica",
+      "clip": true,
+      "width": 4500,
+      "height": 2000,
+      "fill": "#1A1410",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "md1pF",
+          "x": 80,
+          "y": 80,
+          "name": "header5",
+          "fill": "#9D2933",
+          "content": "PIVOT — O SERIF TIPOGRÁFICA + SELLO CARMÍN",
+          "fontFamily": "Inter",
+          "fontSize": 50,
+          "fontWeight": "700",
+          "letterSpacing": 6
+        },
+        {
+          "type": "text",
+          "id": "mc5ni",
+          "x": 80,
+          "y": 160,
+          "name": "sub5",
+          "fill": "#8C7A5A",
+          "content": "Coherencia con el set ASO (Playfair Display) · 2 colores máximo · firma editorial",
+          "fontFamily": "Inter",
+          "fontSize": 36,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "ZHEy5",
+          "x": 120,
+          "y": 280,
+          "name": "V12 — Sello clasico",
+          "clip": true,
+          "width": 1200,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777371005526.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "N2ujdJ",
+          "x": 120,
+          "y": 1820,
+          "name": "labV12",
+          "fill": "#F5F2E9",
+          "content": "V12 — O navy + sello carmín\nFeel libro editorial premium",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "o4YHc",
+          "x": 1500,
+          "y": 280,
+          "name": "V13 — Split vertical",
+          "clip": true,
+          "width": 1200,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777371001638.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "tbmDG",
+          "x": 1500,
+          "y": 1820,
+          "name": "labV13",
+          "fill": "#F5F2E9",
+          "content": "V13 — O dividida navy/carmín\nDualidad bold, más punch",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "SAtjF",
+          "x": 2880,
+          "y": 280,
+          "name": "V14 — Mono carmin",
+          "clip": true,
+          "width": 1200,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777371004530.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "gugjG",
+          "x": 2880,
+          "y": 1820,
+          "name": "labV14",
+          "fill": "#F5F2E9",
+          "content": "V14 — O carmín maciza\nMono-color extremo, máxima simplicidad",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "wOVZO",
+      "x": -9064,
+      "y": 26954,
+      "name": "Icono v2 — Background invertido (LinkedIn/Apple style)",
+      "clip": true,
+      "width": 4500,
+      "height": 2000,
+      "fill": "#1A1410",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "F0QDPV",
+          "x": 80,
+          "y": 80,
+          "name": "header6",
+          "fill": "#9D2933",
+          "content": "BACKGROUND INVERTIDO — MARK CLARO SOBRE COLOR",
+          "fontFamily": "Inter",
+          "fontSize": 50,
+          "fontWeight": "700",
+          "letterSpacing": 6
+        },
+        {
+          "type": "text",
+          "id": "DBR6I",
+          "x": 80,
+          "y": 160,
+          "name": "sub6",
+          "fill": "#8C7A5A",
+          "content": "Convención iOS app icon: bg sólido/gradient + mark cream encima · diferente totalmente de Opera",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "kWnk0",
+          "x": 120,
+          "y": 280,
+          "name": "V15 — BG navy + O cream + sello",
+          "clip": true,
+          "width": 1200,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777372541234.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "em7Ao",
+          "x": 120,
+          "y": 1820,
+          "name": "labV15",
+          "fill": "#F5F2E9",
+          "content": "V15 — BG navy + O cream + sello carmín\nClásico editorial premium book-cover",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "ZTSKs",
+          "x": 1500,
+          "y": 280,
+          "name": "V16 — BG carmin + O cream",
+          "clip": true,
+          "width": 1200,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777372530085.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "U9a0F9",
+          "x": 1500,
+          "y": 1820,
+          "name": "labV16",
+          "fill": "#F5F2E9",
+          "content": "V16 — BG carmín + O cream\nMáximo contraste tipo Pinterest/Lyft",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "G0uvyh",
+          "x": 2880,
+          "y": 280,
+          "name": "V17 — BG gradient + O cream",
+          "clip": true,
+          "width": 1200,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777372535180.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "W5RqZm",
+          "x": 2880,
+          "y": 1820,
+          "name": "labV17",
+          "fill": "#F5F2E9",
+          "content": "V17 — BG gradient navy→carmín + O cream\nModern app trend tipo Apple Music",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        }
+      ]
     }
   ]
 }
