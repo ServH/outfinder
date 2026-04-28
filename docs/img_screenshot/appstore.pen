@@ -42,7 +42,7 @@
           "fill": "#F5F2E9",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "Your\nclothes,\ncolor-matched.",
+          "content": "Your style.\nYours.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -54,7 +54,7 @@
           "x": 105,
           "y": 830,
           "fill": "#8C7A5A",
-          "content": "Built from a 100-year-old colour bible.",
+          "content": "Your wardrobe. Your call. Share away.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -114,10 +114,15 @@
               "type": "rectangle",
               "id": "yfGgz",
               "x": 0,
-              "y": 33,
-              "fill": "#F5F2E9",
+              "y": 0,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/en-pill-only.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         },
@@ -322,7 +327,7 @@
           "fill": "#F5F2E9",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "348 combos.\nZero\nalgorithms.",
+          "content": "348 combos.\nHand-picked.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -334,7 +339,7 @@
           "x": 105,
           "y": 830,
           "fill": "#C4A87A",
-          "content": "Sanzo Wada's century-old theory, curated.",
+          "content": "By Sanzo Wada. In 1933.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -394,7 +399,7 @@
               "type": "rectangle",
               "id": "3UMiX",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "fill": {
                 "type": "image",
                 "enabled": true,
@@ -402,7 +407,7 @@
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         },
@@ -476,7 +481,7 @@
           "fill": "#F5F2E9",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "Looks in\nprogress, not\njust saved.",
+          "content": "Always\ncooking.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -488,7 +493,7 @@
           "x": 105,
           "y": 830,
           "fill": "#8C7A5A",
-          "content": "Pick up where yesterday left off.",
+          "content": "Looks you're still building.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -548,10 +553,15 @@
               "type": "rectangle",
               "id": "026h1",
               "x": 0,
-              "y": 33,
-              "fill": "#F5F2E9",
+              "y": 0,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/05-mis-looks-en-v5.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         },
@@ -628,7 +638,7 @@
           "fill": "#F5F2E9",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "Point.\nShoot.",
+          "content": "One tap.\nReal colour\nname.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -641,7 +651,7 @@
           "y": 830,
           "name": "sub05",
           "fill": "#8C7A5A",
-          "content": "Any garment. Any moment.",
+          "content": "No typing. No tags.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -750,7 +760,7 @@
               "type": "rectangle",
               "id": "HeSZV",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc05",
               "fill": {
                 "type": "image",
@@ -759,37 +769,9 @@
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
-        },
-        {
-          "type": "rectangle",
-          "id": "BG9tb",
-          "x": 0,
-          "y": 2450,
-          "name": "grad05",
-          "fill": {
-            "type": "gradient",
-            "gradientType": "linear",
-            "enabled": true,
-            "rotation": 180,
-            "size": {
-              "height": 1
-            },
-            "colors": [
-              {
-                "color": "#1C181400",
-                "position": 0
-              },
-              {
-                "color": "#1C1814FF",
-                "position": 1
-              }
-            ]
-          },
-          "width": 1284,
-          "height": 328
         }
       ]
     },
@@ -964,34 +946,6 @@
               ]
             }
           ]
-        },
-        {
-          "type": "rectangle",
-          "id": "n1N99",
-          "x": 0,
-          "y": 2310,
-          "name": "grad06",
-          "fill": {
-            "type": "gradient",
-            "gradientType": "linear",
-            "enabled": true,
-            "rotation": 180,
-            "size": {
-              "height": 1
-            },
-            "colors": [
-              {
-                "color": "#1C181400",
-                "position": 0
-              },
-              {
-                "color": "#1C1814FF",
-                "position": 1
-              }
-            ]
-          },
-          "width": 1284,
-          "height": 468
         }
       ]
     },
@@ -1125,34 +1079,6 @@
               "height": 2107
             }
           ]
-        },
-        {
-          "type": "rectangle",
-          "id": "JfOnc",
-          "x": 0,
-          "y": 2450,
-          "name": "grad07",
-          "fill": {
-            "type": "gradient",
-            "gradientType": "linear",
-            "enabled": true,
-            "rotation": 180,
-            "size": {
-              "height": 1
-            },
-            "colors": [
-              {
-                "color": "#2C1E0E00",
-                "position": 0
-              },
-              {
-                "color": "#2C1E0EFF",
-                "position": 1
-              }
-            ]
-          },
-          "width": 1284,
-          "height": 328
         }
       ]
     },
@@ -1200,7 +1126,7 @@
           "fill": "#2D2926",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "Your\nwardrobe,\ncolor-coded.",
+          "content": "Your closet,\nin your\npocket.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -1213,7 +1139,7 @@
           "y": 830,
           "name": "arSub",
           "fill": "#9A8668",
-          "content": "Real clothes. Real cutouts. No silhouettes.",
+          "content": "Real garments. Real cutouts.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -1250,7 +1176,7 @@
               "type": "rectangle",
               "id": "SYZy0",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_armario",
               "fill": {
                 "type": "image",
@@ -1259,37 +1185,9 @@
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
-        },
-        {
-          "type": "rectangle",
-          "id": "KbxeL",
-          "x": 0,
-          "y": 2450,
-          "name": "grad_armario",
-          "fill": {
-            "type": "gradient",
-            "gradientType": "linear",
-            "enabled": true,
-            "rotation": 180,
-            "size": {
-              "height": 1
-            },
-            "colors": [
-              {
-                "color": "#F5F2E900",
-                "position": 0
-              },
-              {
-                "color": "#F5F2E9FF",
-                "position": 1
-              }
-            ]
-          },
-          "width": 1284,
-          "height": 328
         }
       ]
     },
@@ -1337,7 +1235,7 @@
           "fill": "#F5F2E9",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "It tells you\nwhat's\nmissing.",
+          "content": "Knows what\nto add.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -1350,7 +1248,7 @@
           "y": 830,
           "name": "sgSub",
           "fill": "#8C7A5A",
-          "content": "The colour you don't yet own.",
+          "content": "The colour your wardrobe asks for.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -1411,41 +1309,18 @@
               "type": "rectangle",
               "id": "dYpgJ",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_sugerencia",
-              "fill": "#F5F2E9",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/07-sugerencia-en-v5.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
-        },
-        {
-          "type": "rectangle",
-          "id": "gTVSV",
-          "x": 0,
-          "y": 2450,
-          "name": "sgGrad",
-          "fill": {
-            "type": "gradient",
-            "gradientType": "linear",
-            "enabled": true,
-            "rotation": 180,
-            "size": {
-              "height": 1
-            },
-            "colors": [
-              {
-                "color": "#1E1C1800",
-                "position": 0
-              },
-              {
-                "color": "#1E1C18FF",
-                "position": 1
-              }
-            ]
-          },
-          "width": 1284,
-          "height": 328
         }
       ]
     },
@@ -1493,7 +1368,7 @@
           "fill": "#F5F2E9",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "Try it\nbefore you\nwear it.",
+          "content": "Vibe check\nfirst.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -1506,7 +1381,7 @@
           "y": 830,
           "name": "vzSub",
           "fill": "#C4A87A",
-          "content": "A dressing room in your pocket.",
+          "content": "Then make it yours.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -1567,46 +1442,18 @@
               "type": "rectangle",
               "id": "0dzJC",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_visualizer_relegado",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/07-visualizer-ink-dyed-robe.png",
+                "url": "appstore/new_v140/07-visualizer-ink-dyed-robe-v5.png",
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
-        },
-        {
-          "type": "rectangle",
-          "id": "19kkh",
-          "x": 0,
-          "y": 2450,
-          "name": "vzGrad",
-          "fill": {
-            "type": "gradient",
-            "gradientType": "linear",
-            "enabled": true,
-            "rotation": 180,
-            "size": {
-              "height": 1
-            },
-            "colors": [
-              {
-                "color": "#2C1E0E00",
-                "position": 0
-              },
-              {
-                "color": "#2C1E0EFF",
-                "position": 1
-              }
-            ]
-          },
-          "width": 1284,
-          "height": 328
         }
       ]
     },
@@ -1657,7 +1504,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Build\nthe look.",
+          "content": "Your style.\nYours.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
           "fontSize": 200,
@@ -1673,7 +1520,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Your real clothes. Real cutouts.",
+          "content": "Your wardrobe. Your call. Share away.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -1705,11 +1552,16 @@
               "type": "rectangle",
               "id": "tsqGo",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b1",
-              "fill": "#FFFFFF",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/en-pill-only.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -1733,7 +1585,7 @@
           "x": 80,
           "y": 140,
           "name": "b2Chip",
-          "fill": "#1A1410",
+          "fill": "#9D2933",
           "cornerRadius": 44,
           "padding": [
             32,
@@ -1745,7 +1597,7 @@
               "id": "64YR9",
               "name": "b2ChipText",
               "fill": "#FFFFFF",
-              "content": "Live",
+              "content": "Carmine",
               "fontFamily": "Inter",
               "fontSize": 34,
               "fontWeight": "600",
@@ -1762,10 +1614,10 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Just point\nand shoot.",
+          "content": "One tap.\nReal colour\nname.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
-          "fontSize": 200,
+          "fontSize": 160,
           "fontWeight": "700"
         },
         {
@@ -1778,7 +1630,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "No filters. No tricks.",
+          "content": "No typing. No tags.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -1810,7 +1662,7 @@
               "type": "rectangle",
               "id": "res8n",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b2",
               "fill": {
                 "type": "image",
@@ -1819,7 +1671,7 @@
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -1872,10 +1724,10 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Wardrobe,\nsorted.",
+          "content": "Your closet,\nin your\npocket.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
-          "fontSize": 200,
+          "fontSize": 160,
           "fontWeight": "700"
         },
         {
@@ -1888,7 +1740,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "One photo per garment.",
+          "content": "Real garments. Real cutouts.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -1920,7 +1772,7 @@
               "type": "rectangle",
               "id": "G7xt0",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b3",
               "fill": {
                 "type": "image",
@@ -1929,7 +1781,7 @@
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -1944,7 +1796,7 @@
       "clip": true,
       "width": 1284,
       "height": 2778,
-      "fill": "#F4E5E2",
+      "fill": "#F0E2D6",
       "layout": "none",
       "children": [
         {
@@ -1982,7 +1834,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Looks in\nprogress.",
+          "content": "Always\ncooking.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
           "fontSize": 200,
@@ -1998,7 +1850,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Yesterday's start, today's finish.",
+          "content": "Looks you're still building.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -2030,11 +1882,16 @@
               "type": "rectangle",
               "id": "dGh4c",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b4",
-              "fill": "#FFFFFF",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/05-mis-looks-en-v5.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -2087,10 +1944,10 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "348\ncombos.",
+          "content": "348 combos.\nHand-picked.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
-          "fontSize": 200,
+          "fontSize": 160,
           "fontWeight": "700"
         },
         {
@@ -2103,7 +1960,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Curated, not generated. Sanzo Wada · 1933.",
+          "content": "By Sanzo Wada. In 1933.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -2135,7 +1992,7 @@
               "type": "rectangle",
               "id": "QtTUT",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b5",
               "fill": {
                 "type": "image",
@@ -2144,7 +2001,7 @@
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -2197,7 +2054,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "What's\nmissing?",
+          "content": "Knows what\nto add.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
           "fontSize": 200,
@@ -2213,7 +2070,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "The colour you don't yet own.",
+          "content": "The colour your wardrobe asks for.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -2245,11 +2102,16 @@
               "type": "rectangle",
               "id": "s51XE",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b6",
-              "fill": "#FFFFFF",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/07-sugerencia-en-v5.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -2302,7 +2164,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Pre-wear\npreview.",
+          "content": "Vibe check\nfirst.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
           "fontSize": 200,
@@ -2318,7 +2180,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "A dressing room in your pocket.",
+          "content": "Then make it yours.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -2350,16 +2212,16 @@
               "type": "rectangle",
               "id": "GdG9i",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b7",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/07-visualizer-ink-dyed-robe.png",
+                "url": "appstore/new_v140/07-visualizer-ink-dyed-robe-v5.png",
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -2658,7 +2520,7 @@
           "fill": "#F5F2E9",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "It's the tone\nGray.",
+          "content": "From photo to\n7 outfits.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -2671,7 +2533,7 @@
           "y": 830,
           "name": "sub05",
           "fill": "#8C7A5A",
-          "content": "A century-old name for what you just shot.",
+          "content": "Background out. Wada tone in.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -2730,91 +2592,20 @@
           "children": [
             {
               "type": "rectangle",
-              "id": "VQje0",
+              "id": "M5WMr",
               "x": 0,
               "y": 0,
-              "name": "bg_blr",
+              "name": "sc05",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "new_feature_EN/fondo_camera.png",
+                "url": "appstore/new_v140/03-result-composite-en-v10.png",
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2140,
-              "effect": {
-                "type": "blur",
-                "radius": 50
-              }
-            },
-            {
-              "type": "frame",
-              "id": "x0o0q",
-              "x": 110,
-              "y": 500,
-              "name": "vf_clip",
-              "clip": true,
-              "width": 768,
-              "height": 1000,
-              "fill": "#00000000",
-              "layout": "none",
-              "children": [
-                {
-                  "type": "rectangle",
-                  "id": "8YgCO",
-                  "x": -110,
-                  "y": -500,
-                  "name": "sharp_img",
-                  "fill": {
-                    "type": "image",
-                    "enabled": true,
-                    "url": "new_feature_EN/fondo_camera.png",
-                    "mode": "fill"
-                  },
-                  "width": 988,
-                  "height": 2140
-                }
-              ]
-            },
-            {
-              "type": "rectangle",
-              "id": "M5WMr",
-              "x": 0,
-              "y": 33,
-              "name": "sc05",
-              "fill": "#1A1A1A",
-              "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
-        },
-        {
-          "type": "rectangle",
-          "id": "0niVh",
-          "x": 0,
-          "y": 2450,
-          "name": "grad05",
-          "fill": {
-            "type": "gradient",
-            "gradientType": "linear",
-            "enabled": true,
-            "rotation": 180,
-            "size": {
-              "height": 1
-            },
-            "colors": [
-              {
-                "color": "#1C181400",
-                "position": 0
-              },
-              {
-                "color": "#1C1814FF",
-                "position": 1
-              }
-            ]
-          },
-          "width": 1284,
-          "height": 328
         }
       ]
     },
@@ -2827,7 +2618,7 @@
       "clip": true,
       "width": 1284,
       "height": 2778,
-      "fill": "#F5E8E5",
+      "fill": "#ECEEEC",
       "layout": "none",
       "children": [
         {
@@ -2865,7 +2656,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Named\ninstantly.",
+          "content": "From photo\nto 7 outfits.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
           "fontSize": 200,
@@ -2881,7 +2672,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Vision detects, Wada names.",
+          "content": "Background out. Wada tone in.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -2913,11 +2704,16 @@
               "type": "rectangle",
               "id": "fWX8E",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b2",
-              "fill": "#FFFFFF",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/03-result-composite-en-v10.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -2964,7 +2760,7 @@
           "fill": "#F5F2E9",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "Tu ropa,\nen colores\nque casan.",
+          "content": "Tu estilo.\nTuyo de verdad.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -2976,7 +2772,7 @@
           "x": 105,
           "y": 830,
           "fill": "#8C7A5A",
-          "content": "Basado en la biblia del color de Sanzo Wada.",
+          "content": "Tu ropa, tus ideas, tu look.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -3036,15 +2832,15 @@
               "type": "rectangle",
               "id": "O9jw5j",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/01-tu-look-rikyu-wabi.png",
+                "url": "appstore/new_v140/es1-final2.png",
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         },
@@ -3121,7 +2917,7 @@
           "fill": "#F5F2E9",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "Apunta.\nDispara.",
+          "content": "Una foto.\nSu tono real.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -3134,7 +2930,7 @@
           "y": 830,
           "name": "sub05",
           "fill": "#8C7A5A",
-          "content": "Cualquier prenda. Cualquier momento.",
+          "content": "Sin escribir nada.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -3243,41 +3039,18 @@
               "type": "rectangle",
               "id": "weBKS",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc05",
-              "fill": "#1A1A1A",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/02-camera-scan-composite-es.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
-        },
-        {
-          "type": "rectangle",
-          "id": "Zd2sX",
-          "x": 0,
-          "y": 2450,
-          "name": "grad05",
-          "fill": {
-            "type": "gradient",
-            "gradientType": "linear",
-            "enabled": true,
-            "rotation": 180,
-            "size": {
-              "height": 1
-            },
-            "colors": [
-              {
-                "color": "#1C181400",
-                "position": 0
-              },
-              {
-                "color": "#1C1814FF",
-                "position": 1
-              }
-            ]
-          },
-          "width": 1284,
-          "height": 328
         }
       ]
     },
@@ -3325,7 +3098,7 @@
           "fill": "#F5F2E9",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "Es el tono\nGray.",
+          "content": "De foto a\n7 outfits.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -3338,7 +3111,7 @@
           "y": 830,
           "name": "sub05",
           "fill": "#8C7A5A",
-          "content": "Un nombre de hace un siglo para lo que acabas de fotografiar.",
+          "content": "Sin fondo. Con tono Wada.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -3397,96 +3170,20 @@
           "children": [
             {
               "type": "rectangle",
-              "id": "A3OSIF",
-              "x": 0,
-              "y": 0,
-              "name": "bg_blr",
-              "fill": {
-                "type": "image",
-                "enabled": true,
-                "url": "new_feature_EN/fondo_camera.png",
-                "mode": "fill"
-              },
-              "width": 988,
-              "height": 2140,
-              "effect": {
-                "type": "blur",
-                "radius": 50
-              }
-            },
-            {
-              "type": "frame",
-              "id": "KkePe",
-              "x": 110,
-              "y": 500,
-              "name": "vf_clip",
-              "clip": true,
-              "width": 768,
-              "height": 1000,
-              "fill": "#00000000",
-              "layout": "none",
-              "children": [
-                {
-                  "type": "rectangle",
-                  "id": "HB15O",
-                  "x": -110,
-                  "y": -500,
-                  "name": "sharp_img",
-                  "fill": {
-                    "type": "image",
-                    "enabled": true,
-                    "url": "new_feature_EN/fondo_camera.png",
-                    "mode": "fill"
-                  },
-                  "width": 988,
-                  "height": 2140
-                }
-              ]
-            },
-            {
-              "type": "rectangle",
               "id": "dmvSw",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc05",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/03-result-composite.png",
+                "url": "appstore/new_v140/03-result-composite-es-v10.png",
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
-        },
-        {
-          "type": "rectangle",
-          "id": "s73nTY",
-          "x": 0,
-          "y": 2450,
-          "name": "grad05",
-          "fill": {
-            "type": "gradient",
-            "gradientType": "linear",
-            "enabled": true,
-            "rotation": 180,
-            "size": {
-              "height": 1
-            },
-            "colors": [
-              {
-                "color": "#1C181400",
-                "position": 0
-              },
-              {
-                "color": "#1C1814FF",
-                "position": 1
-              }
-            ]
-          },
-          "width": 1284,
-          "height": 328
         }
       ]
     },
@@ -3534,7 +3231,7 @@
           "fill": "#2D2926",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "Tu armario,\nordenado por\ncolor.",
+          "content": "Tu armario,\nen tu bolsillo.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -3547,7 +3244,7 @@
           "y": 830,
           "name": "arSub",
           "fill": "#9A8668",
-          "content": "Prendas reales, recortadas. Sin siluetas.",
+          "content": "Recortes reales. Sin siluetas.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -3584,41 +3281,18 @@
               "type": "rectangle",
               "id": "P8VlO",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_armario",
-              "fill": "#F5F2E9",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/04-armario-picker-es-v2.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
-        },
-        {
-          "type": "rectangle",
-          "id": "w9Y2v",
-          "x": 0,
-          "y": 2450,
-          "name": "grad_armario",
-          "fill": {
-            "type": "gradient",
-            "gradientType": "linear",
-            "enabled": true,
-            "rotation": 180,
-            "size": {
-              "height": 1
-            },
-            "colors": [
-              {
-                "color": "#F5F2E900",
-                "position": 0
-              },
-              {
-                "color": "#F5F2E9FF",
-                "position": 1
-              }
-            ]
-          },
-          "width": 1284,
-          "height": 328
         }
       ]
     },
@@ -3663,7 +3337,7 @@
           "fill": "#F5F2E9",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "Looks en\ncurso, no\nsolo guardados.",
+          "content": "Tus looks,\nsiempre\nen marcha.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -3675,7 +3349,7 @@
           "x": 105,
           "y": 830,
           "fill": "#8C7A5A",
-          "content": "Sigue donde lo dejaste ayer.",
+          "content": "Sigue donde lo dejaste.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -3735,15 +3409,15 @@
               "type": "rectangle",
               "id": "L6YZQ",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/04-mis-looks.png",
+                "url": "appstore/new_v140/04-mis-looks-v5.png",
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         },
@@ -3817,7 +3491,7 @@
           "fill": "#F5F2E9",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "348 combos.\nCero\nalgoritmo.",
+          "content": "Escogidos\na mano.\nDesde 1933.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -3829,7 +3503,7 @@
           "x": 105,
           "y": 830,
           "fill": "#C4A87A",
-          "content": "Cien años de teoría del color, curados.",
+          "content": "Sanzo Wada · 348 combos.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -3889,10 +3563,15 @@
               "type": "rectangle",
               "id": "Xp1zQ",
               "x": 0,
-              "y": 33,
-              "fill": "#F5F2E9",
+              "y": 0,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/06-combinations-grey-es.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         },
@@ -3969,7 +3648,7 @@
           "fill": "#F5F2E9",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "Te dice\nqué te\nfalta.",
+          "content": "Sabe qué\nfalta.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -3982,7 +3661,7 @@
           "y": 830,
           "name": "sgSub",
           "fill": "#8C7A5A",
-          "content": "El color que aún no tienes.",
+          "content": "El color que tu armario pide.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -4043,46 +3722,18 @@
               "type": "rectangle",
               "id": "o08rVP",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_sugerencia",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/06-sugerencia-rikyu-wabi.png",
+                "url": "appstore/new_v140/06-sugerencia-rikyu-wabi-v5.png",
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
-        },
-        {
-          "type": "rectangle",
-          "id": "uYx0j",
-          "x": 0,
-          "y": 2450,
-          "name": "sgGrad",
-          "fill": {
-            "type": "gradient",
-            "gradientType": "linear",
-            "enabled": true,
-            "rotation": 180,
-            "size": {
-              "height": 1
-            },
-            "colors": [
-              {
-                "color": "#1E1C1800",
-                "position": 0
-              },
-              {
-                "color": "#1E1C18FF",
-                "position": 1
-              }
-            ]
-          },
-          "width": 1284,
-          "height": 328
         }
       ]
     },
@@ -4130,7 +3781,7 @@
           "fill": "#F5F2E9",
           "textGrowth": "fixed-width",
           "width": 1074,
-          "content": "Pruébalo\nantes de\nponértelo.",
+          "content": "Prueba\nprimero.",
           "lineHeight": 1.12,
           "fontFamily": "Playfair Display",
           "fontSize": 151,
@@ -4143,7 +3794,7 @@
           "y": 830,
           "name": "vzSub",
           "fill": "#C4A87A",
-          "content": "Un probador en tu bolsillo.",
+          "content": "Y hazlo tuyo después.",
           "fontFamily": "Inter",
           "fontSize": 43,
           "fontWeight": "normal"
@@ -4204,41 +3855,18 @@
               "type": "rectangle",
               "id": "g5Waz",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_visualizer_relegado",
-              "fill": "#F5F2E9",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/08-visualizer-ink-dyed-robe-es-v5.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
-        },
-        {
-          "type": "rectangle",
-          "id": "Efb1a",
-          "x": 0,
-          "y": 2450,
-          "name": "vzGrad",
-          "fill": {
-            "type": "gradient",
-            "gradientType": "linear",
-            "enabled": true,
-            "rotation": 180,
-            "size": {
-              "height": 1
-            },
-            "colors": [
-              {
-                "color": "#2C1E0E00",
-                "position": 0
-              },
-              {
-                "color": "#2C1E0EFF",
-                "position": 1
-              }
-            ]
-          },
-          "width": 1284,
-          "height": 328
         }
       ]
     },
@@ -4289,10 +3917,10 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Monta\nel look.",
+          "content": "Tu estilo.\nTuyo de verdad.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
-          "fontSize": 200,
+          "fontSize": 160,
           "fontWeight": "700"
         },
         {
@@ -4305,7 +3933,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Tus prendas. Recortes reales.",
+          "content": "Tu ropa, tus ideas, tu look.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -4337,16 +3965,16 @@
               "type": "rectangle",
               "id": "sh68q",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b1",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/01-tu-look-rikyu-wabi.png",
+                "url": "appstore/new_v140/es1-final2.png",
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -4370,7 +3998,7 @@
           "x": 80,
           "y": 140,
           "name": "b2Chip",
-          "fill": "#1A1410",
+          "fill": "#9D2933",
           "cornerRadius": 44,
           "padding": [
             32,
@@ -4382,7 +4010,7 @@
               "id": "kcBLK",
               "name": "b2ChipText",
               "fill": "#FFFFFF",
-              "content": "En vivo",
+              "content": "Carmín",
               "fontFamily": "Inter",
               "fontSize": 34,
               "fontWeight": "600",
@@ -4399,10 +4027,10 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Apunta\ny dispara.",
+          "content": "Una foto.\nSu tono real.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
-          "fontSize": 200,
+          "fontSize": 160,
           "fontWeight": "700"
         },
         {
@@ -4415,7 +4043,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Sin filtros. Sin trucos.",
+          "content": "Sin escribir nada.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -4447,11 +4075,16 @@
               "type": "rectangle",
               "id": "Bj3TB",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b2",
-              "fill": "#FFFFFF",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/02-camera-scan-composite-es.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -4466,7 +4099,7 @@
       "clip": true,
       "width": 1284,
       "height": 2778,
-      "fill": "#F5E8E5",
+      "fill": "#ECEEEC",
       "layout": "none",
       "children": [
         {
@@ -4504,7 +4137,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Nombrado\nal instante.",
+          "content": "De foto a\n7 outfits.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
           "fontSize": 200,
@@ -4520,7 +4153,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Vision detecta. Wada nombra.",
+          "content": "Sin fondo. Con tono Wada.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -4552,16 +4185,16 @@
               "type": "rectangle",
               "id": "jb2VT",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b2",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/03-result-composite.png",
+                "url": "appstore/new_v140/03-result-composite-es-v10.png",
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -4614,10 +4247,10 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Armario,\nordenado.",
+          "content": "Tu armario,\nen tu bolsillo.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
-          "fontSize": 200,
+          "fontSize": 160,
           "fontWeight": "700"
         },
         {
@@ -4630,7 +4263,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Una foto por prenda.",
+          "content": "Recortes reales. Sin siluetas.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -4662,11 +4295,16 @@
               "type": "rectangle",
               "id": "oK9pl",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b3",
-              "fill": "#FFFFFF",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/04-armario-picker-es-v2.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -4681,7 +4319,7 @@
       "clip": true,
       "width": 1284,
       "height": 2778,
-      "fill": "#F4E5E2",
+      "fill": "#F0E2D6",
       "layout": "none",
       "children": [
         {
@@ -4719,7 +4357,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Looks\nen curso.",
+          "content": "Tus looks,\nen marcha.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
           "fontSize": 200,
@@ -4735,7 +4373,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Empieza ayer, acaba hoy.",
+          "content": "Sigue donde lo dejaste.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -4767,16 +4405,16 @@
               "type": "rectangle",
               "id": "ql2xl",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b4",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/04-mis-looks.png",
+                "url": "appstore/new_v140/04-mis-looks-v5.png",
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -4829,7 +4467,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "348\ncombos.",
+          "content": "Escogidos\na mano.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
           "fontSize": 200,
@@ -4845,7 +4483,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Curados, no generados. Sanzo Wada · 1933.",
+          "content": "Sanzo Wada · 348 combos.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -4877,11 +4515,16 @@
               "type": "rectangle",
               "id": "olLA9",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b5",
-              "fill": "#FFFFFF",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/06-combinations-grey-es.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -4934,7 +4577,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "¿Qué\nfalta?",
+          "content": "Sabe qué\nfalta.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
           "fontSize": 200,
@@ -4950,7 +4593,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "El color que aún no tienes.",
+          "content": "El color que tu armario pide.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -4982,16 +4625,16 @@
               "type": "rectangle",
               "id": "w1e6aS",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b6",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "appstore/new_v140/06-sugerencia-rikyu-wabi.png",
+                "url": "appstore/new_v140/06-sugerencia-rikyu-wabi-v5.png",
                 "mode": "fill"
               },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
         }
@@ -5044,7 +4687,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Probador\nde bolsillo.",
+          "content": "Prueba\nprimero.",
           "lineHeight": 0.95,
           "fontFamily": "Playfair Display",
           "fontSize": 200,
@@ -5060,7 +4703,7 @@
           "fill": "#1A1410",
           "textGrowth": "fixed-width",
           "width": 1124,
-          "content": "Un probador en tu bolsillo.",
+          "content": "Y hazlo tuyo después.",
           "fontFamily": "Inter",
           "fontSize": 42,
           "fontWeight": "500"
@@ -5092,13 +4735,147 @@
               "type": "rectangle",
               "id": "xW7jH",
               "x": 0,
-              "y": 33,
+              "y": 0,
               "name": "sc_b7",
-              "fill": "#FFFFFF",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/08-visualizer-ink-dyed-robe-es-v5.png",
+                "mode": "fill"
+              },
               "width": 988,
-              "height": 2107
+              "height": 2140
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "wznpi",
+      "x": -9064,
+      "y": 15956,
+      "name": "Icono v2 — 3 direcciones",
+      "clip": true,
+      "width": 4000,
+      "height": 2000,
+      "fill": "#1A1410",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "B2rmL",
+          "x": 80,
+          "y": 80,
+          "name": "header",
+          "fill": "#C4A87A",
+          "content": "ICONO v2 — 3 DIRECCIONES",
+          "fontFamily": "Inter",
+          "fontSize": 60,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "text",
+          "id": "fRbDo",
+          "x": 80,
+          "y": 180,
+          "name": "subhead",
+          "fill": "#8C7A5A",
+          "content": "Test contra competencia (Cladwell · Whering · Smart Closet · Stylebook) a 60×60",
+          "fontFamily": "Inter",
+          "fontSize": 36,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "FMM52",
+          "x": 120,
+          "y": 280,
+          "name": "A — Wada Minimal",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777364266137.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "zucFg",
+          "x": 120,
+          "y": 1820,
+          "name": "labelA",
+          "fill": "#F5F2E9",
+          "content": "A — Wada Minimal\n2 swatches solapados (Carmine + Iron Navy)",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "f1k0c",
+          "x": 1450,
+          "y": 280,
+          "name": "B — Prenda + Color",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777364274673.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "pd2ru",
+          "x": 1450,
+          "y": 1820,
+          "name": "labelB",
+          "fill": "#F5F2E9",
+          "content": "B — Prenda + Color\nSilueta de prenda con swatch saliendo",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "yRROZ",
+          "x": 2780,
+          "y": 280,
+          "name": "C — Editorial Tipográfico",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777364271921.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "M3OHOR",
+          "x": 2780,
+          "y": 1820,
+          "name": "labelC",
+          "fill": "#F5F2E9",
+          "content": "C — Editorial Tipográfico\n\"O\" serif con bandas concéntricas Wada",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
         }
       ]
     }
