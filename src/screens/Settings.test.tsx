@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
 import { Linking } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -7,6 +8,58 @@ import { Settings } from "./Settings";
 jest.mock("@/lib/haptics");
 jest.mock("@/hooks/useReducedMotion");
 jest.mock("react-native-reanimated");
+const mockToggleFavorite = jest.fn();
+const mockAddFavorite = jest.fn();
+const mockRemoveFavorite = jest.fn();
+const mockIsFavorite = jest.fn();
+const mockUpdateItemCategory = jest.fn();
+
+jest.mock("@/stores/misLooksStore", () => {
+	const mockState = {
+		items: [],
+		assignments: [],
+		favorites: new Set(["c1", "c2", "c3"]),
+		hydrated: true,
+	};
+	const useMisLooksStore = Object.assign(
+		(selector?: (s: typeof mockState) => unknown) =>
+			selector ? selector(mockState) : mockState,
+		{
+			getState: () => ({
+				...mockState,
+				setItems: jest.fn(),
+				setAssignments: jest.fn(),
+				addFavorite: mockAddFavorite,
+				removeFavorite: mockRemoveFavorite,
+				toggleFavorite: mockToggleFavorite,
+				isFavorite: mockIsFavorite,
+				updateItemCategory: mockUpdateItemCategory,
+			}),
+			setState: jest.fn(),
+		},
+	);
+	return {
+		useMisLooksStore,
+		hydrateMisLooksStore: jest.fn().mockResolvedValue(undefined),
+	};
+});
+
+jest.mock("@react-native-async-storage/async-storage", () =>
+	require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
+);
+
+jest.mock("@/stores/misLooksMigration", () => ({
+	IDEMPOTENCY_KEY: "@outfinder/migration:favorites-to-mis-looks:v1",
+	runMisLooksMigration: jest.fn().mockResolvedValue({ status: "completed" }),
+}));
+jest.mock("@react-navigation/native", () => ({
+	useNavigation: () => ({
+		getParent: () => ({ navigate: jest.fn() }),
+	}),
+	useRoute: () => ({ params: {} }),
+	useFocusEffect: jest.fn(),
+	useIsFocused: () => true,
+}));
 jest.mock("react-native-gesture-handler", () => {
 	const { View } = require("react-native");
 	return {
@@ -29,9 +82,7 @@ jest.mock("@/data/colorIndex", () => ({
 // Mock values we can control per test
 const mockRestore = jest.fn().mockResolvedValue(undefined);
 const mockPurchase = jest.fn().mockResolvedValue(undefined);
-const mockToggleFavorite = jest.fn();
 let mockIsPremium = false;
-let mockCount = 3;
 
 jest.mock("expo-constants", () => ({
 	__esModule: true,
@@ -54,15 +105,6 @@ jest.mock("@/contexts/PremiumContext", () => ({
 	}),
 }));
 
-jest.mock("@/contexts/FavoritesContext", () => ({
-	useFavorites: () => ({
-		favorites: new Set(["c1", "c2", "c3"]),
-		toggleFavorite: mockToggleFavorite,
-		isFavorite: jest.fn(),
-		count: mockCount,
-	}),
-}));
-
 const mockUseReducedMotion = useReducedMotion as jest.Mock;
 
 function renderSettings() {
@@ -77,7 +119,6 @@ describe("Settings", () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		mockIsPremium = false;
-		mockCount = 3;
 		mockUseReducedMotion.mockReturnValue(false);
 	});
 
@@ -331,11 +372,66 @@ describe("Settings", () => {
 	});
 });
 
+describe("Settings dev menu — migration row (AC #10, #12)", () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockIsPremium = false;
+		mockUseReducedMotion.mockReturnValue(false);
+	});
+
+	it("renders dev-rerun-mislooks-migration-row with correct testID and accessibilityLabel", () => {
+		renderSettings();
+		const row = screen.getByTestId("dev-rerun-mislooks-migration-row");
+		expect(row).toBeTruthy();
+		expect(row.props.accessibilityRole).toBe("button");
+		expect(row.props.accessibilityLabel).toBe(
+			"Re-run Mis Looks migration (dev)",
+		);
+	});
+
+	it("pressing the row calls removeItem(IDEMPOTENCY_KEY), runMisLooksMigration(), hydrateMisLooksStore() in order", async () => {
+		const { runMisLooksMigration } = require("@/stores/misLooksMigration");
+		const { hydrateMisLooksStore } = require("@/stores/misLooksStore");
+		const removeItemSpy = jest
+			.spyOn(AsyncStorage, "removeItem")
+			.mockResolvedValue(undefined);
+
+		renderSettings();
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("dev-rerun-mislooks-migration-row"));
+		});
+
+		expect(removeItemSpy).toHaveBeenCalledWith(
+			"@outfinder/migration:favorites-to-mis-looks:v1",
+		);
+		expect(runMisLooksMigration).toHaveBeenCalled();
+		expect(hydrateMisLooksStore).toHaveBeenCalled();
+
+		removeItemSpy.mockRestore();
+	});
+
+	it("shows 'last run: · status: completed' label after successful invocation", async () => {
+		const removeItemSpy = jest
+			.spyOn(AsyncStorage, "removeItem")
+			.mockResolvedValue(undefined);
+
+		renderSettings();
+		expect(screen.queryByText(/last run:/)).toBeNull();
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId("dev-rerun-mislooks-migration-row"));
+		});
+
+		expect(screen.getByText(/last run:.+· status: completed/)).toBeTruthy();
+
+		removeItemSpy.mockRestore();
+	});
+});
+
 describe("Settings iPad layout", () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		mockIsPremium = false;
-		mockCount = 3;
 		mockUseReducedMotion.mockReturnValue(false);
 		jest.spyOn(require("@/lib/device"), "useIsIPad").mockReturnValue(true);
 	});

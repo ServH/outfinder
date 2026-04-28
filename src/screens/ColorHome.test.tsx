@@ -21,15 +21,22 @@ jest.mock("expo-symbols", () => ({
 	SymbolView: "SymbolView",
 }));
 
-// Mock FavoritesContext
+// Mock the unified Mis Looks store (favorites slice only — items/assignments
+// not exercised by ColorHome).
 const mockToggleFavorite = jest.fn();
-jest.mock("@/contexts/FavoritesContext", () => ({
-	useFavorites: () => ({
-		favorites: new Set<string>(),
-		isFavorite: () => false,
-		toggleFavorite: mockToggleFavorite,
-		count: 0,
-	}),
+jest.mock("@/stores/misLooksStore", () => ({
+	useMisLooksStore: (
+		selector: (s: {
+			favorites: Set<string>;
+			isFavorite: (id: string) => boolean;
+			toggleFavorite: (id: string) => void;
+		}) => unknown,
+	) =>
+		selector({
+			favorites: new Set<string>(),
+			isFavorite: () => false,
+			toggleFavorite: mockToggleFavorite,
+		}),
 }));
 
 // Mock usePremiumGate (prevents PremiumContext from loading)
@@ -187,7 +194,9 @@ describe("ColorHome", () => {
 	it("renders the Outfinder header", () => {
 		render(<ColorHome />);
 		expect(screen.getByText("Outfinder")).toBeTruthy();
-		expect(screen.getByText("What color are you wearing?")).toBeTruthy();
+		expect(
+			screen.getByText("What color would you like to combine?"),
+		).toBeTruthy();
 	});
 
 	it("renders 6 basic fabric swatches on Page 1", () => {
@@ -285,14 +294,6 @@ describe("ColorHome", () => {
 		expect(screen.getByTestId("combo-card-combo-2")).toBeTruthy();
 	});
 
-	it("State 2 shows correct combo count", () => {
-		render(<ColorHome />);
-		fireEvent.press(screen.getByTestId("fabric-swatch-brown"));
-
-		expect(screen.getByTestId("combo-count")).toBeTruthy();
-		expect(screen.getByText("2 combos")).toBeTruthy();
-	});
-
 	it("back button returns to State 1", () => {
 		render(<ColorHome />);
 
@@ -312,8 +313,9 @@ describe("ColorHome", () => {
 		render(<ColorHome />);
 		fireEvent.press(screen.getByTestId("fabric-swatch-brown"));
 
-		// Verify initial count
-		expect(screen.getByText("2 combos")).toBeTruthy();
+		// Verify initial feed has both combos
+		expect(screen.getByTestId("combo-card-combo-1")).toBeTruthy();
+		expect(screen.getByTestId("combo-card-combo-2")).toBeTruthy();
 
 		// Change mock return for new shade
 		(getCombinations as jest.Mock).mockReturnValue(altCombos);
@@ -321,8 +323,9 @@ describe("ColorHome", () => {
 		// Tap different shade
 		fireEvent.press(screen.getByTestId("shade-pill-c101"));
 
-		// Count should update
-		expect(screen.getByText("1 combo")).toBeTruthy();
+		// Feed should update — combo-2 is gone, combo-1 remains
+		expect(screen.getByTestId("combo-card-combo-1")).toBeTruthy();
+		expect(screen.queryByTestId("combo-card-combo-2")).toBeNull();
 	});
 
 	it("shade press fires hapticLight", () => {

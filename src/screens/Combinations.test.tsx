@@ -21,13 +21,19 @@ jest.mock("@/hooks/useReducedMotion", () => ({
 const mockIsFavorite = jest.fn().mockReturnValue(false);
 const mockToggleFavorite = jest.fn();
 
-jest.mock("@/contexts/FavoritesContext", () => ({
-	useFavorites: () => ({
-		favorites: new Set(),
-		isFavorite: mockIsFavorite,
-		toggleFavorite: mockToggleFavorite,
-		count: 0,
-	}),
+jest.mock("@/stores/misLooksStore", () => ({
+	useMisLooksStore: (
+		selector: (s: {
+			favorites: Set<string>;
+			isFavorite: (id: string) => boolean;
+			toggleFavorite: (id: string) => void;
+		}) => unknown,
+	) =>
+		selector({
+			favorites: new Set(),
+			isFavorite: mockIsFavorite,
+			toggleFavorite: mockToggleFavorite,
+		}),
 }));
 
 jest.mock("expo-symbols", () => ({
@@ -87,21 +93,10 @@ describe("Combinations", () => {
 		expect(screen.getByText(`← ${realColor.nameEn}`)).toBeTruthy();
 	});
 
-	it("renders combo count in header", () => {
-		renderCombinations("c001");
-
-		expect(screen.getByTestId("combo-count")).toBeTruthy();
-		expect(screen.getByText(`${realCombinations.length} combos`)).toBeTruthy();
-	});
-
 	it("renders header with accessibility label", () => {
 		renderCombinations("c001");
 
-		expect(
-			screen.getByLabelText(
-				`${realColor.nameEn}, ${realCombinations.length} combinations`,
-			),
-		).toBeTruthy();
+		expect(screen.getByLabelText(realColor.nameEn)).toBeTruthy();
 	});
 
 	it("renders ComboCards in the feed", () => {

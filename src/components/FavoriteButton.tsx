@@ -7,7 +7,9 @@ import Animated, {
 	withSpring,
 } from "react-native-reanimated";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useUnfavoriteCascade } from "@/lib/armario/confirmUnfavoriteWithCascade";
 import { hapticLight } from "@/lib/haptics";
+import { getAssignmentCount } from "@/lib/wardrobeRepo";
 import { wadaTokens } from "@/styles/theme";
 
 export interface FavoriteButtonProps {
@@ -32,10 +34,20 @@ export function FavoriteButton({
 	const { t } = useTranslation();
 	const scale = useSharedValue(1);
 	const reducedMotion = useReducedMotion();
+	const showCascadeConfirm = useUnfavoriteCascade();
 
 	const animatedStyle = useAnimatedStyle(() => ({
 		transform: [{ scale: scale.value }],
 	}));
+
+	function commitToggle() {
+		if (!reducedMotion) {
+			scale.value = withSpring(1.2, { damping: 15, stiffness: 300 }, () => {
+				scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+			});
+		}
+		onToggle();
+	}
 
 	function handlePress() {
 		if (onPremiumGate) {
@@ -44,12 +56,19 @@ export function FavoriteButton({
 			return;
 		}
 		hapticLight();
-		if (!reducedMotion) {
-			scale.value = withSpring(1.2, { damping: 15, stiffness: 300 }, () => {
-				scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+		if (isFavorite) {
+			// Unfavorite intent — gate the toggle behind an assignment-count check
+			// so users don't silently lose garments they've assigned. Short-
+			// circuits to direct toggle when count=0 or iOS<17 (NFR9 parity).
+			const count = getAssignmentCount(combinationId);
+			showCascadeConfirm({
+				combinationId,
+				count,
+				onConfirm: commitToggle,
 			});
+			return;
 		}
-		onToggle();
+		commitToggle();
 	}
 
 	return (

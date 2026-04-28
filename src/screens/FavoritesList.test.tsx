@@ -1,17 +1,93 @@
-import { act, fireEvent, render, screen } from "@testing-library/react-native";
+import {
+	act,
+	fireEvent,
+	render,
+	screen,
+	waitFor,
+} from "@testing-library/react-native";
 import * as ReactNative from "react-native";
 import { getCombination } from "@/data/colorIndex";
+import { useUnfavoriteCascade } from "@/lib/armario/confirmUnfavoriteWithCascade";
 import { hapticLight, hapticMedium } from "@/lib/haptics";
+import { getAssignmentCount } from "@/lib/wardrobeRepo";
 import { FavoritesList } from "./FavoritesList";
 
 const mockPush = jest.fn();
+const mockRootNavigate = jest.fn();
 let mockFocusEffectCallback: (() => void) | null = null;
+
+jest.mock("@react-native-async-storage/async-storage", () =>
+	require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
+);
+
+// ---- Interceptable mocks ---------------------------------------------------
+// These default to "legacy iOS < 17" so existing tests (which assume direct
+// OutfitVisualizer routing) still pass without touching them. The 3 Story
+// 13.4a intercept tests override as needed.
+const mockIsIOS17OrNewer = jest.fn(() => false);
+jest.mock("@/lib/platform", () => ({
+	isIOS17OrNewer: () => mockIsIOS17OrNewer(),
+	useIsIOS17OrNewer: () => mockIsIOS17OrNewer(),
+}));
+
+const mockShowCascadeConfirm = jest.fn((args: { onConfirm: () => void }) =>
+	args.onConfirm(),
+);
+jest.mock("@/lib/armario/confirmUnfavoriteWithCascade", () => ({
+	useUnfavoriteCascade: jest.fn(() => mockShowCascadeConfirm),
+}));
+
+jest.mock("@/lib/wardrobeRepo", () => ({
+	getAssignmentCount: jest.fn(() => 0),
+}));
+
+let mockHydrated = false;
+let mockAssignments: Array<{
+	combinationId: string;
+	colorIndex: number;
+	wardrobeItemId: string;
+	assignedAt: number;
+}> = [];
+let mockItems: Array<{
+	id: string;
+	localImagePath: string;
+	thumbnailPath: string;
+	createdAt: number;
+}> = [];
+const mockToggleFavorite = jest.fn();
+let mockFavorites = new Set<string>();
+
+jest.mock("@/stores/misLooksStore", () => ({
+	useMisLooksStore: (
+		selector: (s: {
+			hydrated: boolean;
+			assignments: typeof mockAssignments;
+			items: typeof mockItems;
+			favorites: typeof mockFavorites;
+			toggleFavorite: typeof mockToggleFavorite;
+			isFavorite: (id: string) => boolean;
+		}) => unknown,
+	) =>
+		selector({
+			hydrated: mockHydrated,
+			assignments: mockAssignments,
+			items: mockItems,
+			favorites: mockFavorites,
+			toggleFavorite: mockToggleFavorite,
+			isFavorite: (id: string) => mockFavorites.has(id),
+		}),
+}));
 
 jest.mock("@react-navigation/native", () => ({
 	useNavigation: () => ({
 		push: mockPush,
 		navigate: jest.fn(),
 		goBack: jest.fn(),
+		getParent: () => ({
+			getParent: () => ({
+				navigate: mockRootNavigate,
+			}),
+		}),
 	}),
 	useFocusEffect: (cb: () => void) => {
 		mockFocusEffectCallback = cb;
@@ -27,18 +103,6 @@ jest.mock("expo-symbols", () => ({
 }));
 
 jest.mock("react-native-reanimated");
-
-const mockToggleFavorite = jest.fn();
-let mockFavorites = new Set<string>();
-
-jest.mock("@/contexts/FavoritesContext", () => ({
-	useFavorites: () => ({
-		favorites: mockFavorites,
-		isFavorite: (id: string) => mockFavorites.has(id),
-		toggleFavorite: mockToggleFavorite,
-		count: mockFavorites.size,
-	}),
-}));
 
 jest.mock("@/contexts/PremiumContext", () => ({
 	usePremium: () => ({
@@ -92,10 +156,22 @@ describe("FavoritesList", () => {
 		mockFavorites = new Set<string>();
 		mockToggleFavorite.mockClear();
 		mockPush.mockClear();
+		mockRootNavigate.mockClear();
 		mockHandlePremiumGate.mockClear();
 		mockToastVisible = false;
 		mockFocusEffectCallback = null;
+		mockIsIOS17OrNewer.mockReturnValue(false);
+		mockHydrated = false;
+		mockAssignments = [];
+		mockItems = [];
 		(hapticLight as jest.Mock).mockClear();
+		mockShowCascadeConfirm.mockClear();
+		mockShowCascadeConfirm.mockImplementation(
+			(args: { onConfirm: () => void }) => args.onConfirm(),
+		);
+		(useUnfavoriteCascade as jest.Mock).mockReturnValue(mockShowCascadeConfirm);
+		(getAssignmentCount as jest.Mock).mockReset();
+		(getAssignmentCount as jest.Mock).mockReturnValue(0);
 	});
 
 	// --- AC #1: 2-column grid layout ---
@@ -155,7 +231,7 @@ describe("FavoritesList", () => {
 		render(<FavoritesList />);
 
 		expect(screen.getByTestId("empty-state")).toBeTruthy();
-		expect(screen.getByText("No favorites yet")).toBeTruthy();
+		expect(screen.getByText("No saved looks yet")).toBeTruthy();
 	});
 
 	// --- AC #5: Odd-count alignment ---
@@ -194,10 +270,10 @@ describe("FavoritesList", () => {
 		render(<FavoritesList />);
 
 		expect(screen.getByTestId("empty-state")).toBeTruthy();
-		expect(screen.getByText("No favorites yet")).toBeTruthy();
+		expect(screen.getByText("No saved looks yet")).toBeTruthy();
 		expect(
 			screen.getByText(
-				"Pick a color, explore combinations, and tap ♡ to save the ones you love",
+				"Photograph a garment or pick a palette to begin.",
 			),
 		).toBeTruthy();
 	});
@@ -207,7 +283,7 @@ describe("FavoritesList", () => {
 
 		expect(
 			screen.getByLabelText(
-				"No favorites yet. Pick a color, explore combinations, and tap ♡ to save the ones you love",
+				"No saved looks yet. Photograph a garment or pick a palette to begin.",
 			),
 		).toBeTruthy();
 	});
@@ -401,7 +477,7 @@ describe("FavoritesList", () => {
 
 		expect(
 			screen.getByText(
-				"Pick a color, explore combinations, and tap ♡ to save the ones you love",
+				"Photograph a garment or pick a palette to begin.",
 			),
 		).toBeTruthy();
 	});
@@ -442,6 +518,558 @@ describe("FavoritesList", () => {
 		expect(
 			screen.getByTestId("sort-pill-recent").props.accessibilityState,
 		).toEqual({ selected: false });
+	});
+
+	// --- Story 13.4a / 14.11: Armario intercept (AC #6) ---
+	// Story 14.11 Epic 14 partition moves incomplete (partial/empty) favorites
+	// to the "En curso" strip; only COMPLETE combos remain in the grid, so the
+	// combo-card tap only hits FichaWada. The tile-tap routing is covered by
+	// the Story 14.11 integration block below.
+
+	it("iOS 17+ hydrated + complete combo → combo-card tap routes to ArmarioFichaWada", async () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockItems = [
+			{
+				id: "u1",
+				localImagePath: "file:///u1.webp",
+				thumbnailPath: "file:///u1.thumb.webp",
+				createdAt: 1,
+			},
+			{
+				id: "u2",
+				localImagePath: "file:///u2.webp",
+				thumbnailPath: "file:///u2.thumb.webp",
+				createdAt: 1,
+			},
+		];
+		mockAssignments = [
+			{
+				combinationId: realCombo2.id,
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 100,
+			},
+			{
+				combinationId: realCombo2.id,
+				colorIndex: 1,
+				wardrobeItemId: "u2",
+				assignedAt: 200,
+			},
+		];
+		mockFavorites = new Set([realCombo2.id]);
+		render(<FavoritesList />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId(`combo-card-${realCombo2.id}`));
+		});
+		await waitFor(() => {
+			expect(mockPush).toHaveBeenCalledWith("ArmarioFichaWada", {
+				combinationId: realCombo2.id,
+			});
+		});
+		expect(mockPush).not.toHaveBeenCalledWith(
+			"ArmarioZeroState",
+			expect.anything(),
+		);
+	});
+
+	it("iOS < 17 OR not hydrated → taps still route to OutfitVisualizer (NFR9 parity)", async () => {
+		mockIsIOS17OrNewer.mockReturnValue(false);
+		mockHydrated = true;
+		mockAssignments = [];
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+
+		await act(async () => {
+			fireEvent.press(screen.getByTestId(`combo-card-${realCombo1.id}`));
+		});
+		await waitFor(() => {
+			expect(mockPush).toHaveBeenCalledWith("OutfitVisualizer", {
+				combinationId: realCombo1.id,
+			});
+		});
+		expect(mockPush).not.toHaveBeenCalledWith(
+			"ArmarioZeroState",
+			expect.anything(),
+		);
+		expect(mockPush).not.toHaveBeenCalledWith(
+			"ArmarioFichaWada",
+			expect.anything(),
+		);
+	});
+
+	// --- Story 13.4b: Unfavorite cascade integration ---
+
+	it("unfavorite with 0 assignments → cascade short-circuits → toggleFavorite fires once without sheet", () => {
+		(getAssignmentCount as jest.Mock).mockReturnValue(0);
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+
+		fireEvent.press(screen.getByTestId(`favorite-button-${realCombo1.id}`));
+
+		expect(mockShowCascadeConfirm).toHaveBeenCalledWith(
+			expect.objectContaining({ combinationId: realCombo1.id, count: 0 }),
+		);
+		expect(mockToggleFavorite).toHaveBeenCalledWith(realCombo1.id);
+	});
+
+	it("unfavorite with >0 assignments routes through cascade hook: confirm → toggle; cancel aborts", () => {
+		(getAssignmentCount as jest.Mock).mockReturnValue(2);
+		let capturedOnConfirm: (() => void) | null = null;
+		let capturedOnCancel: (() => void) | null = null;
+		mockShowCascadeConfirm.mockImplementation(
+			(args: { onConfirm: () => void; onCancel?: () => void }) => {
+				capturedOnConfirm = args.onConfirm;
+				capturedOnCancel = args.onCancel ?? null;
+			},
+		);
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+
+		fireEvent.press(screen.getByTestId(`favorite-button-${realCombo1.id}`));
+
+		expect(mockShowCascadeConfirm).toHaveBeenCalledWith(
+			expect.objectContaining({ combinationId: realCombo1.id, count: 2 }),
+		);
+		// Toggle is gated — nothing fires until the provider runs onConfirm.
+		expect(mockToggleFavorite).not.toHaveBeenCalled();
+
+		// Simulate Cancel → toggle stays silent.
+		(capturedOnCancel as (() => void) | null)?.();
+		expect(mockToggleFavorite).not.toHaveBeenCalled();
+
+		// Now simulate the provider resolving with Confirm → toggle fires.
+		(capturedOnConfirm as (() => void) | null)?.();
+		expect(mockToggleFavorite).toHaveBeenCalledWith(realCombo1.id);
+	});
+
+	// --- Story 13.6: FavoritesList enrichment (AC #6, #7, #14) ---
+
+	function makeItem(id: string) {
+		return {
+			id,
+			localImagePath: `file:///items/${id}.webp`,
+			thumbnailPath: `file:///items/${id}.thumb.webp`,
+			createdAt: 1,
+		};
+	}
+
+	it("iOS 17+ hydrated + complete combo → renders FavoriteComboEnrichedCard with badge + thumb strip in grid", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockItems = [makeItem("u1"), makeItem("u2")];
+		// p002 has 2 colors; 2 assignments = complete → stays in grid post-14.11.
+		mockAssignments = [
+			{
+				combinationId: "p002",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 100,
+			},
+			{
+				combinationId: "p002",
+				colorIndex: 1,
+				wardrobeItemId: "u2",
+				assignedAt: 200,
+			},
+		];
+		mockFavorites = new Set(["p002"]);
+		render(<FavoritesList />);
+		expect(screen.getByTestId("enriched-card-p002")).toBeTruthy();
+		const badge = screen.getByTestId("combo-card-bottom-row-leading", {
+			includeHiddenElements: true,
+		});
+		expect(badge.props.children).toBe("2/2 garments");
+		expect(
+			screen.getByTestId("enriched-card-p002-thumbs", {
+				includeHiddenElements: true,
+			}),
+		).toBeTruthy();
+	});
+
+	it("iOS < 17 → always uses plain ComboCard regardless of wardrobe state", () => {
+		mockIsIOS17OrNewer.mockReturnValue(false);
+		mockHydrated = true;
+		mockItems = [makeItem("u1")];
+		mockAssignments = [
+			{
+				combinationId: "p001",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 100,
+			},
+		];
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("enriched-card-p001")).toBeNull();
+		expect(screen.getByTestId(`combo-card-${realCombo1.id}`)).toBeTruthy();
+	});
+
+	it("hydrated === false → always uses plain ComboCard", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = false;
+		mockItems = [makeItem("u1")];
+		mockAssignments = [
+			{
+				combinationId: "p001",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 100,
+			},
+		];
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("enriched-card-p001")).toBeNull();
+		expect(screen.getByTestId(`combo-card-${realCombo1.id}`)).toBeTruthy();
+	});
+
+	it("complete combo renders ctaComplete override in enriched grid card", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockItems = [makeItem("u1"), makeItem("u2")];
+		mockAssignments = [
+			{
+				combinationId: "p002",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 1,
+			},
+			{
+				combinationId: "p002",
+				colorIndex: 1,
+				wardrobeItemId: "u2",
+				assignedAt: 2,
+			},
+		];
+		mockFavorites = new Set(["p002"]);
+		render(<FavoritesList />);
+		const cta = screen.getByTestId("combo-card-cta-override");
+		expect(cta.props.children).toBe("See your look \u2192");
+	});
+
+	// --- Story 14.11: "En curso" incomplete-looks retention surface (AC #11) ---
+
+	it("hides En curso section when all favorites are complete", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockItems = [makeItem("u1"), makeItem("u2")];
+		// p002 has 2 colors; 2 assignments = complete.
+		mockAssignments = [
+			{
+				combinationId: "p002",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 100,
+			},
+			{
+				combinationId: "p002",
+				colorIndex: 1,
+				wardrobeItemId: "u2",
+				assignedAt: 200,
+			},
+		];
+		mockFavorites = new Set(["p002"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-looks-section")).toBeNull();
+	});
+
+	it("renders 1 incomplete tile when 1 favorite is partial", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockItems = [makeItem("u1")];
+		mockAssignments = [
+			{
+				combinationId: "p001",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 1_000_000,
+			},
+		];
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-tile-p001")).toBeTruthy();
+	});
+
+	it("renders multiple tiles when multiple favorites are incomplete", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockAssignments = [];
+		mockFavorites = new Set(["p001", "p002", "p004"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-tile-p001")).toBeTruthy();
+		expect(screen.queryByTestId("incomplete-tile-p002")).toBeTruthy();
+		expect(screen.queryByTestId("incomplete-tile-p004")).toBeTruthy();
+	});
+
+	it("renders incomplete tile for favorite with zero assignments (Guardar-para-luego case)", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockAssignments = [];
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-tile-p001")).toBeTruthy();
+		// Badge renders "No garments" (EN) via CompletenessBadge none variant
+		const badge = screen.getByTestId("incomplete-tile-p001-badge-label");
+		expect(badge.props.children).toBe("No garments");
+	});
+
+	it("completed looks appear in main grid, not in En curso strip", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockItems = [makeItem("u1"), makeItem("u2"), makeItem("u3")];
+		// p001 partial (1/3), p002 complete (2/2)
+		mockAssignments = [
+			{
+				combinationId: "p001",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 100,
+			},
+			{
+				combinationId: "p002",
+				colorIndex: 0,
+				wardrobeItemId: "u2",
+				assignedAt: 200,
+			},
+			{
+				combinationId: "p002",
+				colorIndex: 1,
+				wardrobeItemId: "u3",
+				assignedAt: 300,
+			},
+		];
+		mockFavorites = new Set(["p001", "p002"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-tile-p001")).toBeTruthy();
+		expect(screen.queryByTestId("incomplete-tile-p002")).toBeNull();
+		expect(screen.queryByTestId("enriched-card-p002")).toBeTruthy();
+	});
+
+	it("renders Mis looks completos section header when both buckets are non-empty", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockItems = [makeItem("u1"), makeItem("u2"), makeItem("u3")];
+		mockAssignments = [
+			{
+				combinationId: "p001",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 100,
+			},
+			{
+				combinationId: "p002",
+				colorIndex: 0,
+				wardrobeItemId: "u2",
+				assignedAt: 200,
+			},
+			{
+				combinationId: "p002",
+				colorIndex: 1,
+				wardrobeItemId: "u3",
+				assignedAt: 300,
+			},
+		];
+		mockFavorites = new Set(["p001", "p002"]);
+		render(<FavoritesList />);
+		expect(screen.getByTestId("complete-section-header")).toBeTruthy();
+	});
+
+	it("hides Mis looks completos header when only incomplete looks exist", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockAssignments = [];
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("complete-section-header")).toBeNull();
+	});
+
+	it("falls back to unified grid on iOS < 17 (no En curso, no completos header)", () => {
+		mockIsIOS17OrNewer.mockReturnValue(false);
+		mockHydrated = true;
+		mockAssignments = [];
+		mockFavorites = new Set(["p001", "p002"]);
+		render(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-looks-section")).toBeNull();
+		expect(screen.queryByTestId("complete-section-header")).toBeNull();
+		expect(screen.getByTestId(`combo-card-${realCombo1.id}`)).toBeTruthy();
+		expect(screen.getByTestId(`combo-card-${realCombo2.id}`)).toBeTruthy();
+	});
+
+	it("tile tap pushes ArmarioFichaWada with combinationId (skips S0 per UX-DR5)", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockAssignments = [
+			{
+				combinationId: "p001",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 1_000_000,
+			},
+		];
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+		fireEvent.press(screen.getByTestId("incomplete-tile-p001"));
+		expect(mockPush).toHaveBeenCalledWith("ArmarioFichaWada", {
+			combinationId: "p001",
+		});
+		expect(mockPush).not.toHaveBeenCalledWith(
+			"ArmarioZeroState",
+			expect.anything(),
+		);
+	});
+
+	it("tile tap fires hapticLight", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockAssignments = [];
+		mockFavorites = new Set(["p001"]);
+		(hapticLight as jest.Mock).mockClear();
+		render(<FavoritesList />);
+		fireEvent.press(screen.getByTestId("incomplete-tile-p001"));
+		expect(hapticLight).toHaveBeenCalledTimes(1);
+	});
+
+	it("re-render with completed assignments removes tile from En curso and adds card to Mis looks completos", () => {
+		mockIsIOS17OrNewer.mockReturnValue(true);
+		mockHydrated = true;
+		mockItems = [makeItem("u1"), makeItem("u2")];
+		mockAssignments = [
+			{
+				combinationId: "p002",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 100,
+			},
+		];
+		mockFavorites = new Set(["p002"]);
+		const { rerender } = render(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-tile-p002")).toBeTruthy();
+
+		mockAssignments = [
+			{
+				combinationId: "p002",
+				colorIndex: 0,
+				wardrobeItemId: "u1",
+				assignedAt: 100,
+			},
+			{
+				combinationId: "p002",
+				colorIndex: 1,
+				wardrobeItemId: "u2",
+				assignedAt: 200,
+			},
+		];
+		rerender(<FavoritesList />);
+		expect(screen.queryByTestId("incomplete-tile-p002")).toBeNull();
+		expect(screen.queryByTestId("enriched-card-p002")).toBeTruthy();
+	});
+
+	// --- Story 14.10: "+ Nuevo look" entry-point card ---
+
+	// DFS helper: collects testIDs in document order for order assertions
+	function collectTestIDs(node: unknown): string[] {
+		if (!node || typeof node !== "object") return [];
+		const n = node as { props?: { testID?: string }; children?: unknown };
+		const ids: string[] = n.props?.testID ? [n.props.testID] : [];
+		if (Array.isArray(n.children))
+			ids.push(...n.children.flatMap(collectTestIDs));
+		return ids;
+	}
+
+	it("renders the Nuevo look CTA in empty state", () => {
+		mockFavorites = new Set<string>();
+		const { toJSON } = render(<FavoritesList />);
+
+		expect(screen.getByTestId("mis-looks-new-look-cta")).toBeTruthy();
+		expect(screen.getByTestId("empty-state")).toBeTruthy();
+		// AC #9.1: CTA must appear before empty-state in the tree
+		const ids = collectTestIDs(toJSON());
+		expect(ids.indexOf("mis-looks-new-look-cta")).toBeLessThan(
+			ids.indexOf("empty-state"),
+		);
+	});
+
+	it("renders the Nuevo look CTA as first ListHeader item when list is populated", () => {
+		mockFavorites = new Set(["p001"]);
+		const { toJSON } = render(<FavoritesList />);
+
+		expect(screen.getByTestId("mis-looks-new-look-cta")).toBeTruthy();
+		expect(screen.getByTestId("sort-pills-row")).toBeTruthy();
+		// AC #9.2: CTA must appear before sort-pills-row in the ListHeader
+		const ids = collectTestIDs(toJSON());
+		expect(ids.indexOf("mis-looks-new-look-cta")).toBeLessThan(
+			ids.indexOf("sort-pills-row"),
+		);
+	});
+
+	it("tapping the CTA navigates to Main → ColorsTab → ColorHome via root", () => {
+		mockFavorites = new Set(["p001"]);
+		render(<FavoritesList />);
+
+		fireEvent.press(screen.getByTestId("mis-looks-new-look-cta"));
+
+		expect(mockRootNavigate).toHaveBeenCalledTimes(1);
+		expect(mockRootNavigate).toHaveBeenCalledWith("Main", {
+			screen: "ColorsTab",
+			params: {
+				screen: "ColorHome",
+			},
+		});
+	});
+
+	it("tapping the CTA fires hapticLight", () => {
+		mockFavorites = new Set<string>();
+		(hapticLight as jest.Mock).mockClear();
+		render(<FavoritesList />);
+
+		fireEvent.press(screen.getByTestId("mis-looks-new-look-cta"));
+
+		expect(hapticLight).toHaveBeenCalledTimes(1);
+	});
+
+	it("tapping the CTA does not mutate favorites (no toggleFavorite, no premium gate)", () => {
+		mockFavorites = new Set<string>();
+		render(<FavoritesList />);
+
+		fireEvent.press(screen.getByTestId("mis-looks-new-look-cta"));
+
+		expect(mockToggleFavorite).not.toHaveBeenCalled();
+		expect(mockHandlePremiumGate).not.toHaveBeenCalled();
+	});
+
+	it("CTA has correct accessibility attributes", () => {
+		mockFavorites = new Set<string>();
+		render(<FavoritesList />);
+
+		const cta = screen.getByTestId("mis-looks-new-look-cta");
+		expect(cta.props.accessibilityRole).toBe("button");
+		expect(cta.props.accessibilityLabel).toBe("Start a new look");
+		expect(cta.props.accessibilityHint).toBe(
+			"Explore Sanzo Wada palettes to start a look",
+		);
+	});
+
+	it("renders sparkles SymbolView inside the CTA", () => {
+		mockFavorites = new Set<string>();
+		const tree = render(<FavoritesList />).toJSON();
+
+		function hasSparkles(node: unknown): boolean {
+			if (!node || typeof node !== "object") return false;
+			const n = node as {
+				type?: unknown;
+				props?: { name?: unknown };
+				children?: unknown;
+			};
+			if (n.type === "SymbolView" && n.props?.name === "sparkles") return true;
+			const children = n.children;
+			if (Array.isArray(children)) {
+				return children.some(hasSparkles);
+			}
+			return false;
+		}
+
+		expect(hasSparkles(tree)).toBe(true);
 	});
 });
 

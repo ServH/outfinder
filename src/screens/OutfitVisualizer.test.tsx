@@ -1,18 +1,29 @@
 import {
-	act,
 	fireEvent,
 	render,
 	screen,
 	waitFor,
 } from "@testing-library/react-native";
 
+import { wadaTokens } from "@/styles/theme";
 import { OutfitVisualizer } from "./OutfitVisualizer";
 
-// Mock navigation
+// Mock navigation. The deferred-lookup pattern (feedback_jest_native_module_mock.md)
+// keeps `mockRootNavigate` observable across tests: the factory closure resolves
+// it at runtime, not at hoist-time.
 const mockRouteParams = { combinationId: "" };
+const mockRootNavigate = jest.fn();
+const mockGoBack = jest.fn();
 jest.mock("@react-navigation/native", () => ({
 	useRoute: () => ({ params: mockRouteParams }),
-	useNavigation: () => ({ goBack: jest.fn() }),
+	useNavigation: () => ({
+		goBack: mockGoBack,
+		getParent: () => ({
+			getParent: () => ({ navigate: mockRootNavigate }),
+			getState: () => undefined,
+		}),
+		getState: () => undefined,
+	}),
 	useNavigationState: () => undefined,
 }));
 
@@ -25,17 +36,9 @@ jest.mock("@/data/colorIndex", () => ({
 // Mock haptics
 const mockHapticLight = jest.fn();
 const mockHapticMedium = jest.fn();
-const mockHapticRigid = jest.fn();
 jest.mock("@/lib/haptics", () => ({
 	hapticLight: (...args: unknown[]) => mockHapticLight(...args),
 	hapticMedium: (...args: unknown[]) => mockHapticMedium(...args),
-	hapticRigid: (...args: unknown[]) => mockHapticRigid(...args),
-}));
-
-// Mock share
-const mockShareOutfit = jest.fn();
-jest.mock("@/lib/share", () => ({
-	shareOutfit: (...args: unknown[]) => mockShareOutfit(...args),
 }));
 
 // Mock AsyncStorage
@@ -74,8 +77,8 @@ describe("OutfitVisualizer", () => {
 		mockGetCombination.mockReset();
 		mockHapticLight.mockReset();
 		mockHapticMedium.mockReset();
-		mockHapticRigid.mockReset();
-		mockShareOutfit.mockReset();
+		mockRootNavigate.mockReset();
+		mockGoBack.mockReset();
 		mockAnnounce.mockReset();
 		mockGetItem.mockReset();
 		mockSetItem.mockReset();
@@ -223,20 +226,6 @@ describe("OutfitVisualizer", () => {
 		render(<OutfitVisualizer />);
 
 		expect(screen.getByLabelText("Outfit card")).toBeTruthy();
-	});
-
-	it("renders warm background", () => {
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-
-		render(<OutfitVisualizer />);
-
-		expect(screen.getByLabelText("Warm background")).toBeTruthy();
 	});
 
 	it("fires hapticMedium when tapping a garment to select", () => {
@@ -679,7 +668,6 @@ describe("OutfitVisualizer", () => {
 
 		render(<OutfitVisualizer />);
 
-		expect(screen.getByLabelText("Warm background")).toBeTruthy();
 		expect(screen.getByLabelText("Color aureola")).toBeTruthy();
 		expect(screen.getByLabelText("Outfit card")).toBeTruthy();
 		expect(screen.getByLabelText("Outfit color palette")).toBeTruthy();
@@ -716,146 +704,6 @@ describe("OutfitVisualizer", () => {
 		expect(mockAnnounce).toHaveBeenCalledWith("Changed to Shirt");
 	});
 
-	it("renders Share Outfit button with correct accessibility", () => {
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-
-		render(<OutfitVisualizer />);
-
-		const shareButton = screen.getByLabelText("Share outfit image");
-		expect(shareButton).toBeTruthy();
-		expect(shareButton.props.accessibilityRole).toBe("button");
-	});
-
-	it("fires hapticRigid when share button pressed", async () => {
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-		mockShareOutfit.mockResolvedValue(true);
-
-		render(<OutfitVisualizer />);
-
-		await act(async () => {
-			fireEvent.press(screen.getByLabelText("Share outfit image"));
-		});
-
-		expect(mockHapticRigid).toHaveBeenCalledTimes(1);
-	});
-
-	it("calls shareOutfit when share button pressed", async () => {
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-		mockShareOutfit.mockResolvedValue(true);
-
-		render(<OutfitVisualizer />);
-
-		await act(async () => {
-			fireEvent.press(screen.getByLabelText("Share outfit image"));
-		});
-
-		expect(mockShareOutfit).toHaveBeenCalledTimes(1);
-	});
-
-	it("shows alert when shareOutfit returns false", async () => {
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-		mockShareOutfit.mockResolvedValue(false);
-
-		const alertSpy = jest.spyOn(require("react-native").Alert, "alert");
-
-		render(<OutfitVisualizer />);
-
-		await act(async () => {
-			fireEvent.press(screen.getByLabelText("Share outfit image"));
-		});
-
-		expect(alertSpy).toHaveBeenCalledWith(
-			"Unable to share",
-			"Something went wrong generating the image. Please try again.",
-		);
-		alertSpy.mockRestore();
-	});
-
-	it("prevents double-tap by ignoring second press while sharing", async () => {
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-
-		let resolveShare!: (value: boolean) => void;
-		mockShareOutfit.mockImplementation(
-			() =>
-				new Promise<boolean>((resolve) => {
-					resolveShare = resolve;
-				}),
-		);
-
-		render(<OutfitVisualizer />);
-
-		const shareButton = screen.getByLabelText("Share outfit image");
-
-		// First press — starts sharing
-		await act(async () => {
-			fireEvent.press(shareButton);
-		});
-
-		// Second press while first is in-flight — should be ignored
-		await act(async () => {
-			fireEvent.press(shareButton);
-		});
-
-		// Resolve the pending share
-		await act(async () => {
-			resolveShare(true);
-		});
-
-		expect(mockShareOutfit).toHaveBeenCalledTimes(1);
-	});
-
-	it("does not show alert when shareOutfit succeeds", async () => {
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-		mockShareOutfit.mockResolvedValue(true);
-
-		const alertSpy = jest.spyOn(require("react-native").Alert, "alert");
-
-		render(<OutfitVisualizer />);
-
-		await act(async () => {
-			fireEvent.press(screen.getByLabelText("Share outfit image"));
-		});
-
-		expect(alertSpy).not.toHaveBeenCalled();
-		alertSpy.mockRestore();
-	});
-
 	it("renders nameEn in WadaHeader", () => {
 		mockRouteParams.combinationId = "combo-2";
 		mockGetCombination.mockReturnValue({
@@ -884,196 +732,6 @@ describe("OutfitVisualizer", () => {
 		expect(
 			screen.getByLabelText("秋の暮, Autumn Dusk, 2 color Wada combination"),
 		).toBeTruthy();
-	});
-
-	// --- Coach mark tests (AC: #1, #2, #3, #4, #7) ---
-
-	it("shows coach mark step 1 on first visit (AsyncStorage null)", async () => {
-		mockGetItem.mockResolvedValue(null);
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-
-		render(<OutfitVisualizer />);
-
-		await waitFor(() =>
-			expect(screen.getByTestId("coach-mark-overlay")).toBeTruthy(),
-		);
-
-		expect(screen.getByTestId("coach-mark-text").props.children).toBe(
-			"Tap any garment to change its color",
-		);
-		expect(screen.getByTestId("coach-mark-ok")).toBeTruthy();
-	});
-
-	it("advances to step 2 when OK is tapped on step 1", async () => {
-		mockGetItem.mockResolvedValue(null);
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-
-		render(<OutfitVisualizer />);
-
-		await waitFor(() =>
-			expect(screen.getByTestId("coach-mark-overlay")).toBeTruthy(),
-		);
-
-		await act(async () => {
-			fireEvent.press(screen.getByTestId("coach-mark-ok"));
-		});
-
-		expect(screen.getByTestId("coach-mark-text").props.children).toBe(
-			"Use the arrows or swipe to change garments",
-		);
-		expect(mockHapticLight).toHaveBeenCalledTimes(1);
-	});
-
-	it("dismisses overlay and saves flag when OK tapped on step 2", async () => {
-		mockGetItem.mockResolvedValue(null);
-		mockSetItem.mockResolvedValue(undefined);
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-
-		render(<OutfitVisualizer />);
-
-		await waitFor(() =>
-			expect(screen.getByTestId("coach-mark-overlay")).toBeTruthy(),
-		);
-
-		// Tap OK on step 1
-		await act(async () => {
-			fireEvent.press(screen.getByTestId("coach-mark-ok"));
-		});
-
-		// Tap OK on step 2
-		await act(async () => {
-			fireEvent.press(screen.getByTestId("coach-mark-ok"));
-		});
-
-		expect(screen.queryByTestId("coach-mark-overlay")).toBeNull();
-		expect(mockSetItem).toHaveBeenCalledWith(
-			"@outfinder/visualizer-introduced",
-			"true",
-		);
-		expect(mockHapticLight).toHaveBeenCalledTimes(2);
-	});
-
-	it("does not show coach mark overlay on returning visit", async () => {
-		mockGetItem.mockResolvedValue("true");
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-
-		render(<OutfitVisualizer />);
-
-		await act(async () => {});
-
-		expect(screen.queryByTestId("coach-mark-overlay")).toBeNull();
-	});
-
-	it("coach mark overlay has accessibilityRole alert (VoiceOver)", async () => {
-		mockGetItem.mockResolvedValue(null);
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-
-		render(<OutfitVisualizer />);
-
-		await waitFor(() =>
-			expect(screen.getByTestId("coach-mark-overlay")).toBeTruthy(),
-		);
-
-		expect(
-			screen.getByTestId("coach-mark-overlay").props.accessibilityRole,
-		).toBe("alert");
-	});
-
-	it("OK button has accessibilityRole button and accessibilityLabel Got it", async () => {
-		mockGetItem.mockResolvedValue(null);
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-
-		render(<OutfitVisualizer />);
-
-		await waitFor(() =>
-			expect(screen.getByTestId("coach-mark-ok")).toBeTruthy(),
-		);
-
-		const okButton = screen.getByTestId("coach-mark-ok");
-		expect(okButton.props.accessibilityRole).toBe("button");
-		expect(okButton.props.accessibilityLabel).toBe("Got it");
-	});
-
-	it("announces tip for step 1 on first visit", async () => {
-		mockGetItem.mockResolvedValue(null);
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-
-		render(<OutfitVisualizer />);
-
-		await waitFor(() =>
-			expect(screen.getByTestId("coach-mark-overlay")).toBeTruthy(),
-		);
-
-		expect(mockAnnounce).toHaveBeenCalledWith(
-			"Tip: Tap any garment to change its color",
-		);
-	});
-
-	it("announces tip for step 2 when advancing from step 1", async () => {
-		mockGetItem.mockResolvedValue(null);
-		mockRouteParams.combinationId = "combo-2";
-		mockGetCombination.mockReturnValue({
-			id: "combo-2",
-			colors: [red, blue],
-			nameJp: "テスト",
-			nameEn: "Test",
-		});
-
-		render(<OutfitVisualizer />);
-
-		await waitFor(() =>
-			expect(screen.getByTestId("coach-mark-overlay")).toBeTruthy(),
-		);
-
-		await act(async () => {
-			fireEvent.press(screen.getByTestId("coach-mark-ok"));
-		});
-
-		expect(mockAnnounce).toHaveBeenCalledWith(
-			"Tip: Use the arrows or swipe to change garments",
-		);
 	});
 
 	// --- Permanent arrow tests (AC: #5, Task 4.3) ---
@@ -1149,11 +807,127 @@ describe("OutfitVisualizer", () => {
 		expect(mockAnnounce).toHaveBeenCalledWith("Changed to Hoodie");
 	});
 
-	it("arrows are rendered even when coach marks are visible", async () => {
+	// --- Make Mine CTA (Story 14.6) ---
+
+	describe("Make Mine CTA (Story 14.6)", () => {
+		it("renders 'Hacer mío este look' CTA with testID and a11y label", () => {
+			mockRouteParams.combinationId = "combo-2";
+			mockGetCombination.mockReturnValue({
+				id: "combo-2",
+				colors: [red, blue],
+				nameJp: "テスト",
+				nameEn: "Test",
+			});
+
+			render(<OutfitVisualizer />);
+
+			const cta = screen.getByTestId("visualizer-make-mine");
+			expect(cta).toBeTruthy();
+			expect(cta.props.accessibilityLabel).toBe("Make this look mine");
+		});
+
+		it("CTA background is the Aureola color (first slot hex)", () => {
+			mockRouteParams.combinationId = "combo-2";
+			mockGetCombination.mockReturnValue({
+				id: "combo-2",
+				colors: [red, blue],
+				nameJp: "テスト",
+				nameEn: "Test",
+			});
+
+			render(<OutfitVisualizer />);
+
+			const cta = screen.getByTestId("visualizer-make-mine");
+			expect(cta.props.style).toEqual(
+				expect.objectContaining({ backgroundColor: red.hex }),
+			);
+		});
+
+		it.each<[string, ReturnType<typeof makeColor>, string]>([
+			["high-luminance (yellow)", yellow, wadaTokens.textPrimary],
+			["low-luminance (red)", red, "#faf7f2"],
+		])("CTA label color adapts to Wada luminance: %s", (_label, firstSlotColor, expectedLabelColor) => {
+			mockRouteParams.combinationId = "combo-luminance";
+			mockGetCombination.mockReturnValue({
+				id: "combo-luminance",
+				colors: [firstSlotColor, blue],
+				nameJp: "テスト",
+				nameEn: "Test",
+			});
+
+			render(<OutfitVisualizer />);
+
+			const cta = screen.getByTestId("visualizer-make-mine");
+			// Inline style for the label color lives on the first <Text> child.
+			const labelNode = cta.findByProps({
+				children: "Make this look mine",
+			});
+			expect(labelNode.props.style).toEqual(
+				expect.objectContaining({ color: expectedLabelColor }),
+			);
+		});
+
+		it("tap fires hapticMedium and cross-navigates to Main → FavoritesTab → ArmarioFichaWada", () => {
+			mockRouteParams.combinationId = "combo-cross-nav";
+			mockGetCombination.mockReturnValue({
+				id: "combo-cross-nav",
+				colors: [red, blue],
+				nameJp: "テスト",
+				nameEn: "Test",
+			});
+
+			render(<OutfitVisualizer />);
+
+			fireEvent.press(screen.getByTestId("visualizer-make-mine"));
+
+			expect(mockHapticMedium).toHaveBeenCalledTimes(1);
+			expect(mockRootNavigate).toHaveBeenCalledWith("Main", {
+				screen: "FavoritesTab",
+				params: {
+					screen: "ArmarioFichaWada",
+					params: { combinationId: "combo-cross-nav" },
+				},
+			});
+		});
+
+		it("CTA has correct a11y hint and role", () => {
+			mockRouteParams.combinationId = "combo-2";
+			mockGetCombination.mockReturnValue({
+				id: "combo-2",
+				colors: [red, blue],
+				nameJp: "テスト",
+				nameEn: "Test",
+			});
+
+			render(<OutfitVisualizer />);
+
+			const cta = screen.getByTestId("visualizer-make-mine");
+			expect(cta.props.accessibilityRole).toBe("button");
+			expect(cta.props.accessibilityHint).toBe(
+				"Opens this look in your wardrobe to assign garments",
+			);
+		});
+	});
+});
+
+describe("Slot-discovery coach mark (Story 15.4)", () => {
+	beforeEach(() => {
+		mockGetCombination.mockReset();
+		mockHapticLight.mockReset();
+		mockHapticMedium.mockReset();
+		mockRootNavigate.mockReset();
+		mockGoBack.mockReset();
+		mockAnnounce.mockReset();
+		mockGetItem.mockReset();
+		mockSetItem.mockReset();
+		mockSetItem.mockResolvedValue(undefined);
+	});
+
+	it("(a) first mount with cleared flag → coach mark visible", async () => {
 		mockGetItem.mockResolvedValue(null);
-		mockRouteParams.combinationId = "combo-2";
+		mockRouteParams.combinationId = "combo-coach-a";
 		mockGetCombination.mockReturnValue({
-			id: "combo-2",
+			id: "combo-coach-a",
 			colors: [red, blue],
 			nameJp: "テスト",
 			nameEn: "Test",
@@ -1162,11 +936,89 @@ describe("OutfitVisualizer", () => {
 		render(<OutfitVisualizer />);
 
 		await waitFor(() =>
-			expect(screen.getByTestId("coach-mark-overlay")).toBeTruthy(),
+			expect(screen.getByTestId("visualizer-coach-mark")).toBeTruthy(),
+		);
+		const text = screen.getByTestId("visualizer-coach-mark-text");
+		expect(text.props.children).toBe(
+			"Tap any garment to swap it or connect it to your wardrobe.",
+		);
+	});
+
+	it("(b) dismiss → AsyncStorage set + haptic + overlay leaves", async () => {
+		mockGetItem.mockResolvedValue(null);
+		mockRouteParams.combinationId = "combo-coach-b";
+		mockGetCombination.mockReturnValue({
+			id: "combo-coach-b",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		await waitFor(() =>
+			expect(screen.getByTestId("visualizer-coach-mark")).toBeTruthy(),
 		);
 
-		expect(screen.getByTestId("arrow-previous")).toBeTruthy();
-		expect(screen.getByTestId("arrow-next")).toBeTruthy();
+		fireEvent.press(screen.getByTestId("visualizer-coach-mark-dismiss"));
+
+		await waitFor(() =>
+			expect(mockSetItem).toHaveBeenCalledWith(
+				"@outfinder/coachmark:visualizer-slots-firstuse",
+				"true",
+			),
+		);
+		expect(mockHapticLight).toHaveBeenCalledTimes(1);
+		await waitFor(() =>
+			expect(screen.queryByTestId("visualizer-coach-mark")).toBeNull(),
+		);
+	});
+
+	it("(c) remount with already-seen → no overlay", async () => {
+		mockGetItem.mockResolvedValue("true");
+		mockRouteParams.combinationId = "combo-coach-c";
+		mockGetCombination.mockReturnValue({
+			id: "combo-coach-c",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		await waitFor(() => expect(mockGetItem).toHaveBeenCalled());
+		expect(screen.queryByTestId("visualizer-coach-mark")).toBeNull();
+	});
+
+	it("(d) not-found combination → no overlay even with cleared flag", async () => {
+		mockGetItem.mockResolvedValue(null);
+		mockRouteParams.combinationId = "combo-not-found";
+		mockGetCombination.mockReturnValue(undefined);
+
+		render(<OutfitVisualizer />);
+
+		await waitFor(() =>
+			expect(screen.getByText("Combination not found")).toBeTruthy(),
+		);
+		expect(screen.queryByTestId("visualizer-coach-mark")).toBeNull();
+	});
+
+	it("(e) overlay does NOT block the back button", async () => {
+		mockGetItem.mockResolvedValue(null);
+		mockRouteParams.combinationId = "combo-coach-e";
+		mockGetCombination.mockReturnValue({
+			id: "combo-coach-e",
+			colors: [red, blue],
+			nameJp: "テスト",
+			nameEn: "Test",
+		});
+
+		render(<OutfitVisualizer />);
+
+		await waitFor(() =>
+			expect(screen.getByTestId("visualizer-coach-mark")).toBeTruthy(),
+		);
+		expect(screen.getByTestId("visualizer-back-button")).toBeTruthy();
 	});
 });
 

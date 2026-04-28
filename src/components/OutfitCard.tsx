@@ -61,23 +61,24 @@ function CardSlot({
 	const slideOpacity = useSharedValue(1);
 
 	useEffect(() => {
-		if (isSelected) {
-			if (reducedMotion) {
-				underlineOpacity.value = 1;
-			} else {
-				underlineOpacity.value = 0.5;
-				underlineOpacity.value = withRepeat(
-					withTiming(1, {
-						duration: 1200,
-						easing: Easing.inOut(Easing.ease),
-					}),
-					-1,
-					true,
-				);
-			}
-		} else {
-			underlineOpacity.value = withTiming(0, { duration: 150 });
+		// Story 15.4 / DEC-4: pulse runs permanently on ALL slots to advertise tap-
+		// ability. Selected slot pulses brighter (0.5↔1.0) to preserve the swap-
+		// selection visual cue; non-selected pulses subtle (0.3↔0.7).
+		const baseline = isSelected ? 0.5 : 0.3;
+		const peak = isSelected ? 1.0 : 0.7;
+		if (reducedMotion) {
+			underlineOpacity.value = (baseline + peak) / 2;
+			return;
 		}
+		underlineOpacity.value = baseline;
+		underlineOpacity.value = withRepeat(
+			withTiming(peak, {
+				duration: 1200,
+				easing: Easing.inOut(Easing.ease),
+			}),
+			-1,
+			true,
+		);
 	}, [isSelected, reducedMotion, underlineOpacity]);
 
 	const underlineStyle = useAnimatedStyle(() => ({

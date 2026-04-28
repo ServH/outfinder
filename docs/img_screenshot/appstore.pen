@@ -1,0 +1,5618 @@
+{
+  "version": "2.11",
+  "children": [
+    {
+      "type": "frame",
+      "id": "U7Zf7",
+      "x": 0,
+      "y": 0,
+      "name": "v1.4 #1 — Tu Look",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1C1814",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "DopPH",
+          "x": 105,
+          "y": 184,
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "Rp6pM",
+          "x": 105,
+          "y": 244,
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "7Ahdd",
+          "x": 105,
+          "y": 277,
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Your style.\nYours.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "hoYVR",
+          "x": 105,
+          "y": 830,
+          "fill": "#8C7A5A",
+          "content": "Your wardrobe. Your call. Share away.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "ecUPR",
+          "x": -33,
+          "y": 856,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "cXyDg",
+          "x": 148,
+          "y": 942,
+          "name": "pf1",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "yfGgz",
+              "x": 0,
+              "y": 0,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/01-tu-look-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "oEdKx",
+          "x": 0,
+          "y": 2450,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#1C181400",
+                "position": 0
+              },
+              {
+                "color": "#1C1814FF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "GrlNA",
+      "x": -9028,
+      "y": 6500,
+      "name": "RETIRED — 02 Home v1.3",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F5F2E9",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "j5qL1",
+          "x": 105,
+          "y": 184,
+          "fill": "#7D6B3D",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "CYEth",
+          "x": 105,
+          "y": 244,
+          "fill": "#7D6B3D",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "oJzRV",
+          "x": 105,
+          "y": 277,
+          "fill": "#2D2926",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Every outfit\nstarts with\none color.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "zr4SX",
+          "x": 105,
+          "y": 830,
+          "fill": "#9A8668",
+          "content": "Colour theory for your everyday wardrobe.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "fITr2",
+          "x": 148,
+          "y": 942,
+          "name": "pf2",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "stroke": {
+            "align": "outside",
+            "thickness": 3,
+            "fill": "#D8D2C4"
+          },
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 66
+            },
+            "blur": 198
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "qid3R",
+              "x": 0,
+              "y": 33,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "sc-home.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "Xg2ya",
+          "x": 0,
+          "y": 2450,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#F5F2E900",
+                "position": 0
+              },
+              {
+                "color": "#F5F2E9FF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "oO79j",
+      "x": 6620,
+      "y": 0,
+      "name": "v1.4 #6 — Combinations",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#4A3A18",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "esNbK",
+          "x": 105,
+          "y": 184,
+          "fill": "#D4B882",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "oqCSb",
+          "x": 105,
+          "y": 244,
+          "fill": "#D4B882",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "DSHvH",
+          "x": 105,
+          "y": 277,
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "348 combos.\nHand-picked.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "XUp1P",
+          "x": 105,
+          "y": 830,
+          "fill": "#C4A87A",
+          "content": "By Sanzo Wada. In 1933.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "dKLHO",
+          "x": -33,
+          "y": 856,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#D4B88228",
+                "position": 0
+              },
+              {
+                "color": "#D4B88200",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "8FgXq",
+          "x": 148,
+          "y": 942,
+          "name": "pf3",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "3UMiX",
+              "x": 0,
+              "y": 0,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/06-combinations-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "ftsJ0",
+          "x": 0,
+          "y": 2450,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#4A3A1800",
+                "position": 0
+              },
+              {
+                "color": "#4A3A18FF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "L9Jf0",
+      "x": 5296,
+      "y": 0,
+      "name": "v1.4 #5 — Mis Looks",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1E1C18",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "e9dkI",
+          "x": 105,
+          "y": 184,
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "B3cTg",
+          "x": 105,
+          "y": 244,
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "lHRCx",
+          "x": 105,
+          "y": 277,
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Always\ncooking.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "GhIBK",
+          "x": 105,
+          "y": 830,
+          "fill": "#8C7A5A",
+          "content": "Looks you're still building.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "IIS74",
+          "x": -33,
+          "y": 856,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "rjdlk",
+          "x": 148,
+          "y": 942,
+          "name": "pf4",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "026h1",
+              "x": 0,
+              "y": 0,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/05-mis-looks-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "MjV2b",
+          "x": 0,
+          "y": 2450,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#1E1C1800",
+                "position": 0
+              },
+              {
+                "color": "#1E1C18FF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "l0QPx",
+      "x": 1324,
+      "y": 0,
+      "name": "v1.4 #2 — Camera Scan",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1C1814",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "cXHuO",
+          "x": 105,
+          "y": 184,
+          "name": "brand05",
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "ImKe8",
+          "x": 105,
+          "y": 244,
+          "name": "line05",
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "JlJur",
+          "x": 105,
+          "y": 277,
+          "name": "h05",
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "One tap.\nReal colour\nname.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "Q6wM0",
+          "x": 105,
+          "y": 830,
+          "name": "sub05",
+          "fill": "#8C7A5A",
+          "content": "No typing. No tags.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "EChdK",
+          "x": -33,
+          "y": 856,
+          "name": "glow05",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "rQmu3",
+          "x": 148,
+          "y": 942,
+          "name": "pf5",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#1A1A1A",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "ctEdP",
+              "x": 0,
+              "y": 0,
+              "name": "bg_blr",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "new_feature_EN/fondo_camera.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140,
+              "effect": {
+                "type": "blur",
+                "radius": 50
+              }
+            },
+            {
+              "type": "frame",
+              "id": "lhqps",
+              "x": 110,
+              "y": 500,
+              "name": "vf_clip",
+              "clip": true,
+              "width": 768,
+              "height": 1000,
+              "fill": "#00000000",
+              "layout": "none",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "gxwF8",
+                  "x": -110,
+                  "y": -500,
+                  "name": "sharp_img",
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "new_feature_EN/fondo_camera.png",
+                    "mode": "fill"
+                  },
+                  "width": 988,
+                  "height": 2140
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "HeSZV",
+              "x": 0,
+              "y": 0,
+              "name": "sc05",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/02-camera-scan-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "tIZto",
+      "x": -7458,
+      "y": 6500,
+      "name": "RETIRED — 06 Color Pairs v1.3",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1C1814",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "NpuOF",
+          "x": 105,
+          "y": 184,
+          "name": "brand06",
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "5J1HR",
+          "x": 105,
+          "y": 244,
+          "name": "line06",
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "XijPL",
+          "x": 105,
+          "y": 277,
+          "name": "h06",
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "See what\npairs\nwith it.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "EZhSl",
+          "x": 105,
+          "y": 830,
+          "name": "sub06",
+          "fill": "#8C7A5A",
+          "content": "Discover its Wada colour palette.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "ZqIg6",
+          "x": -33,
+          "y": 856,
+          "name": "glow06",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "wUUwd",
+          "x": 148,
+          "y": 942,
+          "name": "pf6",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "new_feature_EN/fondo_camera.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "H43Nw",
+              "x": 0,
+              "y": 33,
+              "name": "sc06",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "new_feature_EN/Simulator Screenshot - iPhone 17 Pro Max - 2026-04-15 at 13.03.05.png",
+                "mode": "fill",
+                "blendMode": "screen"
+              },
+              "width": 988,
+              "height": 2107
+            },
+            {
+              "type": "frame",
+              "id": "Goje3",
+              "x": 0,
+              "y": 1505,
+              "name": "modal_clip",
+              "clip": true,
+              "width": 988,
+              "height": 635,
+              "fill": "#00000000",
+              "cornerRadius": [
+                50,
+                50,
+                0,
+                0
+              ],
+              "layout": "none",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "goZPW",
+                  "x": 0,
+                  "y": -1472,
+                  "name": "modal_img",
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "new_feature_EN/Simulator Screenshot - iPhone 17 Pro Max - 2026-04-15 at 13.03.05.png",
+                    "mode": "fill"
+                  },
+                  "width": 988,
+                  "height": 2107
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "3g9OK",
+      "x": -5813,
+      "y": 6500,
+      "name": "RETIRED — 07 Curated v1.3",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#2C1E0E",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "sMbgL",
+          "x": 105,
+          "y": 184,
+          "name": "brand07",
+          "fill": "#D4B882",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "IOLNW",
+          "x": 105,
+          "y": 244,
+          "name": "line07",
+          "fill": "#D4B882",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "ww0Rs",
+          "x": 105,
+          "y": 277,
+          "name": "h07",
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Curated,\nnot\ngenerated.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "P3GPQ",
+          "x": 105,
+          "y": 830,
+          "name": "sub07",
+          "fill": "#C4A87A",
+          "content": "Colour theory meets your wardrobe.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "NL4Nq",
+          "x": -33,
+          "y": 856,
+          "name": "glow07",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#D4B88228",
+                "position": 0
+              },
+              {
+                "color": "#D4B88200",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "SnQLr",
+          "x": 148,
+          "y": 942,
+          "name": "pf7",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "p4l1K",
+              "x": 0,
+              "y": 33,
+              "name": "sc07",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "new_feature_EN/Simulator Screenshot - iPhone 17 Pro Max - 2026-04-15 at 13.03.14.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2107
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "pYVpY",
+      "x": 3972,
+      "y": 0,
+      "name": "v1.4 #4 — Armario Virtual",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F5F2E9",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "JaisO",
+          "x": 105,
+          "y": 184,
+          "name": "arKick",
+          "fill": "#7D6B3D",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "E6D61",
+          "x": 105,
+          "y": 244,
+          "name": "arLine",
+          "fill": "#7D6B3D",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "WwrAC",
+          "x": 105,
+          "y": 277,
+          "name": "arHead",
+          "fill": "#2D2926",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Your closet,\nin your\npocket.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "1sxH8",
+          "x": 105,
+          "y": 830,
+          "name": "arSub",
+          "fill": "#9A8668",
+          "content": "Real garments. Real cutouts.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "CO7wW",
+          "x": 148,
+          "y": 942,
+          "name": "pf3",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "stroke": {
+            "align": "outside",
+            "thickness": 3,
+            "fill": "#D8D2C4"
+          },
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 66
+            },
+            "blur": 198
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "SYZy0",
+              "x": 0,
+              "y": 0,
+              "name": "sc_armario",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/04-armario-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "sLAEM",
+      "x": 7944,
+      "y": 0,
+      "name": "v1.4 #7 — Sugerencia Armonía",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1E1C18",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "ckMIe",
+          "x": 105,
+          "y": 184,
+          "name": "sgKick",
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "9yMGD",
+          "x": 105,
+          "y": 244,
+          "name": "sgLine",
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "NHhDv",
+          "x": 105,
+          "y": 277,
+          "name": "sgHead",
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Knows what\nto add.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "EJBlM",
+          "x": 105,
+          "y": 830,
+          "name": "sgSub",
+          "fill": "#8C7A5A",
+          "content": "The colour your wardrobe asks for.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "B6dKc",
+          "x": -33,
+          "y": 856,
+          "name": "sgGlow",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "0tG7u",
+          "x": 148,
+          "y": 942,
+          "name": "pf6",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "dYpgJ",
+              "x": 0,
+              "y": 0,
+              "name": "sc_sugerencia",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/07-sugerencia-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "o0XTV",
+      "x": 9268,
+      "y": 0,
+      "name": "v1.4 #8 — Visualizer relegado",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#2C1E0E",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "9z4EU",
+          "x": 105,
+          "y": 184,
+          "name": "vzKick",
+          "fill": "#D4B882",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "spOrV",
+          "x": 105,
+          "y": 244,
+          "name": "vzLine",
+          "fill": "#D4B882",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "xDd9w",
+          "x": 105,
+          "y": 277,
+          "name": "vzHead",
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Vibe check\nfirst.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "Meuxo",
+          "x": 105,
+          "y": 830,
+          "name": "vzSub",
+          "fill": "#C4A87A",
+          "content": "Then make it yours.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "z9vJn",
+          "x": -33,
+          "y": 856,
+          "name": "vzGlow",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#D4B88228",
+                "position": 0
+              },
+              {
+                "color": "#D4B88200",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "7x3Bg",
+          "x": 148,
+          "y": 942,
+          "name": "pf7",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "0dzJC",
+              "x": 0,
+              "y": 0,
+              "name": "sc_visualizer_relegado",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/08-visualizer-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "qg6hW",
+      "x": 0,
+      "y": 2978,
+      "name": "v1.4 B-#1 — Tu Look",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#EFEDEC",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "0pbul",
+          "x": 80,
+          "y": 140,
+          "name": "b1Chip",
+          "fill": "#9A9692",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "hrUft",
+              "name": "b1ChipText",
+              "fill": "#FFFFFF",
+              "content": "Mouse Gray",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "Xh9Kf",
+          "x": 80,
+          "y": 280,
+          "name": "b1Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Your style.\nYours.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "gcqjj",
+          "x": 80,
+          "y": 760,
+          "name": "b1Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Your wardrobe. Your call. Share away.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "yQAik",
+          "x": 148,
+          "y": 940,
+          "name": "b1Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "tsqGo",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b1",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/01-tu-look-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "xKRK0",
+      "x": 1324,
+      "y": 2978,
+      "name": "v1.4 B-#2 — Camera Scan",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F5E8E5",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "vX4eR",
+          "x": 80,
+          "y": 140,
+          "name": "b2Chip",
+          "fill": "#9D2933",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "64YR9",
+              "name": "b2ChipText",
+              "fill": "#FFFFFF",
+              "content": "Carmine",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "dDFI8",
+          "x": 80,
+          "y": 280,
+          "name": "b2Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "One tap.\nReal colour\nname.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 160,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "j7QMq",
+          "x": 80,
+          "y": 760,
+          "name": "b2Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "No typing. No tags.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "uAR1B",
+          "x": 148,
+          "y": 940,
+          "name": "b2Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "res8n",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b2",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/02-camera-scan-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Jc0VD",
+      "x": 3972,
+      "y": 2978,
+      "name": "v1.4 B-#4 — Armario Virtual",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#E8ECF1",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "8jHZT",
+          "x": 80,
+          "y": 140,
+          "name": "b3Chip",
+          "fill": "#243140",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "zUA6m",
+              "name": "b3ChipText",
+              "fill": "#FFFFFF",
+              "content": "Iron Navy",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "WrOmr",
+          "x": 80,
+          "y": 280,
+          "name": "b3Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Your closet,\nin your\npocket.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 160,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "ZtqZk",
+          "x": 80,
+          "y": 760,
+          "name": "b3Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Real garments. Real cutouts.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "5frqM",
+          "x": 148,
+          "y": 940,
+          "name": "b3Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "G7xt0",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b3",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/04-armario-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "7renU",
+      "x": 5296,
+      "y": 2978,
+      "name": "v1.4 B-#5 — Mis Looks",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F0E2D6",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "KHAQs",
+          "x": 80,
+          "y": 140,
+          "name": "b4Chip",
+          "fill": "#A52E2C",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "rMzEV",
+              "name": "b4ChipText",
+              "fill": "#FFFFFF",
+              "content": "Madder",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "KHQ0q",
+          "x": 80,
+          "y": 280,
+          "name": "b4Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Always\ncooking.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "qoRYc",
+          "x": 80,
+          "y": 760,
+          "name": "b4Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Looks you're still building.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "0qmlE",
+          "x": 148,
+          "y": 940,
+          "name": "b4Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "dGh4c",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b4",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/05-mis-looks-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "gMdmx",
+      "x": 6620,
+      "y": 2978,
+      "name": "v1.4 B-#6 — Combinations",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F1EDE0",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "cCk8K",
+          "x": 80,
+          "y": 140,
+          "name": "b5Chip",
+          "fill": "#7E6F48",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "EDJr0",
+              "name": "b5ChipText",
+              "fill": "#FFFFFF",
+              "content": "Old Temple Wall",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "IuE6U",
+          "x": 80,
+          "y": 280,
+          "name": "b5Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "348 combos.\nHand-picked.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 160,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "tMBMm",
+          "x": 80,
+          "y": 760,
+          "name": "b5Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "By Sanzo Wada. In 1933.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "ntTRo",
+          "x": 148,
+          "y": 940,
+          "name": "b5Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "QtTUT",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b5",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/06-combinations-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "nkZaF",
+      "x": 7944,
+      "y": 2978,
+      "name": "v1.4 B-#7 — Sugerencia Armonía",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F4F0DA",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "jOLVQ",
+          "x": 80,
+          "y": 140,
+          "name": "b6Chip",
+          "fill": "#C9B95A",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "jKne6",
+              "name": "b6ChipText",
+              "fill": "#1A1410",
+              "content": "Rapeseed",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "k9cM9",
+          "x": 80,
+          "y": 280,
+          "name": "b6Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Knows what\nto add.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "jIoVE",
+          "x": 80,
+          "y": 760,
+          "name": "b6Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "The colour your wardrobe asks for.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "JFxI9",
+          "x": 148,
+          "y": 940,
+          "name": "b6Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "s51XE",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b6",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/07-sugerencia-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "9gmA1",
+      "x": 9268,
+      "y": 2978,
+      "name": "v1.4 B-#8 — Visualizer relegado",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#EFEAE0",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "Ieyyc",
+          "x": 80,
+          "y": 140,
+          "name": "b7Chip",
+          "fill": "#5B4F3A",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "16SGQ",
+              "name": "b7ChipText",
+              "fill": "#FFFFFF",
+              "content": "Smoked Bamboo",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "6ABUP",
+          "x": 80,
+          "y": 280,
+          "name": "b7Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Vibe check\nfirst.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "QmJMY",
+          "x": 80,
+          "y": 760,
+          "name": "b7Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Then make it yours.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "pi0HX",
+          "x": 148,
+          "y": 940,
+          "name": "b7Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "GdG9i",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b7",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/08-visualizer-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "SneAa",
+      "x": -7494,
+      "y": 9582,
+      "name": "v1.4 — Camera #2 AI Composite (working)",
+      "clip": true,
+      "width": 1320,
+      "height": 2868,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "appstore/new_v140/02-camera-empty-base.png",
+        "mode": "fill"
+      },
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "SHzLu",
+          "x": 0,
+          "y": 170,
+          "name": "AI viewport",
+          "clip": true,
+          "width": 1320,
+          "height": 1880,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "appstore/new_v140/suetercompleto.png",
+            "mode": "fill"
+          },
+          "cornerRadius": [
+            120,
+            120,
+            0,
+            0
+          ],
+          "layout": "none"
+        },
+        {
+          "type": "ellipse",
+          "id": "GiylF",
+          "x": 60,
+          "y": 340,
+          "name": "X close bg",
+          "fill": "#FFFFFF",
+          "width": 120,
+          "height": 120
+        },
+        {
+          "type": "text",
+          "id": "i1PzL",
+          "x": 60,
+          "y": 340,
+          "name": "X icon",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width-height",
+          "width": 120,
+          "height": 120,
+          "content": "×",
+          "textAlign": "center",
+          "textAlignVertical": "middle",
+          "fontFamily": "Inter",
+          "fontSize": 80,
+          "fontWeight": "300"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ct9e2",
+      "x": -9064,
+      "y": 9582,
+      "name": "v1.4 — Camera #2b Result (Gray)",
+      "clip": true,
+      "width": 1320,
+      "height": 2868,
+      "fill": "#FAFAF8",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "i61J7",
+          "x": 0,
+          "y": 0,
+          "name": "Status bar",
+          "width": 1320,
+          "height": 170,
+          "padding": [
+            44,
+            90,
+            30,
+            90
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "7ygYS",
+              "name": "timeText",
+              "fill": "#1A1A1A",
+              "content": "09:41",
+              "fontFamily": "Inter",
+              "fontSize": 48,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "LZ4fF",
+              "name": "statusRight",
+              "fill": "#1A1A1A",
+              "content": "●●●●  ◤  ▮▮",
+              "fontFamily": "Inter",
+              "fontSize": 42,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "bT9zC",
+          "x": 72,
+          "y": 240,
+          "name": "Cutout area",
+          "width": 1176,
+          "height": 660,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "appstore/new_v140/sweater-transparent.png",
+            "mode": "fit"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "frame",
+          "id": "oIkhb",
+          "x": 72,
+          "y": 972,
+          "name": "Wada name stack",
+          "width": 1176,
+          "layout": "vertical",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "SQswf",
+              "name": "nameEn",
+              "fill": "#1A1A1A",
+              "content": "Gray",
+              "fontFamily": "Noto Serif JP",
+              "fontSize": 84,
+              "fontWeight": "500"
+            },
+            {
+              "type": "text",
+              "id": "4hSZD",
+              "name": "nameJp",
+              "fill": "#6B6B6B",
+              "content": "灰色",
+              "fontFamily": "Noto Serif JP",
+              "fontSize": 54,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "eZ0TH",
+          "x": 72,
+          "y": 1240,
+          "name": "combosCount",
+          "fill": "#6B6B6B",
+          "textGrowth": "fixed-width",
+          "width": 1176,
+          "content": "Aparece en 7 combinaciones",
+          "textAlign": "center",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "oMUrK",
+          "x": 72,
+          "y": 2376,
+          "name": "Primary CTA",
+          "width": 1176,
+          "height": 144,
+          "fill": "#787870",
+          "cornerRadius": 42,
+          "gap": 24,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "sFSG6",
+              "name": "ctaPrimaryText",
+              "fill": "#FAF7F2",
+              "content": "Guardar en mi armario",
+              "fontFamily": "Inter",
+              "fontSize": 48,
+              "fontWeight": "500"
+            },
+            {
+              "type": "text",
+              "id": "VKXvv",
+              "name": "ctaPrimaryArrow",
+              "fill": "#FAF7F2",
+              "content": "→",
+              "fontFamily": "Inter",
+              "fontSize": 48,
+              "fontWeight": "500"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "tgCOc",
+          "x": 72,
+          "y": 2580,
+          "name": "ctaSecondary",
+          "fill": "#6B6B6B",
+          "textGrowth": "fixed-width",
+          "width": 1176,
+          "content": "ver combinaciones sin guardar",
+          "textAlign": "center",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "rectangle",
+          "cornerRadius": 8,
+          "id": "oh32q",
+          "x": 480,
+          "y": 2790,
+          "name": "Home indicator",
+          "fill": "#1A1A1A",
+          "width": 360,
+          "height": 14
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "E3nCO",
+      "x": 2648,
+      "y": 0,
+      "name": "v1.4 #3 — Camera Result",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1C1814",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "sT9V9",
+          "x": 105,
+          "y": 184,
+          "name": "brand05",
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "VJQOH",
+          "x": 105,
+          "y": 244,
+          "name": "line05",
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "NgfHH",
+          "x": 105,
+          "y": 277,
+          "name": "h05",
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "From photo to\n7 outfits.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "E5deF",
+          "x": 105,
+          "y": 830,
+          "name": "sub05",
+          "fill": "#8C7A5A",
+          "content": "Background out. Wada tone in.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "EK2rU",
+          "x": -33,
+          "y": 856,
+          "name": "glow05",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "cCLbT",
+          "x": 148,
+          "y": 942,
+          "name": "pf5",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#1A1A1A",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "M5WMr",
+              "x": 0,
+              "y": 0,
+              "name": "sc05",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/03-camera-result-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "1CiWA",
+      "x": 2648,
+      "y": 2978,
+      "name": "v1.4 B-#3 — Camera Result",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#ECEEEC",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "uLRWI",
+          "x": 80,
+          "y": 140,
+          "name": "b2Chip",
+          "fill": "#787870",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "OZxUt",
+              "name": "b2ChipText",
+              "fill": "#FFFFFF",
+              "content": "Gray",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "R26gS",
+          "x": 80,
+          "y": 280,
+          "name": "b2Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "From photo\nto 7 outfits.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "2vhVu",
+          "x": 80,
+          "y": 760,
+          "name": "b2Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Background out. Wada tone in.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "fUPH5",
+          "x": 148,
+          "y": 940,
+          "name": "b2Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "fWX8E",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b2",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/03-camera-result-en.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "KT6Ki",
+      "x": 0,
+      "y": 10000,
+      "name": "v1.4 ES #1 — Tu Look",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1C1814",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "YyP1w",
+          "x": 105,
+          "y": 184,
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "VGgbN",
+          "x": 105,
+          "y": 244,
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "Owyee",
+          "x": 105,
+          "y": 277,
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Tu estilo.\nTuyo de verdad.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "w0Wrcr",
+          "x": 105,
+          "y": 830,
+          "fill": "#8C7A5A",
+          "content": "Tu ropa, tus ideas, tu look.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "tAFRi",
+          "x": -33,
+          "y": 856,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "fM4Z6",
+          "x": 148,
+          "y": 942,
+          "name": "pf1",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "O9jw5j",
+              "x": 0,
+              "y": 0,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/01-tu-look-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "x3rpu",
+          "x": 0,
+          "y": 2450,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#1C181400",
+                "position": 0
+              },
+              {
+                "color": "#1C1814FF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "B0eR4",
+      "x": 1324,
+      "y": 10000,
+      "name": "v1.4 ES #2 — Camera Scan",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1C1814",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "CpTxr",
+          "x": 105,
+          "y": 184,
+          "name": "brand05",
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "z0zZqQ",
+          "x": 105,
+          "y": 244,
+          "name": "line05",
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "JEZp0",
+          "x": 105,
+          "y": 277,
+          "name": "h05",
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Una foto.\nSu tono real.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "Z34Tc6",
+          "x": 105,
+          "y": 830,
+          "name": "sub05",
+          "fill": "#8C7A5A",
+          "content": "Sin escribir nada.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "fbRRe",
+          "x": -33,
+          "y": 856,
+          "name": "glow05",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "MCHb0",
+          "x": 148,
+          "y": 942,
+          "name": "pf5",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#1A1A1A",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "Te1Wa",
+              "x": 0,
+              "y": 0,
+              "name": "bg_blr",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "new_feature_EN/fondo_camera.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140,
+              "effect": {
+                "type": "blur",
+                "radius": 50
+              }
+            },
+            {
+              "type": "frame",
+              "id": "j6Dr4A",
+              "x": 110,
+              "y": 500,
+              "name": "vf_clip",
+              "clip": true,
+              "width": 768,
+              "height": 1000,
+              "fill": "#00000000",
+              "layout": "none",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "CY1Xp",
+                  "x": -110,
+                  "y": -500,
+                  "name": "sharp_img",
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "new_feature_EN/fondo_camera.png",
+                    "mode": "fill"
+                  },
+                  "width": 988,
+                  "height": 2140
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "weBKS",
+              "x": 0,
+              "y": 0,
+              "name": "sc05",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/02-camera-scan-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ejwRd",
+      "x": 2648,
+      "y": 10000,
+      "name": "v1.4 ES #3 — Camera Result",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1C1814",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "u3UL5",
+          "x": 105,
+          "y": 184,
+          "name": "brand05",
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "j9aLK",
+          "x": 105,
+          "y": 244,
+          "name": "line05",
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "U4mu6",
+          "x": 105,
+          "y": 277,
+          "name": "h05",
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "De foto a\n7 outfits.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "JKzFq",
+          "x": 105,
+          "y": 830,
+          "name": "sub05",
+          "fill": "#8C7A5A",
+          "content": "Sin fondo. Con tono Wada.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "WnmOw",
+          "x": -33,
+          "y": 856,
+          "name": "glow05",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "ceADd",
+          "x": 148,
+          "y": 942,
+          "name": "pf5",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#1A1A1A",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "dmvSw",
+              "x": 0,
+              "y": 0,
+              "name": "sc05",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/03-camera-result-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "S1sSox",
+      "x": 3972,
+      "y": 10000,
+      "name": "v1.4 ES #4 — Armario Virtual",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F5F2E9",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "Q4qI3",
+          "x": 105,
+          "y": 184,
+          "name": "arKick",
+          "fill": "#7D6B3D",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "ZTawD",
+          "x": 105,
+          "y": 244,
+          "name": "arLine",
+          "fill": "#7D6B3D",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "BBMZd",
+          "x": 105,
+          "y": 277,
+          "name": "arHead",
+          "fill": "#2D2926",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Tu armario,\nen tu bolsillo.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "GQkpH",
+          "x": 105,
+          "y": 830,
+          "name": "arSub",
+          "fill": "#9A8668",
+          "content": "Recortes reales. Sin siluetas.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "p0Gjod",
+          "x": 148,
+          "y": 942,
+          "name": "pf3",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "stroke": {
+            "align": "outside",
+            "thickness": 3,
+            "fill": "#D8D2C4"
+          },
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 66
+            },
+            "blur": 198
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "P8VlO",
+              "x": 0,
+              "y": 0,
+              "name": "sc_armario",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/04-armario-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "nEQrp",
+      "x": 5296,
+      "y": 10000,
+      "name": "v1.4 ES #5 — Mis Looks",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1E1C18",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "UFQiR",
+          "x": 105,
+          "y": 184,
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "FyEFr",
+          "x": 105,
+          "y": 244,
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "fotkX",
+          "x": 105,
+          "y": 277,
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Tus looks,\nsiempre\nen marcha.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "DNeoU",
+          "x": 105,
+          "y": 830,
+          "fill": "#8C7A5A",
+          "content": "Sigue donde lo dejaste.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "F1aWsa",
+          "x": -33,
+          "y": 856,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "rCa6k",
+          "x": 148,
+          "y": 942,
+          "name": "pf4",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "L6YZQ",
+              "x": 0,
+              "y": 0,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/05-mis-looks-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "K9SPt",
+          "x": 0,
+          "y": 2450,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#1E1C1800",
+                "position": 0
+              },
+              {
+                "color": "#1E1C18FF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "PeNxx",
+      "x": 6620,
+      "y": 10000,
+      "name": "v1.4 ES #6 — Combinations",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#4A3A18",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "HWFmi",
+          "x": 105,
+          "y": 184,
+          "fill": "#D4B882",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "LPp6Q",
+          "x": 105,
+          "y": 244,
+          "fill": "#D4B882",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "XbQOg",
+          "x": 105,
+          "y": 277,
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Escogidos\na mano.\nDesde 1933.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "KaW4C",
+          "x": 105,
+          "y": 830,
+          "fill": "#C4A87A",
+          "content": "Sanzo Wada · 348 combos.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "JqcFy",
+          "x": -33,
+          "y": 856,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#D4B88228",
+                "position": 0
+              },
+              {
+                "color": "#D4B88200",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "wJ4oX",
+          "x": 148,
+          "y": 942,
+          "name": "pf3",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "Xp1zQ",
+              "x": 0,
+              "y": 0,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/06-combinations-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "o4F1g",
+          "x": 0,
+          "y": 2450,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#4A3A1800",
+                "position": 0
+              },
+              {
+                "color": "#4A3A18FF",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1284,
+          "height": 328
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "wsgqo",
+      "x": 7944,
+      "y": 10000,
+      "name": "v1.4 ES #7 — Sugerencia Armonía",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#1E1C18",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "eE0iY",
+          "x": 105,
+          "y": 184,
+          "name": "sgKick",
+          "fill": "#C4A87A",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "UwPh8",
+          "x": 105,
+          "y": 244,
+          "name": "sgLine",
+          "fill": "#C4A87A",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "Kh8EL",
+          "x": 105,
+          "y": 277,
+          "name": "sgHead",
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Sabe qué\nfalta.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "OacwN",
+          "x": 105,
+          "y": 830,
+          "name": "sgSub",
+          "fill": "#8C7A5A",
+          "content": "El color que tu armario pide.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "xeyto",
+          "x": -33,
+          "y": 856,
+          "name": "sgGlow",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#C4A87A28",
+                "position": 0
+              },
+              {
+                "color": "#C4A87A00",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "j1eX7",
+          "x": 148,
+          "y": 942,
+          "name": "pf6",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "o08rVP",
+              "x": 0,
+              "y": 0,
+              "name": "sc_sugerencia",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/07-sugerencia-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "UMQjJ",
+      "x": 9268,
+      "y": 10000,
+      "name": "v1.4 ES #8 — Visualizer relegado",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#2C1E0E",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "qpBeG",
+          "x": 105,
+          "y": 184,
+          "name": "vzKick",
+          "fill": "#D4B882",
+          "content": "OUTFINDER",
+          "fontFamily": "Inter",
+          "fontSize": 33,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "rectangle",
+          "id": "S1lKIR",
+          "x": 105,
+          "y": 244,
+          "name": "vzLine",
+          "fill": "#D4B882",
+          "width": 132,
+          "height": 3
+        },
+        {
+          "type": "text",
+          "id": "XbCmT",
+          "x": 105,
+          "y": 277,
+          "name": "vzHead",
+          "fill": "#F5F2E9",
+          "textGrowth": "fixed-width",
+          "width": 1074,
+          "content": "Prueba\nprimero.",
+          "lineHeight": 1.12,
+          "fontFamily": "Playfair Display",
+          "fontSize": 151,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "j356Jy",
+          "x": 105,
+          "y": 830,
+          "name": "vzSub",
+          "fill": "#C4A87A",
+          "content": "Y hazlo tuyo después.",
+          "fontFamily": "Inter",
+          "fontSize": 43,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "ellipse",
+          "id": "PEBUt",
+          "x": -33,
+          "y": 856,
+          "name": "vzGlow",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "radial",
+            "enabled": true,
+            "rotation": 0,
+            "size": {
+              "width": 1,
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#D4B88228",
+                "position": 0
+              },
+              {
+                "color": "#D4B88200",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1350,
+          "height": 1580
+        },
+        {
+          "type": "frame",
+          "id": "mLHZ3",
+          "x": 148,
+          "y": 942,
+          "name": "pf7",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#F5F2E9",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000075",
+            "offset": {
+              "x": 0,
+              "y": 59
+            },
+            "blur": 171
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "g5Waz",
+              "x": 0,
+              "y": 0,
+              "name": "sc_visualizer_relegado",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/08-visualizer-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "UFXPi",
+      "x": 0,
+      "y": 12978,
+      "name": "v1.4 ES B-#1 — Tu Look",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#EFEDEC",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "SxT2b",
+          "x": 80,
+          "y": 140,
+          "name": "b1Chip",
+          "fill": "#9A9692",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "DcV2T",
+              "name": "b1ChipText",
+              "fill": "#FFFFFF",
+              "content": "Mouse Gray",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "rQXJk",
+          "x": 80,
+          "y": 280,
+          "name": "b1Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Tu estilo.\nTuyo de verdad.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 160,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "ZIvkP",
+          "x": 80,
+          "y": 760,
+          "name": "b1Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Tu ropa, tus ideas, tu look.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "orYgi",
+          "x": 148,
+          "y": 940,
+          "name": "b1Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "sh68q",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b1",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/01-tu-look-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ithmd",
+      "x": 1324,
+      "y": 12978,
+      "name": "v1.4 ES B-#2 — Camera Scan",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F5E8E5",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "r8pZPi",
+          "x": 80,
+          "y": 140,
+          "name": "b2Chip",
+          "fill": "#9D2933",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "kcBLK",
+              "name": "b2ChipText",
+              "fill": "#FFFFFF",
+              "content": "Carmín",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "W2dIsc",
+          "x": 80,
+          "y": 280,
+          "name": "b2Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Una foto.\nSu tono real.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 160,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "MOWbV",
+          "x": 80,
+          "y": 760,
+          "name": "b2Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Sin escribir nada.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "VUitx",
+          "x": 148,
+          "y": 940,
+          "name": "b2Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "Bj3TB",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b2",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/02-camera-scan-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "u0Otok",
+      "x": 2648,
+      "y": 12978,
+      "name": "v1.4 ES B-#3 — Camera Result",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#ECEEEC",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "YHBpa",
+          "x": 80,
+          "y": 140,
+          "name": "b2Chip",
+          "fill": "#787870",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "nNvGt",
+              "name": "b2ChipText",
+              "fill": "#FFFFFF",
+              "content": "Gray",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "I6G1e",
+          "x": 80,
+          "y": 280,
+          "name": "b2Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "De foto a\n7 outfits.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "X4dCIR",
+          "x": 80,
+          "y": 760,
+          "name": "b2Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Sin fondo. Con tono Wada.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "eFj6L",
+          "x": 148,
+          "y": 940,
+          "name": "b2Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "jb2VT",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b2",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/03-camera-result-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "hCkcQ",
+      "x": 3972,
+      "y": 12978,
+      "name": "v1.4 ES B-#4 — Armario Virtual",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#E8ECF1",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "ThAI0",
+          "x": 80,
+          "y": 140,
+          "name": "b3Chip",
+          "fill": "#243140",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "T0KvkW",
+              "name": "b3ChipText",
+              "fill": "#FFFFFF",
+              "content": "Iron Navy",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "q6C136",
+          "x": 80,
+          "y": 280,
+          "name": "b3Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Tu armario,\nen tu bolsillo.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 160,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "vxPsL",
+          "x": 80,
+          "y": 760,
+          "name": "b3Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Recortes reales. Sin siluetas.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "MRLMQ",
+          "x": 148,
+          "y": 940,
+          "name": "b3Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "oK9pl",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b3",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/04-armario-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "whAEt",
+      "x": 5296,
+      "y": 12978,
+      "name": "v1.4 ES B-#5 — Mis Looks",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F0E2D6",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "biBm3",
+          "x": 80,
+          "y": 140,
+          "name": "b4Chip",
+          "fill": "#A52E2C",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "difeR",
+              "name": "b4ChipText",
+              "fill": "#FFFFFF",
+              "content": "Madder",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "Q0EhO",
+          "x": 80,
+          "y": 280,
+          "name": "b4Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Tus looks,\nen marcha.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "jgE90",
+          "x": 80,
+          "y": 760,
+          "name": "b4Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Sigue donde lo dejaste.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "cnyJz",
+          "x": 148,
+          "y": 940,
+          "name": "b4Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "ql2xl",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b4",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/05-mis-looks-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "xDFDq",
+      "x": 6620,
+      "y": 12978,
+      "name": "v1.4 ES B-#6 — Combinations",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F1EDE0",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "wBC1c",
+          "x": 80,
+          "y": 140,
+          "name": "b5Chip",
+          "fill": "#7E6F48",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "QNKCy",
+              "name": "b5ChipText",
+              "fill": "#FFFFFF",
+              "content": "Old Temple Wall",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "K6ohA",
+          "x": 80,
+          "y": 280,
+          "name": "b5Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Escogidos\na mano.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "Dl3fl",
+          "x": 80,
+          "y": 760,
+          "name": "b5Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Sanzo Wada · 348 combos.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "H0lbtG",
+          "x": 148,
+          "y": 940,
+          "name": "b5Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "olLA9",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b5",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/06-combinations-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "a22cRu",
+      "x": 7944,
+      "y": 12978,
+      "name": "v1.4 ES B-#7 — Sugerencia Armonía",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#F4F0DA",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "JkZIe",
+          "x": 80,
+          "y": 140,
+          "name": "b6Chip",
+          "fill": "#C9B95A",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "u3Lp6U",
+              "name": "b6ChipText",
+              "fill": "#1A1410",
+              "content": "Rapeseed",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "HfxlZ",
+          "x": 80,
+          "y": 280,
+          "name": "b6Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Sabe qué\nfalta.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "s3E30a",
+          "x": 80,
+          "y": 760,
+          "name": "b6Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "El color que tu armario pide.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "VdlYv",
+          "x": 148,
+          "y": 940,
+          "name": "b6Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "w1e6aS",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b6",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/07-sugerencia-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "u3DSf",
+      "x": 9268,
+      "y": 12978,
+      "name": "v1.4 ES B-#8 — Visualizer relegado",
+      "clip": true,
+      "width": 1284,
+      "height": 2778,
+      "fill": "#EFEAE0",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "DLQKj",
+          "x": 80,
+          "y": 140,
+          "name": "b7Chip",
+          "fill": "#5B4F3A",
+          "cornerRadius": 44,
+          "padding": [
+            32,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "BwPp0",
+              "name": "b7ChipText",
+              "fill": "#FFFFFF",
+              "content": "Smoked Bamboo",
+              "fontFamily": "Inter",
+              "fontSize": 34,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "aJzPr",
+          "x": 80,
+          "y": 280,
+          "name": "b7Head",
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Prueba\nprimero.",
+          "lineHeight": 0.95,
+          "fontFamily": "Playfair Display",
+          "fontSize": 200,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "XuPjV",
+          "x": 80,
+          "y": 760,
+          "name": "b7Bullet",
+          "opacity": 0.65,
+          "fill": "#1A1410",
+          "textGrowth": "fixed-width",
+          "width": 1124,
+          "content": "Y hazlo tuyo después.",
+          "fontFamily": "Inter",
+          "fontSize": 42,
+          "fontWeight": "500"
+        },
+        {
+          "type": "frame",
+          "id": "FUSDy",
+          "x": 148,
+          "y": 940,
+          "name": "b7Mock",
+          "clip": true,
+          "width": 988,
+          "height": 2140,
+          "fill": "#FFFFFF",
+          "cornerRadius": 155,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 80
+            },
+            "blur": 200
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "xW7jH",
+              "x": 0,
+              "y": 0,
+              "name": "sc_b7",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "appstore/new_v140/08-visualizer-es.png",
+                "mode": "fill"
+              },
+              "width": 988,
+              "height": 2140
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "wznpi",
+      "x": -9064,
+      "y": 15956,
+      "name": "Icono v2 — 3 direcciones",
+      "clip": true,
+      "width": 4000,
+      "height": 2000,
+      "fill": "#1A1410",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "B2rmL",
+          "x": 80,
+          "y": 80,
+          "name": "header",
+          "fill": "#C4A87A",
+          "content": "ICONO v2 — 3 DIRECCIONES",
+          "fontFamily": "Inter",
+          "fontSize": 60,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "text",
+          "id": "fRbDo",
+          "x": 80,
+          "y": 180,
+          "name": "subhead",
+          "fill": "#8C7A5A",
+          "content": "Test contra competencia (Cladwell · Whering · Smart Closet · Stylebook) a 60×60",
+          "fontFamily": "Inter",
+          "fontSize": 36,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "FMM52",
+          "x": 120,
+          "y": 280,
+          "name": "A — Wada Minimal",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777364266137.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "zucFg",
+          "x": 120,
+          "y": 1820,
+          "name": "labelA",
+          "fill": "#F5F2E9",
+          "content": "A — Wada Minimal\n2 swatches solapados (Carmine + Iron Navy)",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "f1k0c",
+          "x": 1450,
+          "y": 280,
+          "name": "B — Prenda + Color",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777364274673.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "pd2ru",
+          "x": 1450,
+          "y": 1820,
+          "name": "labelB",
+          "fill": "#F5F2E9",
+          "content": "B — Prenda + Color\nSilueta de prenda con swatch saliendo",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "yRROZ",
+          "x": 2780,
+          "y": 280,
+          "name": "C — Editorial Tipográfico",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777364271921.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "M3OHOR",
+          "x": 2780,
+          "y": 1820,
+          "name": "labelC",
+          "fill": "#F5F2E9",
+          "content": "C — Editorial Tipográfico\n\"O\" serif con bandas concéntricas Wada",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "pU2mX",
+      "x": -9064,
+      "y": 18156,
+      "name": "Icono v2 — Iteración Mosaico-O",
+      "clip": true,
+      "width": 5555,
+      "height": 2000,
+      "fill": "#1A1410",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "p2fvI",
+          "x": 80,
+          "y": 80,
+          "name": "header2",
+          "fill": "#C4A87A",
+          "content": "ICONO v2 — ITERACIÓN MOSAICO-O",
+          "fontFamily": "Inter",
+          "fontSize": 60,
+          "fontWeight": "700",
+          "letterSpacing": 8
+        },
+        {
+          "type": "text",
+          "id": "qT49R",
+          "x": 80,
+          "y": 180,
+          "name": "sub2",
+          "fill": "#8C7A5A",
+          "content": "Basado en el icono original de Alejandro: paleta Wada formando una O implícita",
+          "fontFamily": "Inter",
+          "fontSize": 36,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "r8Xcrb",
+          "x": 120,
+          "y": 280,
+          "name": "Original",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "icon/Gemini_Generated_Image_28w4ib28w4ib28w4.png",
+            "mode": "fit"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "MTPJF",
+          "x": 120,
+          "y": 1820,
+          "name": "label0",
+          "fill": "#F5F2E9",
+          "content": "Original — Alejandro\n11 swatches navy/beige/gris formando O",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "Im1f4",
+          "x": 1450,
+          "y": 280,
+          "name": "V1 Sin lineas blancas",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370065513.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "UAIC8",
+          "x": 1450,
+          "y": 1820,
+          "name": "label1",
+          "fill": "#F5F2E9",
+          "content": "V1 — Sin líneas blancas\nSwatches contiguos, masas más sólidas",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "OnIVF",
+          "x": 2780,
+          "y": 280,
+          "name": "V2 Con Carmin",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370062584.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "m5o8B",
+          "x": 2780,
+          "y": 1820,
+          "name": "label2",
+          "fill": "#F5F2E9",
+          "content": "V2 — Con acento Carmín\n1 swatch rojo como punto focal",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "J5LmfY",
+          "x": 4110,
+          "y": 280,
+          "name": "V3 O asimetrica",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370062923.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "L07PS",
+          "x": 4110,
+          "y": 1820,
+          "name": "label3",
+          "fill": "#F5F2E9",
+          "content": "V3 — O asimétrica\nAgujero orgánico, no cuadrado perfecto",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "vLjqT",
+      "x": -9064,
+      "y": 20355,
+      "name": "Icono v2 — Refinamiento O-shape sin mosaico",
+      "clip": true,
+      "width": 5555,
+      "height": 2000,
+      "fill": "#1A1410",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "rUYcC",
+          "x": 80,
+          "y": 80,
+          "name": "header3",
+          "fill": "#9D2933",
+          "content": "REFINAMIENTO — O-SHAPE + CARMÍN, MENOS MOSAICO",
+          "fontFamily": "Inter",
+          "fontSize": 55,
+          "fontWeight": "700",
+          "letterSpacing": 6
+        },
+        {
+          "type": "text",
+          "id": "A9zKc",
+          "x": 80,
+          "y": 170,
+          "name": "sub3",
+          "fill": "#8C7A5A",
+          "content": "3 maneras distintas de resolver la O preservando el acento Carmín",
+          "fontFamily": "Inter",
+          "fontSize": 36,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "bEU5e",
+          "x": 120,
+          "y": 280,
+          "name": "V4 — O cuatro bloques",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370493237.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "WsDAd",
+          "x": 120,
+          "y": 1820,
+          "name": "labV4",
+          "fill": "#F5F2E9",
+          "content": "V4 — O en 4 bloques\n4 cuadrantes Wada, uno Carmín",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "wwMVe",
+          "x": 1450,
+          "y": 280,
+          "name": "V5 — O concéntrica",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370481646.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "owLgS",
+          "x": 1450,
+          "y": 1820,
+          "name": "labV5",
+          "fill": "#F5F2E9",
+          "content": "V5 — O concéntrica\nAnillos navy/beige/gris + ring Carmín",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "k09XW",
+          "x": 2780,
+          "y": 280,
+          "name": "V6 — O serif + sello",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370486477.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "cKuVM",
+          "x": 2780,
+          "y": 1820,
+          "name": "labV6",
+          "fill": "#F5F2E9",
+          "content": "V6 — O serif tipográfica\nNavy maciza + sello Carmín dentro",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "bxfXk",
+          "x": 4110,
+          "y": 280,
+          "name": "V7 — O caligráfica",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370482015.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "eWFMz",
+          "x": 4110,
+          "y": 1820,
+          "name": "labV7",
+          "fill": "#F5F2E9",
+          "content": "V7 — O caligráfica japonesa\nBrushstroke estilo Wada + tinta Carmín",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "j4red0",
+      "x": -9064,
+      "y": 22554,
+      "name": "Icono v2 — Refinamiento sobre V4",
+      "clip": true,
+      "width": 5452,
+      "height": 2000,
+      "fill": "#1A1410",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "BE9ed",
+          "x": 80,
+          "y": 80,
+          "name": "header4",
+          "fill": "#9D2933",
+          "content": "REFINAMIENTO SOBRE V4 — DETALLES QUE MARCAN DIFERENCIA",
+          "fontFamily": "Inter",
+          "fontSize": 50,
+          "fontWeight": "700",
+          "letterSpacing": 6
+        },
+        {
+          "type": "text",
+          "id": "d8XMH",
+          "x": 80,
+          "y": 160,
+          "name": "sub4",
+          "fill": "#8C7A5A",
+          "content": "4 ángulos: posición del carmín · hairlines · esquinas redondeadas · asimetría",
+          "fontFamily": "Inter",
+          "fontSize": 36,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "IMUJR",
+          "x": 120,
+          "y": 280,
+          "name": "V8 — Carmin top-right",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370678675.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "R0iRAs",
+          "x": 120,
+          "y": 1820,
+          "name": "labV8",
+          "fill": "#F5F2E9",
+          "content": "V8 — Carmín arriba-derecha\nMás eye-catching, focal alto",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "td0Ud",
+          "x": 1450,
+          "y": 280,
+          "name": "V9 — Hairline dividers",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370677891.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "F8TUtq",
+          "x": 1450,
+          "y": 1820,
+          "name": "labV9",
+          "fill": "#F5F2E9",
+          "content": "V9 — Líneas crema entre bloques\nFeel arquitectónico tipo vitral",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "nOfYJ",
+          "x": 2780,
+          "y": 280,
+          "name": "V10 — Inner rounded corners",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370687783.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "rC76o",
+          "x": 2780,
+          "y": 1820,
+          "name": "labV10",
+          "fill": "#F5F2E9",
+          "content": "V10 — Esquinas internas redondeadas\nMás suave, iOS-native",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "nJHZC",
+          "x": 4110,
+          "y": 280,
+          "name": "V11 — Asimetria con carmin pequeño",
+          "clip": true,
+          "width": 1100,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777370677582.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "ERNSn",
+          "x": 4110,
+          "y": 1820,
+          "name": "labV11",
+          "fill": "#F5F2E9",
+          "content": "V11 — Bloques asimétricos\nCarmín como acento pequeño, no cuadrante",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "FWEmj",
+      "x": -9064,
+      "y": 24754,
+      "name": "Icono v2 — Pivot O serif tipografica",
+      "clip": true,
+      "width": 4500,
+      "height": 2000,
+      "fill": "#1A1410",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "md1pF",
+          "x": 80,
+          "y": 80,
+          "name": "header5",
+          "fill": "#9D2933",
+          "content": "PIVOT — O SERIF TIPOGRÁFICA + SELLO CARMÍN",
+          "fontFamily": "Inter",
+          "fontSize": 50,
+          "fontWeight": "700",
+          "letterSpacing": 6
+        },
+        {
+          "type": "text",
+          "id": "mc5ni",
+          "x": 80,
+          "y": 160,
+          "name": "sub5",
+          "fill": "#8C7A5A",
+          "content": "Coherencia con el set ASO (Playfair Display) · 2 colores máximo · firma editorial",
+          "fontFamily": "Inter",
+          "fontSize": 36,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "ZHEy5",
+          "x": 120,
+          "y": 280,
+          "name": "V12 — Sello clasico",
+          "clip": true,
+          "width": 1200,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777371005526.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "N2ujdJ",
+          "x": 120,
+          "y": 1820,
+          "name": "labV12",
+          "fill": "#F5F2E9",
+          "content": "V12 — O navy + sello carmín\nFeel libro editorial premium",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "o4YHc",
+          "x": 1500,
+          "y": 280,
+          "name": "V13 — Split vertical",
+          "clip": true,
+          "width": 1200,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777371001638.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "tbmDG",
+          "x": 1500,
+          "y": 1820,
+          "name": "labV13",
+          "fill": "#F5F2E9",
+          "content": "V13 — O dividida navy/carmín\nDualidad bold, más punch",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "SAtjF",
+          "x": 2880,
+          "y": 280,
+          "name": "V14 — Mono carmin",
+          "clip": true,
+          "width": 1200,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777371004530.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "gugjG",
+          "x": 2880,
+          "y": 1820,
+          "name": "labV14",
+          "fill": "#F5F2E9",
+          "content": "V14 — O carmín maciza\nMono-color extremo, máxima simplicidad",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "wOVZO",
+      "x": -9064,
+      "y": 26954,
+      "name": "Icono v2 — Background invertido (LinkedIn/Apple style)",
+      "clip": true,
+      "width": 4500,
+      "height": 2000,
+      "fill": "#1A1410",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "F0QDPV",
+          "x": 80,
+          "y": 80,
+          "name": "header6",
+          "fill": "#9D2933",
+          "content": "BACKGROUND INVERTIDO — MARK CLARO SOBRE COLOR",
+          "fontFamily": "Inter",
+          "fontSize": 50,
+          "fontWeight": "700",
+          "letterSpacing": 6
+        },
+        {
+          "type": "text",
+          "id": "DBR6I",
+          "x": 80,
+          "y": 160,
+          "name": "sub6",
+          "fill": "#8C7A5A",
+          "content": "Convención iOS app icon: bg sólido/gradient + mark cream encima · diferente totalmente de Opera",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "kWnk0",
+          "x": 120,
+          "y": 280,
+          "name": "V15 — BG navy + O cream + sello",
+          "clip": true,
+          "width": 1200,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777372541234.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "em7Ao",
+          "x": 120,
+          "y": 1820,
+          "name": "labV15",
+          "fill": "#F5F2E9",
+          "content": "V15 — BG navy + O cream + sello carmín\nClásico editorial premium book-cover",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "ZTSKs",
+          "x": 1500,
+          "y": 280,
+          "name": "V16 — BG carmin + O cream",
+          "clip": true,
+          "width": 1200,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777372530085.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "U9a0F9",
+          "x": 1500,
+          "y": 1820,
+          "name": "labV16",
+          "fill": "#F5F2E9",
+          "content": "V16 — BG carmín + O cream\nMáximo contraste tipo Pinterest/Lyft",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "G0uvyh",
+          "x": 2880,
+          "y": 280,
+          "name": "V17 — BG gradient + O cream",
+          "clip": true,
+          "width": 1200,
+          "height": 1500,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1777372535180.png",
+            "mode": "fill"
+          },
+          "cornerRadius": 24,
+          "layout": "none"
+        },
+        {
+          "type": "text",
+          "id": "W5RqZm",
+          "x": 2880,
+          "y": 1820,
+          "name": "labV17",
+          "fill": "#F5F2E9",
+          "content": "V17 — BG gradient navy→carmín + O cream\nModern app trend tipo Apple Music",
+          "fontFamily": "Inter",
+          "fontSize": 34,
+          "fontWeight": "600"
+        }
+      ]
+    }
+  ]
+}

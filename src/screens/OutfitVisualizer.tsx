@@ -1,24 +1,18 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { RouteProp } from "@react-navigation/native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { useCallback, useEffect, useRef, useState } from "react";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	AccessibilityInfo,
-	Alert,
 	Pressable,
 	ScrollView,
 	Text,
 	useWindowDimensions,
 	View,
 } from "react-native";
-import ReanimatedAnimated, {
-	runOnJS,
-	useAnimatedStyle,
-	useSharedValue,
-	withTiming,
-} from "react-native-reanimated";
 import { Aureola } from "@/components/Aureola";
+import { CoachMarkOverlay } from "@/components/CoachMarkOverlay";
 import {
 	GARMENT_REGISTRY,
 	type GarmentType,
@@ -26,16 +20,26 @@ import {
 import { MiniPaletteStrip } from "@/components/MiniPaletteStrip";
 import { OutfitCard } from "@/components/OutfitCard";
 import { WadaHeader } from "@/components/WadaHeader";
-import { WarmBackground } from "@/components/WarmBackground";
 import { getColor, getCombination } from "@/data/colorIndex";
+import { useCoachMark } from "@/hooks/useCoachMark";
 import { getCycleForGarment, useOutfitState } from "@/hooks/useOutfitState";
 import { useStoreReviewPrompt } from "@/hooks/useStoreReviewPrompt";
+import { COACH_MARK_KEYS } from "@/lib/coachMarkKeys";
+import { relativeLuminance } from "@/lib/color";
 import { useIsIPad } from "@/lib/device";
-import { hapticLight, hapticMedium, hapticRigid } from "@/lib/haptics";
-import { shareOutfit } from "@/lib/share";
+import { hapticLight, hapticMedium } from "@/lib/haptics";
 import { FAB_PROTRUSION } from "@/navigation/CustomTabBar";
-import type { ColorsStackParamList } from "@/navigation/types";
+import type {
+	ColorsStackParamList,
+	RootStackParamList,
+} from "@/navigation/types";
 import { wadaTokens } from "@/styles/theme";
+
+// Shared with UnifiedCameraResultScreen (Story 14.4): Wada-hex CTA labels flip
+// from dark pergamino ink (> 0.40) to cream (≤ 0.40). Aesthetic threshold tuned
+// for the Wada palette, not a WCAG contrast rule.
+const LUMINANCE_DARK_TEXT_THRESHOLD = 0.4;
+const CTA_LABEL_CREAM = "#faf7f2";
 
 type OutfitVisualizerRoute = RouteProp<
 	ColorsStackParamList,
@@ -81,117 +85,27 @@ export function OutfitVisualizer() {
 		backLabel = t("browseAll.backButton");
 	}
 
-	const shareViewRef = useRef<View>(null);
-
-	const [sharing, setSharing] = useState(false);
-
-	// Coach mark state: 0 = hidden, 1 = step 1, 2 = step 2
-	const [coachStep, setCoachStep] = useState(0);
-	const reduceMotionRef = useRef(false);
-
-	// Card animation values
-	const cardOpacity = useSharedValue(0);
-	const cardTranslateY = useSharedValue(20);
-
-	const cardAnimStyle = useAnimatedStyle(() => ({
-		opacity: cardOpacity.value,
-		transform: [{ translateY: cardTranslateY.value }],
-	}));
-
 	const { slots, selectedSlotIndex, selectSlot, cycleVariant } = useOutfitState(
 		combination?.colors ?? [],
 	);
 
-	// Read reduce motion preference once on mount
-	useEffect(() => {
-		AccessibilityInfo.isReduceMotionEnabled().then((enabled) => {
-			reduceMotionRef.current = enabled;
-		});
-	}, []);
-
-	// Animate card in whenever a step becomes active
-	useEffect(() => {
-		if (coachStep > 0) {
-			if (reduceMotionRef.current) {
-				cardOpacity.value = 1;
-				cardTranslateY.value = 0;
-			} else {
-				cardOpacity.value = withTiming(1, { duration: 260 });
-				cardTranslateY.value = withTiming(0, { duration: 280 });
-			}
-		}
-	}, [coachStep, cardOpacity, cardTranslateY]);
-
-	// Read visualizer-introduced flag on mount
-	useEffect(() => {
-		(async () => {
-			try {
-				const value = await AsyncStorage.getItem(
-					"@outfinder/visualizer-introduced",
-				);
-				if (value !== "true") {
-					setCoachStep(1);
-					AccessibilityInfo.announceForAccessibility(
-						t("visualizer.coachStep1Announce"),
-					);
-				}
-			} catch {
-				setCoachStep(1);
-				AccessibilityInfo.announceForAccessibility(
-					t("visualizer.coachStep1Announce"),
-				);
-			}
-		})();
-	}, [t]);
-
-	const handleCoachOk = useCallback(() => {
-		hapticLight();
-		if (coachStep === 1) {
-			const goToStep2 = () => {
-				cardTranslateY.value = 18;
-				setCoachStep(2);
-				AccessibilityInfo.announceForAccessibility(
-					t("visualizer.coachStep2Announce"),
-				);
-			};
-			if (reduceMotionRef.current) {
-				goToStep2();
-			} else {
-				// Animate card out upward, then swap to step 2 and animate back in
-				cardOpacity.value = withTiming(0, { duration: 150 }, () => {
-					runOnJS(goToStep2)();
-				});
-				cardTranslateY.value = withTiming(-10, { duration: 150 });
-			}
-		} else {
-			const dismiss = () => {
-				setCoachStep(0);
-				AsyncStorage.setItem("@outfinder/visualizer-introduced", "true").catch(
-					() => {},
-				);
-			};
-			if (reduceMotionRef.current) {
-				dismiss();
-			} else {
-				// Animate card out and dismiss overlay
-				cardOpacity.value = withTiming(0, { duration: 200 }, () => {
-					runOnJS(dismiss)();
-				});
-				cardTranslateY.value = withTiming(10, { duration: 200 });
-			}
-		}
-	}, [coachStep, cardOpacity, cardTranslateY, t]);
-
-	const handleShare = useCallback(async () => {
-		if (sharing) return;
-		hapticRigid();
-		setSharing(true);
-		const success = await shareOutfit(shareViewRef);
-		setSharing(false);
-		if (!success) {
-			Alert.alert(t("visualizer.shareError"), t("visualizer.shareErrorBody"));
-		}
-	}, [sharing, t]);
+	// Cross-stack nav to Ficha Wada via root. Must go through root because
+	// OutfitVisualizer is registered in BOTH ColorsStack and FavoritesStack, but
+	// ArmarioFichaWada only lives in FavoritesStack — a local push would fail
+	// when the user entered via ColorsTab. Trade-off: swipe-back from Ficha Wada
+	// lands on FavoritesList (not Visualizer). See Story 14.6 AC #3 rationale.
+	const handleMakeMine = useCallback(() => {
+		hapticMedium();
+		const rootNav =
+			navigation.getParent()?.getParent<NativeStackNavigationProp<RootStackParamList>>();
+		rootNav?.navigate("Main", {
+			screen: "FavoritesTab",
+			params: {
+				screen: "ArmarioFichaWada",
+				params: { combinationId },
+			},
+		} as never);
+	}, [navigation, combinationId]);
 
 	const handleSlotTap = useCallback(
 		(index: number) => {
@@ -273,6 +187,14 @@ export function OutfitVisualizer() {
 	// Trigger in-app review sheet on 2nd Visualizer visit (must be before early return)
 	useStoreReviewPrompt();
 
+	const { shouldShow: shouldShowCoachMark, markSeen: markCoachMarkSeen } =
+		useCoachMark(COACH_MARK_KEYS.visualizerSlotsFirstUse);
+
+	async function handleDismissCoachMark() {
+		hapticLight();
+		await markCoachMarkSeen();
+	}
+
 	if (!combination) {
 		return (
 			<View
@@ -286,10 +208,15 @@ export function OutfitVisualizer() {
 		);
 	}
 
+	const ctaLabelColor =
+		relativeLuminance(slots[0].color.hex) > LUMINANCE_DARK_TEXT_THRESHOLD
+			? wadaTokens.textPrimary
+			: CTA_LABEL_CREAM;
+
 	return (
 		<View
 			className="flex-1"
-			style={{ backgroundColor: wadaTokens.warmBg }}
+			style={{ backgroundColor: wadaTokens.bgPaper }}
 			accessibilityLabel={t("visualizer.screenLabel")}
 		>
 			{/* Back button */}
@@ -320,9 +247,7 @@ export function OutfitVisualizer() {
 				contentContainerStyle={{ flexGrow: 1 }}
 				showsVerticalScrollIndicator={false}
 			>
-				{/* Capturable area — everything the user sees minus the share button */}
-				<View ref={shareViewRef} collapsable={false} className="flex-1">
-					<WarmBackground />
+				<View className="flex-1">
 					<View className="flex-1 items-center justify-center py-4">
 						<Aureola
 							hex={slots[0].color.hex}
@@ -408,82 +333,51 @@ export function OutfitVisualizer() {
 					</View>
 				</View>
 			</ScrollView>
-			{/* Share button — paddingBottom clears the protruding camera FAB */}
+			{/* Primary CTA — bridge to Ficha Wada; replaces the Story 14.5 share button
+			    and uses the Aureola hex as background per UX-DR6 (visual parity with
+			    the halo already rendered behind the outfit card). */}
 			<View
-				className="items-center py-3"
-				style={{ paddingBottom: 12 + FAB_PROTRUSION }}
+				className="px-4"
+				style={{ paddingBottom: 12 + FAB_PROTRUSION, paddingTop: 8 }}
 			>
 				<Pressable
-					onPress={handleShare}
-					disabled={sharing}
-					accessibilityLabel={t("visualizer.shareLabel")}
+					onPress={handleMakeMine}
 					accessibilityRole="button"
-					className="min-h-[48px] items-center justify-center rounded-full bg-surface px-6 py-3"
-					style={{ opacity: sharing ? 0.5 : 1 }}
+					accessibilityLabel={t("visualizer.makeMineA11yLabel")}
+					accessibilityHint={t("visualizer.makeMineA11yHint")}
+					testID="visualizer-make-mine"
+					className="h-12 w-full flex-row items-center justify-center rounded-[14px]"
+					style={{ backgroundColor: slots[0].color.hex }}
 				>
 					<Text
 						allowFontScaling
-						className="font-sans text-sm font-medium text-primary"
+						style={{
+							fontFamily: "Inter_500Medium",
+							fontSize: 16,
+							color: ctaLabelColor,
+							marginRight: 8,
+						}}
 					>
-						{t("visualizer.shareButton")}
+						{t("visualizer.makeMineButton")}
+					</Text>
+					<Text
+						style={{
+							fontFamily: "Inter_500Medium",
+							fontSize: 16,
+							color: ctaLabelColor,
+						}}
+					>
+						{"→"}
 					</Text>
 				</Pressable>
 			</View>
-			{/* 2-step coach mark overlay — outside ScrollView, zIndex 999 */}
-			{coachStep > 0 && (
-				<View
-					className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center"
-					style={{ zIndex: 999, backgroundColor: "rgba(0,0,0,0.5)" }}
-					accessibilityRole="alert"
-					testID="coach-mark-overlay"
-				>
-					<ReanimatedAnimated.View
-						style={[
-							{
-								borderRadius: 16,
-								paddingHorizontal: 28,
-								paddingVertical: 28,
-								marginHorizontal: isTablet ? 80 : 40,
-								maxWidth: isTablet ? 480 : 300,
-								alignItems: "center",
-								backgroundColor: wadaTokens.bgPaper,
-							},
-							cardAnimStyle,
-						]}
-					>
-						<Text
-							className="text-base text-center mb-5"
-							style={{
-								fontFamily: "NotoSerifJP_400Regular",
-								color: wadaTokens.textPrimary,
-							}}
-							testID="coach-mark-text"
-						>
-							{coachStep === 1
-								? t("visualizer.coachStep1")
-								: t("visualizer.coachStep2")}
-						</Text>
-						<Pressable
-							onPress={handleCoachOk}
-							accessibilityRole="button"
-							accessibilityLabel={t("visualizer.gotIt")}
-							testID="coach-mark-ok"
-							className="rounded-lg px-8 py-3 min-w-[44px] min-h-[44px] justify-center items-center"
-							style={{ backgroundColor: wadaTokens.textPrimary }}
-						>
-							<Text
-								className="text-sm"
-								style={{
-									color: wadaTokens.bgPaper,
-									fontFamily: "Inter_500Medium",
-								}}
-							>
-								{t("visualizer.gotIt")}
-							</Text>
-						</Pressable>
-					</ReanimatedAnimated.View>
-				</View>
-			)}
+			<CoachMarkOverlay
+				visible={shouldShowCoachMark}
+				text={t("visualizer.coachMark.text")}
+				accessibilityAnnouncement={t("visualizer.coachMark.a11yAnnouncement")}
+				onDismiss={handleDismissCoachMark}
+				testID="visualizer-coach-mark"
+			/>
 		</View>
 	);
 }

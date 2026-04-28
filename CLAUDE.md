@@ -11,6 +11,22 @@ Outfinder — React Native iOS app for color coordination using Sanzo Wada's "A 
 - `pnpm test` — Jest tests
 - `npx tsc --noEmit` — type check only
 
+## Navigation map
+
+- **`docs/README.md`** — índice de toda la documentación (PRD, arquitectura, UX specs, epics activos/archivados, research, assets). Leer primero para encontrar cualquier doc.
+- **`docs/project-context.md`** — arquitectura, componentes, patrones actuales. Fuente de verdad para contexto técnico.
+- **`_bmad-output/implementation-artifacts/`** — stories activas (raíz) + histórico en `archive/epic-NN/`. `sprint-status.yaml` y `deferred-work.md` viven en raíz.
+
+### Docs maintenance contract (MANDATORY)
+
+Cualquier agente que **cree, mueva, renombre o archive** un `.md` dentro de `docs/` DEBE actualizar `docs/README.md` en el mismo turno:
+- **Nuevo .md** → añadir entrada en la sección correspondiente (Planning, Archive, Núcleo, Assets, etc.) con una línea descriptiva corta
+- **Move / rename** → actualizar el path y descripción en la sección donde esté listado
+- **Archivar** → mover la entrada de su sección activa a la sección "Archive"
+- Mantener el tree visual y las secciones ordenadas por relevancia (activo antes que histórico)
+
+No aplica a: story files dentro de `_bmad-output/implementation-artifacts/` (esos los gestiona la convención de epic-N/story-N naming y `sprint-status.yaml`).
+
 ## Agent Rules (from 5 PWA retrospectives)
 
 ### Story Scope

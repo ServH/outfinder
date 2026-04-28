@@ -2,18 +2,19 @@
   "expo": {
     "name": "Outfinder",
     "slug": "outfinder",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "outfinder",
     "userInterfaceStyle": "light",
     "ios": {
       "bundleIdentifier": "com.alejandrocamps.outfinder",
-      "buildNumber": "5",
+      "buildNumber": "6",
       "supportsTablet": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSCameraUsageDescription": "Outfinder uses your camera to identify garment colors and find Wada combinations."
+        "NSCameraUsageDescription": "Outfinder uses your camera to identify garment colors and find Wada combinations.",
+        "NSPhotoLibraryUsageDescription": "Outfinder necesita acceso a tus fotos para añadir prendas a tu Armario."
       }
     },
     "plugins": [
@@ -35,7 +36,13 @@
         }
       ],
       "expo-localization",
-      "expo-camera"
+      "expo-camera",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Outfinder necesita acceso a tus fotos para añadir prendas a tu Armario."
+        }
+      ]
     ],
     "experiments": {
       "reactCompiler": true

@@ -5,12 +5,12 @@ import { FlatList, Pressable, Text, View } from "react-native";
 import { ComboCard } from "@/components/ComboCard";
 import { PremiumPaywall } from "@/components/PremiumPaywall";
 import { PREMIUM_CONFIG } from "@/config/premium";
-import { useFavorites } from "@/contexts/FavoritesContext";
 import { getColor, getCombinations } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
 import { usePremiumGate } from "@/hooks/usePremiumGate";
 import { useIsIPad } from "@/lib/device";
 import type { ColorsStackParamList } from "@/navigation/types";
+import { useMisLooksStore } from "@/stores/misLooksStore";
 import { wadaTokens } from "@/styles/theme";
 
 type CombinationsProps = NativeStackScreenProps<
@@ -26,7 +26,9 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 	const combinations = getCombinations(colorId).sort(
 		(a, b) => a.colors.length - b.colors.length,
 	);
-	const { isFavorite, toggleFavorite, favorites } = useFavorites();
+	const favorites = useMisLooksStore((s) => s.favorites);
+	const isFavorite = useMisLooksStore((s) => s.isFavorite);
+	const toggleFavorite = useMisLooksStore((s) => s.toggleFavorite);
 	const gate = usePremiumGate(favorites);
 
 	const renderSeparator = useCallback(
@@ -66,16 +68,14 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 		return null;
 	}
 
-	const comboCount = combinations.length;
-
 	return (
 		<View className="flex-1" style={{ backgroundColor: wadaTokens.bgPaper }}>
-			{/* Header: ← ColorName + combo count (matches State 2 style) */}
+			{/* Header: ← ColorName */}
 			<View
 				testID="color-header"
-				className="flex-row items-center justify-between pb-2"
+				className="flex-row items-center pb-2"
 				style={{ paddingTop: 60, paddingHorizontal: isTablet ? 24 : 16 }}
-				accessibilityLabel={`${color.nameEn}, ${comboCount} ${t("combinations.combination", { count: comboCount })}`}
+				accessibilityLabel={color.nameEn}
 			>
 				<Pressable
 					onPress={() => navigation.goBack()}
@@ -97,17 +97,6 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 						← {color.nameEn}
 					</Text>
 				</Pressable>
-				<Text
-					style={{
-						fontFamily: "Inter_400Regular",
-						fontSize: 15,
-						color: wadaTokens.textSecondary,
-						flexShrink: 0,
-					}}
-					testID="combo-count"
-				>
-					{comboCount} {t("combinations.combo", { count: comboCount })}
-				</Text>
 			</View>
 
 			{/* Combo cards feed */}
@@ -126,8 +115,10 @@ export function Combinations({ route, navigation }: CombinationsProps) {
 			{/* Premium paywall modal */}
 			<PremiumPaywall
 				visible={gate.paywallVisible}
+				context="favorites"
+				currentCount={gate.favoriteCombinationIds.length}
 				blockedCombination={gate.blockedCombination}
-				favoriteCombinationIds={gate.favoriteCombinationIds}
+				savedCombinationIds={gate.favoriteCombinationIds}
 				priceString={gate.priceString}
 				purchaseState={gate.purchaseState}
 				errorMessage={gate.errorMessage}

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	ActivityIndicator,
+	Image,
 	Modal,
 	Pressable,
 	ScrollView,
@@ -18,6 +19,7 @@ import Animated, {
 	withSpring,
 	withTiming,
 } from "react-native-reanimated";
+import { PREMIUM_CONFIG } from "@/config/premium";
 import { getAllCombinations, getCombination } from "@/data/colorIndex";
 import type { Combination } from "@/data/types";
 import type { PurchaseState } from "@/hooks/usePremiumGate";
@@ -28,28 +30,63 @@ import { wadaTokens } from "@/styles/theme";
 const DISMISS_THRESHOLD = 100;
 const VELOCITY_THRESHOLD = 500;
 
+/**
+ * Gating context. `"favorites"` drives the combo-collection framing (saved
+ * palette previews, optional blocked strip, combination count in body copy)
+ * used when the user hits `FREE_FAVORITES_LIMIT`. `"wardrobe"` drives the
+ * garment-capture framing used when `FREE_WARDROBE_LIMIT` blocks a save —
+ * no palette preview, wardrobe-specific copy + limit badge.
+ */
+export type PaywallContext = "favorites" | "wardrobe";
+
 export interface PremiumPaywallProps {
 	visible: boolean;
-	blockedCombination?: Combination;
-	favoriteCombinationIds: string[];
+	context: PaywallContext;
+	/**
+	 * Current count toward the free-tier limit. For favorites this is the
+	 * number of saved combinations; for wardrobe, the number of wardrobe
+	 * items. The limit itself is derived from `PREMIUM_CONFIG` via context.
+	 */
+	currentCount: number;
 	priceString: string;
 	purchaseState?: PurchaseState;
 	errorMessage?: string | null;
 	onPurchase: () => void;
 	onRestore: () => void;
 	onDismiss: () => void;
+	/**
+	 * Favorites-only. The combination the user just tried to favorite that
+	 * triggered the paywall; rendered as a faded "locked" strip below the
+	 * saved palette previews.
+	 */
+	blockedCombination?: Combination;
+	/**
+	 * Favorites-only. IDs of the user's already-saved favorite combinations;
+	 * drives the palette preview strip. In wardrobe context this is ignored.
+	 */
+	savedCombinationIds?: string[];
+	/**
+	 * Wardrobe-only. Up to ~5 thumbnail URIs of the user's most recent
+	 * wardrobe items; drives the horizontal thumb row shown in place of the
+	 * palette preview. Ignored in favorites context. If empty, the header +
+	 * thumb row is hidden (same as favorites with 0 saved).
+	 */
+	wardrobeItemThumbnails?: string[];
 }
 
 export function PremiumPaywall({
 	visible,
-	blockedCombination,
-	favoriteCombinationIds,
+	context,
+	currentCount,
 	priceString,
 	purchaseState = "idle",
 	errorMessage = null,
 	onPurchase,
 	onRestore,
 	onDismiss,
+	blockedCombination,
+	savedCombinationIds = [],
+	wardrobeItemThumbnails = [],
 }: PremiumPaywallProps) {
 	const { t } = useTranslation();
 	const { height: screenHeight } = useWindowDimensions();
@@ -61,7 +98,10 @@ export function PremiumPaywall({
 	const ctaScale = useSharedValue(1);
 
 	const totalCombinations = getAllCombinations().length;
-	const favCount = favoriteCombinationIds.length;
+	const limit =
+		context === "favorites"
+			? PREMIUM_CONFIG.FREE_FAVORITES_LIMIT
+			: PREMIUM_CONFIG.FREE_WARDROBE_LIMIT;
 
 	useEffect(() => {
 		if (visible) {
@@ -151,16 +191,37 @@ export function PremiumPaywall({
 		transform: [{ scale: ctaScale.value }],
 	}));
 
-	// Resolve favorite combinations to their actual data
-	const savedCombinations = favoriteCombinationIds
+	// Resolve saved favorite combinations to their actual data. In wardrobe
+	// context `savedCombinationIds` is unused (preview is hidden below).
+	const savedCombinations = savedCombinationIds
 		.map((id) => getCombination(id))
 		.filter((c): c is Combination => c !== undefined);
 
-	// Settings entry point: no blocked combination
-	const isSettingsEntry = !blockedCombination;
-	const showPalettePreview = favCount > 0 || !isSettingsEntry;
+	// Palette preview (saved combos + optional blocked strip) belongs to the
+	// favorites framing. In wardrobe context we swap it for a thumb row of
+	// the user's most recent garments — keeps the sheet at a consistent
+	// vertical rhythm with the favorites variant instead of leaving a gap.
+	const showPalettePreview =
+		context === "favorites" &&
+		(currentCount > 0 || blockedCombination !== undefined);
+	const showWardrobeThumbs =
+		context === "wardrobe" && wardrobeItemThumbnails.length > 0;
 
-	const badgeText = t("paywall.limitBadge", { count: favCount, limit: 5 });
+	const badgeText = t(`paywall.${context}.limitBadge`, {
+		count: currentCount,
+		limit,
+	});
+	const headlineText = t(`paywall.${context}.headline`);
+	const bodyText =
+		context === "favorites"
+			? t("paywall.favorites.body", {
+					count: currentCount,
+					remaining: totalCombinations - currentCount,
+				})
+			: t("paywall.wardrobe.body", { count: currentCount });
+	const unlockLabel = t(`paywall.${context}.unlockLabel`, {
+		price: priceString,
+	});
 
 	if (!visible) {
 		return null;
@@ -203,6 +264,7 @@ export function PremiumPaywall({
 					>
 						<ScrollView
 							contentContainerStyle={{
+								flexGrow: 1,
 								paddingHorizontal: 24,
 								paddingBottom: 40,
 							}}
@@ -227,19 +289,21 @@ export function PremiumPaywall({
 									<View
 										className="flex-row justify-between"
 										accessible
-										accessibilityLabel={`${t("paywall.yourCollection")}. ${t("paywall.savedCount", { count: favCount })}`}
+										accessibilityLabel={`${t("paywall.favorites.yourCollection")}. ${t("paywall.favorites.savedCount", { count: currentCount })}`}
 									>
 										<Text
 											allowFontScaling
 											className="font-sans text-[11px] text-tertiary"
 										>
-											{t("paywall.yourCollection")}
+											{t("paywall.favorites.yourCollection")}
 										</Text>
 										<Text
 											allowFontScaling
 											className="font-sans text-[11px] text-favorite-red"
 										>
-											{t("paywall.savedCount", { count: favCount })}
+											{t("paywall.favorites.savedCount", {
+												count: currentCount,
+											})}
 										</Text>
 									</View>
 
@@ -287,6 +351,62 @@ export function PremiumPaywall({
 								</View>
 							)}
 
+							{/* Wardrobe thumbs preview — parallels the palette preview
+							    above for vertical-rhythm parity. Rendered only when
+							    context is wardrobe AND at least one thumbnail is
+							    provided. */}
+							{showWardrobeThumbs && (
+								<View className="mt-6" testID="wardrobe-thumbs-preview">
+									{/* Header row mirrors the favorites variant. */}
+									<View
+										className="flex-row justify-between"
+										accessible
+										accessibilityLabel={`${t("paywall.wardrobe.yourCollection")}. ${t("paywall.wardrobe.savedCount", { count: currentCount })}`}
+									>
+										<Text
+											allowFontScaling
+											className="font-sans text-[11px] text-tertiary"
+										>
+											{t("paywall.wardrobe.yourCollection")}
+										</Text>
+										<Text
+											allowFontScaling
+											className="font-sans text-[11px] text-premium-accent"
+										>
+											{t("paywall.wardrobe.savedCount", {
+												count: currentCount,
+											})}
+										</Text>
+									</View>
+
+									{/* Horizontal thumb row — up to 5 most recent items.
+									    Decorative: the header row above already announces
+									    the count for VoiceOver. Individual thumbs are
+									    plain <Image> without a11y labels — VoiceOver
+									    naturally skips unlabeled images, so no explicit
+									    elements-hidden is needed (and using it would
+									    also block testing-library from querying by
+									    testID). */}
+									<View className="mt-2 flex-row" style={{ gap: 6 }}>
+										{wardrobeItemThumbnails.slice(0, 5).map((uri, idx) => (
+											<Image
+												// biome-ignore lint/suspicious/noArrayIndexKey: thumbnails are a stable slice of a store-ordered list; index is effectively the identity here.
+												key={`wardrobe-thumb-${idx}`}
+												source={{ uri }}
+												resizeMode="contain"
+												testID={`wardrobe-thumb-preview-${idx}`}
+												style={{
+													width: 48,
+													height: 48,
+													borderRadius: 8,
+													backgroundColor: wadaTokens.bgElevated,
+												}}
+											/>
+										))}
+									</View>
+								</View>
+							)}
+
 							{/* Limit badge */}
 							<View className="items-center mt-2 mb-5">
 								<View
@@ -313,7 +433,7 @@ export function PremiumPaywall({
 								className="font-serif-jp text-[20px] text-center mb-[10px] text-primary"
 								style={{ lineHeight: 28 }}
 							>
-								{t("paywall.headline")}
+								{headlineText}
 							</Text>
 
 							{/* Body text */}
@@ -323,11 +443,15 @@ export function PremiumPaywall({
 								className="font-sans text-[13px] font-light text-center px-2 mb-6 text-secondary"
 								style={{ lineHeight: 21 }}
 							>
-								{t("paywall.body", {
-									count: favCount,
-									remaining: totalCombinations - favCount,
-								})}
+								{bodyText}
 							</Text>
+
+							{/* Spacer — with flexGrow on contentContainer, this View
+							    absorbs any leftover vertical room so the CTAs always
+							    anchor to the bottom of the sheet regardless of how
+							    much space the preview section occupies (favorites
+							    with N palette strips vs wardrobe with 1 thumb row). */}
+							<View style={{ flex: 1, minHeight: 0 }} />
 
 							{/* Price + CTA row */}
 							<View className="flex-row gap-3 items-center mb-4">
@@ -365,7 +489,7 @@ export function PremiumPaywall({
 									accessibilityLabel={
 										purchaseState === "purchasing"
 											? t("paywall.purchasing")
-											: t("paywall.unlockLabel", { price: priceString })
+											: unlockLabel
 									}
 									disabled={isLoading}
 									onPressIn={() => {

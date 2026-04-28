@@ -2,17 +2,17 @@
 	"tabs": {
 		"colors": "Colors",
 		"favs": "Favs",
-		"favorites": "Favorites",
+		"favorites": "My Looks",
 		"settings": "Settings",
 		"camera": "Camera",
 		"colorsTab": "Colors tab",
-		"favoritesTab": "Favorites tab",
+		"favoritesTab": "My Looks tab",
 		"settingsTab": "Settings tab",
 		"cameraTab": "Open camera scanner"
 	},
 	"home": {
 		"title": "Outfinder",
-		"subtitle": "What color are you wearing?",
+		"subtitle": "What color would you like to combine?",
 		"browseAll": "Browse all 159 colors",
 		"allColors": "All 159\ncolors",
 		"backToFamilies": "Back to color families",
@@ -31,32 +31,48 @@
 		"goBack": "Go back",
 		"notFound": "Combination not found",
 		"screenLabel": "Outfit Visualizer screen",
-		"coachStep1": "Tap any garment to change its color",
-		"coachStep1Announce": "Tip: Tap any garment to change its color",
-		"coachStep2": "Use the arrows or swipe to change garments",
-		"coachStep2Announce": "Tip: Use the arrows or swipe to change garments",
-		"gotIt": "Got it",
 		"previousGarment": "Previous garment",
 		"nextGarment": "Next garment",
-		"shareLabel": "Share outfit image",
-		"shareButton": "Share Outfit",
+		"makeMineButton": "Make this look mine",
+		"makeMineA11yLabel": "Make this look mine",
+		"makeMineA11yHint": "Opens this look in your wardrobe to assign garments",
 		"selectedForSwap": "Selected {{label}} for swap",
 		"swapResult": "{{selectedLabel}} is now {{newColorA}}, {{tappedLabel}} is now {{newColorB}}",
 		"changedTo": "Changed to {{label}}",
-		"shareError": "Unable to share",
-		"shareErrorBody": "Something went wrong generating the image. Please try again."
+		"coachMark": {
+			"text": "Tap any garment to swap it or connect it to your wardrobe.",
+			"a11yAnnouncement": "Visualizer tip. Tap any garment to swap it or connect it to your wardrobe."
+		}
 	},
 	"favorites": {
-		"title": "Favorites",
-		"screenLabel": "Favorites List screen",
+		"title": "My Looks",
+		"screenLabel": "My Looks screen",
 		"sortRecent": "Recent",
 		"sortAZ": "A-Z",
 		"sortSize": "By size",
 		"sortRecentLabel": "Sort by recent",
 		"sortAZLabel": "Sort alphabetically",
 		"sortSizeLabel": "Sort by size",
-		"emptyTitle": "No favorites yet",
-		"emptySubtitle": "Pick a color, explore combinations, and tap \u2661 to save the ones you love"
+		"emptyTitle": "No saved looks yet",
+		"emptySubtitle": "Photograph a garment or pick a palette to begin.",
+		"newLookCta": {
+			"title": "Build your look",
+			"subtitle": "Explore Sanzo Wada palettes and build your look",
+			"a11yLabel": "Start a new look",
+			"a11yHint": "Explore Sanzo Wada palettes to start a look"
+		},
+		"incompleteSection": {
+			"title": "In progress",
+			"a11yLabel": "In progress. Your unfinished looks."
+		},
+		"incompleteTile": {
+			"a11yLabel": "Look {{name}}. {{assigned}} of {{total}} garments assigned. {{remaining}} missing.",
+			"a11yHint": "Open this look to assign more garments"
+		},
+		"completeSection": {
+			"title": "My completed looks",
+			"a11yLabel": "My completed looks"
+		}
 	},
 	"settings": {
 		"title": "Settings",
@@ -77,26 +93,36 @@
 	},
 	"paywall": {
 		"dismiss": "Dismiss paywall",
-		"yourCollection": "Your collection",
-		"savedCount": "\u2665 {{count}} saved",
-		"limitBadge": "{{count}} of {{limit}} free favorites used",
 		"lockedLabel": "Locked combination. Upgrade to save",
-		"headline": "Don't stop\ncollecting",
-		"body_one": "You've found {{count}} harmony worth keeping. There are {{remaining}} more combinations waiting to be discovered.",
-		"body_other": "You've found {{count}} harmonies worth keeping. There are {{remaining}} more combinations waiting to be discovered.",
 		"priceLabel": "{{price}}, one-time purchase",
 		"oneTime": "one time",
 		"purchasing": "Purchasing, please wait",
-		"unlockLabel": "Unlock unlimited favorites for {{price}}",
-		"unlockButton": "Unlock Unlimited",
+		"unlockButton": "Unlock unlimited",
 		"restoreButton": "Restore Purchase",
 		"restoring": "Restoring purchase, please wait",
-		"notNow": "Not now"
+		"notNow": "Not now",
+		"favorites": {
+			"yourCollection": "Your collection",
+			"savedCount": "\u2665 {{count}} saved",
+			"limitBadge": "{{count}} of {{limit}} free favorites used",
+			"headline": "Don't stop\ncollecting",
+			"body_one": "You've found {{count}} harmony worth keeping. There are {{remaining}} more combinations waiting to be discovered.",
+			"body_other": "You've found {{count}} harmonies worth keeping. There are {{remaining}} more combinations waiting to be discovered.",
+			"unlockLabel": "Unlock unlimited favorites for {{price}}"
+		},
+		"wardrobe": {
+			"yourCollection": "Your wardrobe",
+			"savedCount": "{{count}} garments",
+			"limitBadge": "{{count}} of {{limit}} free wardrobe items used",
+			"headline": "Your wardrobe\nunlimited",
+			"body": "You already have {{count}} garments saved. With Outfinder Premium, capture every piece of your real wardrobe — no limit.",
+			"unlockLabel": "Unlock unlimited wardrobe for {{price}}"
+		}
 	},
 	"comboCard": {
 		"combinationLabel": "{{name}} combination: {{colors}}",
 		"openHint": "Opens outfit visualizer",
-		"yours": "yours",
+		"yours": "your tone",
 		"seeOutfit": "See outfit"
 	},
 	"favoriteButton": {
@@ -170,7 +196,11 @@
 	},
 	"common": {
 		"goBack": "Go back",
-		"dismiss": "Dismiss"
+		"dismiss": "Dismiss",
+		"cancel": "Cancel",
+		"coachMark": {
+			"gotIt": "Got it"
+		}
 	},
 	"iap": {
 		"networkError": "Check your internet connection and try again.",
@@ -179,8 +209,135 @@
 		"genericError": "Something went wrong. Please try again.",
 		"noPreviousPurchase": "No previous purchase found for this Apple ID."
 	},
+	"armario": {
+		"capture": {
+			"guidanceHint": "Place the garment on a plain background, good light",
+			"captureButtonLabel": "Take photo of garment",
+			"chooseLibraryButtonLabel": "Choose from library",
+			"permissionDenied": "Camera access is required to add garments to your Wardrobe.",
+			"libraryPermissionDenied": "Photo library access is required to pick a garment photo.",
+			"openSettings": "Open Settings",
+			"removingBackground": "Removing background…",
+			"errorNoSubject": "We couldn't find the garment. Try a plain background with better light.",
+			"errorVisionFailed": "Background removal failed. Please try again.",
+			"errorIoFailed": "Couldn't read or save the photo. Please try again.",
+			"errorDismiss": "Dismiss",
+			"goBack": "Go back"
+		},
+		"preview": {
+			"cutoutReady": "Background removed. Check the cutout.",
+			"retakeButton": "Retake",
+			"useButton": "Use this photo",
+			"imageLabel": "Garment cutout preview",
+			"errorDiskFull": "Your device is out of space",
+			"errorEncode": "Couldn't process the photo. Please try again.",
+			"errorSaveFailed": "Couldn't save the garment. Please try again.",
+			"errorDismiss": "Dismiss"
+		},
+		"s0": {
+			"screenLabel": "Zero state screen",
+			"heroTitle": "Dress this palette with your clothes",
+			"subtitle": "Assign a real garment to each color. Once all three are ready, we'll compose your look.",
+			"primaryCta": "Start assigning garments",
+			"secondaryCta": "Not now",
+			"polaroidA11y": "Placeholder for {{color}}. Double-tap to start assigning."
+		},
+		"s2": {
+			"screenLabel": "Wada card screen",
+			"instruction": "Assign your garments to each color of the palette",
+			"wardrobeLabel": "YOUR WARDROBE",
+			"linkAssign": "Assign",
+			"linkChange": "Change",
+			"linkRemove": "Remove",
+			"viewLookCta": "See your look",
+			"slotA11yUnassigned": "{{color}}, unassigned. Double-tap to assign.",
+			"slotA11yAssigned": "{{color}}, assigned. Double-tap to change.",
+			"slotRemoveA11y": "Remove garment from {{color}}",
+			"quitarConfirmBody": "Remove the garment from {{color}}?",
+			"quitarConfirmYes": "Remove",
+			"lookSavedAnnouncement": "Look saved to My Looks",
+			"saveForLaterCta": "Save for later",
+			"saveForLaterA11yLabel": "Save this look to work on later",
+			"saveForLaterA11yHint": "Adds it to My Looks with no garments assigned"
+		},
+		"misLooksLimit": {
+			"strip": "You've reached the 5 saved-looks limit. Delete one to continue.",
+			"stripA11y": "Alert: you've reached the 5 saved-looks limit. Delete one from My Looks to continue."
+		},
+		"s4": {
+			"screenLabel": "Your look",
+			"headerPrefix": "Wada Palette \u00b7",
+			"shareCta": "Share your look",
+			"exploreCta": "Explore more palettes",
+			"shareError": "Could not create share image. Please try again.",
+			"canvasA11y": "Outfit: {{combo}}, {{count}} garments assigned. Use the Share button to share your look."
+		},
+		"s5": {
+			"screenLabel": "Harmony suggestion screen",
+			"subtitle": "Complete the look to see the full harmony.",
+			"suggestionTitle": "Complete the harmony.",
+			"suggestionCopyAccessory": "Perfect for an accessory: shoes, bag, or belt.",
+			"suggestionCopyMain": "This is usually the main piece of the look.",
+			"suggestionCopyLayer": "Consider a second layer or a knitted piece.",
+			"suggestionCta": "Add garment in {{color}}",
+			"backToFicha": "Back to palette",
+			"canvasA11y": "Outfit: {{combo}}, {{assigned}} of {{total}} garments assigned. Missing: {{missing}}."
+		},
+		"favorites": {
+			"badgeComplete": "{{assigned}}/{{total}} garments",
+			"badgePartial": "{{assigned}}/{{total}} garments",
+			"badgeNone": "No garments",
+			"ctaComplete": "See your look \u2192",
+			"ctaPartial": "Complete your look \u2192",
+			"ctaEmpty": "Assign garments \u2192",
+			"a11yHintComplete": "Complete look. Double-tap to see your look.",
+			"a11yHintPartial": "{{assigned}} of {{total}} garments assigned. Double-tap to complete the look.",
+			"a11yHintEmpty": "No garments assigned yet. Double-tap to start assigning."
+		},
+		"s3": {
+			"screenLabel": "Wardrobe picker",
+			"pickerTitle": "Choose for {{color}}",
+			"footerNewPhoto": "Take a new photo of a garment",
+			"emptyTitle": "Your wardrobe is empty",
+			"emptySubtitle": "Tap the button below to add your first garment",
+			"itemA11y": "Garment. Double-tap to assign to {{color}}. Long-press to delete.",
+			"itemA11yAssignedElsewhere": "Garment already assigned to another color in this palette. Double-tap to move to {{color}}. Long-press to delete.",
+			"assignedElsewhere": "Assigned elsewhere",
+			"dismiss": "Dismiss picker",
+			"dragHint": "Drag down to dismiss",
+			"deleteConfirmTitle": "Delete this garment?",
+			"deleteConfirmBodyNoAssignments": "The photo will be removed from your Wardrobe.",
+			"deleteConfirmBodyWithAssignments_one": "It will also be removed from the palette where you're using it.",
+			"deleteConfirmBodyWithAssignments_other": "It will also be removed from {{count}} palettes where you're using it.",
+			"deleteConfirmYes": "Delete",
+			"editMode": {
+				"title": "Edit wardrobe",
+				"cancel": "Cancel",
+				"done": "Done",
+				"cancelA11yLabel": "Cancel",
+				"doneA11yLabel": "Done",
+				"enterAnnouncement": "Edit mode activated. Tap the delete button on a garment to remove it.",
+				"deleteA11yLabel": "Delete {{category}}",
+				"tileA11yInEditMode": "Garment in edit mode. Use the delete button in the corner to remove it.",
+				"editCategoryA11yLabel": "Edit category of {{category}}",
+				"editCategoryA11yHint": "Opens the category picker to change the garment type."
+			}
+		},
+		"unfavoriteCascade": {
+			"body_one": "The garment you assigned to this palette will be removed. Photos stay in your Wardrobe.",
+			"body_other": "The {{count}} garments you assigned to this palette will be removed. Photos stay in your Wardrobe.",
+			"confirm": "Remove from favorites"
+		},
+		"badge": {
+			"complete": "{{assigned}}/{{total}}",
+			"partial": "{{assigned}}/{{total}}",
+			"none": "No garments",
+			"a11y": "{{assigned}} of {{total}} assigned"
+		}
+	},
 	"colorCapture": {
-		"cameraButtonLabel": "Open camera to identify garment color",
+		"cameraButtonLabel": "Camera — capture a garment",
+		"closeCameraLabel": "Close camera",
 		"captureButtonLabel": "Take photo",
 		"overlayHint": "Find natural light · Center the garment",
 		"permissionDenied": "Camera access is required to identify garment colors.",
@@ -199,5 +356,58 @@
 		"outOfCoverageMessage": "This colour is too vibrant for Wada's palette — his combinations are based on natural pigments from 1930s Japan. The closest tone we found:",
 		"outOfCoverageAction": "See {{name}}'s combinations",
 		"tryAgain": "Try again"
+	},
+	"unifiedCamera": {
+		"capture": {
+			"hint": "Photograph your full garment",
+			"captureButtonLabel": "Take photo",
+			"processing": "Analyzing your garment...",
+			"errorNoSubject": "We couldn't find the garment. Try a plain background with good light.",
+			"errorVisionFailed": "We couldn't process the photo. Try again.",
+			"errorIoFailed": "Couldn't read or save the photo. Try again.",
+			"retry": "Try again"
+		},
+		"coachMark": {
+			"text": "Snap your garment. We'll cut it out, detect its Wada color, and suggest combinations.",
+			"a11yAnnouncement": "Camera tip. Snap your garment; we'll cut it out, detect its Wada color, and suggest combinations."
+		},
+		"result": {
+			"cutoutA11yLabel": "Cutout of your garment, tone {{nameEn}}",
+			"wadaNameStackA11y": "Tone {{nameEn}}, {{nameJp}}",
+			"combinationsCount_one": "Appears in {{count}} combination",
+			"combinationsCount_other": "Appears in {{count}} combinations",
+			"toneCorrectionPrompt": "Is this the right tone?",
+			"toneCorrectionSwatchA11y": "Choose tone {{nameEn}}",
+			"toneConfirmedA11yLive": "Tone changed to {{nameEn}}",
+			"primaryCta": "Save to my wardrobe",
+			"primaryCtaA11yLabel": "Save to my wardrobe. Wada tone {{nameEn}}. {{count}} combinations available.",
+			"secondaryLink": "view combinations without saving",
+			"secondaryLinkA11yLabel": "View combinations without saving"
+		},
+		"categorySheet": {
+			"title": "What type of garment is it?",
+			"rowTop": "Top",
+			"rowBottom": "Bottom",
+			"rowFootwear": "Footwear",
+			"rowAccessory": "Accessory",
+			"confirm": "Confirm",
+			"confirmA11yLabel": "Confirm",
+			"closeSheetA11y": "Close sheet",
+			"rowA11yHint": "Double-tap to select this category"
+		},
+		"save": {
+			"errorDiskFull": "Your device is out of space",
+			"errorEncode": "Couldn't process the photo. Please try again.",
+			"errorSaveFailed": "Couldn't save the garment. Please try again.",
+			"errorDismiss": "Got it"
+		},
+		"postSave": {
+			"title": "Saved to your wardrobe",
+			"subtitle": "as {{categoryLabel}}",
+			"primaryCta": "See combinations with {{wadaName}}",
+			"primaryCtaA11y": "See combinations with {{wadaName}}",
+			"secondaryCta": "Back to My Looks",
+			"secondaryCtaA11y": "Back to My Looks"
+		}
 	}
 }

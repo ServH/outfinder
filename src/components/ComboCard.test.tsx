@@ -217,7 +217,7 @@ describe("ComboCard", () => {
 			);
 
 			expect(screen.getByTestId("yours-label")).toBeTruthy();
-			expect(screen.getByText("yours")).toBeTruthy();
+			expect(screen.getByText("your tone")).toBeTruthy();
 		});
 
 		it("does not show 'yours' label when showYoursLabel=false", () => {

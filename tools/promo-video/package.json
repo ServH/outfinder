@@ -1,0 +1,22 @@
+{
+	"name": "outfinder-promo-video",
+	"version": "1.0.0",
+	"scripts": {
+		"setup": "cp ../../docs/img_screenshot/sc-home.png public/sc-home.png && cp ../../docs/img_screenshot/sc-combinations.png public/sc-combinations.png && cp ../../docs/img_screenshot/sc-visualizer.png public/sc-visualizer.png && cp ../../docs/img_screenshot/sc-favorites.png public/sc-favorites.png && cp ../../docs/img_screenshot/appstore/01-visualizer.png public/as-visualizer.png && cp ../../docs/img_screenshot/appstore/02-home.png public/as-home.png && cp ../../docs/img_screenshot/appstore/03-combinations.png public/as-combinations.png && cp ../../docs/img_screenshot/appstore/04-favorites.png public/as-favorites.png && cp ../../assets/images/icon.png public/icon.png",
+		"start": "npm run setup && npx remotion studio",
+		"render:appstore": "npm run setup && npx remotion render AppStorePreview out/appstore-preview.mp4 --codec=h264",
+		"render:social": "npm run setup && npx remotion render SocialPreview out/social-preview.mp4 --codec=h264"
+	},
+	"dependencies": {
+		"@remotion/cli": "^4.0.0",
+		"@remotion/transitions": "^4.0.0",
+		"remotion": "^4.0.0",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
+	},
+	"devDependencies": {
+		"@types/react": "^18.2.0",
+		"@types/react-dom": "^18.2.0",
+		"typescript": "^5.0.0"
+	}
+}

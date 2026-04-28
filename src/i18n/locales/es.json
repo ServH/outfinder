@@ -2,17 +2,17 @@
 	"tabs": {
 		"colors": "Colores",
 		"favs": "Favs",
-		"favorites": "Favoritos",
+		"favorites": "Mis Looks",
 		"settings": "Ajustes",
 		"camera": "Cámara",
 		"colorsTab": "Pestaña de colores",
-		"favoritesTab": "Pestaña de favoritos",
+		"favoritesTab": "Pestaña Mis Looks",
 		"settingsTab": "Pestaña Ajustes",
 		"cameraTab": "Abrir escáner de cámara"
 	},
 	"home": {
 		"title": "Outfinder",
-		"subtitle": "\u00bfDe qu\u00e9 color es tu ropa hoy?",
+		"subtitle": "\u00bfQu\u00e9 color de ropa quieres combinar?",
 		"browseAll": "Ver catálogo",
 		"allColors": "Ver\ncatálogo",
 		"backToFamilies": "Volver a las familias",
@@ -31,32 +31,48 @@
 		"goBack": "Volver",
 		"notFound": "Combinaci\u00f3n no encontrada",
 		"screenLabel": "Pantalla del Visualizador",
-		"coachStep1": "Toca cualquier prenda para cambiar su color",
-		"coachStep1Announce": "Consejo: Toca cualquier prenda para cambiar su color",
-		"coachStep2": "Usa las flechas o desliza para cambiar las prendas",
-		"coachStep2Announce": "Consejo: Usa las flechas o desliza para cambiar las prendas",
-		"gotIt": "Entendido",
 		"previousGarment": "Prenda anterior",
 		"nextGarment": "Prenda siguiente",
-		"shareLabel": "Compartir imagen del outfit",
-		"shareButton": "Compartir Outfit",
+		"makeMineButton": "Hacer m\u00edo este look",
+		"makeMineA11yLabel": "Hacer m\u00edo este look",
+		"makeMineA11yHint": "Abre este look en tu armario para asignarle prendas",
 		"selectedForSwap": "{{label}} seleccionada para intercambio",
 		"swapResult": "{{selectedLabel}} ahora es {{newColorA}}, {{tappedLabel}} ahora es {{newColorB}}",
 		"changedTo": "Cambiado a {{label}}",
-		"shareError": "No se puede compartir",
-		"shareErrorBody": "Algo sali\u00f3 mal al generar la imagen. Int\u00e9ntalo de nuevo."
+		"coachMark": {
+			"text": "Toca cualquier prenda para cambiarla o conectarla con tu armario.",
+			"a11yAnnouncement": "Consejo del Visualizador. Toca cualquier prenda para cambiarla o conectarla con tu armario."
+		}
 	},
 	"favorites": {
-		"title": "Favoritos",
-		"screenLabel": "Pantalla de Favoritos",
+		"title": "Mis Looks",
+		"screenLabel": "Pantalla Mis Looks",
 		"sortRecent": "Reciente",
 		"sortAZ": "A-Z",
 		"sortSize": "Por tama\u00f1o",
 		"sortRecentLabel": "Ordenar por reciente",
 		"sortAZLabel": "Ordenar alfab\u00e9ticamente",
 		"sortSizeLabel": "Ordenar por tama\u00f1o",
-		"emptyTitle": "Sin favoritos a\u00fan",
-		"emptySubtitle": "Elige un color, explora combinaciones y toca \u2661 para guardar las que te gusten"
+		"emptyTitle": "Aún no tienes looks guardados",
+		"emptySubtitle": "Fotografía una prenda o escoge una paleta para empezar.",
+		"newLookCta": {
+			"title": "Monta tu look",
+			"subtitle": "Explora las paletas de Sanzo Wada y monta tu look",
+			"a11yLabel": "Empezar un look nuevo",
+			"a11yHint": "Explora paletas de Sanzo Wada para empezar un look"
+		},
+		"incompleteSection": {
+			"title": "En curso",
+			"a11yLabel": "En curso. Tus looks a medias."
+		},
+		"incompleteTile": {
+			"a11yLabel": "Look {{name}}. {{assigned}} de {{total}} prendas asignadas. Faltan {{remaining}}.",
+			"a11yHint": "Abre este look para asignar más prendas"
+		},
+		"completeSection": {
+			"title": "Mis looks completos",
+			"a11yLabel": "Mis looks completos"
+		}
 	},
 	"settings": {
 		"title": "Ajustes",
@@ -77,21 +93,31 @@
 	},
 	"paywall": {
 		"dismiss": "Cerrar paywall",
-		"yourCollection": "Tu colecci\u00f3n",
-		"savedCount": "\u2665 {{count}} guardados",
-		"limitBadge": "{{count}} de {{limit}} favoritos gratuitos usados",
 		"lockedLabel": "Combinaci\u00f3n bloqueada. Actualiza para guardar",
-		"headline": "No pares\nde coleccionar",
-		"body_one": "Encontraste {{count}} armon\u00eda que vale la pena guardar. Hay {{remaining}} combinaciones m\u00e1s esperando ser descubiertas.",
-		"body_other": "Encontraste {{count}} armon\u00edas que vale la pena guardar. Hay {{remaining}} combinaciones m\u00e1s esperando ser descubiertas.",
 		"priceLabel": "{{price}}, compra \u00fanica",
 		"oneTime": "una vez",
 		"purchasing": "Comprando, por favor espera",
-		"unlockLabel": "Desbloquea favoritos ilimitados por {{price}}",
-		"unlockButton": "Desbloquear Todo",
+		"unlockButton": "Desbloquear ilimitado",
 		"restoreButton": "Restaurar Compra",
 		"restoring": "Restaurando compra, por favor espera",
-		"notNow": "Ahora no"
+		"notNow": "Ahora no",
+		"favorites": {
+			"yourCollection": "Tu colecci\u00f3n",
+			"savedCount": "\u2665 {{count}} guardados",
+			"limitBadge": "{{count}} de {{limit}} favoritos gratuitos usados",
+			"headline": "No pares\nde coleccionar",
+			"body_one": "Encontraste {{count}} armon\u00eda que vale la pena guardar. Hay {{remaining}} combinaciones m\u00e1s esperando ser descubiertas.",
+			"body_other": "Encontraste {{count}} armon\u00edas que vale la pena guardar. Hay {{remaining}} combinaciones m\u00e1s esperando ser descubiertas.",
+			"unlockLabel": "Desbloquea favoritos ilimitados por {{price}}"
+		},
+		"wardrobe": {
+			"yourCollection": "Tu armario",
+			"savedCount": "{{count}} prendas",
+			"limitBadge": "{{count}} de {{limit}} prendas gratuitas usadas",
+			"headline": "Tu armario\nsin l\u00edmite",
+			"body": "Ya tienes {{count}} prendas guardadas. Con Outfinder Premium captura todas las prendas de tu armario real sin l\u00edmite.",
+			"unlockLabel": "Desbloquea armario ilimitado por {{price}}"
+		}
 	},
 	"comboCard": {
 		"combinationLabel": "Combinaci\u00f3n {{name}}: {{colors}}",
@@ -107,7 +133,7 @@
 	},
 	"error": {
 		"screenLabel": "Pantalla de error de la aplicaci\u00f3n",
-		"message": "Algo sali\u00f3 mal",
+		"message": "Algo ha ido mal",
 		"restart": "Reiniciar"
 	},
 	"swatchGroups": {
@@ -170,18 +196,149 @@
 	},
 	"common": {
 		"goBack": "Volver",
-		"dismiss": "Cerrar"
+		"dismiss": "Cerrar",
+		"cancel": "Cancelar",
+		"coachMark": {
+			"gotIt": "Entendido"
+		}
 	},
 	"iap": {
 		"networkError": "Comprueba tu conexión a internet e inténtalo de nuevo.",
 		"storeUnavailable": "La App Store no está disponible temporalmente. Inténtalo más tarde.",
 		"purchasesDisabled": "Las compras integradas están desactivadas en este dispositivo.",
-		"genericError": "Algo salió mal. Por favor inténtalo de nuevo.",
+		"genericError": "Algo ha ido mal. Por favor inténtalo de nuevo.",
 		"noPreviousPurchase": "No se encontró ninguna compra anterior para este Apple ID."
 	},
+	"armario": {
+		"capture": {
+			"guidanceHint": "Pon la prenda sobre fondo liso, buena luz",
+			"captureButtonLabel": "Hacer foto a la prenda",
+			"chooseLibraryButtonLabel": "Elegir de la Biblioteca",
+			"permissionDenied": "Se necesita acceso a la cámara para añadir prendas a tu Armario.",
+			"libraryPermissionDenied": "Se necesita acceso a la biblioteca de fotos para elegir una imagen de la prenda.",
+			"openSettings": "Abrir Ajustes",
+			"removingBackground": "Quitando el fondo…",
+			"errorNoSubject": "No pudimos encontrar la prenda. Prueba con fondo liso y buena luz.",
+			"errorVisionFailed": "No se pudo quitar el fondo. Inténtalo de nuevo.",
+			"errorIoFailed": "No se pudo leer o guardar la foto. Inténtalo de nuevo.",
+			"errorDismiss": "Cerrar",
+			"goBack": "Volver"
+		},
+		"preview": {
+			"cutoutReady": "Fondo eliminado. Revisa el recorte.",
+			"retakeButton": "Repetir",
+			"useButton": "Usar esta foto",
+			"imageLabel": "Vista previa del recorte de la prenda",
+			"errorDiskFull": "No hay espacio en el dispositivo",
+			"errorEncode": "No pudimos procesar la foto. Inténtalo de nuevo.",
+			"errorSaveFailed": "No pudimos guardar la prenda. Inténtalo de nuevo.",
+			"errorDismiss": "Descartar"
+		},
+		"s0": {
+			"screenLabel": "Pantalla de inicio",
+			"heroTitle": "Viste esta paleta con tu ropa",
+			"subtitle": "Asigna una prenda real a cada color. Cuando los tres estén listos, generamos tu look al instante.",
+			"primaryCta": "Empezar a asignar prendas",
+			"secondaryCta": "Ahora no",
+			"polaroidA11y": "Hueco para {{color}}. Doble-tap para empezar a asignar."
+		},
+		"s2": {
+			"screenLabel": "Pantalla Ficha Wada",
+			"instruction": "Asigna tus prendas a cada color de la paleta",
+			"wardrobeLabel": "TU ARMARIO",
+			"linkAssign": "Asignar",
+			"linkChange": "Cambiar",
+			"linkRemove": "Quitar",
+			"viewLookCta": "Ver tu look",
+			"slotA11yUnassigned": "{{color}}, sin asignar. Doble-tap para asignar.",
+			"slotA11yAssigned": "{{color}}, asignada. Doble-tap para cambiar.",
+			"slotRemoveA11y": "Quitar prenda de {{color}}",
+			"quitarConfirmBody": "¿Quitar la prenda de {{color}}?",
+			"quitarConfirmYes": "Quitar",
+			"lookSavedAnnouncement": "Look guardado en Mis Looks",
+			"saveForLaterCta": "Guardar para luego",
+			"saveForLaterA11yLabel": "Guardar este look para trabajarlo más tarde",
+			"saveForLaterA11yHint": "Lo añade a Mis Looks sin prendas asignadas"
+		},
+		"misLooksLimit": {
+			"strip": "Alcanzaste el límite de 5 looks guardados. Elimina uno para continuar.",
+			"stripA11y": "Aviso: has alcanzado el límite de 5 looks guardados. Elimina uno desde Mis Looks para continuar."
+		},
+		"s4": {
+			"screenLabel": "Tu look",
+			"headerPrefix": "Paleta Wada \u00b7",
+			"shareCta": "Compartir look",
+			"exploreCta": "Explorar m\u00e1s paletas",
+			"shareError": "No se pudo crear la imagen para compartir. Int\u00e9ntalo de nuevo.",
+			"canvasA11y": "Look: {{combo}}, {{count}} prendas asignadas. Usa el bot\u00f3n Compartir para compartir tu look."
+		},
+		"s5": {
+			"screenLabel": "Pantalla de sugerencia de armonía",
+			"subtitle": "Completa el look para ver la armonía completa.",
+			"suggestionTitle": "Completa la armonía.",
+			"suggestionCopyAccessory": "Ideal para un accesorio: zapatos, bolso o cinturón.",
+			"suggestionCopyMain": "Suele ser la pieza principal del look.",
+			"suggestionCopyLayer": "Puede ser una segunda capa o prenda de punto.",
+			"suggestionCta": "Añadir prenda en {{color}}",
+			"backToFicha": "Volver a la paleta",
+			"canvasA11y": "Look: {{combo}}, {{assigned}} de {{total}} prendas asignadas. Falta: {{missing}}."
+		},
+		"favorites": {
+			"badgeComplete": "{{assigned}}/{{total}} prendas",
+			"badgePartial": "{{assigned}}/{{total}} prendas",
+			"badgeNone": "Sin prendas",
+			"ctaComplete": "Ver tu look \u2192",
+			"ctaPartial": "Completa tu look \u2192",
+			"ctaEmpty": "Asignar prendas \u2192",
+			"a11yHintComplete": "Look completo. Doble-tap para ver tu look.",
+			"a11yHintPartial": "{{assigned}} de {{total}} prendas asignadas. Doble-tap para completar el look.",
+			"a11yHintEmpty": "Sin prendas asignadas. Doble-tap para empezar a asignar."
+		},
+		"s3": {
+			"screenLabel": "Selector de armario",
+			"pickerTitle": "Elige para {{color}}",
+			"footerNewPhoto": "Fotografiar prenda nueva",
+			"emptyTitle": "Tu armario está vacío",
+			"emptySubtitle": "Toca el botón de abajo para añadir tu primera prenda",
+			"itemA11y": "Prenda. Doble-tap para asignarla a {{color}}. Mantén pulsado para eliminarla.",
+			"itemA11yAssignedElsewhere": "Prenda ya asignada a otro color de esta paleta. Doble-tap para moverla a {{color}}. Mantén pulsado para eliminarla.",
+			"assignedElsewhere": "Ya asignada",
+			"dismiss": "Cerrar selector",
+			"dragHint": "Arrastra para cerrar",
+			"deleteConfirmTitle": "¿Eliminar esta prenda?",
+			"deleteConfirmBodyNoAssignments": "La foto se eliminará de tu Armario.",
+			"deleteConfirmBodyWithAssignments_one": "También se eliminará de la paleta donde la has usado.",
+			"deleteConfirmBodyWithAssignments_other": "También se eliminará de {{count}} paletas donde la has usado.",
+			"deleteConfirmYes": "Eliminar",
+			"editMode": {
+				"title": "Editar armario",
+				"cancel": "Cancelar",
+				"done": "Listo",
+				"cancelA11yLabel": "Cancelar",
+				"doneA11yLabel": "Listo",
+				"enterAnnouncement": "Modo edición activado. Toca el botón eliminar de una prenda para borrarla.",
+				"deleteA11yLabel": "Eliminar {{category}}",
+				"tileA11yInEditMode": "Prenda en modo edición. Usa el botón eliminar de la esquina para borrarla.",
+				"editCategoryA11yLabel": "Editar categoría de {{category}}",
+				"editCategoryA11yHint": "Abre el selector de categoría para cambiar el tipo de prenda."
+			}
+		},
+		"unfavoriteCascade": {
+			"body_one": "Se quitará la prenda que habías asignado a esta paleta. Las fotos seguirán en tu Armario.",
+			"body_other": "Se quitarán las {{count}} prendas que habías asignado a esta paleta. Las fotos seguirán en tu Armario.",
+			"confirm": "Quitar de favoritos"
+		},
+		"badge": {
+			"complete": "{{assigned}}/{{total}}",
+			"partial": "{{assigned}}/{{total}}",
+			"none": "Sin prendas",
+			"a11y": "{{assigned}} de {{total}} asignadas"
+		}
+	},
 	"colorCapture": {
-		"cameraButtonLabel": "Abrir cámara para identificar el color de la prenda",
-		"captureButtonLabel": "Tomar foto",
+		"cameraButtonLabel": "Cámara — captura una prenda",
+		"closeCameraLabel": "Cerrar cámara",
+		"captureButtonLabel": "Hacer foto",
 		"overlayHint": "Busca luz natural · Centra la prenda",
 		"permissionDenied": "Se necesita acceso a la cámara para identificar colores de prendas.",
 		"wbSliderLabel": "Temperatura del balance de blancos",
@@ -199,5 +356,58 @@
 		"outOfCoverageMessage": "Este color es demasiado vibrante para la paleta de Wada — sus combinaciones se basan en pigmentos naturales del Japón de los años 30. El tono más cercano que encontramos:",
 		"outOfCoverageAction": "Ver combinaciones de {{name}}",
 		"tryAgain": "Intentar de nuevo"
+	},
+	"unifiedCamera": {
+		"capture": {
+			"hint": "Fotografía tu prenda completa",
+			"captureButtonLabel": "Hacer foto",
+			"processing": "Analizando tu prenda...",
+			"errorNoSubject": "No pudimos encontrar la prenda. Prueba con fondo liso y buena luz.",
+			"errorVisionFailed": "No pudimos procesar la foto. Inténtalo de nuevo.",
+			"errorIoFailed": "No se pudo leer o guardar la foto. Inténtalo de nuevo.",
+			"retry": "Reintentar"
+		},
+		"coachMark": {
+			"text": "Fotografía tu prenda. La recortamos automáticamente, detectamos su color Wada y te sugerimos combinaciones.",
+			"a11yAnnouncement": "Consejo de cámara. Fotografía tu prenda; la recortamos, detectamos su color Wada y te sugerimos combinaciones."
+		},
+		"result": {
+			"cutoutA11yLabel": "Recorte de tu prenda, tono {{nameEn}}",
+			"wadaNameStackA11y": "Tono {{nameEn}}, {{nameJp}}",
+			"combinationsCount_one": "Aparece en {{count}} combinación",
+			"combinationsCount_other": "Aparece en {{count}} combinaciones",
+			"toneCorrectionPrompt": "¿Es éste el tono correcto?",
+			"toneCorrectionSwatchA11y": "Elegir tono {{nameEn}}",
+			"toneConfirmedA11yLive": "Tono cambiado a {{nameEn}}",
+			"primaryCta": "Guardar en mi armario",
+			"primaryCtaA11yLabel": "Guardar en mi armario. Tono Wada {{nameEn}}. {{count}} combinaciones disponibles.",
+			"secondaryLink": "ver combinaciones sin guardar",
+			"secondaryLinkA11yLabel": "Ver combinaciones sin guardar"
+		},
+		"categorySheet": {
+			"title": "¿Qué tipo de prenda es?",
+			"rowTop": "Parte de arriba",
+			"rowBottom": "Parte de abajo",
+			"rowFootwear": "Calzado",
+			"rowAccessory": "Accesorio",
+			"confirm": "Confirmar",
+			"confirmA11yLabel": "Confirmar",
+			"closeSheetA11y": "Cerrar hoja",
+			"rowA11yHint": "Tócalo dos veces para seleccionar esta categoría"
+		},
+		"save": {
+			"errorDiskFull": "Tu dispositivo se quedó sin espacio",
+			"errorEncode": "No pudimos procesar la foto. Inténtalo de nuevo.",
+			"errorSaveFailed": "No pudimos guardar la prenda. Inténtalo de nuevo.",
+			"errorDismiss": "Entendido"
+		},
+		"postSave": {
+			"title": "Guardado en tu armario",
+			"subtitle": "como {{categoryLabel}}",
+			"primaryCta": "Ver combinaciones con {{wadaName}}",
+			"primaryCtaA11y": "Ver combinaciones con {{wadaName}}",
+			"secondaryCta": "Volver a Mis Looks",
+			"secondaryCtaA11y": "Volver a Mis Looks"
+		}
 	}
 }
