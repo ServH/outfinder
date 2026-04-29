@@ -23,6 +23,7 @@ planning/
 ├── epic-13-armario-virtual.md          ← Epic 13 Armario Virtual (feature-complete)
 ├── epic-15-ideas-pre-launch.md         ← ideas + análisis pre-Epic 15 (input para epic-15.md)
 ├── v2-strategy-brief.md                ← estrategia v2 (Paleta Objetivo, Zero-Cost, Botón Mágico)
+├── v2-tech-exploration-handoff.md      ← handoff tech-first v2 para agente arquitecto (URL Resolver, WadaCoreML, Apple Intelligence, AR mirror, native iOS APIs)
 ├── aso-v140-spec.md                    ← spec ASO v1.4 (capturas A/B EN+ES, icono v2, narrativa camera-first) — §10 estado final cerrado
 ├── aso-v140-handoff-keywords.md        ← handoff para agente `app-store-aso`: subtitle/keywords/promo refinement v1.4
 ├── epic-15/                            ← Epic 15 Pre-launch polish (activo, v1.4.0 launch blocker)
